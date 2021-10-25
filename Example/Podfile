@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'SwifterKnife_Example' do
+  pod 'SwifterKnife', :path => '../'
+
+  target 'SwifterKnife_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
