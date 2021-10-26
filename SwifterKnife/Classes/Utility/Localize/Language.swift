@@ -75,6 +75,10 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         let locale = NSLocale(localeIdentifier: localized ? Self.current.rawValue : rawValue)
         return locale.displayName(forKey: .identifier, value: rawValue)
     }
+    
+    public var direction: Locale.LanguageDirection {
+        Locale.characterDirection(forLanguage: rawValue)
+    }
 }
 
 
