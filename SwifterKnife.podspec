@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SwifterKnife'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A handy collection of Swift method and Tools to build project faster and more efficient.'
 
   s.description      = <<-DESC
@@ -26,15 +26,23 @@ Pod::Spec.new do |s|
   s.swift_version = '5.3'
   s.requires_arc = true
   s.source           = { :git => 'https://github.com/CoderLouie/SwifterKnife.git', :tag => s.version.to_s }
-  s.source_files = 'SwifterKnife/Classes/**/*'
+  
+  s.source_files =
+  'SwifterKnife/Classes/Base/**/*',
+  'SwifterKnife/Classes/Extension/**/*',
+  'SwifterKnife/Classes/Utility/**/*',
+  'SwifterKnife/Classes/Views/**/*'
+  
   s.public_header_files = 'SwifterKnife/Classes/**/*.h'
   
   s.subspec 'Base' do |sp|
-    sp.source_files = 'SwifterKnife/Classes/Base/*.swift', 'SwifterKnife/Classes/Extension/**/*.swift'
+    sp.source_files = 'SwifterKnife/Classes/Base/*.swift'
   end
   # Extension Extensions
   s.subspec 'Extension' do |sp|
-    sp.source_files = 'SwifterKnife/Classes/Base/*.swift', 'SwifterKnife/Classes/Extension/**/*.swift'
+    sp.source_files =
+    'SwifterKnife/Classes/Base/*.swift',
+    'SwifterKnife/Classes/Extension/**/*.swift'
   end
   
   # Utility Extensions
@@ -45,7 +53,9 @@ Pod::Spec.new do |s|
   
   # Layout Extensions
   s.subspec 'Views' do |sp|
-    sp.source_files = 'SwifterKnife/Classes/Base/*.swift', 'SwifterKnife/Classes/Views/**/*.swift'
+    sp.source_files =
+    'SwifterKnife/Classes/Base/*.swift',
+    'SwifterKnife/Classes/Views/**/*.swift'
     sp.dependency 'SnapKit'
   end
   
