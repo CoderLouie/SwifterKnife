@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  SwifterKnife
 //
-//  Created by 18616562401@163.com on 10/25/2021.
-//  Copyright (c) 2021 18616562401@163.com. All rights reserved.
+//  Created by liyang on 10/25/2021.
+//  Copyright (c) 2021 liyang. All rights reserved.
 //
 
 import UIKit

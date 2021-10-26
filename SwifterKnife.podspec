@@ -9,28 +9,45 @@
 Pod::Spec.new do |s|
   s.name             = 'SwifterKnife'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of SwifterKnife.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
+  s.summary          = 'A handy collection of Swift method and Tools to build project faster and more efficient.'
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+  SwifterKnife is a collection of Swift extension method and some tools that often use in develop project, with them you might build project faster and more efficient.
                        DESC
 
   s.homepage         = 'https://github.com/18616562401@163.com/SwifterKnife'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '18616562401@163.com' => '18616562401@163.com' }
-  s.source           = { :git => 'https://github.com/18616562401@163.com/SwifterKnife.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '9.0'
-
+  s.ios.deployment_target = '10.0'
+  
+  s.swift_version = '5.3'
+  s.requires_arc = true
+  s.source           = { :git => 'https://github.com/18616562401@163.com/SwifterKnife.git', :tag => s.version.to_s }
   s.source_files = 'SwifterKnife/Classes/**/*'
+  s.public_header_files = 'SwifterKnife/Classes/**/*.h'
+  
+  s.subspec 'Base' do |sp|
+    sp.source_files = 'SwifterKnife/Classes/Base/*.swift', 'SwifterKnife/Classes/Extension/**/*.swift'
+  end
+  # Extension Extensions
+  s.subspec 'Extension' do |sp|
+    sp.source_files = 'SwifterKnife/Classes/Base/*.swift', 'SwifterKnife/Classes/Extension/**/*.swift'
+  end
+  
+  # Utility Extensions
+  s.subspec 'Utility' do |sp|
+    sp.source_files = 'SwifterKnife/Classes/Utility/**/*'
+    s.public_header_files = 'SwifterKnife/Classes/Utility/**/*.h'
+  end
+  
+  # Layout Extensions
+  s.subspec 'Views' do |sp|
+    sp.source_files = 'SwifterKnife/Classes/Base/*.swift', 'SwifterKnife/Classes/Views/**/*.swift'
+    sp.dependency 'SnapKit'
+  end
   
   # s.resource_bundles = {
   #   'SwifterKnife' => ['SwifterKnife/Assets/*.png']

@@ -2,17 +2,30 @@
 //  ViewController.swift
 //  SwifterKnife
 //
-//  Created by 18616562401@163.com on 10/25/2021.
-//  Copyright (c) 2021 18616562401@163.com. All rights reserved.
+//  Created by liyang on 10/25/2021.
+//  Copyright (c) 2021 liyang. All rights reserved.
 //
 
 import UIKit
+import SwifterKnife
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let stack: Queue<Int> = [1, 2, 3, 4]
+        for val in stack {
+            print(val)
+            if val == 2 {
+//                stack.push(10)
+                stack.pollFirst()
+            }
+        }
+        
+        let res = stack.map { $0 + 2 }
+        print(res)
     }
 
     override func didReceiveMemoryWarning() {
