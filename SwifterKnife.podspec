@@ -15,17 +15,17 @@ Pod::Spec.new do |s|
   SwifterKnife is a collection of Swift extension method and some tools that often use in develop project, with them you might build project faster and more efficient.
                        DESC
 
-  s.homepage         = 'https://github.com/18616562401@163.com/SwifterKnife'
+  s.homepage         = 'https://github.com/CoderLouie/SwifterKnife'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { '18616562401@163.com' => '18616562401@163.com' }
+  s.author           = { 'liyang' => '18616562401@163.com' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
   
   s.swift_version = '5.3'
   s.requires_arc = true
-  s.source           = { :git => 'https://github.com/18616562401@163.com/SwifterKnife.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/CoderLouie/SwifterKnife.git', :tag => s.version.to_s }
   s.source_files = 'SwifterKnife/Classes/**/*'
   s.public_header_files = 'SwifterKnife/Classes/**/*.h'
   
