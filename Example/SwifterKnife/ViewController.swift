@@ -23,6 +23,13 @@ class ViewController: UIViewController {
                 stack.pollFirst()
             }
         }
+
+        let view = UIView()
+        view.snp.makeConstraints { make in
+            make.left.equalTo(0)
+        }
+//        let val = 5.fit
+        print(5.fit, 5.fitH)
         
         let res = stack.map { $0 + 2 }
         print(res)

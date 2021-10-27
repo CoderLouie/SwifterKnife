@@ -97,7 +97,7 @@ final public class FlexVView: FlexView {
         let inset = contentInsets
         let align = alignment ?? self.alignment
         
-        view.snp.makeConstraints { (make) in
+        view.snp.makeConstraints { make in
             switch align {
                 
             case .start:
@@ -122,19 +122,19 @@ final public class FlexHView: FlexView {
         let inset = contentInsets
         let align = alignment ?? self.alignment
         
-        view.snp.makeConstraints { (make) in
+        view.snp.makeConstraints { make in
             switch align {
                 
             case .start:
-                make.left.equalTo(inset.left)
-                make.right.lessThanOrEqualTo(-inset.right)
+                make.leading.equalTo(inset.left)
+                make.trailing.lessThanOrEqualTo(-inset.right)
             case .center:
-                make.left.greaterThanOrEqualTo(inset.left)
-                make.right.lessThanOrEqualTo(-inset.right)
+                make.leading.greaterThanOrEqualTo(inset.left)
+                make.trailing.lessThanOrEqualTo(-inset.right)
                 make.centerX.equalTo(self)
             case .end:
-                make.left.greaterThanOrEqualTo(inset.left)
-                make.right.equalTo(-inset.right)
+                make.leading.greaterThanOrEqualTo(inset.left)
+                make.trailing.equalTo(-inset.right)
             }
         }
     }
@@ -209,11 +209,11 @@ final public class BoxHView: BoxView {
         
         if view.isHidden {
             let prevView: UIView? = index == 0 ? nil : items[index - 1].view
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 if let prevView = prevView {
-                    item.left = make.left.equalTo(prevView.snp.right).offset(space).constraint
+                    item.leading = make.leading.equalTo(prevView.snp.right).offset(space).constraint
                 } else {
-                    item.left = make.left.equalTo(inset.left).constraint
+                    item.leading = make.leading.equalTo(inset.left).constraint
                 }
             }
             item.uninstall()
@@ -291,29 +291,29 @@ final public class BoxHView: BoxView {
         let inset = contentInsets
         let view = item.view
         if let nextItem = nextItem {
-            nextItem.left?.deactivate()
+            nextItem.leading?.deactivate()
             let nextView = nextItem.view
-            nextView.snp.makeConstraints { (make) in
-                nextItem.left = make.left.equalTo(view.snp.right).offset(nextItem.margin).constraint
+            nextView.snp.makeConstraints { make in
+                nextItem.leading = make.leading.equalTo(view.snp.right).offset(nextItem.margin).constraint
             }
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 if let prevView = prevItem?.view {
-                    item.left = make.left.equalTo(prevView.snp.right).offset(item.margin).constraint
+                    item.leading = make.leading.equalTo(prevView.snp.right).offset(item.margin).constraint
                 } else {
-                    item.left = make.left.equalTo(inset.left).constraint
+                    item.leading = make.leading.equalTo(inset.left).constraint
                 }
             }
         } else {
             let prevView = prevItem?.view
             rightConstraint?.deactivate()
             
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 if let prevView = prevView {
-                    item.left = make.left.equalTo(prevView.snp.right).offset(item.margin).constraint
+                    item.leading = make.leading.equalTo(prevView.snp.right).offset(item.margin).constraint
                 } else {
-                    item.left = make.left.equalTo(inset.left).constraint
+                    item.leading = make.leading.equalTo(inset.left).constraint
                 }
-                rightConstraint = make.right.equalTo(-inset.right).constraint
+                rightConstraint = make.trailing.equalTo(-inset.right).constraint
             }
         }
     }
@@ -324,19 +324,19 @@ final public class BoxHView: BoxView {
     private func _reconnect(from nextItem: BoxHItem?, to prevItem: BoxHItem?, skipOver item: BoxHItem) {
         let inset = contentInsets
         if let nextItem = nextItem {
-            nextItem.left?.deactivate()
-            nextItem.view.snp.makeConstraints { (make) in
+            nextItem.leading?.deactivate()
+            nextItem.view.snp.makeConstraints { make in
                 if let prevView = prevItem?.view {
-                    nextItem.left = make.left.equalTo(prevView.snp.right).offset(nextItem.margin).constraint
+                    nextItem.leading = make.leading.equalTo(prevView.snp.right).offset(nextItem.margin).constraint
                 } else {
-                    nextItem.left = make.left.equalTo(inset.left).constraint
+                    nextItem.leading = make.leading.equalTo(inset.left).constraint
                 }
             }
         } else {
             rightConstraint?.deactivate()
             if let prevView = prevItem?.view {
-                prevView.snp.makeConstraints { (make) in
-                    rightConstraint = make.right.equalTo(-inset.right).constraint
+                prevView.snp.makeConstraints { make in
+                    rightConstraint = make.trailing.equalTo(-inset.right).constraint
                 }
             } else {
                 rightConstraint = nil
@@ -353,7 +353,7 @@ final public class BoxHView: BoxView {
     
     private class BoxHItem {
         var margin: CGFloat = .zero
-        var left: Constraint?
+        var leading: Constraint?
         var top: Constraint?
         var centerY: Constraint?
         var bottom: Constraint?
@@ -363,7 +363,7 @@ final public class BoxHView: BoxView {
             self.view = view
         }
         func installCons() {
-            left?.activate()
+            leading?.activate()
             installVCons()
         }
         func installVCons() {
@@ -372,13 +372,13 @@ final public class BoxHView: BoxView {
             bottom?.activate()
         }
         func uninstall() {
-            left?.deactivate()
+            leading?.deactivate()
             top?.deactivate()
             centerY?.deactivate()
             bottom?.deactivate()
         }
         func makeVCons(alignment: FlexView.CrossAlignment, inset: UIEdgeInsets) {
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 switch(alignment) {
                     
                 case .start:
@@ -430,11 +430,11 @@ final public class BoxVView: BoxView {
         
         if view.isHidden {
             let prevView: UIView? = index == 0 ? nil : items[index - 1].view
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 if let prevView = prevView {
                     item.top = make.top.equalTo(prevView.snp.bottom).offset(space).constraint
                 } else {
-                    item.top = make.left.equalTo(inset.top).constraint
+                    item.top = make.leading.equalTo(inset.top).constraint
                 }
             }
             item.uninstall()
@@ -514,21 +514,21 @@ final public class BoxVView: BoxView {
         if let nextItem = nextItem {
             nextItem.top?.deactivate()
             let nextView = nextItem.view
-            nextView.snp.makeConstraints { (make) in
+            nextView.snp.makeConstraints { make in
                 nextItem.top = make.top.equalTo(view.snp.bottom).offset(nextItem.margin).constraint
             }
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 if let prevView = prevItem?.view {
                     item.top = make.top.equalTo(prevView.snp.bottom).offset(item.margin).constraint
                 } else {
-                    item.top = make.left.equalTo(inset.top).constraint
+                    item.top = make.leading.equalTo(inset.top).constraint
                 }
             }
         } else {
             let prevView = prevItem?.view
             bottomConstraint?.deactivate()
             
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
                 if let prevView = prevView {
                     item.top = make.top.equalTo(prevView.snp.bottom).offset(item.margin).constraint
                 } else {
@@ -546,7 +546,7 @@ final public class BoxVView: BoxView {
         let inset = contentInsets
         if let nextItem = nextItem {
             nextItem.top?.deactivate()
-            nextItem.view.snp.makeConstraints { (make) in
+            nextItem.view.snp.makeConstraints { make in
                 if let prevView = prevItem?.view {
                     nextItem.top = make.top.equalTo(prevView.snp.bottom).offset(nextItem.margin).constraint
                 } else {
@@ -556,7 +556,7 @@ final public class BoxVView: BoxView {
         } else {
             bottomConstraint?.deactivate()
             if let prevView = prevItem?.view {
-                prevView.snp.makeConstraints { (make) in
+                prevView.snp.makeConstraints { make in
                     bottomConstraint = make.bottom.equalTo(-inset.bottom).constraint
                 }
             } else {
@@ -575,9 +575,9 @@ final public class BoxVView: BoxView {
     private class BoxVItem {
         var margin: CGFloat = .zero
         var top: Constraint?
-        var left: Constraint?
+        var leading: Constraint?
         var centerX: Constraint?
-        var right: Constraint?
+        var trailing: Constraint?
         
         unowned let view: UIView
         init(view: UIView) {
@@ -588,30 +588,31 @@ final public class BoxVView: BoxView {
             installHCons()
         }
         func installHCons() {
-            left?.activate()
+            leading?.activate()
             centerX?.activate()
-            right?.activate()
+            trailing?.activate()
         }
         func uninstall() {
             top?.deactivate()
-            left?.deactivate()
+            leading?.deactivate()
             centerX?.deactivate()
-            right?.deactivate()
+            trailing?.deactivate()
         }
         func makeHCons(alignment: FlexView.CrossAlignment, inset: UIEdgeInsets) {
-            view.snp.makeConstraints { (make) in
+            view.snp.makeConstraints { make in
+                
                 switch(alignment) {
-                    
+                
                 case .start:
-                    left = make.left.equalTo(inset.left).constraint
-                    right = make.right.lessThanOrEqualTo(-inset.right).constraint
+                    leading = make.leading.equalTo(inset.left).constraint
+                    trailing = make.trailing.lessThanOrEqualTo(-inset.right).constraint
                 case .center:
-                    left = make.left.greaterThanOrEqualTo(inset.left).constraint
-                    right = make.right.lessThanOrEqualTo(-inset.right).constraint
+                    leading = make.leading.greaterThanOrEqualTo(inset.left).constraint
+                    trailing = make.trailing.lessThanOrEqualTo(-inset.right).constraint
                     centerX = make.centerX.equalTo(view.superview!).constraint
                 case .end:
-                    left = make.left.greaterThanOrEqualTo(inset.left).constraint
-                    right = make.right.equalTo(-inset.right).constraint
+                    leading = make.leading.greaterThanOrEqualTo(inset.left).constraint
+                    trailing = make.trailing.equalTo(-inset.right).constraint
                 }
             }
         }

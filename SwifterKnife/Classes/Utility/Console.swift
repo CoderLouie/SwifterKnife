@@ -7,21 +7,20 @@
 
 import Foundation
  
-
 public enum Console {
     private static let dataFmt: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         return formatter
     }()
-    static var timeString: String {
+    private static var timeString: String {
         return dataFmt.string(from: Date())
     }
     
-    static var printEnable: Bool = App.isDebug
-    static var nslogEnable: Bool = App.isDebug
+    public static var printEnable: Bool = App.isDebug
+    public static var nslogEnable: Bool = App.isDebug
     // 18:25:35.473 ATViewController.swift 26 deinit
-    static func log(_ items: Any...,
+    public static func log(_ items: Any...,
                   separator: String = " ",
                  terminator: String = "\n",
                        file: NSString = #file,
@@ -35,9 +34,8 @@ public enum Console {
         print(prefix, content, terminator: terminator)
     }
      
-    /// 重要的日志记录，测试人员和开发人员查看
-    // 18:25:35.473 ATViewController.swift 26
-    static func trace(_ items: Any...,
+    /// 重要的日志记录，测试人员和开发人员查看 
+    public static func trace(_ items: Any...,
                   separator: String = " ",
                  terminator: String = "\n",
                        file: NSString = #file,

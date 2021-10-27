@@ -27,11 +27,13 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source           = { :git => 'https://github.com/CoderLouie/SwifterKnife.git', :tag => s.version.to_s }
   
-  s.source_files =
-  'SwifterKnife/Classes/Base/**/*',
-  'SwifterKnife/Classes/Extension/**/*',
-  'SwifterKnife/Classes/Utility/**/*',
-  'SwifterKnife/Classes/Views/**/*'
+#  s.source_files =
+#  'SwifterKnife/Classes/Base/**/*',
+#  'SwifterKnife/Classes/Extension/**/*',
+#  'SwifterKnife/Classes/Utility/**/*',
+#  'SwifterKnife/Classes/Views/**/*'
+  s.source_files = 'SwifterKnife/Classes/**/*'
+
   
   s.public_header_files = 'SwifterKnife/Classes/**/*.h'
   

@@ -14,16 +14,14 @@
 #define SF_Value(value) \
 [SwiftyFitsize sf_float:value]
 
-#define SafeInsetT \
-[SwiftyFitsize shared] sf_safeInsetT]
+#define SFH_Value(value) \
+[SwiftyFitsize sfh_float:value]
 
-#define SafeInsetB \
-[SwiftyFitsize sf_safeInsetB]
+#define SFT_Value(value) \
+[SwiftyFitsize sft_float:value]
+
+#define SFC_Value(value) \
+[SwiftyFitsize sfc_float:value]
  
-#define NavBarH \
-[SwiftyFitsize sf_navbarH]
-
-#define TabBarH \
-[SwiftyFitsize sf_tabbarH]
 
 #endif /* SwiftFitSizeOC_h */

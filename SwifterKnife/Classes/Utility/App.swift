@@ -7,12 +7,11 @@
 
 import UIKit
  
-
-enum App {
+public enum App {
     
-    /// App是否处于debug模式
-    static var isDebug: Bool {
-        #if DEVELOPMENT
+    /// 是否处于debug模式
+    public static var isDebug: Bool {
+        #if DEBUG
         return true
         #else
         return false

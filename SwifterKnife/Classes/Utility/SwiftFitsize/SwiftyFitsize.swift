@@ -31,12 +31,9 @@ import UIKit
 }
 
 @objc public final class SwiftyFitsize: NSObject {
-    static let _shared = SwiftyFitsize()
     private override init() { }
     
-    @objc public class func shared() -> SwiftyFitsize {
-        return SwiftyFitsize._shared
-    }
+    @objc public static let shared = SwiftyFitsize()
     
     /// 默认参照宽度
     @objc public private(set) var referenceW: CGFloat = 375
@@ -47,18 +44,18 @@ import UIKit
     /// 默认 iPad 适配缩放倍数 (0 , 1]
     @objc public private(set) var iPadFitMultiple: CGFloat = 0.5
     /// 中间安全区域参照高度
-    var referenceBodyHeight: CGFloat {
+    @objc public var referenceBodyHeight: CGFloat {
         if !isIPhoneXSeriesHeight { return referenceH }
         return referenceH - Screen.safeAreaT - Screen.safeAreaB
     }
     /// 仅去除顶部后的安全区域参照高度
-    var referenceWithoutHeaderHeight: CGFloat {
+    @objc public var referenceWithoutHeaderHeight: CGFloat {
         if !isIPhoneXSeriesHeight { return referenceH }
         return referenceH - Screen.safeAreaT
     }
     /// 适配倍数
-    var fitMultiple: CGFloat {
-        return Screen.isIPad ? Self._shared.iPadFitMultiple : 1
+    @objc public var fitMultiple: CGFloat {
+        return Screen.isIPad ? iPadFitMultiple : 1
     }
      
     
@@ -74,10 +71,10 @@ import UIKit
         isIPhoneXSeriesHeight: Bool = true,
         iPadFitMultiple: CGFloat = 0.5
     ) {
-        Self._shared.referenceW = width
-        Self._shared.referenceH = height
-        Self._shared.isIPhoneXSeriesHeight = isIPhoneXSeriesHeight
-        Self._shared.iPadFitMultiple =
+        shared.referenceW = width
+        shared.referenceH = height
+        shared.isIPhoneXSeriesHeight = isIPhoneXSeriesHeight
+        shared.iPadFitMultiple =
             (iPadFitMultiple > 1 || iPadFitMultiple < 0) ? 1 : iPadFitMultiple
     }
     
@@ -127,15 +124,15 @@ public extension SwiftyFitsizeable {
     var fitC: TargetType { return sf(.flexibleSafeAreaCenterHeight) }
 }
 
-public protocol CGFloatFitsizeable: SwiftyFitsizeable {
+fileprivate protocol CGFloatFitsizeable: SwiftyFitsizeable {
     var cgfloatValue: CGFloat { get }
 }
-public extension CGFloatFitsizeable {
-    func sf(_ type: SwiftyFitType) -> CGFloat {
-        return SwiftyFitsize._shared.fitNumber(self.cgfloatValue, fitType: type)
+extension CGFloatFitsizeable {
+    public func sf(_ type: SwiftyFitType) -> CGFloat {
+        return SwiftyFitsize.shared.fitNumber(self.cgfloatValue, fitType: type)
     }
 }
-public extension CGFloatFitsizeable where Self: BinaryInteger {
+extension CGFloatFitsizeable where Self: BinaryInteger {
     var cgfloatValue: CGFloat { return CGFloat(self) }
 }
  
@@ -151,7 +148,7 @@ extension UInt16: CGFloatFitsizeable {}
 extension UInt8: CGFloatFitsizeable {}
 
 
-public extension CGFloatFitsizeable where Self: BinaryFloatingPoint {
+extension CGFloatFitsizeable where Self: BinaryFloatingPoint {
     var cgfloatValue: CGFloat { return CGFloat(self) }
 }
 extension Double: CGFloatFitsizeable {}
@@ -165,7 +162,7 @@ extension CGFloat: CGFloatFitsizeable {
 
 extension UIFont: SwiftyFitsizeable {
     public func sf(_ type: SwiftyFitType) -> UIFont {
-        return self.withSize(round(self.pointSize.sf(type))) as! Self
+        return self.withSize(round(self.pointSize.sf(type)))
     }
 }
 extension CGPoint: SwiftyFitsizeable {
@@ -204,45 +201,36 @@ public extension SwiftyFitsize {
     @objc static func sf_float(_ value: CGFloat) -> CGFloat {
         value.fit
     }
-    @objc static func sf_safeInsetT() -> CGFloat {
-        Screen.safeAreaT
+    @objc static func sfh_float(_ value: CGFloat) -> CGFloat {
+        value.fitH
     }
-    @objc static func sf_safeInsetB() -> CGFloat {
-        Screen.safeAreaB
+    @objc static func sft_float(_ value: CGFloat) -> CGFloat {
+        value.fitT
+    }
+    @objc static func sfc_float(_ value: CGFloat) -> CGFloat {
+        value.fitC
     }
     @objc static func sf_font(_ font: UIFont) -> UIFont {
         font.fit
     }
-    
-    @objc static func sf_navbarH() -> CGFloat {
-        Screen.navbarH
-    }
-    @objc static func sf_tabbarH() -> CGFloat {
-        Screen.tabbarH
-    }
 }
 
 
-struct Screen {
+@objc public final class Screen: NSObject {
+    private override init() { }
+    
     private static let sw: CGFloat = UIScreen.main.bounds.width
     private static let sh: CGFloat = UIScreen.main.bounds.height
     
-    static var width: CGFloat { sw < sh ? sw : sh }
-    static var height: CGFloat { sw < sh ? sh : sw }
+    @objc public static var width: CGFloat { sw < sh ? sw : sh }
+    @objc public static var height: CGFloat { sw < sh ? sh : sw }
     
-    static let scale = UIScreen.main.scale
-     
-    static var bodyHeight: CGFloat {
-        return height - safeAreaT - safeAreaB
-    }
-    static var withoutHeaderHeight: CGFloat {
-        return height - safeAreaT
-    }
+    @objc public static let scale = UIScreen.main.scale
     
-    static var isIPad: Bool {
+    @objc public static var isIPad: Bool {
         UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
     }
-    static let isIphneXSeries: Bool = {
+    @objc public static let isIphneXSeries: Bool = {
         var bottomSafeInset: CGFloat = 0
         if #available(iOS 11.0, *) {
             bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
@@ -251,12 +239,12 @@ struct Screen {
     }()
     
     /// 当前是否是竖屏
-    static var isPortrait: Bool {
+    @objc public static var isPortrait: Bool {
         return UIApplication.shared.statusBarOrientation.isPortrait
     }
     
     /// 安全区域刘海一侧的间距 (20/44/50)
-    static var safeAreaT: CGFloat {
+    @objc public static var safeAreaT: CGFloat {
         let inset = safeAreaInsets
         switch UIApplication.shared.statusBarOrientation {
         case .portrait, .portraitUpsideDown: return inset.top
@@ -265,9 +253,9 @@ struct Screen {
         default: return 0
         }
     }
-        
+    
     /// 安全区域刘海对侧的间距
-    static var safeAreaB: CGFloat {
+    @objc public static var safeAreaB: CGFloat {
         let inset = safeAreaInsets
         switch UIApplication.shared.statusBarOrientation {
         case .portrait, .portraitUpsideDown: return inset.bottom
@@ -276,22 +264,23 @@ struct Screen {
         default: return 0
         }
     }
-    static var safeAreaCenterH: CGFloat {
+    
+    @objc public static var bodyHeight: CGFloat {
         return height - safeAreaT - safeAreaB
     }
-    static var safeAreaH: CGFloat {
+    @objc public static var withoutHeaderHeight: CGFloat {
         return height - safeAreaT
     }
     // 44 + 20 ---- (44/50) + 44
-    static var navbarH: CGFloat {
+    @objc public static var navbarH: CGFloat {
         safeAreaT + 44
     }
     // 49 --- 49 + 34
-    static var tabbarH: CGFloat {
+    @objc public static var tabbarH: CGFloat {
         safeAreaB + 49
     }
     
-    static var currentWindow: UIWindow? {
+    @objc public static var currentWindow: UIWindow? {
         if let window = UIApplication.shared.delegate?.window {
             return window
         }
@@ -306,7 +295,7 @@ struct Screen {
         return UIApplication.shared.keyWindow
     }
     
-    static var safeAreaInsets: UIEdgeInsets {
+    @objc public static var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
             guard let window = currentWindow else { return .zero }
             if let inset = window.rootViewController?.view.safeAreaInsets,
@@ -317,7 +306,7 @@ struct Screen {
         return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
     }
     
-    static var frontViewController: UIViewController {
+    @objc public static var frontViewController: UIViewController {
         guard let window = currentWindow,
               let rootVC = window.rootViewController else {
             fatalError()
@@ -326,8 +315,8 @@ struct Screen {
     }
 }
  
-public extension UIViewController {
-    func front() -> UIViewController {
+extension UIViewController {
+    public func front() -> UIViewController {
         if let presented = self.presentedViewController {
             return presented.front()
         } else if let nav = self as? UINavigationController,
