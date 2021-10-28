@@ -40,16 +40,16 @@ import Foundation
 
  - SeeAlso: Grand Central Dispatch
  */
-public enum GCD {
+fileprivate enum GCD {
 
 }
-public extension GCD {
+fileprivate extension GCD {
     enum Queue {
         case main, userInteractive, userInitiated, utility, background, custom(queue: DispatchQueue)
     }
 }
 
-public extension GCD {
+fileprivate extension GCD {
     @discardableResult
     static func async(on queue: Queue, after seconds: TimeInterval? = nil, execute work: @escaping () -> Void) -> DispatchWorkItem {
         let item = DispatchWorkItem(block: work)
@@ -736,12 +736,12 @@ public struct AsyncGroup {
         return group.wait(timeout: timeout)
     }
     
-    @discardableResult
-    public func notify(on queue: GCD.Queue, execute: @escaping () -> Void) -> DispatchWorkItem {
-        let item = DispatchWorkItem(block: execute)
-        group.notify(queue: queue.rawValue, work: item)
-        return item
-    }
+//    @discardableResult
+//    public func notify(on queue: GCD.Queue, execute: @escaping () -> Void) -> DispatchWorkItem {
+//        let item = DispatchWorkItem(block: execute)
+//        group.notify(queue: queue.rawValue, work: item)
+//        return item
+//    }
 }
 
 

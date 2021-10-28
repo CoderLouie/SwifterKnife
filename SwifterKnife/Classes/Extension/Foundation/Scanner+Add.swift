@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Scanner {
+public extension Scanner {
     // 方便 Debug时查看当前扫描到哪里了
     func peek(range: ClosedRange<Int>) -> String? {
         let i = scanLocation

@@ -31,12 +31,12 @@ import Foundation
 /*
  let unreadArticles = articles.filter(!\.isRead)
  */
-prefix func !<T>(keyPath: KeyPath<T, Bool>) -> (T) -> Bool {
+public prefix func !<T>(keyPath: KeyPath<T, Bool>) -> (T) -> Bool {
     return { !$0[keyPath: keyPath] }
 }
 /*
  let fullLengthArticles = articles.filter(\.category == .fullLength)
  */
-func ==<T, V: Equatable>(lhs: KeyPath<T, V>, rhs: V) -> (T) -> Bool {
+public func ==<T, V: Equatable>(lhs: KeyPath<T, V>, rhs: V) -> (T) -> Bool {
     return { $0[keyPath: lhs] == rhs }
 }

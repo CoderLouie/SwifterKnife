@@ -45,6 +45,24 @@ public extension DispatchQueue {
 import Foundation
 
 public extension DispatchQueue {
+    var userInteractive: DispatchQueue {
+        .global(qos: .userInteractive)
+    }
+    var userInitiated: DispatchQueue {
+        .global(qos: .userInitiated)
+    }
+    var utility: DispatchQueue {
+        .global(qos: .utility)
+    }
+    var background: DispatchQueue {
+        .global(qos: .background)
+    }
+    var `default`: DispatchQueue {
+        .global(qos: .default)
+    }
+}
+
+public extension DispatchQueue {
     /// Execute the provided closure after a `TimeInterval`.
     ///
     /// - Parameters:

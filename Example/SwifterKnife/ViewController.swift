@@ -15,6 +15,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        Console.log("hello")
+        Console.logFunc()
+        Console.trace("world")
+        
         let stack: Queue<Int> = [1, 2, 3, 4]
         for val in stack {
             print(val)
