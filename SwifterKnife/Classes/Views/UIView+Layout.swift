@@ -32,7 +32,28 @@ public extension UIView {
             }
         }
     }
-    func embedInverticallyScrollView() {
+    func embedInVerticallyScrollView(
+        _ contentConfig: (FlexVView) -> Void,
+        _ scrollConfig: ((UIScrollView) -> Void)? = nil) -> FlexVView {
         
+        let box = UIScrollView().then { s in
+            s.showsVerticalScrollIndicator = false
+            s.showsHorizontalScrollIndicator = false
+            s.backgroundColor = .clear
+            scrollConfig?(s)
+            addSubview(s)
+            s.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+        return FlexVView().then {
+            contentConfig($0)
+            box.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.edges.equalTo(box)
+                make.width.equalTo(self.snp.width)
+                make.width.equalToSuperview()
+            }
+        }
     }
 }
