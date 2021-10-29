@@ -8,17 +8,11 @@
 import Foundation
 
 // MARK: - CarouselViewDelegate
-public protocol CarouselViewDelegate: AnyObject {
-    func carouselView(_ carouselView: CarouselView, didSelect cell: CarouselViewCell, at index: Int)
-    func carouselView(_ carouselView: CarouselView, didDeselect cell: CarouselViewCell, at index: Int)
-    func carouselView(_ carouselView: CarouselView, willAppear cell: CarouselViewCell, at index: Int)
-    func carouselView(_ carouselView: CarouselView, willDisappear cell: CarouselViewCell, at index: Int)
-}
-extension CarouselViewDelegate {
-    func carouselView(_ carouselView: CarouselView, didSelectRowAt index: Int) { }
-    func carouselView(_ carouselView: CarouselView, didDeselectRowAt index: Int) { }
-    func carouselView(_ carouselView: CarouselView, willAppear cell: CarouselViewCell, at index: Int) { }
-    func carouselView(_ carouselView: CarouselView, willDisappear cell: CarouselViewCell, at index: Int) { }
+@objc public protocol CarouselViewDelegate {
+    @objc optional func carouselView(_ carouselView: CarouselView, didSelect cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, didDeselect cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, willAppear cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, willDisappear cell: CarouselViewCell, at index: Int)
 }
 
 
@@ -107,8 +101,8 @@ open class CarouselView: UIView {
                 reset()
             case .none:  break
             }
-            delegate?.carouselView(self, willDisappear: currentCell, at: currentIndex)
-            delegate?.carouselView(self, willAppear: nextCell, at: nextIndex)
+            delegate?.carouselView?(self, willDisappear: currentCell, at: currentIndex)
+            delegate?.carouselView?(self, willAppear: nextCell, at: nextIndex)
         }
     }
     
@@ -131,7 +125,7 @@ open class CarouselView: UIView {
         // cells
         currentCell.frame = CGRect(origin: CGPoint(x: width, y: 0), size: bounds.size)
         nextCell.frame = CGRect(origin: CGPoint(x: width * 2, y: 0), size: bounds.size)
-        delegate?.carouselView(self, didSelect: currentCell, at: currentIndex)
+        delegate?.carouselView?(self, didSelect: currentCell, at: currentIndex)
     }
 }
 
@@ -189,8 +183,8 @@ extension CarouselView: UIScrollViewDelegate {
         let index = scrollView.contentOffset.x / side
         if index == 1 { return }
         
-        delegate?.carouselView(self, didDeselect: currentCell, at: currentIndex)
-        delegate?.carouselView(self, didSelect: nextCell, at: nextIndex)
+        delegate?.carouselView?(self, didDeselect: currentCell, at: currentIndex)
+        delegate?.carouselView?(self, didSelect: nextCell, at: nextIndex)
         
         reset()
     }
