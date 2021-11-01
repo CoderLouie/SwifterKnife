@@ -15,6 +15,13 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF0272BDC34001BBBE1 /* IAP.swift */; };
+		B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF3272BE66E001BBBE1 /* Query.swift */; };
+		B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */; };
+		B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF7272BED70001BBBE1 /* Payment.swift */; };
+		B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFA272BF3F2001BBBE1 /* PaymentQueueControl.swift */; };
+		B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFC272BF47C001BBBE1 /* PurchaseControl.swift */; };
+		B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */; };
 		B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 /* End PBXBuildFile section */
@@ -48,6 +55,13 @@
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		B6B5FAF0272BDC34001BBBE1 /* IAP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAP.swift; sourceTree = "<group>"; };
+		B6B5FAF3272BE66E001BBBE1 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPRequest.swift; sourceTree = "<group>"; };
+		B6B5FAF7272BED70001BBBE1 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		B6B5FAFA272BF3F2001BBBE1 /* PaymentQueueControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentQueueControl.swift; sourceTree = "<group>"; };
+		B6B5FAFC272BF47C001BBBE1 /* PurchaseControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseControl.swift; sourceTree = "<group>"; };
+		B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreControl.swift; sourceTree = "<group>"; };
 		B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
@@ -108,6 +122,7 @@
 		607FACD21AFB9204008FA782 /* Example for SwifterKnife */ = {
 			isa = PBXGroup;
 			children = (
+				B6B5FAF2272BE558001BBBE1 /* IAP */,
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
@@ -167,6 +182,28 @@
 				9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		B6B5FAF2272BE558001BBBE1 /* IAP */ = {
+			isa = PBXGroup;
+			children = (
+				B6B5FAF9272BF3D8001BBBE1 /* Payment */,
+				B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */,
+				B6B5FAF0272BDC34001BBBE1 /* IAP.swift */,
+				B6B5FAF3272BE66E001BBBE1 /* Query.swift */,
+			);
+			name = IAP;
+			sourceTree = "<group>";
+		};
+		B6B5FAF9272BF3D8001BBBE1 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				B6B5FAF7272BED70001BBBE1 /* Payment.swift */,
+				B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */,
+				B6B5FAFC272BF47C001BBBE1 /* PurchaseControl.swift */,
+				B6B5FAFA272BF3F2001BBBE1 /* PaymentQueueControl.swift */,
+			);
+			name = Payment;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -345,9 +382,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
+				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
+				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
+				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
+				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

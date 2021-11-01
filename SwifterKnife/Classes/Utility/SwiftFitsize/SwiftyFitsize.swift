@@ -335,3 +335,11 @@ extension UIViewController {
         }
     }
 }
+
+public extension CGFloat {
+    /// 向下像素化对齐
+    var pix: CGFloat {
+        let scale = Screen.scale
+        return Darwin.floor(self * scale) / scale
+    }
+}

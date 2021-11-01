@@ -27,13 +27,17 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         return availableLanguages.map(Language.init(rawValue:))
     }
     
+    public static var loadDefault: ((_ code: String) -> Language)?
     public static var `default`: Language {
 //        guard let first = Bundle.main.preferredLocalizations.first else {
 //            return .en
 //        }
-        guard let first = Locale.preferredLanguages.first else { return .en }
+        guard let code = Locale.preferredLanguages.first else { return .en }
+        if let config = loadDefault {
+            return config(code)
+        }
         
-        let preferedLan = Language(rawValue: first)
+        let preferedLan = Language(rawValue: code)
         return preferedLan
 //        if (available().contains(preferedLan)) {
 //            return preferedLan
@@ -118,14 +122,4 @@ public extension Language {
     /// 阿拉伯语 Arabic
     static var ar: Language { .init(rawValue: "ar") }
     */
-}
-
-extension Language {
-    
-    public struct Table: RawRepresentable, Equatable, Hashable {
-        public let rawValue: String
-        public init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-    }
-}
+} 

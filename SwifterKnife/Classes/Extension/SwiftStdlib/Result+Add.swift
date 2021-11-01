@@ -5,7 +5,7 @@
 //  Created by liyang on 2021/10/19.
 //
 
-extension Result {
+public extension Result {
     /// Returns whether the instance is `.success`.
     var isSuccess: Bool {
         guard case .success = self else { return false }

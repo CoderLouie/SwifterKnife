@@ -51,7 +51,7 @@ open class CarouselView: UIView {
     }
     
     /// 当前索引, 用于currentCell
-    private(set) var currentIndex = 0
+    public private(set) var currentIndex = 0
     private unowned var currentCell: CarouselViewCell!
     /// next索引, 用于nextCell
     private var nextIndex = -1

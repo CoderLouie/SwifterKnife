@@ -333,6 +333,24 @@ public extension ViewAddition where Self: UIView {
 
 
 public extension UIView {
+    var middleW: CGFloat {
+        return frame.size.width * 0.5
+    }
+    var middleH: CGFloat {
+        get { center.x }
+        set { center = CGPoint(x: newValue, y: center.y) }
+    }
+}
+
+/*
+public extension UIView {
+    var centerX: CGFloat {
+        get { center.y }
+        set { center = CGPoint(x: center.x, y: newValue) }
+    }
+    var centerY: CGFloat {
+        return frame.size.height * 0.5
+    }
     var origin: CGPoint {
         get {
             return frame.origin
@@ -364,12 +382,6 @@ public extension UIView {
         set {
             frame.size.height = newValue
         }
-    }
-    var middleW: CGFloat {
-        return frame.size.width * 0.5
-    }
-    var middleH: CGFloat {
-        return frame.size.height * 0.5
     }
     var left: CGFloat {
         get {
@@ -404,3 +416,4 @@ public extension UIView {
         }
     }
 }
+ */

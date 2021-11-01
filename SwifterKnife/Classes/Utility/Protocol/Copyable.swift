@@ -7,19 +7,19 @@
 
 import Foundation
 
-protocol Copyable: AnyObject {
+public protocol Copyable: AnyObject {
     associatedtype T
     
     func copyable() -> T
 }
 
-extension Copyable where Self: NSObject {
+public extension Copyable where Self: NSObject {
     func copyable() -> Self {
         copy() as! Self
     }
 }
 
-extension Copyable where Self: DataCodable {
+public extension Copyable where Self: DataCodable {
     func copyable() -> Self {
         guard let data = try? encode(),
               let copied = try? Self.decode(with: data) else {

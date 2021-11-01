@@ -12,7 +12,7 @@ import Foundation
 public protocol DataEncodable {
     func encode() throws -> Data
 }
-extension DataEncodable {
+public extension DataEncodable {
     func toJSON() -> [String: Any] {
         guard let data = try? encode(),
               let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
@@ -36,12 +36,12 @@ extension DataEncodable {
     }
 }
 
-extension DataEncodable where Self: Encodable {
+public extension DataEncodable where Self: Encodable {
     func encode() throws -> Data {
         try JSONEncoder().encode(self)
     }
 }
-extension DataEncodable where Self: NSCoding {
+public extension DataEncodable where Self: NSCoding {
     func encode() throws -> Data {
         NSKeyedArchiver.archivedData(withRootObject: self)
     }
@@ -51,7 +51,7 @@ extension DataEncodable where Self: NSCoding {
 public protocol DataDecodable {
     static func decode(with data: Data) throws -> Self
 }
-extension DataDecodable {
+public extension DataDecodable {
     static func decode(from json: [String: Any]) throws -> Self {
         let data = try JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
         return try decode(with: data)

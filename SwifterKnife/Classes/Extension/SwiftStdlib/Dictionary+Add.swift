@@ -281,7 +281,7 @@ public extension Dictionary {
 
 
 
-extension Dictionary {
+public extension Dictionary {
     func pick(keys: Key...) -> [Key: Value] {
         var result: [Key: Value] = [:]
         keys.forEach { result[$0] = self[$0] }

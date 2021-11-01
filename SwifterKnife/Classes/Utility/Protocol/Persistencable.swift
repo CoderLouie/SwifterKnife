@@ -10,7 +10,7 @@ import Foundation
 /// 可持久化的
 public protocol Persistencable: DataCodable { }
 
-extension Persistencable {
+public extension Persistencable {
     @discardableResult
     func save(toFile path: String) -> Bool {
         do {

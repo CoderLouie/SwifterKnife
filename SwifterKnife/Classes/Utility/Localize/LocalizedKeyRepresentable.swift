@@ -12,32 +12,40 @@ import Foundation
 public protocol LocalizedKeyRepresentable {
     var localizeKey: String { get }
     
-    var table: Language.Table? { get }
+    var table: String? { get }
     static var bundle: Bundle { get }
 }
 public extension LocalizedKeyRepresentable {
-    var table: Language.Table? { nil }
+    var table: String? { nil }
     static var bundle: Bundle { .main }
 }
 
 
 public extension LocalizedKeyRepresentable {
     var localized: String {
-        localized(using: .current)
+        NSLocalizedString(localizeKey, tableName: table, bundle: Self.bundle, value:"", comment:"")
     }
-    func localized(using language: Language) -> String {
+    
+    func localizedFormat(with args: CVarArg...) -> String {
+        String(format: localized, arguments: args)
+    }
+    
+    var slocalized: String {
+        slocalized(using: .current)
+    }
+    func slocalized(using language: Language) -> String {
         let key = localizeKey
         func query(in code: Language) -> String? {
             if let path = Self.bundle.path(forResource: code.rawValue, ofType: "lproj"),
                   let bundle = Bundle(path: path)  {
-                return bundle.localizedString(forKey: key, value: nil, table: table?.rawValue)
+                return bundle.localizedString(forKey: key, value: nil, table: table)
             }
             return nil
         }
         return query(in: language) ?? query(in: .base) ?? key
     }
-    func localizedFormat(with args: CVarArg..., using lan: Language? = nil) -> String {
-        return String(format: localized(using: lan ?? .current), arguments: args)
+    func slocalizedFormat(with args: CVarArg..., using lan: Language? = nil) -> String {
+        return String(format: slocalized(using: lan ?? .current), arguments: args)
     }
 }
 
@@ -54,25 +62,14 @@ extension String: LocalizedKeyRepresentable {
 
 
 public struct LocalizedKey {
-    public private(set) var key: String
-    public private(set) var tableName: String
-    init(_ key: String, _ tableName: String) {
+    public let key: String
+    public let tableName: String
+    public init(_ key: String, _ tableName: String) {
         self.key = key
         self.tableName = tableName
     }
 }
 extension LocalizedKey: LocalizedKeyRepresentable {
     public var localizeKey: String { key }
-    public var table: Language.Table? {
-        .init(rawValue: tableName)
-    }
-}
-
-/*
-extension String {
-   var gif: LocalizedKey {
-       LocalizedKey(self, "Gif")
-   }
-}
- 
-*/
+    public var table: String? { tableName }
+} 
