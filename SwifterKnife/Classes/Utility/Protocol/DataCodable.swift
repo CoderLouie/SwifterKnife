@@ -66,13 +66,13 @@ public extension DataDecodable {
 }
 
 
-extension DataDecodable where Self: Decodable {
+public extension DataDecodable where Self: Decodable {
     static func decode(with data: Data) throws -> Self {
         try JSONDecoder().decode(Self.self, from: data)
     }
 }
 
-extension DataDecodable where Self: NSCoding {
+public extension DataDecodable where Self: NSCoding {
     static func decode(with data: Data) throws -> Self {
         guard let model = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
             fatalError()

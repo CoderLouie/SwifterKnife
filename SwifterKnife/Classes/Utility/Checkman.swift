@@ -1,9 +1,8 @@
 //
 //  Checkman.swift
-//  VideoCutter
+//  SwifterKnife
 //
-//  Created by 李阳 on 2021/9/1.
-//  Copyright © 2021 gomo. All rights reserved.
+//  Created by liyang on 2021/10/24.
 //
 
 import Foundation
