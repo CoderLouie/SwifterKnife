@@ -111,7 +111,7 @@ public final class Checkman<T: TicketHandle> {
                     self.retryCount += 1
                     self.handle(tickt: item, at: path, by: manager)
                 case .retryWithDelay(let timeDelay):
-                    self.workQueue.after(timeDelay) {
+                    self.workQueue.asyncAfter(deadline: .now() + timeDelay) {
                         self.retryCount += 1
                         self.handle(tickt: item, at: path, by: manager)
                     }
