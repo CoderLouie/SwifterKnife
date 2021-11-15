@@ -116,7 +116,7 @@ public final class Checkman<T: TicketHandle> {
                         self.handle(tickt: item, at: path, by: manager)
                     }
                 case .skipWithDelay(let timeDelay):
-                    self.workQueue.after(timeDelay) {
+                    self.workQueue.asyncAfter(deadline: .now() + timeDelay) {
                         self.skip(tickt: item, at: path, by: manager)
                     }
                 }
