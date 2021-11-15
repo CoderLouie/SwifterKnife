@@ -1,0 +1,6 @@
+framework module SwifterKnife {
+  umbrella header "SwifterKnife-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -346,31 +346,6 @@ public extension UIImage {
         return stretchableImage(withLeftCapWidth: Int(tmp.width * point.x), topCapHeight: Int(tmp.height * point.y))
     }
     
-    enum CropArea {
-        case top, left, bottom, right
-    }
-    func cropAspectFit(at area: CropArea = .top,
-                       size fitSize: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(fitSize, true, 0)
-        defer { UIGraphicsEndImageContext() }
-        switch area {
-        case .top:
-            let height = fitSize.width * size.height / size.width
-            self.draw(in: CGRect(x: 0, y: 0, width: fitSize.width, height: height))
-        case .bottom:
-            let height = fitSize.width * size.height / size.width
-            self.draw(in: CGRect(x: 0, y: size.height - height, width: fitSize.width, height: height))
-            break
-        case .left:
-            break
-        case .right:
-            break
-        }
-        
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-    
-    
     convenience init?(fileNamed name: String,
                              in bundleClass: AnyClass? = nil) {
         guard !name.hasSuffix("/") else { return nil }

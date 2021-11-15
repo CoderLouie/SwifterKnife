@@ -45,7 +45,7 @@ fileprivate enum GCD {
 }
 fileprivate extension GCD {
     enum Queue {
-        case main, userInteractive, userInitiated, utility, background, custom(queue: DispatchQueue)
+        case main, userInteractive, userInitiated, utility, `default`, background, custom(queue: DispatchQueue)
     }
 }
 
@@ -70,6 +70,7 @@ fileprivate extension GCD.Queue {
         case .userInteractive: return .global(qos: .userInteractive)
         case .userInitiated: return .global(qos: .userInitiated)
         case .utility: return .global(qos: .utility)
+        case .default: return .global()
         case .background: return .global(qos: .background)
         case .custom(let queue): return queue
         }
@@ -231,6 +232,11 @@ public struct AsyncBlock<In, Out> {
     public static func utility<O>(after seconds: Double? = nil, _ block: @escaping () -> O) -> AsyncBlock<Void, O> {
         return Async.async(after: seconds, block: block, queue: .utility)
     }
+    
+    @discardableResult
+    public static func `default`<O>(after seconds: Double? = nil, _ block: @escaping () -> O) -> AsyncBlock<Void, O> {
+        return Async.async(after: seconds, block: block, queue: .default)
+    }
 
     /**
      Sends the a block to be run asynchronously on a queue with a quality of service of QOS_CLASS_BACKGROUND.
@@ -360,7 +366,12 @@ public struct AsyncBlock<In, Out> {
     public func utility<O>(after seconds: Double? = nil, _ chainingBlock: @escaping (Out) -> O) -> AsyncBlock<Out, O> {
         return chain(after: seconds, block: chainingBlock, queue: .utility)
     }
-
+    
+    @discardableResult
+    public func `default`<O>(after seconds: Double? = nil, _ chainingBlock: @escaping (Out) -> O) -> AsyncBlock<Out, O> {
+        return chain(after: seconds, block: chainingBlock, queue: .default)
+    }
+    
     /**
      Sends the a block to be run asynchronously on a queue with a quality of service of QOS_CLASS_BACKGROUND, after the current block has finished.
 

@@ -26,13 +26,16 @@ public extension CGSize {
         return min(width, height)
     }
 
+    var standardized: CGSize {
+        return CGSize(width: abs(width), height: abs(height))
+    }
 }
 
 
 import UIKit
 public extension CGSize {
     var isEmpty: Bool {
-        width == 0 || height == 0
+        width == 0 && height == 0
     }
     
     func inset(_ inset: UIEdgeInsets) -> CGSize {
@@ -43,6 +46,8 @@ public extension CGSize {
     init(dimension: CGFloat) {
         self = CGSize(width: dimension, height: dimension)
     }
+    
+    
 }
 
 // MARK: - Methods
