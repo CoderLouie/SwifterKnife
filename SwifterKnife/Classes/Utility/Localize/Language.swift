@@ -27,7 +27,13 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         return availableLanguages.map(Language.init(rawValue:))
     }
     
-    public static var loadDefault: ((_ code: String) -> Language)?
+    public static var loadDefault: ((_ code: String) -> Language)? = { code in
+        if code.hasPrefix("zh-") {
+            // // zh-Hant\zh-HK\zh-TW
+            return code.contains("Hans") ? .zhHans : .zhHant
+        }
+        return Language(rawValue: code)
+    }
     public static var `default`: Language {
 //        guard let first = Bundle.main.preferredLocalizations.first else {
 //            return .en
@@ -96,9 +102,11 @@ public extension Language {
     
     
     // 请在你的项目中自行扩展添加支持的多语言
-    /*
+
     /// 繁体中文 Chinese, Traditional
     static var zhHant: Language { .init(rawValue: "zh-Hant") }
+    
+    /*
     /// 繁体中文(香港) Chinese, Hong Kong
     static var zhHK: Language { .init(rawValue: "zh-HK") }
     /// 日语 Japanese

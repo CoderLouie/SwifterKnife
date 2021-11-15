@@ -1174,6 +1174,11 @@ extension Device {
             return ProcessInfo.processInfo.isLowPowerModeEnabled
         }
         
+        public var ram: Int {
+            let bits = ProcessInfo.processInfo.physicalMemory
+            return Int(round(CGFloat(bits) / CGFloat(1024 * 1024 * 1024)))
+        }
+        
         /// Provides a textual representation of the battery state.
         /// Examples:
         /// ```
