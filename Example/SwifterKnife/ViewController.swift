@@ -19,6 +19,7 @@ class ViewController: UIViewController {
         Console.logFunc()
         Console.trace("world")
         
+        
         let stack: Queue<Int> = [1, 2, 3, 4]
         for val in stack {
             print(val)

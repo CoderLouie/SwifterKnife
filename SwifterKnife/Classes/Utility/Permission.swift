@@ -7,7 +7,10 @@
 
 import UIKit
 import Photos
+
+#if ImportLocation
 import CoreLocation
+#endif
 
 public enum Permission {
     public enum AuthorizationStatus {
@@ -100,7 +103,7 @@ public enum Permission {
             completion(.authorized, false)
         }
     }
-    
+    #if ImportLocation
     // MARK: - Location
     private final class LocationManager: NSObject, CLLocationManagerDelegate {
         let manager: CLLocationManager
@@ -240,6 +243,7 @@ public enum Permission {
             }
         }
     }
+    #endif
     
     // MARK: - ......
     
