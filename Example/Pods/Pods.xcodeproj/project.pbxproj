@@ -99,6 +99,7 @@
 		B4FEBFB31560EF6679EFBD784150B278 /* KeyPath+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334763C5D2225BED1CC5386E01C081B9 /* KeyPath+Add.swift */; };
 		B599696DFEF6B2A5ECF528F4E5BB1846 /* ConstraintDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1D9F6F4E2364DFAF158E04AF5D5EAA /* ConstraintDescription.swift */; };
 		B63A724127439A98002B7E14 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A724027439A98002B7E14 /* Files.swift */; };
+		B63A726B2744E361002B7E14 /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A726A2744E361002B7E14 /* Mems.swift */; };
 		B68D3AFD273A6F8600E993D2 /* GrowingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68D3AFC273A6F8600E993D2 /* GrowingTextView.swift */; };
 		B6D507A0272AE3AF00DE90BE /* Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D5079F272AE3AF00DE90BE /* Chain.swift */; };
 		B6DE9408272934900087C220 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DE9407272934900087C220 /* Device.swift */; };
@@ -278,6 +279,7 @@
 		B55C995977955998F4B99D0C11EB027C /* CGPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Add.swift"; sourceTree = "<group>"; };
 		B59CC50C652CA23D2784F471A4E2A4E8 /* UIViewController+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Add.swift"; sourceTree = "<group>"; };
 		B63A724027439A98002B7E14 /* Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
+		B63A726A2744E361002B7E14 /* Mems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mems.swift; sourceTree = "<group>"; };
 		B6688FE66950239FA4E48412FBB68E22 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B68D3AFC273A6F8600E993D2 /* GrowingTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingTextView.swift; sourceTree = "<group>"; };
 		B6D5079F272AE3AF00DE90BE /* Chain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chain.swift; sourceTree = "<group>"; };
@@ -624,6 +626,7 @@
 				5BB03C6BC0CBB8A5655118C01CFE50FF /* Reusable */,
 				7F87E04294C943695D5D34C0035126C0 /* SwiftFitsize */,
 				CB8DCFAC06738A8CA0DB23534CF28283 /* SwiftyJSON.swift */,
+				B63A726A2744E361002B7E14 /* Mems.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1027,6 +1030,7 @@
 				81797C26C7871C190C58558A68C5A969 /* SwiftyFitsize.swift in Sources */,
 				D926A7A0280CF9A464735A5819ACEE21 /* SwiftyJSON.swift in Sources */,
 				7F3EE28E1556CD8380BB33D1B46D209D /* Then.swift in Sources */,
+				B63A726B2744E361002B7E14 /* Mems.swift in Sources */,
 				B68D3AFD273A6F8600E993D2 /* GrowingTextView.swift in Sources */,
 				8D8E8C09FB84BD841886925A016E086A /* UIBarButtonItem+Add.swift in Sources */,
 				003E7F8727BF3ADD16FF8B0956DD3952 /* UIButton+Add.swift in Sources */,
