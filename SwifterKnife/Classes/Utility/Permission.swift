@@ -19,6 +19,7 @@ public enum Permission {
         case restricted
         case notSupport
         
+        #if ImportLocation
         public enum LocationWay {
             case always
             case whenInUse
@@ -38,6 +39,7 @@ public enum Permission {
             default: return nil
             }
         }
+        #endif
     }
     public typealias CompletionHandler = (_ status: AuthorizationStatus, _ isFirst: Bool) -> Void
     

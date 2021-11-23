@@ -8,6 +8,16 @@
 
 #import "KKView.h"
 
+
+@interface NSObject (KKAdd)
+- (instancetype)then:(void (^)(id this))block;
+@end
+@implementation NSObject (KKAdd)
+- (instancetype)then:(void (^)(id))block {
+    block(self);
+    return self;
+}
+@end
 //#import <SwifterKnife/SwifterKnife-Swift.h>
 @import SwifterKnife;
 
@@ -23,10 +33,18 @@
 //    CGFloat val = [Screen safeInsetB];
     NSLog(@"%f", Screen.safeAreaT);
     
+    NSNumber *num = @1;
+    [num then:^(NSNumber *this) {
+        
+    }];
     
     CGFloat val = SFH_Value(5);
 //    [SwiftyFitsize shared].referenceH;
     return self;
+}
+
+- (void)drawRect:(CGRect)rect {
+    UIRectClip(rect);
 }
 
 @end

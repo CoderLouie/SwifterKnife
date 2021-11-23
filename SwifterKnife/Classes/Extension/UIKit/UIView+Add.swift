@@ -337,8 +337,7 @@ public extension UIView {
         return frame.size.width * 0.5
     }
     var middleH: CGFloat {
-        get { center.x }
-        set { center = CGPoint(x: newValue, y: center.y) }
+        return frame.size.height * 0.5
     }
 }
 
