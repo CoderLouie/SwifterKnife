@@ -57,6 +57,7 @@ Pod::Spec.new do |s|
     sp.source_files =
     'SwifterKnife/Classes/Base/*.swift',
     'SwifterKnife/Classes/Views/**/*.swift'
+    
     sp.dependency 'SnapKit'
   end
   
