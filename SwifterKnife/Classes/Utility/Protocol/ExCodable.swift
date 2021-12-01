@@ -12,9 +12,6 @@ import Foundation
  *  # ExCodable
  *
  *  A protocol extends `Encodable` & `Decodable` with `keyMapping`
- *  swift codable json model type-inference
- *  key-mapping keypath codingkey subscript
- *  alternative-keys nested-keys type-conversion
  *
  *  - seealso: [Usage](https://github.com/iwill/ExCodable#usage) from GitGub
  *  - seealso: `ExCodableTests.swift` form the source code
@@ -149,7 +146,7 @@ public extension Encoder {
         }
         
         let keys = stringKey.split(separator: dot).map { ExCodingKey($0) }
-        var container = self.container(keyedBy: ExCodingKey.self)
+        var container = container(keyedBy: ExCodingKey.self)
         for key in keys.dropLast() {
             container = container.nestedContainer(keyedBy: ExCodingKey.self, forKey: key)
         }
@@ -172,7 +169,7 @@ public extension Encoder {
         try? encode(value, for: codingKey, nonnull: false, throws: false)
     }
     fileprivate func encode<T: Encodable, K: CodingKey>(_ value: T?, for codingKey: K, nonnull: Bool = false, throws: Bool = false) throws {
-        var container = self.container(keyedBy: K.self)
+        var container = container(keyedBy: K.self)
         do {
             if nonnull { try container.encode(value, forKey: codingKey) }
             else { try container.encodeIfPresent(value, forKey: codingKey) }
@@ -289,8 +286,9 @@ fileprivate extension KeyedDecodingContainer {
         catch { firstError = error }
         
         let dot: Character = "."
-        if let exCodingKey = codingKey as? ExCodingKey, // Self.Key is ExCodingKey.Type
-           exCodingKey.intValue == nil && exCodingKey.stringValue.contains(dot) {
+        if let exCodingKey = codingKey as? ExCodingKey,
+           exCodingKey.intValue == nil,
+           exCodingKey.stringValue.contains(dot) {
             let keys = exCodingKey.stringValue.split(separator: dot).map { ExCodingKey($0) }
             if !keys.isEmpty,
                let container = nestedContainer(with: keys.dropLast()),
@@ -338,20 +336,42 @@ fileprivate extension KeyedDecodingContainer {
         
         if let digit = T.self as? IntegerValue.Type {
             if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
-                return digit.init(ex_int: bool ? 1 : 0) as? T }
-            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return digit.init(ex_double: double) as? T } // include Float
-            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = digit.init(ex_string: string) { return value as? T }
+                return digit.init(ex_int: bool ? 1 : 0) as? T
+            }
+            if let double = try? decodeIfPresent(Double.self, forKey: codingKey) {
+                // include Float
+                return digit.init(ex_double: double) as? T
+            }
+            if let string = try? decodeIfPresent(String.self, forKey: codingKey),
+                      let value = digit.init(ex_string: string) {
+                return value as? T
+            }
         }
         else if let float = T.self as? FloatingValue.Type {
             if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
-                return float.init(ex_int64: bool ? 1 : 0) as? T }
-            if let int64 = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return float.init(ex_int64: int64) as? T } // include all Int types
-            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = float.init(ex_string: string) { return value as? T }
+                return float.init(ex_int64: bool ? 1 : 0) as? T
+            }
+            if let int64 = try? decodeIfPresent(Int64.self, forKey: codingKey) {
+                // include all Int types
+                return float.init(ex_int64: int64) as? T
+            }
+            if let string = try? decodeIfPresent(String.self, forKey: codingKey),
+               let value = float.init(ex_string: string) {
+                return value as? T
+            }
         }
         else if type is String.Type {
-            if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) { return String(describing: bool) as? T }
-            else if let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return String(describing: int64) as? T } // include all Int types
-            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T } // include Float
+            if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
+                return String(describing: bool) as? T
+            }
+            if let int64 = try? decodeIfPresent(Int64.self,  forKey: codingKey) {
+                // include all Int types
+                return String(describing: int64) as? T
+            }
+            if let double = try? decodeIfPresent(Double.self, forKey: codingKey) {
+                // include Float
+                return String(describing: double) as? T
+            }
         }
         if let custom = self as? ExCodableDecodingTypeConverter,
            let value = try? custom.decode(self, codingKey: codingKey, as: type) {
@@ -401,9 +421,9 @@ extension UInt64: IntegerValue {}
 
 fileprivate func bool(from string: String) -> Bool? {
     switch string.lowercased() {
-        case "true", "t", "yes", "y":
+        case "true", "t", "yes", "y", "1":
             return true
-        case "false", "f", "no", "n", "":
+        case "false", "f", "no", "n", "0", "":
             return false
         default:
             return nil
