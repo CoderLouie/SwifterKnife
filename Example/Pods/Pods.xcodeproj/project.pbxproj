@@ -100,6 +100,7 @@
 		B599696DFEF6B2A5ECF528F4E5BB1846 /* ConstraintDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1D9F6F4E2364DFAF158E04AF5D5EAA /* ConstraintDescription.swift */; };
 		B63A724127439A98002B7E14 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A724027439A98002B7E14 /* Files.swift */; };
 		B63A726B2744E361002B7E14 /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A726A2744E361002B7E14 /* Mems.swift */; };
+		B6423282275786AD00ACE628 /* SwiftyTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6423281275786AD00ACE628 /* SwiftyTimer.swift */; };
 		B68D3AFD273A6F8600E993D2 /* GrowingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68D3AFC273A6F8600E993D2 /* GrowingTextView.swift */; };
 		B6D507A0272AE3AF00DE90BE /* Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D5079F272AE3AF00DE90BE /* Chain.swift */; };
 		B6D96B18274CBF20006FAFFD /* CALayer+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D96B17274CBF20006FAFFD /* CALayer+Add.swift */; };
@@ -282,6 +283,7 @@
 		B59CC50C652CA23D2784F471A4E2A4E8 /* UIViewController+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Add.swift"; sourceTree = "<group>"; };
 		B63A724027439A98002B7E14 /* Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
 		B63A726A2744E361002B7E14 /* Mems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mems.swift; sourceTree = "<group>"; };
+		B6423281275786AD00ACE628 /* SwiftyTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTimer.swift; sourceTree = "<group>"; };
 		B6688FE66950239FA4E48412FBB68E22 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B68D3AFC273A6F8600E993D2 /* GrowingTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingTextView.swift; sourceTree = "<group>"; };
 		B6D5079F272AE3AF00DE90BE /* Chain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chain.swift; sourceTree = "<group>"; };
@@ -624,6 +626,7 @@
 				5BB03C6BC0CBB8A5655118C01CFE50FF /* Reusable */,
 				7F87E04294C943695D5D34C0035126C0 /* SwiftFitsize */,
 				CB8DCFAC06738A8CA0DB23534CF28283 /* SwiftyJSON.swift */,
+				B6423281275786AD00ACE628 /* SwiftyTimer.swift */,
 				B63A726A2744E361002B7E14 /* Mems.swift */,
 			);
 			name = Utility;
@@ -971,6 +974,7 @@
 				8262C20575B9B2CBAF0E5445AD92EAAF /* App.swift in Sources */,
 				B6FB1958272F9D66003D255B /* Data+Add.swift in Sources */,
 				C9AA6DF5CC10BA33DD327122C027EF1F /* Array+Add.swift in Sources */,
+				B6423282275786AD00ACE628 /* SwiftyTimer.swift in Sources */,
 				B6D96B1A274CC064006FAFFD /* UIBezierPath+Add.swift in Sources */,
 				48E3E489FB0E01CA1DE6214314FCBA91 /* BidirectionalCollection+Add.swift in Sources */,
 				891A71C9EC261CB3A6B90068B5A1E3B2 /* BinaryFloatingPoint+Add.swift in Sources */,

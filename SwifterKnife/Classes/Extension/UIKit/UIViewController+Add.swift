@@ -73,6 +73,15 @@ public extension UIViewController {
     }
 }
 
+public extension UIViewController {
+    /// Check if the view controller has been presented or not.
+    /// - Returns: true if the controller is presented, otherwise false.
+    public var isModal: Bool {
+        presentingViewController?.presentedViewController == self ||
+            navigationController?.presentingViewController?.presentedViewController == navigationController ||
+            tabBarController?.presentingViewController is UITabBarController
+    }
+}
 
 // MARK: - Alert
 public extension UIViewController {

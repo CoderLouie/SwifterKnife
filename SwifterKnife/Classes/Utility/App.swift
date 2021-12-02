@@ -18,23 +18,53 @@ public enum App {
         #endif
     }
     
+    public static var isInTestFlight: Bool {
+        Bundle.main.appStoreReceiptURL?.path.contains("sandboxReceipt") == true
+    }
+    
+    public static var schemes: [String] {
+        guard let infoDictionary = Bundle.main.infoDictionary,
+            let urlTypes = infoDictionary["CFBundleURLTypes"] as? [AnyObject],
+            let urlType = urlTypes.first as? [String: AnyObject],
+            let urlSchemes = urlType["CFBundleURLSchemes"] as? [String] else {
+                return []
+        }
+        return urlSchemes
+    }
+
+    public static var mainScheme: String? {
+        schemes.first
+    }
+    
     public static var namespace: String {
-        guard let namespace =  Bundle.main.infoDictionary?["CFBundleExecutable"] as? String else { return "" }
-        return  namespace
+        string(for: "CFBundleExecutable")
     }
     
-    public static var version: String? {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    public static var version: String {
+        string(for: "CFBundleShortVersionString")
     }
     
-    public static var build: String? {
-        return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+    public static var build: String {
+        string(for: "CFBundleVersion")
+    }
+    public static var bundleId: String {
+        string(for: "CFBundleIdentifier")
     }
     
-    public static var name: String? {
-        return Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
+    public static var displayName: String {
+        string(for: "CFBundleDisplayName")
     }
-     
+    public static var appName: String {
+        string(for: kCFBundleNameKey as String)
+    }
+    
+    private static func string(for key: String) -> String {
+        guard let infoDictionary = Bundle.main.infoDictionary,
+            let value = infoDictionary[key] as? String else {
+                return ""
+        }
+        return value
+    }
     
     public static func gotoSetting() {
         let url = URL(string: UIApplication.openSettingsURLString)

@@ -44,3 +44,26 @@ public extension Int {
         return number == 0 ? self : Int(round(Double(self) / Double(number))) * number
     }
 }
+
+public extension Int {
+    /// Caclulate the nearest below value for this number in comparison with a specified value.
+    /// - Parameter value: The value that will be used to search the nearest up.
+    /// - Returns: The nearest value to the speficied value.
+    func nearest(to value: Int) -> Int {
+        self / value * value + (self % value) / (value / 2) * value
+    }
+    
+    /// Caclulate the nearest below value for this number in comparison with a specified value.
+    /// - Parameter value: The value that will be used to search the nearest up.
+    /// - Returns: The nearest below value to the speficied value.
+    func nearestBelow(to value: Int) -> Int {
+        self / value * value + 0 / (value / 2) * value
+    }
+    
+    /// Caclulate the nearest up value for this number in comparison with a specified value.
+    /// - Parameter value: The value that will be used to search the nearest up.
+    /// - Returns: The nearest up value to the speficied value.
+    func nearestUp(to value: Int) -> Int {
+        self / value * value + (value / 2) / (value / 2) * value
+    }
+}

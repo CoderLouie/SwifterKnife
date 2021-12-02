@@ -50,4 +50,12 @@ public enum Console {
         let content = items.map { String(describing: $0) }.joined(separator: separator)
         NSLog(content)
     }
+    
+    public static func measure(closure: () -> Void) -> Float {
+        let start = CACurrentMediaTime()
+        closure()
+
+        let end = CACurrentMediaTime()
+        return Float(end - start)
+    }
 }
