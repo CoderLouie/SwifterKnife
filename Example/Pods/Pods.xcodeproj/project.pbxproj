@@ -101,12 +101,15 @@
 		B63A724127439A98002B7E14 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A724027439A98002B7E14 /* Files.swift */; };
 		B63A726B2744E361002B7E14 /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A726A2744E361002B7E14 /* Mems.swift */; };
 		B6423282275786AD00ACE628 /* SwiftyTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6423281275786AD00ACE628 /* SwiftyTimer.swift */; };
+		B65105162766F1D900971F03 /* SandBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65105152766F1D900971F03 /* SandBox.swift */; };
 		B68D3AFD273A6F8600E993D2 /* GrowingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68D3AFC273A6F8600E993D2 /* GrowingTextView.swift */; };
+		B6B2612A27608C0700F45EE7 /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2612927608C0700F45EE7 /* Lazy.swift */; };
 		B6D507A0272AE3AF00DE90BE /* Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D5079F272AE3AF00DE90BE /* Chain.swift */; };
 		B6D96B18274CBF20006FAFFD /* CALayer+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D96B17274CBF20006FAFFD /* CALayer+Add.swift */; };
 		B6D96B1A274CC064006FAFFD /* UIBezierPath+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D96B19274CC064006FAFFD /* UIBezierPath+Add.swift */; };
 		B6DE9408272934900087C220 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DE9407272934900087C220 /* Device.swift */; };
 		B6DE940A272A54DD0087C220 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DE9409272A54DD0087C220 /* Async.swift */; };
+		B6EB7411275E0E3700B23768 /* Catch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6EB7410275E0E3700B23768 /* Catch.swift */; };
 		B6FB1956272F9BB5003D255B /* Checkman.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FB1955272F9BB5003D255B /* Checkman.swift */; };
 		B6FB1958272F9D66003D255B /* Data+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FB1957272F9D66003D255B /* Data+Add.swift */; };
 		B780B272106411CBE258BB60FFC45410 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D038D2FAA2F6B073D1B64B8635F4E3E6 /* Debugging.swift */; };
@@ -284,13 +287,16 @@
 		B63A724027439A98002B7E14 /* Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
 		B63A726A2744E361002B7E14 /* Mems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mems.swift; sourceTree = "<group>"; };
 		B6423281275786AD00ACE628 /* SwiftyTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTimer.swift; sourceTree = "<group>"; };
+		B65105152766F1D900971F03 /* SandBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandBox.swift; sourceTree = "<group>"; };
 		B6688FE66950239FA4E48412FBB68E22 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B68D3AFC273A6F8600E993D2 /* GrowingTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingTextView.swift; sourceTree = "<group>"; };
+		B6B2612927608C0700F45EE7 /* Lazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
 		B6D5079F272AE3AF00DE90BE /* Chain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chain.swift; sourceTree = "<group>"; };
 		B6D96B17274CBF20006FAFFD /* CALayer+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Add.swift"; sourceTree = "<group>"; };
 		B6D96B19274CC064006FAFFD /* UIBezierPath+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBezierPath+Add.swift"; sourceTree = "<group>"; };
 		B6DE9407272934900087C220 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		B6DE9409272A54DD0087C220 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		B6EB7410275E0E3700B23768 /* Catch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catch.swift; sourceTree = "<group>"; };
 		B6FB1955272F9BB5003D255B /* Checkman.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkman.swift; sourceTree = "<group>"; };
 		B6FB1957272F9D66003D255B /* Data+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
 		B8BA7F09FEC3B13DA9E8B535DC2052B4 /* DispatchQueue+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Add.swift"; sourceTree = "<group>"; };
@@ -612,6 +618,7 @@
 		82A98DAD92A6D8BC80B77049CB8D54AA /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				B65105152766F1D900971F03 /* SandBox.swift */,
 				59294F07014FF333BBEDA61BC53EE063 /* App.swift */,
 				B6DE9409272A54DD0087C220 /* Async.swift */,
 				B9F4E31A9F15880CD37762C8C3B0EFFB /* Builtlns */,
@@ -628,6 +635,8 @@
 				CB8DCFAC06738A8CA0DB23534CF28283 /* SwiftyJSON.swift */,
 				B6423281275786AD00ACE628 /* SwiftyTimer.swift */,
 				B63A726A2744E361002B7E14 /* Mems.swift */,
+				B6EB7410275E0E3700B23768 /* Catch.swift */,
+				B6B2612927608C0700F45EE7 /* Lazy.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1006,6 +1015,7 @@
 				30065F26E4F93BDC684D659732D62515 /* LayoutView.swift in Sources */,
 				51ABBAEAFA85A61B1D1C07E859C6A315 /* Locale+Add.swift in Sources */,
 				CEAA00D72D510515DD8EC17839395AE3 /* LocalizedKeyRepresentable.swift in Sources */,
+				B6B2612A27608C0700F45EE7 /* Lazy.swift in Sources */,
 				2A3041B7D9F5CE92C8CD07B1CB4F23EB /* MutableCollection+Add.swift in Sources */,
 				2EB5C02D60499D4EE01C9FFDD1FE5C32 /* NibLoadable.swift in Sources */,
 				58F5F45F60CEFEA54D694D5AE3F5CCD9 /* NibOwnerLoadable.swift in Sources */,
@@ -1015,7 +1025,9 @@
 				1B65F93C42D9F8E853D415E3A56E99C7 /* Permission.swift in Sources */,
 				9BA89375562FCA87DD5B05F14CD51EFB /* Persistencable.swift in Sources */,
 				B7D7B4624171F3FBCB76C04A106EC672 /* PriorityQueue.swift in Sources */,
+				B6EB7411275E0E3700B23768 /* Catch.swift in Sources */,
 				337CBC60591AD99263B2819553E4B0CC /* Queue.swift in Sources */,
+				B65105162766F1D900971F03 /* SandBox.swift in Sources */,
 				83342A815EEC7332EB6B629D44709681 /* RangeReplaceableCollection+Add.swift in Sources */,
 				B6FB1956272F9BB5003D255B /* Checkman.swift in Sources */,
 				274F5CD3BB555688CC827247D76DBA90 /* Result+Add.swift in Sources */,

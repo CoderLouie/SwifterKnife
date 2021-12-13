@@ -10,7 +10,13 @@ import UIKit
 import SwifterKnife
 
 class ViewController: UIViewController {
-
+ 
+    private lazy var subView = Lazy {
+        UIView().then {
+            self.view.addSubview($0)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -19,6 +25,9 @@ class ViewController: UIViewController {
         Console.logFunc()
         Console.trace("world")
         
+        print(subView.isInitialized)
+        print(subView.wrapped)
+        print(subView.isInitialized)
         
         let stack: Queue<Int> = [1, 2, 3, 4]
         for val in stack {

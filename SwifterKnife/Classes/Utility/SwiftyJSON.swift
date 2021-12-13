@@ -252,8 +252,6 @@ public struct JSON {
     }
 
     /// The static null JSON
-    @available(*, unavailable, renamed:"null")
-    public static var nullJSON: JSON { return null }
     public static var null: JSON { return JSON(NSNull()) }
 }
 
@@ -354,13 +352,13 @@ public protocol JSONSubscriptType {
 
 extension Int: JSONSubscriptType {
     public var jsonKey: JSONKey {
-        return JSONKey.index(self)
+        return .index(self)
     }
 }
 
 extension String: JSONSubscriptType {
     public var jsonKey: JSONKey {
-        return JSONKey.key(self)
+        return .key(self)
     }
 }
 
@@ -452,11 +450,12 @@ extension JSON {
         set {
             switch path.count {
             case 0: return
-            case 1: self[sub:path[0]].object = newValue.object
+            case 1: self[sub: path[0]].object = newValue.object
             default:
                 var aPath = path
                 aPath.remove(at: 0)
                 var nextJSON = self[sub: path[0]]
+                /// 产生递归调用
                 nextJSON[aPath] = newValue
                 self[sub: path[0]] = nextJSON
             }
@@ -789,9 +788,9 @@ extension JSON {
     public var stringValue: String {
         get {
             switch type {
-            case .string: return object as? String ?? ""
+            case .string: return rawString
             case .number: return rawNumber.stringValue
-            case .bool:   return (object as? Bool).map { String($0) } ?? ""
+            case .bool:   return String(rawBool)
             default:      return ""
             }
         }
@@ -826,7 +825,7 @@ extension JSON {
             case .string:
                 let decimal = NSDecimalNumber(string: object as? String)
                 return decimal == .notANumber ? .zero : decimal
-            case .number: return object as? NSNumber ?? NSNumber(value: 0)
+            case .number: return rawNumber
             case .bool: return NSNumber(value: rawBool ? 1 : 0)
             default: return NSNumber(value: 0.0)
             }

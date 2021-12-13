@@ -15,6 +15,12 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		B6B2871C276361EA00486E61 /* DBStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28716276361EA00486E61 /* DBStorable.swift */; };
+		B6B2871D276361EA00486E61 /* ColumnKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28717276361EA00486E61 /* ColumnKey.swift */; };
+		B6B2871E276361EA00486E61 /* DBStorable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28718276361EA00486E61 /* DBStorable+Add.swift */; };
+		B6B2871F276361EA00486E61 /* DispatchQueue+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28719276361EA00486E61 /* DispatchQueue+Add.swift */; };
+		B6B28720276361EA00486E61 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2871A276361EA00486E61 /* Database.swift */; };
+		B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2871B276361EA00486E61 /* DBCompatible.swift */; };
 		B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF0272BDC34001BBBE1 /* IAP.swift */; };
 		B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF3272BE66E001BBBE1 /* Query.swift */; };
 		B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */; };
@@ -55,6 +61,12 @@
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		B6B28716276361EA00486E61 /* DBStorable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBStorable.swift; sourceTree = "<group>"; };
+		B6B28717276361EA00486E61 /* ColumnKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnKey.swift; sourceTree = "<group>"; };
+		B6B28718276361EA00486E61 /* DBStorable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBStorable+Add.swift"; sourceTree = "<group>"; };
+		B6B28719276361EA00486E61 /* DispatchQueue+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Add.swift"; sourceTree = "<group>"; };
+		B6B2871A276361EA00486E61 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		B6B2871B276361EA00486E61 /* DBCompatible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBCompatible.swift; sourceTree = "<group>"; };
 		B6B5FAF0272BDC34001BBBE1 /* IAP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAP.swift; sourceTree = "<group>"; };
 		B6B5FAF3272BE66E001BBBE1 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPRequest.swift; sourceTree = "<group>"; };
@@ -122,6 +134,7 @@
 		607FACD21AFB9204008FA782 /* Example for SwifterKnife */ = {
 			isa = PBXGroup;
 			children = (
+				B6B28715276361EA00486E61 /* SwiftyDB */,
 				B6B5FAF2272BE558001BBBE1 /* IAP */,
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
@@ -182,6 +195,20 @@
 				9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		B6B28715276361EA00486E61 /* SwiftyDB */ = {
+			isa = PBXGroup;
+			children = (
+				B6B28716276361EA00486E61 /* DBStorable.swift */,
+				B6B28717276361EA00486E61 /* ColumnKey.swift */,
+				B6B28718276361EA00486E61 /* DBStorable+Add.swift */,
+				B6B28719276361EA00486E61 /* DispatchQueue+Add.swift */,
+				B6B2871A276361EA00486E61 /* Database.swift */,
+				B6B2871B276361EA00486E61 /* DBCompatible.swift */,
+			);
+			name = SwiftyDB;
+			path = ../../../../DB/SwiftySQL/SwiftySQL/SwiftyDB;
 			sourceTree = "<group>";
 		};
 		B6B5FAF2272BE558001BBBE1 /* IAP */ = {
@@ -383,16 +410,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */,
+				B6B2871E276361EA00486E61 /* DBStorable+Add.swift in Sources */,
+				B6B2871D276361EA00486E61 /* ColumnKey.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
 				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
+				B6B2871C276361EA00486E61 /* DBStorable.swift in Sources */,
 				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
+				B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,
+				B6B28720276361EA00486E61 /* Database.swift in Sources */,
+				B6B2871F276361EA00486E61 /* DispatchQueue+Add.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
