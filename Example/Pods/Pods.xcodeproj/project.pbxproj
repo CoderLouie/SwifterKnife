@@ -1435,7 +1435,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/SwifterKnife/SwifterKnife.modulemap";
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D ImportLocation";
 				PRODUCT_MODULE_NAME = SwifterKnife;
 				PRODUCT_NAME = SwifterKnife;
 				SDKROOT = iphoneos;
@@ -1468,7 +1468,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/SwifterKnife/SwifterKnife.modulemap";
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D ImportLocation";
 				PRODUCT_MODULE_NAME = SwifterKnife;
 				PRODUCT_NAME = SwifterKnife;
 				SDKROOT = iphoneos;

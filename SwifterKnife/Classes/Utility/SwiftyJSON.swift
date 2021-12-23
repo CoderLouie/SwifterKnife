@@ -808,6 +808,9 @@ extension JSON {
     public var number: NSNumber? {
         get {
             switch type {
+            case .string:
+                let decimal = NSDecimalNumber(string: rawString)
+                return decimal == .notANumber ? nil : decimal
             case .number: return rawNumber
             case .bool:   return NSNumber(value: rawBool ? 1 : 0)
             default:      return nil

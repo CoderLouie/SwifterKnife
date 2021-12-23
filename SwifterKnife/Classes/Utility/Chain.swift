@@ -7,6 +7,15 @@
 
 import Foundation
 
+/*
+ https://juejin.cn/post/7005541971427065886
+ Chain(UIView())
+     .frame(CGRect(x: 0, y: 0, width: 100, height: 100))
+     .backgroundColor(.white)
+     .alpha(0.5)
+     .target
+ */
+
 @dynamicMemberLookup
 /// 用于实现链式调用
 public struct Chain<Target> {

@@ -12,16 +12,7 @@ public final class Lazy<T> {
     
     public init(_ builder: @escaping () -> T) {
         self.builder = builder
-    }
-//    public init(_ builder: @escaping @autoclosure () -> T) {
-//        self.builder = builder
-//    }
-    
-//    public lazy var wrappedValue: T = {
-//        let v = builder()
-//        builder = nil
-//        return v
-//    }()
+    } 
     public private(set) var rawValue: T?
     
     public var wrapped: T {

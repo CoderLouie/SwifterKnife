@@ -28,6 +28,8 @@ import UIKit
     case flexibleSafeAreaWithoutTopHeight = 7
     /// ∥-
     case forceSafeAreaWithoutTopHeight = 8
+    /// 小屏手机(height < 570)才会适配高度
+    case flexibleHeightOnlyOnSmallDevcie = 9
 }
 
 @objc public final class SwiftyFitsize: NSObject {
@@ -100,6 +102,9 @@ import UIKit
             return Screen.withoutHeaderHeight / referenceWithoutHeaderHeight * value * fitMultiple
         case .forceSafeAreaWithoutTopHeight:
             return Screen.withoutHeaderHeight / referenceWithoutHeaderHeight * value
+        case .flexibleHeightOnlyOnSmallDevcie:
+            if Screen.height > 570 { return value }
+            return Screen.height / referenceH * value
         }
     }
     fileprivate func fitNumber(
@@ -122,6 +127,9 @@ public extension SwiftyFitsizeable {
     var fitH: TargetType { return sf(.flexibleHeight) }
     var fitT: TargetType { return sf(.flexibleSafeAreaWithoutTopHeight) }
     var fitC: TargetType { return sf(.flexibleSafeAreaCenterHeight) }
+    var fitS: TargetType {
+        return sf(.flexibleHeightOnlyOnSmallDevcie)
+    }
 }
 
 fileprivate protocol CGFloatFitsizeable: SwiftyFitsizeable {

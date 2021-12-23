@@ -7,11 +7,7 @@
 
 import UIKit
 import Photos
-
-#if ImportLocation
-import CoreLocation
-#endif
-
+ 
 public enum Permission {
     public enum AuthorizationStatus {
         case authorized
@@ -24,14 +20,14 @@ public enum Permission {
             case always
             case whenInUse
         }
-        case locaiton(LocationWay)
+        case location(LocationWay)
         
         fileprivate init?(locationStatus: CLAuthorizationStatus) {
             switch locationStatus {
             case .authorizedAlways:
-                self = .locaiton(.always)
+                self = .location(.always)
             case .authorizedWhenInUse:
-                self = .locaiton(.whenInUse)
+                self = .location(.whenInUse)
             case .restricted:
                 self = .restricted
             case .denied:
@@ -40,10 +36,43 @@ public enum Permission {
             }
         }
         #endif
+        
+        var authorized: Bool {
+            if case .authorized = self { return true }
+            #if ImportLocation
+            if case .location = self { return true }
+            #endif
+            return false
+        }
+        #if ImportLocation
+        var clWhenInUse: Bool {
+            if case let .location(way) = self,
+               way == .whenInUse { return true }
+            return false
+        }
+        var clAlways: Bool {
+            if case let .location(way) = self,
+               way == .always { return true }
+            return false
+        }
+        #endif
     }
     public typealias CompletionHandler = (_ status: AuthorizationStatus, _ isFirst: Bool) -> Void
     
     // MARK: - Photo
+    public static var photoStatus: AuthorizationStatus {
+        guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
+            return .notSupport
+        }
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .restricted: return .restricted
+        case .denied: return .denied
+        case .notDetermined:
+            fatalError("misuse API, you should use requestPhoto method")
+        default: return .authorized
+        }
+    }
     public static func requestPhoto(completion: @escaping CompletionHandler) {
         assert(for: .photoUsage)
         _requestPhoto { status, isFirst in
@@ -81,6 +110,19 @@ public enum Permission {
     }
     
     // MARK: - Camera
+    public static var cameraStatus: AuthorizationStatus {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            return .notSupport
+        }
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch status {
+        case .restricted: return .restricted
+        case .denied: return .denied
+        case .notDetermined:
+            fatalError("misuse API, you should use requestCamera method")
+        default: return .authorized
+        }
+    }
     public static func requestCamera(completion: @escaping CompletionHandler) {
         assert(for: .camera)
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
@@ -105,8 +147,112 @@ public enum Permission {
             completion(.authorized, false)
         }
     }
-    #if ImportLocation
-    // MARK: - Location
+    
+    // MARK: - ......
+    
+    private static func assert(for kind: PermissionKind) {
+        let key = kind.bundleKey
+        precondition(Bundle.main.object(forInfoDictionaryKey: key) != nil, "\(key) not found in Info.plist")
+    }
+    private enum PermissionKind {
+        case camera
+        case photoUsage
+        case addPhotoToLibrary
+        case locationWhenInUse
+        case locationAlways
+        
+        var bundleKey: String {
+            switch self {
+            case .camera:
+                return "NSCameraUsageDescription"
+            case .photoUsage:
+                return "NSPhotoLibraryUsageDescription"
+            case .addPhotoToLibrary:
+                return "NSPhotoLibraryAddUsageDescription"
+            case .locationAlways:
+                return "NSLocationAlwaysAndWhenInUseUsageDescription"
+            case .locationWhenInUse:
+                return "NSLocationWhenInUseUsageDescription"
+            }
+        }
+    }
+}
+
+
+#if ImportLocation
+
+// MARK: - Location
+import CoreLocation
+extension Permission {
+    
+    public static var locationStatus: AuthorizationStatus {
+        guard CLLocationManager.locationServicesEnabled() else {
+            return .denied
+        }
+        let status = CLLocationManager.authorizationStatus()
+        guard let res = AuthorizationStatus(locationStatus: status) else { fatalError("misuse API, you should use requestLocation method") }
+        return res
+    }
+    
+    private static var locationManager: LocationManager = LocationManager()
+    private static func _requestLocation(
+        way: AuthorizationStatus.LocationWay,
+        completion: @escaping CompletionHandler) {
+        guard CLLocationManager.locationServicesEnabled() else {
+            completion(.denied, false)
+            return
+        }
+        let status = CLLocationManager.authorizationStatus()
+        switch way {
+        case .whenInUse:
+            assert(for: .locationWhenInUse)
+            if status == .notDetermined {
+                locationManager.requestPermission(way: .whenInUse) { newStatus in
+                    completion(newStatus, true)
+                }
+            } else if let newStatus = AuthorizationStatus(locationStatus: status) {
+                completion(newStatus, false)
+            }
+        case .always:
+            assert(for: .locationWhenInUse)
+            assert(for: .locationAlways)
+            if status == .notDetermined ||
+                status == .authorizedWhenInUse {
+                locationManager.requestPermission(way: .always) { newStatus in
+                    completion(newStatus, true)
+                }
+            } else if let newStatus = AuthorizationStatus(locationStatus: status) {
+                completion(newStatus, false)
+            }
+        }
+    }
+    public static func requestLocation(
+        way: AuthorizationStatus.LocationWay,
+        completion: @escaping CompletionHandler) {
+        _requestLocation(way: way) { status, isFirst in
+            DispatchQueue.main.async {
+                completion(status, isFirst)
+            }
+        }
+    }
+    public static func updateLocation(
+        way: AuthorizationStatus.LocationWay,
+        completion: @escaping (Result<[String: String], Error>?, AuthorizationStatus, Bool) -> Void) {
+        _requestLocation(way: way) { status, isFirst in
+            if case .location = status {
+                locationManager.updateLocation { result in
+                    DispatchQueue.main.async {
+                        completion(result, status, isFirst)
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completion(nil, status, isFirst)
+                }
+            }
+        }
+    }
+    
     private final class LocationManager: NSObject, CLLocationManagerDelegate {
         let manager: CLLocationManager
         var authorization: ((AuthorizationStatus) -> Void)?
@@ -185,94 +331,5 @@ public enum Permission {
             endUpdate(result: .failure(error))
         }
     }
-    
-    private static var locationManager: LocationManager = LocationManager()
-    
-    private static func _requestLocation(
-        way: AuthorizationStatus.LocationWay,
-        completion: @escaping CompletionHandler) {
-        guard CLLocationManager.locationServicesEnabled() else {
-            completion(.denied, false)
-            return
-        }
-        let status = CLLocationManager.authorizationStatus()
-        switch way {
-        case .whenInUse:
-            assert(for: .locationWhenInUse)
-            if status == .notDetermined {
-                locationManager.requestPermission(way: .whenInUse) { newStatus in
-                    completion(newStatus, true)
-                }
-            } else if let newStatus = AuthorizationStatus(locationStatus: status) {
-                completion(newStatus, false)
-            }
-        case .always:
-            assert(for: .locationWhenInUse)
-            assert(for: .locationAlways)
-            if status == .notDetermined ||
-                status == .authorizedWhenInUse {
-                locationManager.requestPermission(way: .always) { newStatus in
-                    completion(newStatus, true)
-                }
-            } else if let newStatus = AuthorizationStatus(locationStatus: status) {
-                completion(newStatus, false)
-            }
-        }
-    }
-    public static func requestLocation(
-        way: AuthorizationStatus.LocationWay,
-        completion: @escaping CompletionHandler) {
-        _requestLocation(way: way) { status, isFirst in
-            DispatchQueue.main.async {
-                completion(status, isFirst)
-            }
-        }
-    }
-    public static func updateLocation(
-        way: AuthorizationStatus.LocationWay,
-        completion: @escaping (Result<[String: String], Error>?, AuthorizationStatus, Bool) -> Void) {
-        _requestLocation(way: way) { status, isFirst in
-            if case .locaiton = status {
-                locationManager.updateLocation { result in
-                    DispatchQueue.main.async {
-                        completion(result, status, isFirst)
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(nil, status, isFirst)
-                }
-            }
-        }
-    }
-    #endif
-    
-    // MARK: - ......
-    
-    private static func assert(for kind: PermissionKind) {
-        let key = kind.bundleKey
-        precondition(Bundle.main.object(forInfoDictionaryKey: key) != nil, "\(key) not found in Info.plist")
-    }
-    private enum PermissionKind {
-        case camera
-        case photoUsage
-        case addPhotoToLibrary
-        case locationWhenInUse
-        case locationAlways
-        
-        var bundleKey: String {
-            switch self {
-            case .camera:
-                return "NSCameraUsageDescription"
-            case .photoUsage:
-                return "NSPhotoLibraryUsageDescription"
-            case .addPhotoToLibrary:
-                return "NSPhotoLibraryAddUsageDescription"
-            case .locationAlways:
-                return "NSLocationAlwaysAndWhenInUseUsageDescription"
-            case .locationWhenInUse:
-                return "NSLocationWhenInUseUsageDescription"
-            }
-        }
-    }
 }
+#endif

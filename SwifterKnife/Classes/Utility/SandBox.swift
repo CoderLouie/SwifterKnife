@@ -118,8 +118,34 @@ extension SandBox {
           /SystemData/
           /tmp/
      */
-    public enum Folder: CaseIterable {
-        case home, document, library, caches, temporary, preference, bundle
+    
+    public struct Folder: RawRepresentable {
+        public let rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        static var home: Folder {
+            .init(rawValue: NSHomeDirectory())
+        }
+        static var document: Folder {
+            .init(rawValue: NSHomeDirectory() + "/Documents")
+        }
+        static var library: Folder {
+            .init(rawValue: NSHomeDirectory() + "/Library")
+        }
+        static var caches: Folder {
+            .init(rawValue: NSHomeDirectory() + "/Library/Caches")
+        }
+        static var preference: Folder {
+            .init(rawValue: NSHomeDirectory() + "/Library/Preference")
+        }
+        static var temporary: Folder {
+            .init(rawValue: NSHomeDirectory() + "/tmp")
+        }
+        static var bundle: Folder {
+            .init(rawValue: Bundle.main.bundlePath)
+        }
     }
 }
 
@@ -131,24 +157,10 @@ extension String {
 }
 
 extension SandBox.Folder {
-    public var path: String {
-        let homePath = NSHomeDirectory()
-        switch self {
-        case .home:
-            return homePath
-        case .document:
-            return homePath + "/Documents"
-        case .library:
-            return homePath + "/Library"
-        case .temporary:
-            return homePath + "/tmp"
-        case .caches:
-            return homePath + "/Library/Caches"
-        case .preference:
-            return homePath + "/Library/Preference"
-        case .bundle:
-            return Bundle.main.bundlePath
-        }
+    fileprivate func path(for item: String) -> String {
+        let home = rawValue
+        if item.hasPrefix("/") { return home + item }
+        return home + "/\(item)"
     }
 //    var path: String {
 //        switch self {
@@ -168,9 +180,4 @@ extension SandBox.Folder {
 //            return Bundle.main.bundlePath
 //        }
 //    }
-    fileprivate func path(for item: String) -> String {
-        let home = path
-        if item.hasPrefix("/") { return home + item }
-        return home + "/\(item)"
-    }
 }
