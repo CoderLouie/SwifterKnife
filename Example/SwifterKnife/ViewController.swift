@@ -21,6 +21,22 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        let roundView = UIView().then { this in
+            view.addSubview(this)
+            this.backgroundColor = .cyan
+            this.snp.makeConstraints { make in
+                make.width.height.equalTo(100)
+                make.center.equalToSuperview()
+            }
+            
+            this.roundCorners(20, corners: [.topLeft, .topRight, .bottomRight], borderWidth: 1, borderColor: .red)
+//            this.roundCorners(20, corners: [.topLeft, .topRight, .bottomRight])
+        }
+        
+        
+    }
+
+    func test_01() {
         Console.log("hello")
         Console.logFunc()
         Console.trace("world")
@@ -46,7 +62,7 @@ class ViewController: UIViewController {
         
         print(Device.current)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

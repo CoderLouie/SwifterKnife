@@ -99,21 +99,21 @@ public extension UIView {
         return nil
     }
 
-    /// Set some or all corners radiuses of view.
-    ///
-    /// - Parameters:
-    ///   - corners: array of corners to change (example: [.bottomLeft, .topRight]).
-    ///   - radius: radius for selected corners.
-    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
-        let maskPath = UIBezierPath(
-            roundedRect: bounds,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius))
-
-        let shape = CAShapeLayer()
-        shape.path = maskPath.cgPath
-        layer.mask = shape
-    }
+//    /// Set some or all corners radiuses of view.
+//    ///
+//    /// - Parameters:
+//    ///   - corners: array of corners to change (example: [.bottomLeft, .topRight]).
+//    ///   - radius: radius for selected corners.
+//    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
+//        let maskPath = UIBezierPath(
+//            roundedRect: bounds,
+//            byRoundingCorners: corners,
+//            cornerRadii: CGSize(width: radius, height: radius))
+//
+//        let shape = CAShapeLayer()
+//        shape.path = maskPath.cgPath
+//        layer.mask = shape
+//    }
 
     /// Add shadow to view.
     ///
@@ -305,6 +305,46 @@ public extension UIView {
             views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
         } while index < views.count
         return nil
+    }
+    
+    /// Set some or all corners radiuses of view.
+    ///
+    /// - Parameters:
+    ///   - radius: radius for selected corners.
+    ///   - corners: array of corners to change (example: [.bottomLeft, .topRight]).
+    ///   - fillColor: fillColor
+    ///   - borderWidth: borderWidth
+    ///   - borderColor: borderColor
+    func roundCorners(_ radius: CGFloat,
+                     corners: UIRectCorner,
+                     fillColor: UIColor? = nil,
+                     borderWidth: CGFloat? = nil,
+                     borderColor: UIColor? = nil) {
+        onDidLayout { this in
+            let path = UIBezierPath(roundedRect: this.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+            let maskLayer = CAShapeLayer()
+            var needAdd = false
+            if let width = borderWidth {
+                needAdd = true
+                maskLayer.lineWidth = width
+            }
+            if let color = borderColor {
+                needAdd = true
+                maskLayer.strokeColor = color.cgColor
+            }
+            maskLayer.path = path.cgPath
+            if !needAdd {
+                if let bg = fillColor {
+                    this.backgroundColor = bg
+                }
+                this.layer.mask = maskLayer
+            } else {
+                let bgColor = fillColor ?? this.backgroundColor
+                maskLayer.fillColor = bgColor?.cgColor
+                this.backgroundColor = .clear
+                this.layer.addSublayer(maskLayer)
+            }
+        }
     }
 }
 
