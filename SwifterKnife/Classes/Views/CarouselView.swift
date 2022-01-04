@@ -125,6 +125,7 @@ open class CarouselView: UIView {
         // cells
         currentCell.frame = CGRect(origin: CGPoint(x: width, y: 0), size: bounds.size)
         nextCell.frame = CGRect(origin: CGPoint(x: width * 2, y: 0), size: bounds.size)
+        delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
         delegate?.carouselView?(self, didSelect: currentCell, at: currentIndex)
     }
 }
