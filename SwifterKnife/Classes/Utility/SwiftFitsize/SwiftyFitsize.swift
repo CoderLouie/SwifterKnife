@@ -32,27 +32,32 @@ import UIKit
     case flexibleHeightOnlyOnSmallDevcie = 9
 }
 
+@objc public enum PixelAligment: Int {
+    case floor, round, ceil
+}
+
 @objc public final class SwiftyFitsize: NSObject {
     private override init() { }
     
     @objc public static let shared = SwiftyFitsize()
     
+    @objc public var pixelAligment: PixelAligment = .round
     /// 默认参照宽度
     @objc public private(set) var referenceW: CGFloat = 375
     /// 默认参照高度
     @objc public private(set) var referenceH: CGFloat = 812
     /// 是否为iPhoneX系列的参照高度，默认否
-    @objc public private(set) var isIPhoneXSeriesHeight: Bool = true
+    @objc public private(set) var referenceIsIPhoneXSeries: Bool = true
     /// 默认 iPad 适配缩放倍数 (0 , 1]
     @objc public private(set) var iPadFitMultiple: CGFloat = 0.5
     /// 中间安全区域参照高度
     @objc public var referenceBodyHeight: CGFloat {
-        if !isIPhoneXSeriesHeight { return referenceH }
+        if !referenceIsIPhoneXSeries { return referenceH }
         return referenceH - Screen.safeAreaT - Screen.safeAreaB
     }
     /// 仅去除顶部后的安全区域参照高度
     @objc public var referenceWithoutHeaderHeight: CGFloat {
-        if !isIPhoneXSeriesHeight { return referenceH }
+        if !referenceIsIPhoneXSeries { return referenceH }
         return referenceH - Screen.safeAreaT
     }
     /// 适配倍数
@@ -60,7 +65,6 @@ import UIKit
         return Screen.isIPad ? iPadFitMultiple : 1
     }
      
-    
     /// 设置参照的相关参数
     /// - Parameters:
     ///   - width: 参照的宽度
@@ -70,12 +74,12 @@ import UIKit
     @objc public static func reference(
         width: CGFloat = 375,
         height: CGFloat = 812,
-        isIPhoneXSeriesHeight: Bool = true,
+        isIPhoneXSeries: Bool = true,
         iPadFitMultiple: CGFloat = 0.5
     ) {
         shared.referenceW = width
         shared.referenceH = height
-        shared.isIPhoneXSeriesHeight = isIPhoneXSeriesHeight
+        shared.referenceIsIPhoneXSeries = isIPhoneXSeries
         shared.iPadFitMultiple =
             (iPadFitMultiple > 1 || iPadFitMultiple < 0) ? 1 : iPadFitMultiple
     }
@@ -113,8 +117,7 @@ import UIKit
     ) -> CGFloat {
         guard value != CGFloat.leastNormalMagnitude else { return 0 }
         let res = _fitNumber(value, fitType: fitType)
-        let scale = Screen.scale
-        return ceil(res * scale) / scale
+        return res.pixel(pixelAligment)
     }
 }
 
@@ -319,10 +322,20 @@ extension UIFont {
 
 // MARK:- OC
 public extension Screen {
-    /// 向下像素化对其
+    /// 像素化对齐
     @objc static func pix(_ value: CGFloat) -> CGFloat {
         value.pix
     }
+    @objc static func pixFloor(_ value: CGFloat) -> CGFloat {
+        value.pixel(.floor)
+    }
+    @objc static func pixRound(_ value: CGFloat) -> CGFloat {
+        value.pixel(.round)
+    }
+    @objc static func pixCeil(_ value: CGFloat) -> CGFloat {
+        value.pixel(.ceil)
+    }
+    
     @objc static func fit(_ value: CGFloat) -> CGFloat {
         value.fit
     }
@@ -363,9 +376,18 @@ extension UIViewController {
 }
 
 public extension CGFloat {
-    /// 向下像素化对齐
-    var pix: CGFloat {
+    /// 像素化对齐
+    var pix: CGFloat { pixel(.round) }
+    
+    func pixel(_ aligment: PixelAligment) -> CGFloat {
         let scale = Screen.scale
-        return Darwin.floor(self * scale) / scale
+        switch aligment {
+        case .floor:
+            return Darwin.floor(self * scale) / scale
+        case .round:
+            return Darwin.round(self * scale) / scale
+        case .ceil:
+            return Darwin.ceil(self * scale) / scale
+        }
     }
 }

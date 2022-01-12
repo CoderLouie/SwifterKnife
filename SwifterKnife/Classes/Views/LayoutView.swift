@@ -26,8 +26,11 @@ open class VirtualView: UIView {
 
 open class LayoutView: VirtualView {
     public enum Alignment {
+        /// 左/上
         case start
+        /// 中
         case center
+        /// 右/下
         case end
     }
     
@@ -61,40 +64,24 @@ open class LayoutView: VirtualView {
     open var arrangedViews: [UIView] { subviews }
     public var arrangedViewsCount: Int { return arrangedViews.count }
     
-    open func addArrangedView(_ view: UIView, alignment: Alignment? = nil) {
+    public func addArrangedView(_ view: UIView, alignment: Alignment? = nil) {
         insertArrangedView(view, at: arrangedViewsCount, alignment: alignment)
     }
+    
     open func insertArrangedView(_ view: UIView, at index: Int, alignment: Alignment? = nil) { }
-    
-    @discardableResult
-    open func removeArrangedView<View: UIView>(_ view: View) -> View? {
-        guard let idx = indexOfArrangedView(view) else { return nil }
-        return removeArrangedView(at: idx)
-    }
-    @discardableResult
-    open func removeArrangedView<View: UIView>(at index: Int) -> View? {
-        let view = arrangedViews[index]
-        view.removeFromSuperview()
-        return view as? View
-    }
-    
-    open func indexOfArrangedView<View>(_ view: View) -> Int? where View : UIView {
-        return arrangedViews.firstIndex(of: view)
-    }
 }
 open class QueueView: LayoutView { }
 
 /// 垂直方向会自动根据对齐方式布局
 final public class QueueVView: QueueView {
     
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: FlexView.Alignment? = nil) {
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertSubview(view, at: index)
         let inset = contentInsets
         let align = alignment ?? self.alignment
         
         view.snp.makeConstraints { make in
             switch align {
-                
             case .start:
                 make.top.equalTo(inset.top)
             case .center:
@@ -108,7 +95,8 @@ final public class QueueVView: QueueView {
 
 /// 水平方向会自动根据对齐方式布局
 final public class QueueHView: QueueView {
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: FlexView.Alignment? = nil) {
+    
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertSubview(view, at: index)
         let inset = contentInsets
         let align = alignment ?? self.alignment
@@ -133,7 +121,7 @@ open class FlexView: LayoutView { }
 /// 垂直方向会自动根据内容大小布局，开发者只需做好水平方向上的布局
 final public class FlexVView: FlexView {
     
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: FlexView.Alignment? = nil) {
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertSubview(view, at: index)
         let inset = contentInsets
         let align = alignment ?? self.alignment
@@ -158,7 +146,7 @@ final public class FlexVView: FlexView {
 
 /// 水平方向会自动根据内容大小布局，开发者只需做好垂直方向上的布局
 final public class FlexHView: FlexView {
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: FlexView.Alignment? = nil) {
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertSubview(view, at: index)
         let inset = contentInsets
         let align = alignment ?? self.alignment
@@ -182,39 +170,56 @@ final public class FlexHView: FlexView {
 }
 
 
-open class BoxView: FlexView {
+open class BoxView: LayoutView {
     public var spacing: CGFloat = .zero
     
-    open func addArrangedView(_ view: UIView, spacing: CGFloat? = nil, alignment: FlexView.Alignment? = nil) {
+    public func addArrangedView(_ view: UIView, spacing: CGFloat? = nil, alignment: LayoutView.Alignment? = nil) {
         insertArrangedView(view, at: arrangedViewsCount, spacing: spacing, alignment: alignment)
     }
-    open func insertArrangedView(_ view: UIView,
-                                 at index: Int,
-                                 spacing: CGFloat? = nil,
-                                 alignment: FlexView.Alignment? = nil) {
-        
-    }
-    open override func insertArrangedView(_ view: UIView, at index: Int, alignment: FlexView.Alignment? = nil) {
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertArrangedView(view, at: index, spacing: spacing, alignment: alignment)
     }
     
+    open func insertArrangedView(_ view: UIView,
+                                 at index: Int,
+                                 spacing: CGFloat? = nil,
+                                 alignment: LayoutView.Alignment? = nil) { }
+    
+    
     @discardableResult
-    open func showArrangedView<View: UIView>(_ view: View) -> View? {
+    public func showArrangedView<View: UIView>(_ view: View) -> View? {
         guard let idx = indexOfArrangedView(view) else { return nil }
         return showArrangedView(at: idx)
-    }
-    @discardableResult
-    open func hiddenArrangedView<View: UIView>(_ view: View) -> View? {
-        guard let idx = indexOfArrangedView(view) else { return nil }
-        return hiddenArrangedView(at: idx)
     }
     @discardableResult
     open func showArrangedView<View: UIView>(at index: Int) -> View {
         return subviews[index] as! View
     }
+    
+    @discardableResult
+    public func hiddenArrangedView<View: UIView>(_ view: View) -> View? {
+        guard let idx = indexOfArrangedView(view) else { return nil }
+        return hiddenArrangedView(at: idx)
+    }
     @discardableResult
     open func hiddenArrangedView<View: UIView>(at index: Int) -> View {
         return subviews[index] as! View
+    }
+    
+    @discardableResult
+    public func removeArrangedView<View: UIView>(_ view: View) -> View? {
+        guard let idx = indexOfArrangedView(view) else { return nil }
+        return removeArrangedView(at: idx)
+    }
+    @discardableResult
+    open func removeArrangedView<View: UIView>(at index: Int) -> View? {
+        let view = arrangedViews[index]
+        view.removeFromSuperview()
+        return view as? View
+    }
+    
+    open func indexOfArrangedView<View>(_ view: View) -> Int? where View : UIView {
+        return arrangedViews.firstIndex(of: view)
     }
 }
 
@@ -235,7 +240,7 @@ final public class BoxHView: BoxView {
     public override func insertArrangedView(_ view: UIView,
                                             at index: Int,
                                             spacing: CGFloat? = nil,
-                                            alignment: FlexView.Alignment? = nil) {
+                                            alignment: LayoutView.Alignment? = nil) {
         let count = items.count
         precondition(index <= count)
         insertSubview(view, at: index)
@@ -252,7 +257,7 @@ final public class BoxHView: BoxView {
             let prevView: UIView? = index == 0 ? nil : items[index - 1].view
             view.snp.makeConstraints { make in
                 if let prevView = prevView {
-                    item.leading = make.leading.equalTo(prevView.snp.right).offset(space).constraint
+                    item.leading = make.leading.equalTo(prevView.snp.trailing).offset(space).constraint
                 } else {
                     item.leading = make.leading.equalTo(inset.left).constraint
                 }
@@ -335,11 +340,11 @@ final public class BoxHView: BoxView {
             nextItem.leading?.deactivate()
             let nextView = nextItem.view
             nextView.snp.makeConstraints { make in
-                nextItem.leading = make.leading.equalTo(view.snp.right).offset(nextItem.margin).constraint
+                nextItem.leading = make.leading.equalTo(view.snp.trailing).offset(nextItem.margin).constraint
             }
             view.snp.makeConstraints { make in
                 if let prevView = prevItem?.view {
-                    item.leading = make.leading.equalTo(prevView.snp.right).offset(item.margin).constraint
+                    item.leading = make.leading.equalTo(prevView.snp.trailing).offset(item.margin).constraint
                 } else {
                     item.leading = make.leading.equalTo(inset.left).constraint
                 }
@@ -350,7 +355,7 @@ final public class BoxHView: BoxView {
             
             view.snp.makeConstraints { make in
                 if let prevView = prevView {
-                    item.leading = make.leading.equalTo(prevView.snp.right).offset(item.margin).constraint
+                    item.leading = make.leading.equalTo(prevView.snp.trailing).offset(item.margin).constraint
                 } else {
                     item.leading = make.leading.equalTo(inset.left).constraint
                 }
@@ -368,7 +373,7 @@ final public class BoxHView: BoxView {
             nextItem.leading?.deactivate()
             nextItem.view.snp.makeConstraints { make in
                 if let prevView = prevItem?.view {
-                    nextItem.leading = make.leading.equalTo(prevView.snp.right).offset(nextItem.margin).constraint
+                    nextItem.leading = make.leading.equalTo(prevView.snp.trailing).offset(nextItem.margin).constraint
                 } else {
                     nextItem.leading = make.leading.equalTo(inset.left).constraint
                 }
@@ -385,11 +390,11 @@ final public class BoxHView: BoxView {
         }
     }
     
-    private func _firstNoHiddenItem(from index: Int? = nil) -> BoxHItem? {
-        return items[(index ?? 0)...].first { !$0.view.isHidden }
+    private func _firstNoHiddenItem(from index: Int) -> BoxHItem? {
+        return items[index...].first { !$0.view.isHidden }
     }
-    private func _lastNoHiddenItem(from index: Int? = nil) -> BoxHItem? {
-        return items[...(index ?? items.count - 1)].last { !$0.view.isHidden }
+    private func _lastNoHiddenItem(from index: Int) -> BoxHItem? {
+        return items[...index].last { !$0.view.isHidden }
     }
     
     private class BoxHItem {
@@ -418,7 +423,7 @@ final public class BoxHView: BoxView {
             centerY?.deactivate()
             bottom?.deactivate()
         }
-        func makeVCons(alignment: FlexView.Alignment, inset: UIEdgeInsets) {
+        func makeVCons(alignment: LayoutView.Alignment, inset: UIEdgeInsets) {
             view.snp.makeConstraints { make in
                 switch(alignment) {
                     
@@ -456,7 +461,7 @@ final public class BoxVView: BoxView {
     public override func insertArrangedView(_ view: UIView,
                                             at index: Int,
                                             spacing: CGFloat? = nil,
-                                            alignment: FlexView.Alignment? = nil) {
+                                            alignment: LayoutView.Alignment? = nil) {
         let count = items.count
         precondition(index <= count)
         insertSubview(view, at: index)
@@ -606,11 +611,11 @@ final public class BoxVView: BoxView {
         }
     }
     
-    private func _firstNoHiddenItem(from index: Int? = nil) -> BoxVItem? {
-        return items[(index ?? 0)...].first { !$0.view.isHidden }
+    private func _firstNoHiddenItem(from index: Int) -> BoxVItem? {
+        return items[index...].first { !$0.view.isHidden }
     }
-    private func _lastNoHiddenItem(from index: Int? = nil) -> BoxVItem? {
-        return items[...(index ?? items.count - 1)].last { !$0.view.isHidden }
+    private func _lastNoHiddenItem(from index: Int) -> BoxVItem? {
+        return items[...index].last { !$0.view.isHidden }
     }
     
     private class BoxVItem {
@@ -639,7 +644,7 @@ final public class BoxVView: BoxView {
             centerX?.deactivate()
             trailing?.deactivate()
         }
-        func makeHCons(alignment: FlexView.Alignment, inset: UIEdgeInsets) {
+        func makeHCons(alignment: LayoutView.Alignment, inset: UIEdgeInsets) {
             view.snp.makeConstraints { make in
                 
                 switch(alignment) {
