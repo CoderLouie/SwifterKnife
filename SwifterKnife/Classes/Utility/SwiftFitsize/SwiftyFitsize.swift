@@ -137,7 +137,7 @@ fileprivate protocol CGFloatFitsizeable: SwiftyFitsizeable {
 }
 extension CGFloatFitsizeable {
     public func sf(_ type: SwiftyFitType) -> CGFloat {
-        return SwiftyFitsize.shared.fitNumber(self.cgfloatValue, fitType: type)
+        return SwiftyFitsize.shared.fitNumber(cgfloatValue, fitType: type)
     }
 }
 extension CGFloatFitsizeable where Self: BinaryInteger {
@@ -202,8 +202,8 @@ extension UIEdgeInsets: SwiftyFitsizeable {
 
 extension UIFont {
     @objc public var fit: UIFont {
-        let newSize = SwiftyFitsize.shared.fitNumber(self.pointSize, fitType: .flexibleWidth)
-        return self.withSize(round(newSize))
+        let newSize = SwiftyFitsize.shared.fitNumber(pointSize, fitType: .flexibleWidth)
+        return withSize(round(newSize))
     }
 }
 
@@ -335,11 +335,15 @@ public extension Screen {
     @objc static func fitC(_ value: CGFloat) -> CGFloat {
         value.fitC
     }
+    /// 只有小屏幕手机才会是配高度 small
+    @objc static func fitS(_ value: CGFloat) -> CGFloat {
+        value.fitS
+    }
 }
  
 extension UIViewController {
     public func front() -> UIViewController {
-        if let presented = self.presentedViewController {
+        if let presented = presentedViewController {
             return presented.front()
         } else if let nav = self as? UINavigationController,
                   let visible = nav.visibleViewController {
@@ -348,7 +352,7 @@ extension UIViewController {
                   let selected = tab.selectedViewController {
             return selected.front()
         } else {
-            for vc in self.children.reversed() {
+            for vc in children.reversed() {
                 if vc.view.window != nil {
                     return vc.front()
                 }
