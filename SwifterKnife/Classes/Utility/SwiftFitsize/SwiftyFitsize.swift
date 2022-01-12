@@ -104,7 +104,7 @@ import UIKit
             return Screen.withoutHeaderH / referenceWithoutHeaderHeight * value
         case .flexibleHeightOnlyOnSmallDevcie:
             if Screen.height > 570 { return value }
-            return Screen.height / referenceH * value
+            return Screen.height / referenceBodyHeight * value
         }
     }
     fileprivate func fitNumber(
