@@ -7,6 +7,7 @@
 
 import Foundation
  
+
 public final class Lazy<T> {
     private var builder: (() -> T)!
     
@@ -28,19 +29,3 @@ public final class Lazy<T> {
 }
 
 
-@propertyWrapper
-public struct Clamp<T: Comparable> {
-    private var value: T
-    private let min: T
-    private let max: T
-    public init(wrappedValue value: T, min: T, max: T) {
-        assert(value >= min && value <= max, "\(value)不在范围内[\(min), \(max)]")
-        (self.value, self.min, self.max) = (value, min, max)
-    }
-    public var wrappedValue: T {
-        get { value }
-        set {
-            value = newValue < min ? min : (newValue > max ? max : newValue)
-        }
-    }
-}

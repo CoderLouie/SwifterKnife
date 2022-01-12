@@ -10,8 +10,6 @@
 #endif
 #endif
 
-#import "SwiftyFitsize.h"
-#import "SwiftyFitsize.h"
 
 FOUNDATION_EXPORT double SwifterKnifeVersionNumber;
 FOUNDATION_EXPORT const unsigned char SwifterKnifeVersionString[];

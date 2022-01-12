@@ -10,7 +10,12 @@ import UIKit
 import SwifterKnife
 
 class ViewController: UIViewController {
- 
+    
+    @NullResettable({ "12" })
+    var name: String!
+     
+    
+    
     private lazy var subView = Lazy {
         UIView().then {
             self.view.addSubview($0)

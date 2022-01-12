@@ -95,13 +95,13 @@ import UIKit
         case .forceHeight:
             return Screen.height / referenceH * value
         case .flexibleSafeAreaCenterHeight:
-            return Screen.bodyHeight / referenceBodyHeight * value * fitMultiple
+            return Screen.bodyH / referenceBodyHeight * value * fitMultiple
         case .forceSafeAreaCenterHeight:
-            return Screen.bodyHeight / referenceBodyHeight * value
+            return Screen.bodyH / referenceBodyHeight * value
         case .flexibleSafeAreaWithoutTopHeight:
-            return Screen.withoutHeaderHeight / referenceWithoutHeaderHeight * value * fitMultiple
+            return Screen.withoutHeaderH / referenceWithoutHeaderHeight * value * fitMultiple
         case .forceSafeAreaWithoutTopHeight:
-            return Screen.withoutHeaderHeight / referenceWithoutHeaderHeight * value
+            return Screen.withoutHeaderH / referenceWithoutHeaderHeight * value
         case .flexibleHeightOnlyOnSmallDevcie:
             if Screen.height > 570 { return value }
             return Screen.height / referenceH * value
@@ -168,11 +168,6 @@ extension CGFloat: CGFloatFitsizeable {
 }
 #endif
 
-extension UIFont: SwiftyFitsizeable {
-    public func sf(_ type: SwiftyFitType) -> UIFont {
-        return self.withSize(round(self.pointSize.sf(type)))
-    }
-}
 extension CGPoint: SwiftyFitsizeable {
     public func sf(_ type: SwiftyFitType) -> CGPoint {
         return CGPoint(x: x.sf(type), y: y.sf(type))
@@ -204,22 +199,11 @@ extension UIEdgeInsets: SwiftyFitsizeable {
     }
 }
 
-// MARK:- OC
-public extension SwiftyFitsize {
-    @objc static func sf_float(_ value: CGFloat) -> CGFloat {
-        value.fit
-    }
-    @objc static func sfh_float(_ value: CGFloat) -> CGFloat {
-        value.fitH
-    }
-    @objc static func sft_float(_ value: CGFloat) -> CGFloat {
-        value.fitT
-    }
-    @objc static func sfc_float(_ value: CGFloat) -> CGFloat {
-        value.fitC
-    }
-    @objc static func sf_font(_ font: UIFont) -> UIFont {
-        font.fit
+
+extension UIFont {
+    @objc public var fit: UIFont {
+        let newSize = SwiftyFitsize.shared.fitNumber(self.pointSize, fitType: .flexibleWidth)
+        return self.withSize(round(newSize))
     }
 }
 
@@ -238,7 +222,7 @@ public extension SwiftyFitsize {
     @objc public static var isIPad: Bool {
         UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
     }
-    @objc public static let isIphneXSeries: Bool = {
+    @objc public static let isIPhoneXSeries: Bool = {
         var bottomSafeInset: CGFloat = 0
         if #available(iOS 11.0, *) {
             bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
@@ -251,7 +235,7 @@ public extension SwiftyFitsize {
         return UIApplication.shared.statusBarOrientation.isPortrait
     }
     
-    /// 安全区域刘海一侧的间距 (20/44/50)
+    /// 安全区域刘海一侧的间距 (20/44/50) 也即状态栏高度
     @objc public static var safeAreaT: CGFloat {
         let inset = safeAreaInsets
         switch UIApplication.shared.statusBarOrientation {
@@ -262,7 +246,7 @@ public extension SwiftyFitsize {
         }
     }
     
-    /// 安全区域刘海对侧的间距
+    /// 安全区域刘海对侧的间距 也即 HomeIndicator 高度
     @objc public static var safeAreaB: CGFloat {
         let inset = safeAreaInsets
         switch UIApplication.shared.statusBarOrientation {
@@ -273,11 +257,14 @@ public extension SwiftyFitsize {
         }
     }
     
-    @objc public static var bodyHeight: CGFloat {
+    @objc public static var bodyH: CGFloat {
         return height - safeAreaT - safeAreaB
     }
-    @objc public static var withoutHeaderHeight: CGFloat {
+    @objc public static var withoutHeaderH: CGFloat {
         return height - safeAreaT
+    }
+    @objc public static var withoutFooterH: CGFloat {
+        return height - safeAreaB
     }
     // 44 + 20 ---- (44/50) + 44
     @objc public static var navbarH: CGFloat {
@@ -304,6 +291,12 @@ public extension SwiftyFitsize {
     }
     
     @objc public static var safeAreaInsets: UIEdgeInsets {
+        guard global.top > 0 else { return global }
+        global = _safeAreaInsets
+        return global
+    }
+    private static var global: UIEdgeInsets = .zero
+    private static var _safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
             guard let window = currentWindow else { return .zero }
             if let inset = window.rootViewController?.view.safeAreaInsets,
@@ -320,6 +313,27 @@ public extension SwiftyFitsize {
             fatalError()
         }
         return rootVC.front()
+    }
+}
+
+
+// MARK:- OC
+public extension Screen {
+    /// 向下像素化对其
+    @objc static func pix(_ value: CGFloat) -> CGFloat {
+        value.pix
+    }
+    @objc static func fit(_ value: CGFloat) -> CGFloat {
+        value.fit
+    }
+    @objc static func fitH(_ value: CGFloat) -> CGFloat {
+        value.fitH
+    }
+    @objc static func fitT(_ value: CGFloat) -> CGFloat {
+        value.fitT
+    }
+    @objc static func fitC(_ value: CGFloat) -> CGFloat {
+        value.fitC
     }
 }
  

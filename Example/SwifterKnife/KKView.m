@@ -26,7 +26,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     UILabel *label = [UILabel new];
-    UIFont *font = [UIFont systemFontOfSize:14];
+    UIFont *font = [UIFont systemFontOfSize:14].fit;
 //    label.font = [SwiftyFitsize sf_font:font];
 //    label.font = SF_Font(font);
 //    CGFloat val = [SwiftyFitsize sf_float:15];
@@ -38,7 +38,7 @@
         
     }];
     
-    CGFloat val = SFH_Value(5);
+    CGFloat val = [Screen fit:3];
 //    [SwiftyFitsize shared].referenceH;
     return self;
 }

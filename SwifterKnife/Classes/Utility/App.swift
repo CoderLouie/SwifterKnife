@@ -9,6 +9,20 @@ import UIKit
  
 public enum App {
     
+    public static func delegate<T: UIApplicationDelegate>(as type: T.Type = T.self) -> T {
+        guard let delegate = UIApplication.shared.delegate as? T else {
+            fatalError("Cann't convert UIApplication.shared.delegate to \(type.self)")
+        }
+        return delegate
+    }
+    
+    public static var delegate: UIApplicationDelegate? {
+        UIApplication.shared.delegate
+    }
+    public static var window: UIWindow? {
+        UIApplication.shared.delegate?.window ?? nil
+    }
+    
     /// 是否处于debug模式
     public static var isDebug: Bool {
         #if DEBUG
@@ -24,8 +38,8 @@ public enum App {
     
     public static var schemes: [String] {
         guard let infoDictionary = Bundle.main.infoDictionary,
-            let urlTypes = infoDictionary["CFBundleURLTypes"] as? [AnyObject],
-            let urlType = urlTypes.first as? [String: AnyObject],
+            let urlTypes = infoDictionary["CFBundleURLTypes"] as? [Any],
+            let urlType = urlTypes.first as? [String: Any],
             let urlSchemes = urlType["CFBundleURLSchemes"] as? [String] else {
                 return []
         }

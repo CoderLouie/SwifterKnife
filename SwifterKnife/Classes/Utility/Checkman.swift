@@ -21,7 +21,7 @@ public protocol TicketHandle: Persistencable {
 
 fileprivate extension TicketHandle {
     var t_filename: String {
-        "\(NSDate().timeIntervalSince1970)"
+        "\(Int(round(Date().timeIntervalSince1970)))"
     }
 }
 
@@ -79,7 +79,7 @@ public final class Checkman<T: TicketHandle> {
               let filename = (fetchBehavior == .random ?
                                 contents.randomElement() :
                                 contents.sorted().first) else {
-            Console.log("IAP 没有需上传至服务器的本地订阅收据文件")
+            Console.log(workspace + " is cleaned")
             // 已经全部上传上传完毕
             isWorking = false
             return
@@ -98,26 +98,28 @@ public final class Checkman<T: TicketHandle> {
     private func handle(tickt item: T,
                         at path: String,
                         by manager: FileManager) {
-        T.handle(ticket: item, for: self) { result in
-            self.workQueue.async {
+        T.handle(ticket: item, for: self) { [weak self] result in
+            guard let sself = self else { return }
+            sself.workQueue.async { [weak sself] in
+                guard let this = sself else { return }
                 switch result {
                 case .remove:
                     try? manager.removeItem(atPath: path)
-                    self.goon()
+                    this.goon()
                 case .skip:
-                    self.skip(tickt: item, at: path, by: manager)
+                    this.skip(tickt: item, at: path, by: manager)
                     
                 case .retry:
-                    self.retryCount += 1
-                    self.handle(tickt: item, at: path, by: manager)
+                    this.retryCount += 1
+                    this.handle(tickt: item, at: path, by: manager)
                 case .retryWithDelay(let timeDelay):
-                    self.workQueue.asyncAfter(deadline: .now() + timeDelay) {
-                        self.retryCount += 1
-                        self.handle(tickt: item, at: path, by: manager)
+                    this.workQueue.asyncAfter(deadline: .now() + timeDelay) { [weak this] in
+                        this?.retryCount += 1
+                        this?.handle(tickt: item, at: path, by: manager)
                     }
                 case .skipWithDelay(let timeDelay):
-                    self.workQueue.asyncAfter(deadline: .now() + timeDelay) {
-                        self.skip(tickt: item, at: path, by: manager)
+                    this.workQueue.asyncAfter(deadline: .now() + timeDelay) { [weak this] in
+                        this?.skip(tickt: item, at: path, by: manager)
                     }
                 }
             }

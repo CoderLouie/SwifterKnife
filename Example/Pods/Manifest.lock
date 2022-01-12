@@ -1,14 +1,14 @@
 PODS:
   - SnapKit (5.0.1)
-  - SwifterKnife (0.1.0):
-    - SwifterKnife/Base (= 0.1.0)
-    - SwifterKnife/Extension (= 0.1.0)
-    - SwifterKnife/Utility (= 0.1.0)
-    - SwifterKnife/Views (= 0.1.0)
-  - SwifterKnife/Base (0.1.0)
-  - SwifterKnife/Extension (0.1.0)
-  - SwifterKnife/Utility (0.1.0)
-  - SwifterKnife/Views (0.1.0):
+  - SwifterKnife (0.1.3):
+    - SwifterKnife/Base (= 0.1.3)
+    - SwifterKnife/Extension (= 0.1.3)
+    - SwifterKnife/Utility (= 0.1.3)
+    - SwifterKnife/Views (= 0.1.3)
+  - SwifterKnife/Base (0.1.3)
+  - SwifterKnife/Extension (0.1.3)
+  - SwifterKnife/Utility (0.1.3)
+  - SwifterKnife/Views (0.1.3):
     - SnapKit
 
 DEPENDENCIES:
@@ -24,8 +24,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwifterKnife: da4e2c5f0efa4d892e50b3f05f6b074434528e83
+  SwifterKnife: 0d8e4799620625b57e966fd9a2dda14996d5be09
 
 PODFILE CHECKSUM: c752aef62df9f94ad8ecea3d3f4cf1ca8bdf6468
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
