@@ -106,12 +106,13 @@ open class CarouselView: UIView {
         }
     }
     
+    private var isFirstLayout = true
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard scrollView.bounds.isEmpty else {
-            return
-        }
+        guard isFirstLayout else { return }
+        isFirstLayout = false
+        
         let bounds = self.bounds
         let width = bounds.width
         side = width
