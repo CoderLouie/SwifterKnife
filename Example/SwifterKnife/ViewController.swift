@@ -9,6 +9,14 @@
 import UIKit
 import SwifterKnife
 
+//class Animal {
+//    @objc var age: Int = 2
+//    @objc func eat(){
+//        print("eat")
+//    }
+//}
+
+
 class ViewController: UIViewController {
     
     @NullResettable({ "12" })

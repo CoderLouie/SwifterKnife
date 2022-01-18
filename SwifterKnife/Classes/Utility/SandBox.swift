@@ -125,27 +125,29 @@ extension SandBox {
             self.rawValue = rawValue
         }
         
-        static var home: Folder {
-            .init(rawValue: NSHomeDirectory())
-        }
-        static var document: Folder {
-            .init(rawValue: NSHomeDirectory() + "/Documents")
-        }
-        static var library: Folder {
-            .init(rawValue: NSHomeDirectory() + "/Library")
-        }
-        static var caches: Folder {
-            .init(rawValue: NSHomeDirectory() + "/Library/Caches")
-        }
-        static var preference: Folder {
-            .init(rawValue: NSHomeDirectory() + "/Library/Preference")
-        }
-        static var temporary: Folder {
-            .init(rawValue: NSHomeDirectory() + "/tmp")
-        }
-        static var bundle: Folder {
-            .init(rawValue: Bundle.main.bundlePath)
-        }
+    }
+}
+public extension SandBox.Folder {
+    static var home: SandBox.Folder {
+        .init(rawValue: NSHomeDirectory())
+    }
+    static var document: SandBox.Folder {
+        .init(rawValue: NSHomeDirectory() + "/Documents")
+    }
+    static var library: SandBox.Folder {
+        .init(rawValue: NSHomeDirectory() + "/Library")
+    }
+    static var caches: SandBox.Folder {
+        .init(rawValue: NSHomeDirectory() + "/Library/Caches")
+    }
+    static var preference: SandBox.Folder {
+        .init(rawValue: NSHomeDirectory() + "/Library/Preference")
+    }
+    static var temporary: SandBox.Folder {
+        .init(rawValue: NSHomeDirectory() + "/tmp")
+    }
+    static var bundle: SandBox.Folder {
+        .init(rawValue: Bundle.main.bundlePath)
     }
 }
 

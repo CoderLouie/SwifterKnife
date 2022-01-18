@@ -294,7 +294,7 @@ extension UIFont {
     }
     
     @objc public static var safeAreaInsets: UIEdgeInsets {
-        guard global.top > 0 else { return global }
+        if global.top > 0 { return global }
         global = _safeAreaInsets
         return global
     }
