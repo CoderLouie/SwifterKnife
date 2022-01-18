@@ -8,78 +8,110 @@
 
 import UIKit
 import SwifterKnife
+import SnapKit
 
-//class Animal {
-//    @objc var age: Int = 2
-//    @objc func eat(){
-//        print("eat")
-//    }
-//}
-
+enum Step: Int, CaseIterable {
+    case step1 = 1
+    case step2
+    case step3
+    case step4
+    case step5
+    var title: String {
+        return "step_\(rawValue)"
+    }
+    var image: UIImage? {
+        return UIImage(named: "img_tutorial_0\(rawValue)")
+    }
+}
 
 class ViewController: UIViewController {
     
-    @NullResettable({ "12" })
-    var name: String!
-     
-    
-    
-    private lazy var subView = Lazy {
-        UIView().then {
-            self.view.addSubview($0)
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        let roundView = UIView().then { this in
-            view.addSubview(this)
-            this.backgroundColor = .cyan
-            this.snp.makeConstraints { make in
-                make.width.height.equalTo(100)
-                make.center.equalToSuperview()
-            }
-            
-            this.roundCorners(20, corners: [.topLeft, .topRight, .bottomRight], borderWidth: 1, borderColor: .red)
-//            this.roundCorners(20, corners: [.topLeft, .topRight, .bottomRight])
-        }
-        
-        
-    }
-
-    func test_01() {
-        Console.log("hello")
-        Console.logFunc()
-        Console.trace("world")
-        
-        print(subView.isInitialized)
-        print(subView.wrapped)
-        print(subView.isInitialized)
-        
-        let stack: Queue<Int> = [1, 2, 3, 4]
-        for val in stack {
-            print(val)
-            if val == 2 {
-//                stack.push(10)
-                stack.pollFirst()
-            }
-        }
- 
-//        let val = 5.fit
-        print(5.fit, 5.fitH)
-        
-        let res = stack.map { $0 + 2 }
-        print(res)
-        
-        print(Device.current)
+        setupBody()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    private unowned var stepView: CarouselView!
+    private unowned var pageControl: UIPageControl!
+    private var steps: [Step] = Step.allCases
 }
 
+
+// MARK: - Delegate
+extension ViewController: CarouselViewDelegate {
+    func carouselView(_ carouselView: CarouselView, willAppear cell: CarouselViewCell, at index: Int) {
+        guard let stepCell = cell as? StepCell else {
+            return
+        }
+        stepCell.reload(step: steps[index])
+    }
+    func carouselView(_ carouselView: CarouselView, didSelect cell: CarouselViewCell, at index: Int) {
+        pageControl.currentPage = index
+    }
+}
+
+// MARK: - Create Views
+extension ViewController {
+    private func setupBody() {
+        let direction: CarouselView.ScrollDirection = .vertical
+        stepView = CarouselView(direction: direction).then {
+//            $0.isInfinitely = false
+            $0.backgroundColor = .groupTableViewBackground
+            $0.register(StepCell.self)
+            $0.delegate = self
+            $0.itemsCount = steps.count
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.equalTo(0)
+                make.height.equalToSelfWidth().multipliedBy(96.0/78.0)
+                make.centerY.equalToSuperview()
+            }
+        }
+        pageControl = UIPageControl().then {
+            $0.numberOfPages = steps.count
+            stepView.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalTo(-10)
+            }
+        }
+    }
+}
+
+
+fileprivate class StepCell: CarouselViewCell {
+    override func setup() {
+        label = UILabel().then {
+            $0.font = UIFont.systemFont(ofSize: 20)
+            $0.numberOfLines = 0
+            $0.textAlignment = .center
+            $0.textColor = .black
+            addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(0)
+            }
+        }
+        imageView = UIImageView().then {
+            $0.contentMode = .scaleAspectFit
+            addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.top.equalTo(label.snp.bottom)
+                make.leading.trailing.bottom.equalTo(0)
+            }
+        }
+    }
+    
+    func reload(step: Step) {
+        label.text = step.title
+        imageView.image = step.image
+    }
+    
+    private unowned var label: UILabel!
+    private unowned var imageView: UIImageView!
+}

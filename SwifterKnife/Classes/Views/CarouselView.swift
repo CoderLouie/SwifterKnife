@@ -50,6 +50,32 @@ open class CarouselView: UIView {
         addSubview($0)
     }
     
+    public enum ScrollDirection {
+        case horizontal
+        case vertical
+    }
+    
+    public let scrollDirection: ScrollDirection
+    
+    public init(direction: ScrollDirection, frame: CGRect) {
+        self.scrollDirection = direction
+        super.init(frame: frame)
+    }
+    public convenience init(direction: ScrollDirection) {
+        self.init(direction: direction, frame: .zero)
+    }
+    public convenience override init(frame: CGRect) {
+        self.init(direction: .horizontal, frame: frame)
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private var isHorizontal: Bool {
+        scrollDirection == .horizontal
+    }
+//    public var isInfinitely = true
+    
     /// 当前索引, 用于currentCell
     public private(set) var currentIndex = 0
     private unowned var currentCell: CarouselViewCell!
@@ -73,31 +99,45 @@ open class CarouselView: UIView {
     
     private enum PanDirection {
         case none
-        case left
-        case fastLeft
-        case right
-        case fastRight
+        case forward
+        case fastForward
+        case backward
+        case fastBackward
     }
     private var direction: PanDirection = .none {
         didSet {
             guard oldValue != direction else { return }
             guard direction != .none else { return }
             switch direction {
-            case .left:
+            case .forward:
                 nextIndex = targetIndex ?? (currentIndex + 1)
-                if nextIndex >= itemsCount { nextIndex = 0 }
-                nextCell.frame = nextCell.frame.with {
-                    $0.origin.x = side * 2
+                if nextIndex >= itemsCount {
+//                    guard isInfinitely else { return }
+                    nextIndex = 0
                 }
-            case .fastLeft:
+                nextCell.frame = nextCell.frame.with {
+                    if isHorizontal {
+                        $0.origin.x = side * 2
+                    } else {
+                        $0.origin.y = side * 2
+                    }
+                }
+            case .fastForward:
                 reset()
-            case .right:
+            case .backward:
                 nextIndex = targetIndex ?? (currentIndex - 1)
-                if nextIndex < 0 { nextIndex = itemsCount - 1 }
-                nextCell.frame = nextCell.frame.with {
-                    $0.origin.x = 0
+                if nextIndex < 0 { 
+//                    guard isInfinitely else { return }
+                    nextIndex = itemsCount - 1
                 }
-            case .fastRight:
+                nextCell.frame = nextCell.frame.with {
+                    if isHorizontal {
+                        $0.origin.x = 0
+                    } else {
+                        $0.origin.y = 0
+                    }
+                }
+            case .fastBackward:
                 reset()
             case .none:  break
             }
@@ -114,18 +154,32 @@ open class CarouselView: UIView {
         isFirstLayout = false
         
         let bounds = self.bounds
-        let width = bounds.width
-        side = width
-        
         // scroll
         scrollView.frame = bounds
         scrollView.contentInset = .zero
-        scrollView.contentSize = CGSize(width: width * 3, height: 0)
-        scrollView.contentOffset = CGPoint(x: width, y: 0)
         
-        // cells
-        currentCell.frame = CGRect(origin: CGPoint(x: width, y: 0), size: bounds.size)
-        nextCell.frame = CGRect(origin: CGPoint(x: width * 2, y: 0), size: bounds.size)
+        if isHorizontal {
+            let width = bounds.width
+            side = width
+            
+            scrollView.contentSize = CGSize(width: width * 3, height: 0)
+            scrollView.contentOffset = CGPoint(x: width, y: 0)
+            
+            // cells
+            currentCell.frame = CGRect(origin: CGPoint(x: width, y: 0), size: bounds.size)
+            nextCell.frame = CGRect(origin: CGPoint(x: width * 2, y: 0), size: bounds.size)
+        } else {
+            let height = bounds.height
+            side = height
+            
+            scrollView.contentSize = CGSize(width: 0, height: height * 3)
+            scrollView.contentOffset = CGPoint(x: 0, y: height)
+            
+            // cells
+            currentCell.frame = CGRect(origin: CGPoint(x: 0, y: height), size: bounds.size)
+            nextCell.frame = CGRect(origin: CGPoint(x: 0, y: height * 2), size: bounds.size)
+        }
+        
         delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
         delegate?.carouselView?(self, didSelect: currentCell, at: currentIndex)
     }
@@ -133,11 +187,11 @@ open class CarouselView: UIView {
 
 // MARK: - Public Method
 extension CarouselView {
-    open var isTracking: Bool { scrollView.isTracking }
-    open var isDragging: Bool { scrollView.isDragging }
-    open var isDecelerating: Bool { scrollView.isDecelerating }
+    public var isTracking: Bool { scrollView.isTracking }
+    public var isDragging: Bool { scrollView.isDragging }
+    public var isDecelerating: Bool { scrollView.isDecelerating }
     
-    open var isScrollEnabled: Bool {
+    public var isScrollEnabled: Bool {
         get { scrollView.isScrollEnabled }
         set { scrollView.isScrollEnabled = newValue }
     }
@@ -156,7 +210,11 @@ extension CarouselView {
     }
     
     open func forward() {
-        scrollView.setContentOffset(CGPoint(x: side * 2, y: 0), animated: true)
+        if isHorizontal {
+            scrollView.setContentOffset(CGPoint(x: side * 2, y: 0), animated: true)
+        } else {
+            scrollView.setContentOffset(CGPoint(x: 0, y: side * 2), animated: true)
+        }
     }
     open func backward() {
         scrollView.setContentOffset(.zero, animated: true)
@@ -182,7 +240,10 @@ extension CarouselView: UIScrollViewDelegate {
     }
     private func scrollingDidEnd() {
         direction = .none
-        let index = scrollView.contentOffset.x / side
+        let offset = isHorizontal ?
+            scrollView.contentOffset.x :
+            scrollView.contentOffset.y
+        let index = offset / side
         if index == 1 { return }
         
         delegate?.carouselView?(self, didDeselect: currentCell, at: currentIndex)
@@ -195,17 +256,19 @@ extension CarouselView: UIScrollViewDelegate {
         guard scrollView.contentSize != .zero else {
             return
         }
-        let offsetX = scrollView.contentOffset.x
+        let offset = isHorizontal ?
+            scrollView.contentOffset.x :
+            scrollView.contentOffset.y
          
-        if offsetX > side {
-            direction = .left
-            if offsetX > side * 2.05 {
-                direction = .fastLeft
+        if offset > side {
+            direction = .forward
+            if offset > side * 2.05 {
+                direction = .fastForward
             }
-        } else if offsetX < side {
-            direction = .right
-            if offsetX < -side * 0.05 {
-                direction = .fastRight
+        } else if offset < side {
+            direction = .backward
+            if offset < -side * 0.05 {
+                direction = .fastBackward
             }
         } else {
             direction = .none
@@ -221,7 +284,12 @@ extension CarouselView: UIScrollViewDelegate {
         (currentCell.frame, nextCell.frame) = (nextCell.frame, currentCell.frame)
          
         (currentCell, nextCell) = (nextCell, currentCell)
-        scrollView.contentOffset = CGPoint(x: side, y: 0)
+        if isHorizontal {
+            scrollView.contentOffset = CGPoint(x: side, y: 0)
+        } else {
+            scrollView.contentOffset = CGPoint(x: 0, y: side)
+        }
+        
         targetIndex = nil
     }
 }
