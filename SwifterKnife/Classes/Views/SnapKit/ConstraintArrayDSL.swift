@@ -192,18 +192,18 @@ public struct ConstraintArrayDSL {
         fixedItemHeight: CGFloat,
         warpCount: Int,
         edgeInset: ConstraintEdgeInsets = .zero) {
-        
-        guard self.array.count > 1,
+        let n = self.array.count
+        guard n > 1,
               warpCount >= 1,
               let tempSuperView = commonSuperviewOfViews() else {
             return
         }
         
-        let remainder = self.array.count % warpCount
-        let quotient = self.array.count / warpCount
+        let remainder = n % warpCount
+        let quotient = n / warpCount
         
         let rowCount = (remainder == 0) ? quotient : (quotient + 1)
-        let columnCount = warpCount
+        let columnCount = rowCount == 1 ? n : warpCount
         
         for (i,v) in self.array.enumerated() {
             
@@ -258,55 +258,45 @@ public struct ConstraintArrayDSL {
         fixedInteritemSpacing: CGFloat,
         warpCount: Int,
         edgeInset: ConstraintEdgeInsets = .zero) {
-        
-        guard self.array.count > 1,
+        let n = array.count
+        guard n > 1,
               warpCount >= 1,
               let tempSuperView = commonSuperviewOfViews() else {
             return
         }
         
-        let remainder = self.array.count % warpCount
-        let quotient = self.array.count / warpCount
+        let remainder = n % warpCount
+        let quotient = n / warpCount
         
         let rowCount = (remainder == 0) ? quotient : (quotient + 1)
-        let columnCount = warpCount
+        let columnCount = rowCount == 1 ? n : warpCount
         
-        var prev: ConstraintView?
+        var prev: ConstraintView!
         
-        for (i, v) in self.array.enumerated() {
+        for (i, v) in array.enumerated() {
             
             let currentRow = i / warpCount
             let currentColumn = i % warpCount
             
             v.snp.makeConstraints { make in
-                guard let prev = prev else {//first row & first col
+                if i > 0 { make.width.height.equalTo(array[0]) }
+                
+                if currentRow == 0 {
                     make.top.equalTo(tempSuperView).offset(edgeInset.top)
-                    make.leading.equalTo(tempSuperView).offset(edgeInset.left)
-                    return
+                } else {
+                    make.top.equalTo(array[i-columnCount].snp.bottom).offset(fixedLineSpacing)
                 }
-                make.width.height.equalTo(prev)
-                if currentRow == rowCount - 1 {//last row
-                    if currentRow != 0,
-                       i - columnCount >= 0 {//just one row
-                        make.top.equalTo(self.array[i-columnCount].snp.bottom).offset(fixedLineSpacing)
-                    }
+                if currentRow == rowCount - 1 {
                     make.bottom.equalTo(tempSuperView).offset(-edgeInset.bottom)
                 }
                 
-                if currentRow != 0,
-                   currentRow != rowCount - 1 {//other row
-                    make.top.equalTo(self.array[i-columnCount].snp.bottom).offset(fixedLineSpacing)
-                }
-                if currentColumn == warpCount - 1 {//last col
-                    if currentColumn != 0 {//just one line
-                        make.leading.equalTo(prev.snp.trailing).offset(fixedInteritemSpacing)
-                    }
-                    make.trailing.equalTo(tempSuperView).offset(-edgeInset.right)
-                }
-                
-                if currentColumn != 0,
-                   currentColumn != warpCount - 1 {//other col
+                if currentColumn == 0 {
+                    make.leading.equalTo(tempSuperView).offset(edgeInset.left)
+                } else {
                     make.leading.equalTo(prev.snp.trailing).offset(fixedInteritemSpacing)
+                }
+                if currentColumn == columnCount - 1 {
+                    make.trailing.equalTo(tempSuperView).offset(-edgeInset.right)
                 }
             }
             prev = v

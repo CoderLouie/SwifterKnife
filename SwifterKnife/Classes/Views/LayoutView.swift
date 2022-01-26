@@ -90,7 +90,7 @@ final public class SequenceHView: SequenceView {
                 case .center:
                     make.top.greaterThanOrEqualTo(inset.top)
                     make.bottom.lessThanOrEqualTo(-inset.bottom)
-                    make.centerY.equalTo(self)
+                    make.centerY.equalToSuperview()
                 case .end:
                     make.top.greaterThanOrEqualTo(inset.top)
                     make.bottom.equalTo(-inset.bottom)
@@ -157,7 +157,7 @@ final public class SequenceVView: SequenceView {
                 case .center:
                     make.leading.greaterThanOrEqualTo(inset.left)
                     make.trailing.lessThanOrEqualTo(-inset.right)
-                    make.centerX.equalTo(self)
+                    make.centerX.equalToSuperview()
                 case .end:
                     make.leading.greaterThanOrEqualTo(inset.left)
                     make.trailing.equalTo(-inset.right)
@@ -235,7 +235,7 @@ final public class SudokuView: VirtualView {
         let remainder = n % warpCount
         let quotient = n / warpCount
         let rowCount = (remainder == 0) ? quotient : (quotient + 1)
-        let columnCount = warpCount
+        let columnCount = rowCount == 1 ? n : warpCount
         
         switch behaviour {
         case let .itemLength(width, height):
@@ -302,10 +302,7 @@ final public class SudokuView: VirtualView {
                     if currentColumn == 0 {
                         make.leading.equalTo(inset.left)
                     } else {
-                        make.leading.equalTo(prev.snp.trailing).offset(interitem)
-                        if (rowCount == 1 && i == n - 1) {
-                            make.trailing.equalTo(-inset.right)
-                        }
+                        make.leading.equalTo(prev.snp.trailing).offset(interitem) 
                     }
                     if currentColumn == columnCount - 1 {
                         make.trailing.equalTo(-inset.right)
@@ -343,7 +340,7 @@ final public class QueueVView: QueueView {
             case .start:
                 make.top.equalTo(inset.top)
             case .center:
-                make.centerY.equalTo(self)
+                make.centerY.equalToSuperview()
             case .end:
                 make.bottom.equalTo(-inset.bottom)
             }
@@ -365,7 +362,7 @@ final public class QueueHView: QueueView {
             case .start:
                 make.leading.equalTo(inset.left)
             case .center:
-                make.centerX.equalTo(self)
+                make.centerX.equalToSuperview()
             case .end:
                 make.trailing.equalTo(-inset.right)
             }
@@ -393,7 +390,7 @@ final public class FlexVView: FlexView {
             case .center:
                 make.top.greaterThanOrEqualTo(inset.top)
                 make.bottom.lessThanOrEqualTo(-inset.bottom)
-                make.centerY.equalTo(self)
+                make.centerY.equalToSuperview()
             case .end:
                 make.top.greaterThanOrEqualTo(inset.top)
                 make.bottom.equalTo(-inset.bottom)
@@ -418,7 +415,7 @@ final public class FlexHView: FlexView {
             case .center:
                 make.leading.greaterThanOrEqualTo(inset.left)
                 make.trailing.lessThanOrEqualTo(-inset.right)
-                make.centerX.equalTo(self)
+                make.centerX.equalToSuperview()
             case .end:
                 make.leading.greaterThanOrEqualTo(inset.left)
                 make.trailing.equalTo(-inset.right)

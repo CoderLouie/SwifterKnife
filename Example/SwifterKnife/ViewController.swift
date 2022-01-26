@@ -61,6 +61,7 @@ extension ViewController {
         SudokuView().do { this in
             this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
             this.behaviour = .spacing(10, 15)
+//            this.behaviour = .itemLength(50, 130)
             view.addSubview(this)
             this.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
