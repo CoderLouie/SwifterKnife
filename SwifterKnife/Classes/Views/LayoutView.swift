@@ -22,6 +22,14 @@ open class VirtualView: UIView {
     public override class var layerClass: AnyClass {
         return VirtualLayer.self
     }
+    
+    open override func didMoveToSuperview() {
+        if let _ = superview {
+            self.snp.makeConstraints { make in
+                make.width.height.equalTo(1).priority(100)
+            }
+        }
+    }
 }
 
 open class LayoutView: VirtualView {
@@ -35,7 +43,7 @@ open class LayoutView: VirtualView {
     }
     
     public var contentInsets: UIEdgeInsets = .zero
-    public var alignment: Alignment = .center
+    public let alignment: Alignment
     
     public init(_ alignment: Alignment = .center, frame: CGRect = .zero) {
         self.alignment = alignment
@@ -46,21 +54,286 @@ open class LayoutView: VirtualView {
     public override convenience init(frame: CGRect) {
         self.init(.center, frame: frame)
     }
-    
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    fileprivate func setup() { }
     
-    open override func didMoveToSuperview() {
-        if let _ = superview {
-            self.snp.makeConstraints { make in
-                make.width.height.equalTo(1).priority(100)
+    open func setup() { }
+}
+
+open class SequenceView: LayoutView {
+    public enum FixedBehaviour {
+        case itemLength(_ length: CGFloat)
+        case spacing(_ spacing: CGFloat)
+    }
+    public var behaviour: FixedBehaviour = .spacing(10.fit)
+    
+    open func addArrangedViews(_ views: [UIView]) {}
+    public func addArrangedViews(_ views: UIView...) {
+        addArrangedViews(views)
+    }
+}
+final public class SequenceHView: SequenceView {
+    public override func addArrangedViews(_ views: [UIView]) {
+        guard views.count > 1 else { return }
+        
+        let inset = contentInsets
+        views.forEach {
+            $0.removeFromSuperview()
+            addSubview($0)
+            
+            $0.snp.makeConstraints { make in
+                switch alignment {
+                case .start:
+                    make.top.equalTo(inset.top)
+                    make.bottom.lessThanOrEqualTo(-inset.bottom)
+                case .center:
+                    make.top.greaterThanOrEqualTo(inset.top)
+                    make.bottom.lessThanOrEqualTo(-inset.bottom)
+                    make.centerY.equalTo(self)
+                case .end:
+                    make.top.greaterThanOrEqualTo(inset.top)
+                    make.bottom.equalTo(-inset.bottom)
+                }
+            }
+        }
+        
+        switch behaviour {
+        case let .spacing(spacing):
+            var prev: UIView?
+            for view in views {
+                view.snp.makeConstraints { make in
+                    guard let prev = prev else {//first one
+                        make.leading.equalTo(inset.left)
+                        return
+                    }
+                    make.width.equalTo(prev)
+                    make.leading.equalTo(prev.snp.trailing).offset(spacing)
+                }
+                prev = view;
+            }
+            prev?.snp.makeConstraints { make in
+                make.trailing.equalTo(-inset.right)
+            }
+        case let .itemLength(itemLength):
+            let n = CGFloat(views.count - 1)
+            var prev: UIView?
+            for (i, v) in views.enumerated() {
+                v.snp.makeConstraints { make in
+                    make.width.equalTo(itemLength)
+                    if prev != nil {
+                        let offset = (CGFloat(1) - (CGFloat(i) / n)) *
+                            (itemLength + inset.left) -
+                            CGFloat(i) * inset.right / n
+                        make.trailing.equalTo(self).multipliedBy(CGFloat(i) / n).offset(offset)
+                    } else {//first one
+                        make.leading.equalTo(inset.left);
+                    }
+                     
+                }
+                prev = v;
+            }
+            prev?.snp.makeConstraints { make in
+                make.trailing.equalTo(-inset.right);
             }
         }
     }
+}
+final public class SequenceVView: SequenceView {
+    public override func addArrangedViews(_ views: [UIView]) {
+        guard views.count > 1 else { return }
+        
+        let inset = contentInsets
+        views.forEach {
+            $0.removeFromSuperview()
+            addSubview($0)
+            
+            $0.snp.makeConstraints { make in
+                switch alignment {
+                
+                case .start:
+                    make.leading.equalTo(inset.left)
+                    make.trailing.lessThanOrEqualTo(-inset.right)
+                case .center:
+                    make.leading.greaterThanOrEqualTo(inset.left)
+                    make.trailing.lessThanOrEqualTo(-inset.right)
+                    make.centerX.equalTo(self)
+                case .end:
+                    make.leading.greaterThanOrEqualTo(inset.left)
+                    make.trailing.equalTo(-inset.right)
+                }
+            }
+        }
+        
+        switch behaviour {
+        case let .spacing(spacing):
+            var prev: UIView?
+            for view in views {
+                view.snp.makeConstraints { make in
+                    guard let prev = prev else {//first one
+                        make.top.equalTo(inset.top)
+                        return
+                    }
+                    make.height.equalTo(prev)
+                    make.top.equalTo(prev.snp.bottom).offset(spacing)
+                }
+                prev = view;
+            }
+            prev?.snp.makeConstraints { make in
+                make.bottom.equalTo(-inset.bottom)
+            }
+        case let .itemLength(itemLength):
+            let n = CGFloat(views.count - 1)
+            var prev: UIView?
+            for (i, v) in views.enumerated() {
+                v.snp.makeConstraints { make in
+                    make.height.equalTo(itemLength)
+                    if prev != nil {
+                        let offset = (CGFloat(1) - (CGFloat(i) / n)) *
+                            (itemLength + inset.top) -
+                            CGFloat(i) * inset.bottom / n
+                        make.bottom.equalTo(self).multipliedBy(CGFloat(i) / n).offset(offset)
+                    } else {//first one
+                        make.top.equalTo(inset.left);
+                    }
+                     
+                }
+                prev = v;
+            }
+            prev?.snp.makeConstraints { make in
+                make.bottom.equalTo(-inset.right);
+            }
+        }
+    }
+}
+
+final public class SudokuView: VirtualView {
+    public enum FixedBehaviour {
+        case itemLength(_ width: CGFloat, _ height: CGFloat)
+        case spacing(_ lineSpacing: CGFloat, _ InteritemSpacing: CGFloat)
+    }
+    public var contentInsets: UIEdgeInsets = .zero
+    public var behaviour: FixedBehaviour = .spacing(10.fit, 10.fit)
+    public var warpCount: Int = 3
     
+    
+    public func addArrangedViews(_ views: UIView...) {
+        addArrangedViews(views)
+    }
+    public func addArrangedViews(_ views: [UIView]) {
+        let n = views.count
+        guard n > 1, warpCount >= 0 else {
+            return
+        }
+        views.forEach {
+            $0.removeFromSuperview()
+            addSubview($0)
+        }
+        
+        let inset = contentInsets
+        
+        let remainder = n % warpCount
+        let quotient = n / warpCount
+        let rowCount = (remainder == 0) ? quotient : (quotient + 1)
+        let columnCount = warpCount
+        
+        switch behaviour {
+        case let .itemLength(width, height):
+            for (i,v) in views.enumerated() {
+                
+                let currentRow = i / warpCount
+                let currentColumn = i % warpCount
+                
+                v.snp.makeConstraints { make in
+                    make.width.equalTo(width)
+                    make.height.equalTo(height)
+                    if currentRow == 0 {//fisrt row
+                        make.top.equalTo(inset.top)
+                    }
+                    if currentRow == rowCount - 1 {//last row
+                        make.bottom.equalTo(-inset.bottom)
+                    }
+                    
+                    if currentRow != 0,
+                       currentRow != rowCount - 1 {//other row
+                        let offset = (CGFloat(1) - CGFloat(currentRow) / CGFloat(rowCount - 1)) *
+                            (height + inset.top) -
+                            CGFloat(currentRow) * inset.bottom / CGFloat(rowCount - 1)
+                        make.bottom.equalTo(self).multipliedBy(CGFloat(currentRow) / CGFloat(rowCount - 1)).offset(offset)
+                    }
+                    
+                    if currentColumn == 0 {//first col
+                        make.leading.equalTo(inset.left)
+                    }
+                    if currentColumn == columnCount - 1 {//last col
+                        make.trailing.equalTo(-inset.right)
+                    }
+                    
+                    if currentColumn != 0,
+                       currentColumn != columnCount - 1 {//other col
+                        let offset = (CGFloat(1) - CGFloat(currentColumn) / CGFloat(columnCount - 1)) *
+                            (width + inset.left) -
+                            CGFloat(currentColumn) * inset.right / CGFloat(columnCount - 1)
+                        make.trailing.equalTo(self).multipliedBy(CGFloat(currentColumn) / CGFloat(columnCount - 1)).offset(offset)
+                    }
+                }
+            }
+        case let .spacing(line, interitem):
+            var prev: UIView?
+            
+            for (i, v) in views.enumerated() {
+                
+                let currentRow = i / warpCount
+                let currentColumn = i % warpCount
+                
+                v.snp.makeConstraints { make in
+                    guard let prev = prev else {//first row & first col
+                        make.top.equalTo(inset.top)
+                        make.leading.equalTo(inset.left)
+                        
+                        if currentRow == rowCount - 1 {//last row
+                            make.bottom.equalTo(-inset.bottom)
+                        }
+                        return
+                    }
+                    make.width.height.equalTo(prev)
+                    if currentRow == rowCount - 1 {//last row
+                        if currentRow == 0 {
+                            if i == n - 1 {
+                                make.trailing.equalTo(-inset.right)
+                            }
+                        }
+                        if currentRow != 0,
+                           i - columnCount >= 0 {//just one row
+                            make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
+                        }
+                        make.bottom.equalTo(-inset.bottom)
+                    }
+                    
+                    if currentRow != 0,
+                       currentRow != rowCount - 1 {//other row
+                        make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
+                    }
+                    
+                    if currentColumn == warpCount - 1 {//last col
+                        if currentColumn != 0 {//just one line
+                            make.leading.equalTo(prev.snp.trailing).offset(interitem)
+                        }
+                        make.trailing.equalTo(-inset.right)
+                    }
+                    
+                    if currentColumn != 0,
+                       currentColumn != warpCount - 1 {//other col
+                        make.leading.equalTo(prev.snp.trailing).offset(interitem)
+                    }
+                }
+                prev = v
+            }
+        }
+    }
+}
+
+open class LinearView: LayoutView {
     open var arrangedViews: [UIView] { subviews }
     public var arrangedViewsCount: Int { return arrangedViews.count }
     
@@ -70,7 +343,8 @@ open class LayoutView: VirtualView {
     
     open func insertArrangedView(_ view: UIView, at index: Int, alignment: Alignment? = nil) { }
 }
-open class QueueView: LayoutView { }
+
+open class QueueView: LinearView { }
 
 /// 垂直方向会自动根据对齐方式布局
 final public class QueueVView: QueueView {
@@ -116,7 +390,7 @@ final public class QueueHView: QueueView {
 }
 
 
-open class FlexView: LayoutView { }
+open class FlexView: LinearView { }
 
 /// 垂直方向会自动根据内容大小布局，开发者只需做好水平方向上的布局
 final public class FlexVView: FlexView {
@@ -170,7 +444,7 @@ final public class FlexHView: FlexView {
 }
 
 
-open class BoxView: LayoutView {
+open class BoxView: LinearView {
     public var spacing: CGFloat = .zero
     
     public func addArrangedView(_ view: UIView, spacing: CGFloat? = nil, alignment: LayoutView.Alignment? = nil) {

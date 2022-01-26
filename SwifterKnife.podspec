@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SwifterKnife'
-  s.version          = '0.1.3'
+  s.version          = '0.1.4'
   s.summary          = 'A handy collection of Swift method and Tools to build project faster and more efficient.'
 
   s.description      = <<-DESC
