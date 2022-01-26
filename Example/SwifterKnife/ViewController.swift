@@ -59,8 +59,8 @@ extension ViewController: CarouselViewDelegate {
 extension ViewController {
     private func setupBody() {
         SudokuView().do { this in
-            this.contentInsets = UIEdgeInsets(top: 68, left: 30, bottom: 15, right: 30)
-            this.behaviour = .spacing(0, 15)
+            this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
+            this.behaviour = .spacing(10, 15)
             view.addSubview(this)
             this.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
@@ -69,7 +69,7 @@ extension ViewController {
             }
             this.warpCount = 4
             
-            this.addArrangedViews((1...3).map { idx in
+            this.addArrangedViews((1...5).map { idx in
                 UILabel().then {
                     $0.backgroundColor = .yellow
                     $0.text = "\(idx)"

@@ -279,7 +279,8 @@ final public class SudokuView: VirtualView {
                 }
             }
         case let .spacing(line, interitem):
-            var prev: UIView?
+            
+            var prev: UIView!
             
             for (i, v) in views.enumerated() {
                 
@@ -287,44 +288,27 @@ final public class SudokuView: VirtualView {
                 let currentColumn = i % warpCount
                 
                 v.snp.makeConstraints { make in
-                    guard let prev = prev else {//first row & first col
+                    if i > 0 { make.width.height.equalTo(views[0]) }
+                    
+                    if currentRow == 0 {
                         make.top.equalTo(inset.top)
-                        make.leading.equalTo(inset.left)
-                        
-                        if currentRow == rowCount - 1 {//last row
-                            make.bottom.equalTo(-inset.bottom)
-                        }
-                        return
+                    } else {
+                        make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
                     }
-                    make.width.height.equalTo(prev)
-                    if currentRow == rowCount - 1 {//last row
-                        if currentRow == 0 {
-                            if i == n - 1 {
-                                make.trailing.equalTo(-inset.right)
-                            }
-                        }
-                        if currentRow != 0,
-                           i - columnCount >= 0 {//just one row
-                            make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
-                        }
+                    if currentRow == rowCount - 1 {
                         make.bottom.equalTo(-inset.bottom)
                     }
                     
-                    if currentRow != 0,
-                       currentRow != rowCount - 1 {//other row
-                        make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
-                    }
-                    
-                    if currentColumn == warpCount - 1 {//last col
-                        if currentColumn != 0 {//just one line
-                            make.leading.equalTo(prev.snp.trailing).offset(interitem)
-                        }
-                        make.trailing.equalTo(-inset.right)
-                    }
-                    
-                    if currentColumn != 0,
-                       currentColumn != warpCount - 1 {//other col
+                    if currentColumn == 0 {
+                        make.leading.equalTo(inset.left)
+                    } else {
                         make.leading.equalTo(prev.snp.trailing).offset(interitem)
+                        if (rowCount == 1 && i == n - 1) {
+                            make.trailing.equalTo(-inset.right)
+                        }
+                    }
+                    if currentColumn == columnCount - 1 {
+                        make.trailing.equalTo(-inset.right)
                     }
                 }
                 prev = v
