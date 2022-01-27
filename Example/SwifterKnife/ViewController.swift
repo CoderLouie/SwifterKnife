@@ -70,14 +70,16 @@ extension ViewController {
             }
             this.warpCount = 4
             
-            this.addArrangedViews((1...5).map { idx in
-                UILabel().then {
+            for i in 1...5 {
+                let label = UILabel().then {
                     $0.backgroundColor = .yellow
-                    $0.text = "\(idx)"
+                    $0.text = "\(i)"
                     $0.font = UIFont.systemFont(ofSize: 25)
                     $0.textAlignment = .center
                 }
-            })
+                this.addArrangedView(label)
+            }
+            this.placeArrangedViews()
         }
     }
     private func setupBody1() {

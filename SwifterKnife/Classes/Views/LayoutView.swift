@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
  
+// 只用做布局，不做渲染，类似UIStackView
 open class VirtualView: UIView {
     private class VirtualLayer: CATransformLayer {
         override var backgroundColor: CGColor? {
@@ -23,6 +24,15 @@ open class VirtualView: UIView {
         return VirtualLayer.self
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    open func setup() {}
+    
     open override func didMoveToSuperview() {
         if let _ = superview {
             self.snp.makeConstraints { make in
@@ -32,181 +42,7 @@ open class VirtualView: UIView {
     }
 }
 
-open class LayoutView: VirtualView {
-    public enum Alignment {
-        /// 左/上
-        case start
-        /// 中
-        case center
-        /// 右/下
-        case end
-    }
-    
-    public var contentInsets: UIEdgeInsets = .zero
-    public let alignment: Alignment
-    
-    public init(_ alignment: Alignment = .center, frame: CGRect = .zero) {
-        self.alignment = alignment
-        super.init(frame: frame)
-        setup()
-    }
-     
-    public override convenience init(frame: CGRect) {
-        self.init(.center, frame: frame)
-    }
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    open func setup() { }
-}
-
-open class SequenceView: LayoutView {
-    public enum FixedBehaviour {
-        case itemLength(_ length: CGFloat)
-        case spacing(_ spacing: CGFloat)
-    }
-    public var behaviour: FixedBehaviour = .spacing(10.fit)
-    
-    open func addArrangedViews(_ views: [UIView]) {}
-    public func addArrangedViews(_ views: UIView...) {
-        addArrangedViews(views)
-    }
-}
-final public class SequenceHView: SequenceView {
-    public override func addArrangedViews(_ views: [UIView]) {
-        guard views.count > 1 else { return }
-        
-        let inset = contentInsets
-        views.forEach {
-            $0.removeFromSuperview()
-            addSubview($0)
-            
-            $0.snp.makeConstraints { make in
-                switch alignment {
-                case .start:
-                    make.top.equalTo(inset.top)
-                    make.bottom.lessThanOrEqualTo(-inset.bottom)
-                case .center:
-                    make.top.greaterThanOrEqualTo(inset.top)
-                    make.bottom.lessThanOrEqualTo(-inset.bottom)
-                    make.centerY.equalToSuperview()
-                case .end:
-                    make.top.greaterThanOrEqualTo(inset.top)
-                    make.bottom.equalTo(-inset.bottom)
-                }
-            }
-        }
-        
-        switch behaviour {
-        case let .spacing(spacing):
-            var prev: UIView?
-            for view in views {
-                view.snp.makeConstraints { make in
-                    guard let prev = prev else {//first one
-                        make.leading.equalTo(inset.left)
-                        return
-                    }
-                    make.width.equalTo(prev)
-                    make.leading.equalTo(prev.snp.trailing).offset(spacing)
-                }
-                prev = view;
-            }
-            prev?.snp.makeConstraints { make in
-                make.trailing.equalTo(-inset.right)
-            }
-        case let .itemLength(itemLength):
-            let n = CGFloat(views.count - 1)
-            var prev: UIView?
-            for (i, v) in views.enumerated() {
-                v.snp.makeConstraints { make in
-                    make.width.equalTo(itemLength)
-                    if prev != nil {
-                        let offset = (CGFloat(1) - (CGFloat(i) / n)) *
-                            (itemLength + inset.left) -
-                            CGFloat(i) * inset.right / n
-                        make.trailing.equalTo(self).multipliedBy(CGFloat(i) / n).offset(offset)
-                    } else {//first one
-                        make.leading.equalTo(inset.left);
-                    }
-                     
-                }
-                prev = v;
-            }
-            prev?.snp.makeConstraints { make in
-                make.trailing.equalTo(-inset.right);
-            }
-        }
-    }
-}
-final public class SequenceVView: SequenceView {
-    public override func addArrangedViews(_ views: [UIView]) {
-        guard views.count > 1 else { return }
-        
-        let inset = contentInsets
-        views.forEach {
-            $0.removeFromSuperview()
-            addSubview($0)
-            
-            $0.snp.makeConstraints { make in
-                switch alignment {
-                
-                case .start:
-                    make.leading.equalTo(inset.left)
-                    make.trailing.lessThanOrEqualTo(-inset.right)
-                case .center:
-                    make.leading.greaterThanOrEqualTo(inset.left)
-                    make.trailing.lessThanOrEqualTo(-inset.right)
-                    make.centerX.equalToSuperview()
-                case .end:
-                    make.leading.greaterThanOrEqualTo(inset.left)
-                    make.trailing.equalTo(-inset.right)
-                }
-            }
-        }
-        
-        switch behaviour {
-        case let .spacing(spacing):
-            var prev: UIView?
-            for view in views {
-                view.snp.makeConstraints { make in
-                    guard let prev = prev else {//first one
-                        make.top.equalTo(inset.top)
-                        return
-                    }
-                    make.height.equalTo(prev)
-                    make.top.equalTo(prev.snp.bottom).offset(spacing)
-                }
-                prev = view;
-            }
-            prev?.snp.makeConstraints { make in
-                make.bottom.equalTo(-inset.bottom)
-            }
-        case let .itemLength(itemLength):
-            let n = CGFloat(views.count - 1)
-            var prev: UIView?
-            for (i, v) in views.enumerated() {
-                v.snp.makeConstraints { make in
-                    make.height.equalTo(itemLength)
-                    if prev != nil {
-                        let offset = (CGFloat(1) - (CGFloat(i) / n)) *
-                            (itemLength + inset.top) -
-                            CGFloat(i) * inset.bottom / n
-                        make.bottom.equalTo(self).multipliedBy(CGFloat(i) / n).offset(offset)
-                    } else {//first one
-                        make.top.equalTo(inset.left);
-                    }
-                     
-                }
-                prev = v;
-            }
-            prev?.snp.makeConstraints { make in
-                make.bottom.equalTo(-inset.right);
-            }
-        }
-    }
-}
-
+// 九宫格布局
 final public class SudokuView: VirtualView {
     public enum FixedBehaviour {
         case itemLength(_ width: CGFloat, _ height: CGFloat)
@@ -216,18 +52,33 @@ final public class SudokuView: VirtualView {
     public var behaviour: FixedBehaviour = .spacing(10.fit, 10.fit)
     public var warpCount: Int = 3
     
+    private var arrangedViews: [UIView] = []
+    public var arrangedViewsCount: Int { return arrangedViews.count }
     
-    public func addArrangedViews(_ views: UIView...) {
-        addArrangedViews(views)
+    public func addArrangedView(_ view: UIView) {
+        insertArrangedView(view, at: arrangedViewsCount)
     }
-    public func addArrangedViews(_ views: [UIView]) {
+    public func removeArrangedView(_ view: UIView) {
+        arrangedViews.removeAll { $0 === view }
+    }
+    public func removeArrangedViewAt(_ index: Int) {
+        arrangedViews.remove(at: index)
+    }
+    
+    public func insertArrangedView(_ view: UIView, at index: Int) {
+        insertSubview(view, at: index)
+        arrangedViews.insert(view, at: index)
+    }
+    
+    public func replaceArrangedViews() {
+        arrangedViews.forEach { $0.snp.removeConstraints() }
+        placeArrangedViews()
+    }
+    public func placeArrangedViews() {
+        let views = arrangedViews
         let n = views.count
         guard n > 1, warpCount >= 0 else {
             return
-        }
-        views.forEach {
-            $0.removeFromSuperview()
-            addSubview($0)
         }
         
         let inset = contentInsets
@@ -302,7 +153,7 @@ final public class SudokuView: VirtualView {
                     if currentColumn == 0 {
                         make.leading.equalTo(inset.left)
                     } else {
-                        make.leading.equalTo(prev.snp.trailing).offset(interitem) 
+                        make.leading.equalTo(prev.snp.trailing).offset(interitem)
                     }
                     if currentColumn == columnCount - 1 {
                         make.trailing.equalTo(-inset.right)
@@ -313,8 +164,33 @@ final public class SudokuView: VirtualView {
         }
     }
 }
+ 
 
-open class LinearView: LayoutView {
+open class LayoutView: VirtualView {
+    public enum Alignment {
+        /// 左/上
+        case start
+        /// 中
+        case center
+        /// 右/下
+        case end
+    }
+    
+    public var contentInsets: UIEdgeInsets = .zero
+    public let alignment: Alignment
+    
+    public init(_ alignment: Alignment = .center, frame: CGRect = .zero) {
+        self.alignment = alignment
+        super.init(frame: frame)
+    }
+     
+    public override convenience init(frame: CGRect) {
+        self.init(.center, frame: frame)
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     open var arrangedViews: [UIView] { subviews }
     public var arrangedViewsCount: Int { return arrangedViews.count }
     
@@ -325,7 +201,184 @@ open class LinearView: LayoutView {
     open func insertArrangedView(_ view: UIView, at index: Int, alignment: Alignment? = nil) { }
 }
 
-open class QueueView: LinearView { }
+open class SequenceView: LayoutView {
+    public enum FixedBehaviour {
+        case itemLength(_ length: CGFloat)
+        case spacing(_ spacing: CGFloat)
+    }
+    public var behaviour: FixedBehaviour = .spacing(10.fit)
+    
+    open func addArrangedViews(_ views: [UIView]) {}
+    public func addArrangedViews(_ views: UIView...) {
+        addArrangedViews(views)
+    }
+    
+    fileprivate final class SequenceItem {
+        let alignment: LayoutView.Alignment
+        unowned let view: UIView
+        init(view: UIView, alignment: LayoutView.Alignment) {
+            self.view = view
+            self.alignment = alignment
+        }
+    }
+    
+    fileprivate var items: [SequenceItem] = []
+    open override var arrangedViews: [UIView] { items.map(\.view) }
+    
+    open override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
+        insertSubview(view, at: index)
+        let align = alignment ?? self.alignment
+        items.insert(.init(view: view, alignment: align), at: index)
+    }
+    
+    public func removeArrangedView(_ view: UIView) {
+        items.removeAll { $0.view === view }
+    }
+    public func removeArrangedViewAt(_ index: Int) {
+        items.remove(at: index)
+    }
+    
+    open func placeArrangedViews() {}
+    public func replaceArrangedViews() {
+        items.forEach { $0.view.snp.removeConstraints() }
+        placeArrangedViews()
+    }
+}
+
+
+/// 对该试图做好宽度约束，可以对其管理的子视图 做固定宽度等间距布局 / 固定间距等宽度布局
+final public class SequenceHView: SequenceView {
+    public override func placeArrangedViews() {
+        guard items.count > 1 else { return }
+        
+        let inset = contentInsets
+        for item in items {
+            item.view.snp.makeConstraints { make in
+                switch item.alignment {
+                case .start:
+                    make.top.equalTo(inset.top)
+                    make.bottom.lessThanOrEqualTo(-inset.bottom)
+                case .center:
+                    make.top.greaterThanOrEqualTo(inset.top)
+                    make.bottom.lessThanOrEqualTo(-inset.bottom)
+                    make.centerY.equalToSuperview()
+                case .end:
+                    make.top.greaterThanOrEqualTo(inset.top)
+                    make.bottom.equalTo(-inset.bottom)
+                }
+            }
+        }
+        
+        switch behaviour {
+        case let .spacing(spacing):
+            var prev: UIView?
+            for view in arrangedViews {
+                view.snp.makeConstraints { make in
+                    guard let prev = prev else {//first one
+                        make.leading.equalTo(inset.left)
+                        return
+                    }
+                    make.width.equalTo(prev)
+                    make.leading.equalTo(prev.snp.trailing).offset(spacing)
+                }
+                prev = view;
+            }
+            prev?.snp.makeConstraints { make in
+                make.trailing.equalTo(-inset.right)
+            }
+        case let .itemLength(itemLength):
+            let n = CGFloat(items.count - 1)
+            var prev: UIView?
+            for (i, v) in arrangedViews.enumerated() {
+                v.snp.makeConstraints { make in
+                    make.width.equalTo(itemLength)
+                    if prev != nil {
+                        let offset = (CGFloat(1) - (CGFloat(i) / n)) *
+                            (itemLength + inset.left) -
+                            CGFloat(i) * inset.right / n
+                        make.trailing.equalTo(self).multipliedBy(CGFloat(i) / n).offset(offset)
+                    } else {//first one
+                        make.leading.equalTo(inset.left);
+                    }
+                     
+                }
+                prev = v;
+            }
+            prev?.snp.makeConstraints { make in
+                make.trailing.equalTo(-inset.right);
+            }
+        }
+    }
+}
+
+/// 对该试图做好高度约束，可以对其管理的子视图 做固定高度等间距布局 / 固定间距等高度布局
+final public class SequenceVView: SequenceView {
+    public override func placeArrangedViews() {
+        guard items.count > 1 else { return }
+        
+        let inset = contentInsets
+        for item in items {
+            item.view.snp.makeConstraints { make in
+                switch item.alignment {
+                
+                case .start:
+                    make.leading.equalTo(inset.left)
+                    make.trailing.lessThanOrEqualTo(-inset.right)
+                case .center:
+                    make.leading.greaterThanOrEqualTo(inset.left)
+                    make.trailing.lessThanOrEqualTo(-inset.right)
+                    make.centerX.equalToSuperview()
+                case .end:
+                    make.leading.greaterThanOrEqualTo(inset.left)
+                    make.trailing.equalTo(-inset.right)
+                }
+            }
+        }
+        
+        switch behaviour {
+        case let .spacing(spacing):
+            var prev: UIView?
+            for view in arrangedViews {
+                view.snp.makeConstraints { make in
+                    guard let prev = prev else {//first one
+                        make.top.equalTo(inset.top)
+                        return
+                    }
+                    make.height.equalTo(prev)
+                    make.top.equalTo(prev.snp.bottom).offset(spacing)
+                }
+                prev = view;
+            }
+            prev?.snp.makeConstraints { make in
+                make.bottom.equalTo(-inset.bottom)
+            }
+        case let .itemLength(itemLength):
+            let n = CGFloat(items.count - 1)
+            var prev: UIView?
+            for (i, v) in arrangedViews.enumerated() {
+                v.snp.makeConstraints { make in
+                    make.height.equalTo(itemLength)
+                    if prev != nil {
+                        let offset = (CGFloat(1) - (CGFloat(i) / n)) *
+                            (itemLength + inset.top) -
+                            CGFloat(i) * inset.bottom / n
+                        make.bottom.equalTo(self).multipliedBy(CGFloat(i) / n).offset(offset)
+                    } else {//first one
+                        make.top.equalTo(inset.left);
+                    }
+                     
+                }
+                prev = v;
+            }
+            prev?.snp.makeConstraints { make in
+                make.bottom.equalTo(-inset.right);
+            }
+        }
+    }
+}
+
+
+open class QueueView: LayoutView { }
 
 /// 垂直方向会自动根据对齐方式布局
 final public class QueueVView: QueueView {
@@ -371,7 +424,7 @@ final public class QueueHView: QueueView {
 }
 
 
-open class FlexView: LinearView { }
+open class FlexView: LayoutView { }
 
 /// 垂直方向会自动根据内容大小布局，开发者只需做好水平方向上的布局
 final public class FlexVView: FlexView {
@@ -425,7 +478,7 @@ final public class FlexHView: FlexView {
 }
 
 
-open class BoxView: LinearView {
+open class BoxView: LayoutView {
     public var spacing: CGFloat = .zero
     
     public func addArrangedView(_ view: UIView, spacing: CGFloat? = nil, alignment: LayoutView.Alignment? = nil) {
@@ -652,7 +705,7 @@ final public class BoxHView: BoxView {
         return items[...index].last { !$0.view.isHidden }
     }
     
-    private class BoxHItem {
+    private final class BoxHItem {
         var margin: CGFloat = .zero
         var leading: Constraint?
         var top: Constraint?
@@ -873,7 +926,7 @@ final public class BoxVView: BoxView {
         return items[...index].last { !$0.view.isHidden }
     }
     
-    private class BoxVItem {
+    private final class BoxVItem {
         var margin: CGFloat = .zero
         var top: Constraint?
         var leading: Constraint?

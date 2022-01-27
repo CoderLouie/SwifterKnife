@@ -366,6 +366,19 @@ public extension UIView {
 }
 
 /*
+ Content Hugging Priority
+ 抗拉伸 值(默认250)越小 越容易被拉伸，
+ 当子视图不足以填充满父视图的空间时，优先满足此属性值较大的子视图的内容展示，而拉伸属性值较低的子视图。
+ 控制当内容不足以填充满空间时，优先满足此属性值较大的子view的内容展示，而拉伸属性值较低的子view。
+ $0.setContentHuggingPriority(.required, for: .horizontal)
+ 
+ Content Compression Resistance Priority
+ 抗压缩，值(默认750)越小，越容易被压缩
+ 当子视图所需的内容超出父视图的空间时，优先展示此值较大的子视图，而省略压缩此值较小的子视图。
+ $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+ */
+
+/*
 public extension UIView {
     var centerX: CGFloat {
         get { center.y }
