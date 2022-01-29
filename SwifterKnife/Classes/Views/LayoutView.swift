@@ -42,7 +42,11 @@ open class VirtualView: UIView {
     }
 }
 
-// 九宫格布局
+/**
+ 九宫格布局
+ 
+ 对该试图做好宽高度约束，根据warpCount，对其管理的子视图  固定宽高可以做等行列间距布局 / 固定行列间距可以做等宽高布局
+ */
 final public class SudokuView: VirtualView {
     public enum FixedBehaviour {
         case itemLength(_ width: CGFloat, _ height: CGFloat)

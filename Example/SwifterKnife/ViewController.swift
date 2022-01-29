@@ -23,12 +23,16 @@ enum Step: Int, CaseIterable {
         return UIImage(named: "img_tutorial_0\(rawValue)")
     }
 }
+ 
 
 class ViewController: UIViewController {
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBody()
+         
     }
     
     override func didReceiveMemoryWarning() {
