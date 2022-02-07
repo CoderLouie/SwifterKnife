@@ -338,19 +338,13 @@ extension UIView: ViewAddition {}
 public extension ViewAddition where Self: UIView {
     
     func onDidLayout(_ closure: @escaping (Self) -> Void) {
-        var n = 0
-        func recursive() {
-            if !bounds.isEmpty ||
-                n > 1 {
-                closure(self)
-                return
-            }
-            n += 1
-            DispatchQueue.main.async {
-                recursive()
+        if !bounds.isEmpty {
+            closure(self)
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.onDidLayout(closure)
             }
         }
-        recursive()
     }
 }
 
