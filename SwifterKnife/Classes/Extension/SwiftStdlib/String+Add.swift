@@ -779,6 +779,8 @@ public extension String {
         return self
     }
  
+    /// https://www.jianshu.com/p/e4754d8609cc
+    /// #"\\[A-Z]+[A-Za-z]+\.[a-z]+"#
     /// Verify if string matches the regex pattern.
     ///
     /// - Parameter pattern: Pattern to verify.
@@ -787,6 +789,17 @@ public extension String {
         return range(of: pattern, options: .regularExpression, range: nil, locale: nil) != nil
     }
  
+    func matchesAll(pattern: String, options: NSRegularExpression.MatchingOptions = []) throws -> [(subString: String, range: Range<Int>)] {
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let matches = regex.matches(in: self, options: options, range: NSRange(startIndex..<endIndex, in: self))
+        return matches.map { result in
+//            let r1 = result.range(at: 1)
+//            let r2 = result.range(at: 2)
+//            print(r1, r2)
+            let r = result.range
+            return (String(self[Range(r, in: self)!]), r.location..<r.location + r.length)
+        }
+    }
     /// Verify if string matches the regex.
     ///
     /// - Parameters:

@@ -99,6 +99,7 @@
 		B65DEB7F27A0F67F0092AAC7 /* ConstraintArrayDSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65DEB7E27A0F67F0092AAC7 /* ConstraintArrayDSL.swift */; };
 		B68CE7762796DE3E0073C935 /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */; };
 		B68CE7782797F00F0073C935 /* UserDefaults+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */; };
+		B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696EE8527B273F00094C8F2 /* ScrollViewController.swift */; };
 		BB481E283023519AA0477BEB9686C937 /* BinaryFloatingPoint+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = C379A8A138ADED8B4D4530649C75C546 /* BinaryFloatingPoint+Add.swift */; };
 		BD333CDBCF5D2FD55920336FC271DF33 /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474AFC560A8B414B467174737DBC891A /* ConstraintItem.swift */; };
 		BE0D3BDE005640D1AAAD90E7902F8E2F /* DataCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AFEB054ED7210690570D45DE44979 /* DataCodable.swift */; };
@@ -300,6 +301,7 @@
 		B65FF11593F310C483DFB341047A3CFA /* CGPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Add.swift"; sourceTree = "<group>"; };
 		B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
+		B696EE8527B273F00094C8F2 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		BA2E4A0E975F3A27B99AA5E24477D727 /* SignedInteger+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SignedInteger+Add.swift"; sourceTree = "<group>"; };
 		BE0BE9F3D55FDB29EF516F6D6B1B6BCA /* ConstraintLayoutGuideDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutGuideDSL.swift; path = Source/ConstraintLayoutGuideDSL.swift; sourceTree = "<group>"; };
 		C07FDF02C97AF2F2E9D1FB0326FCCA63 /* Checkman.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Checkman.swift; sourceTree = "<group>"; };
@@ -681,6 +683,7 @@
 				C4C0078F45DBCD5A4DB7D81803747FD1 /* PaddingLabel.swift */,
 				21D1373AD567EEB1208598578CDAC51F /* UITableView+Add.swift */,
 				4BEBFBA3CCB24293FDBCBA8E855241BE /* UIView+Layout.swift */,
+				B696EE8527B273F00094C8F2 /* ScrollViewController.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -1088,6 +1091,7 @@
 				FB1AD6D8CA318D07AD01993A42ABD3EF /* Reusable.swift in Sources */,
 				4683345DEFAF3A9131FD178BEA378BB8 /* SandBox.swift in Sources */,
 				525AC0BE4FA1899F20787871531E1F78 /* Scanner+Add.swift in Sources */,
+				B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */,
 				5E6FA57E7E03004641060DA54BCF8BAB /* Sequence+Add.swift in Sources */,
 				2C0F3856634F714FF61D543151E5725C /* SignedInteger+Add.swift in Sources */,
 				110380C464C71F32522C2E441DCCEB35 /* Stack.swift in Sources */,

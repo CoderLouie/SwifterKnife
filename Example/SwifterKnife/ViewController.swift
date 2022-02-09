@@ -35,6 +35,12 @@ class ViewController: UIViewController {
          
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        regex2()
+         
+    }
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -45,6 +51,20 @@ class ViewController: UIViewController {
     private var steps: [Step] = Step.allCases
 }
 
+
+// MARK: - Regex
+private extension ViewController {
+    func regex2() {
+        let str = "aa11+bb23-mj33*dd44/5566%ff77"
+        let pattern = #"([a-z])\1(\d)\2"#
+        print((try? str.matchesAll(pattern: pattern)) ?? "error")
+    }
+    func regex1() {
+        let str = "_123_456_789"
+        let pattern = #"\d{3}"#
+        print((try? str.matchesAll(pattern: pattern)) ?? "error")
+    }
+}
 
 // MARK: - Delegate
 extension ViewController: CarouselViewDelegate {
