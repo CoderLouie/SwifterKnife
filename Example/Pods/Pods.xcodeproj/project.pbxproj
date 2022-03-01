@@ -100,6 +100,7 @@
 		B68CE7762796DE3E0073C935 /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */; };
 		B68CE7782797F00F0073C935 /* UserDefaults+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */; };
 		B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696EE8527B273F00094C8F2 /* ScrollViewController.swift */; };
+		B6D681C127C8AA6200F92DCF /* CAAnimation+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */; };
 		BB481E283023519AA0477BEB9686C937 /* BinaryFloatingPoint+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = C379A8A138ADED8B4D4530649C75C546 /* BinaryFloatingPoint+Add.swift */; };
 		BD333CDBCF5D2FD55920336FC271DF33 /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474AFC560A8B414B467174737DBC891A /* ConstraintItem.swift */; };
 		BE0D3BDE005640D1AAAD90E7902F8E2F /* DataCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AFEB054ED7210690570D45DE44979 /* DataCodable.swift */; };
@@ -302,6 +303,7 @@
 		B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
 		B696EE8527B273F00094C8F2 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
+		B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Add.swift"; sourceTree = "<group>"; };
 		BA2E4A0E975F3A27B99AA5E24477D727 /* SignedInteger+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SignedInteger+Add.swift"; sourceTree = "<group>"; };
 		BE0BE9F3D55FDB29EF516F6D6B1B6BCA /* ConstraintLayoutGuideDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutGuideDSL.swift; path = Source/ConstraintLayoutGuideDSL.swift; sourceTree = "<group>"; };
 		C07FDF02C97AF2F2E9D1FB0326FCCA63 /* Checkman.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Checkman.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 		0FBD449E0C8C0A7F70CA3F5E387E308B /* QuartzCore */ = {
 			isa = PBXGroup;
 			children = (
+				B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */,
 				E443CCA46121AA3988C8E34F59FEEADE /* CALayer+Add.swift */,
 				96756892DFA4B5BFFF53D3847FF366A4 /* CATransform3D+Add.swift */,
 				FA15C7DBC386C3EA50794C07D4D2766D /* CGAffineTransform+Add.swift */,
@@ -1080,6 +1083,7 @@
 				6C4A16E41752F82F2DBC746B6BB80902 /* NibOwnerLoadable.swift in Sources */,
 				488578C4453969D7089471FB93495FCC /* Optional+Add.swift in Sources */,
 				F57814F365BDDE80E1E6A738D9DD997D /* PaddingButton.swift in Sources */,
+				B6D681C127C8AA6200F92DCF /* CAAnimation+Add.swift in Sources */,
 				ABE2916C31F947EC5758FD124048D781 /* PaddingLabel.swift in Sources */,
 				D37B4A58481FDF6D68002CCDFAD1E009 /* Permission.swift in Sources */,
 				732E2B60FCA7DD8AA6F0C2809EC1F3FE /* Persistencable.swift in Sources */,

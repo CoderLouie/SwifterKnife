@@ -83,15 +83,10 @@ extension PaymentQueueControl: SKPaymentTransactionObserver {
             unhandledTransactions = purchase.processTransactions(transactions, on: queue)
             
             unhandledTransactions = restore.processTransactions(unhandledTransactions, on: queue)
-            
-//            unhandledTransactions = completeTransactionsController.processTransactions(unhandledTransactions, on: paymentQueue)
+             
             for transaction in unhandledTransactions {
                 self.queue.finishTransaction(transaction)
             }
-//            if unhandledTransactions.count > 0 {
-//                let strings = unhandledTransactions.map { $0.debugDescription }.joined(separator: "\n")
-//                print("unhandledTransactions:\n\(strings)")
-//            }
         }
     }
     

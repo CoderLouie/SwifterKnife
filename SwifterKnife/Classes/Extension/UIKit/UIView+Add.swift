@@ -337,12 +337,13 @@ public protocol ViewAddition {}
 extension UIView: ViewAddition {}
 public extension ViewAddition where Self: UIView {
     
-    func onDidLayout(_ closure: @escaping (Self) -> Void) {
-        if !bounds.isEmpty {
+    func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int = 0) {
+        // (|| n > 3) 防止该视图bounds本身的宽或者高就是0而出现无限递归的情况
+        if !bounds.isEmpty || n > 3 {
             closure(self)
         } else {
             DispatchQueue.main.async { [weak self] in
-                self?.onDidLayout(closure)
+                self?.onDidLayout(closure, n: n + 1)
             }
         }
     }
