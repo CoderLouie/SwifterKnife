@@ -100,6 +100,8 @@
 		B68CE7762796DE3E0073C935 /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */; };
 		B68CE7782797F00F0073C935 /* UserDefaults+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */; };
 		B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696EE8527B273F00094C8F2 /* ScrollViewController.swift */; };
+		B6C9CEFE27CF506500ECFDA0 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9CEFD27CF506500ECFDA0 /* Command.swift */; };
+		B6C9CF0227CF53DD00ECFDA0 /* Sequence+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */; };
 		B6D681C127C8AA6200F92DCF /* CAAnimation+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */; };
 		BB481E283023519AA0477BEB9686C937 /* BinaryFloatingPoint+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = C379A8A138ADED8B4D4530649C75C546 /* BinaryFloatingPoint+Add.swift */; };
 		BD333CDBCF5D2FD55920336FC271DF33 /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474AFC560A8B414B467174737DBC891A /* ConstraintItem.swift */; };
@@ -303,6 +305,8 @@
 		B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
 		B696EE8527B273F00094C8F2 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
+		B6C9CEFD27CF506500ECFDA0 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Async.swift"; sourceTree = "<group>"; };
 		B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Add.swift"; sourceTree = "<group>"; };
 		BA2E4A0E975F3A27B99AA5E24477D727 /* SignedInteger+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SignedInteger+Add.swift"; sourceTree = "<group>"; };
 		BE0BE9F3D55FDB29EF516F6D6B1B6BCA /* ConstraintLayoutGuideDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutGuideDSL.swift; path = Source/ConstraintLayoutGuideDSL.swift; sourceTree = "<group>"; };
@@ -455,6 +459,7 @@
 				9321C71A0FD35A16FE7B17EC0BA32DBD /* RangeReplaceableCollection+Add.swift */,
 				E292DF4312D29F0E2D5835C7C2013382 /* Result+Add.swift */,
 				6BC505B316969E50B8FB56F6C9F1C2D8 /* Sequence+Add.swift */,
+				B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */,
 				BA2E4A0E975F3A27B99AA5E24477D727 /* SignedInteger+Add.swift */,
 				19F28AFD4ADC5A9C1FF8FA14693CDF82 /* String+Add.swift */,
 				F54F87A9BAC430F2E964CACE7645BF36 /* StringProtocol+Add.swift */,
@@ -531,6 +536,7 @@
 				80EDC033A0FABA05E83378D576588E69 /* Catch.swift */,
 				9EB7B62F1DB58DE40385DA991B02955D /* Chain.swift */,
 				C07FDF02C97AF2F2E9D1FB0326FCCA63 /* Checkman.swift */,
+				B6C9CEFD27CF506500ECFDA0 /* Command.swift */,
 				2540B9C61CBA597B76626B7C4E9A1C02 /* Console.swift */,
 				33D1F12A6744E00AA3887566B84C725C /* Device.swift */,
 				E1FB6FA18AFC58CC090ED9E9673734D1 /* Files.swift */,
@@ -1094,9 +1100,11 @@
 				AA3C68E7F9F6BA54ECEA9DE37EAEE962 /* Result+Add.swift in Sources */,
 				FB1AD6D8CA318D07AD01993A42ABD3EF /* Reusable.swift in Sources */,
 				4683345DEFAF3A9131FD178BEA378BB8 /* SandBox.swift in Sources */,
+				B6C9CF0227CF53DD00ECFDA0 /* Sequence+Async.swift in Sources */,
 				525AC0BE4FA1899F20787871531E1F78 /* Scanner+Add.swift in Sources */,
 				B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */,
 				5E6FA57E7E03004641060DA54BCF8BAB /* Sequence+Add.swift in Sources */,
+				B6C9CEFE27CF506500ECFDA0 /* Command.swift in Sources */,
 				2C0F3856634F714FF61D543151E5725C /* SignedInteger+Add.swift in Sources */,
 				110380C464C71F32522C2E441DCCEB35 /* Stack.swift in Sources */,
 				A8B1781F6F43A1C75A49644E0B1DFB05 /* StoryboardBased.swift in Sources */,

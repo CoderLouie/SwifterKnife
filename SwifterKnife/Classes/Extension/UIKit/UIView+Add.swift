@@ -336,12 +336,28 @@ public extension UIView {
 public protocol ViewAddition {}
 extension UIView: ViewAddition {}
 public extension ViewAddition where Self: UIView {
-    
-    func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int = 0) {
-        // (|| n > 3) 防止该视图bounds本身的宽或者高就是0而出现无限递归的情况
-        if !bounds.isEmpty || n > 3 {
+    /// 在程序启动页面中不太建议调用此方法，
+    func onDidLayout(_ closure: @escaping (Self) -> Void) {
+        onDidLayout(closure, n: 0)
+    }
+    private func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int) {
+        if n == 0 { Console.trace("onDidLayout begin") }
+        // 防止调用层次太深
+        if n > 1000 {
+            Console.trace("onDidLayout too deep")
+            closure(self)
+            return
+        }
+        if !bounds.isEmpty {
+            Console.trace("onDidLayout end \(n)")
             closure(self)
         } else {
+            if n > 60 {
+                DispatchQueue.main.async { [weak self] in
+                    self?.setNeedsLayout()
+                    self?.layoutIfNeeded()
+                }
+            }
             DispatchQueue.main.async { [weak self] in
                 self?.onDidLayout(closure, n: n + 1)
             }
