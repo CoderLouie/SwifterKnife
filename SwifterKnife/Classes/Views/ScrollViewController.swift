@@ -2,7 +2,7 @@
 //  ScrollViewController.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/2/8.
+//  Created by liyang on 2022/2/8.
 //
 
 import UIKit
@@ -16,6 +16,15 @@ open class ScrollViewController: UIViewController {
     open var scrollDirection: ScrollDirection {
         .vertical
     }
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        setup()
+        setupViews()
+    }
+    
+    open func setup() {}
+    open func setupViews() {}
     
     open override func loadView() {
         let scrollView = UIScrollView().then { s in
@@ -43,6 +52,4 @@ open class ScrollViewController: UIViewController {
     public unowned var contentView: UIView!
 }
 
-extension ScrollViewController: UIScrollViewDelegate {
-    
-}
+extension ScrollViewController: UIScrollViewDelegate { }

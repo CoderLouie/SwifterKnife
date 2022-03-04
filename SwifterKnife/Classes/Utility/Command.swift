@@ -1,5 +1,5 @@
 //
-//  Checkman.swift
+//  Command.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2022/02/26.
@@ -7,25 +7,25 @@
 
 import Foundation
 
-final class Command<Success, Error: Swift.Error> {
+public final class Command<Success, Error: Swift.Error> {
     deinit {
         Console.log("Command deinit")
     }
     
     private(set) var isValid: Bool = true
     
-    var onSuccess: (Success) -> Void
-    var onFailure: (Error) -> Void
-    var onTimeout: (() -> Void)?
+    public var onSuccess: (Success) -> Void
+    public var onFailure: (Error) -> Void
+    public var onTimeout: (() -> Void)?
     
-    init(onSuccess: @escaping (Success) -> Void,
+    public init(onSuccess: @escaping (Success) -> Void,
          onFailure: @escaping (Error) -> Void,
          onTimeout: (() -> Void)? = nil) {
         (self.onSuccess, self.onFailure) = (onSuccess, onFailure)
         self.onTimeout = onTimeout
     }
     
-    func makeInvalid(after interval: TimeInterval) {
+    public func makeInvalid(after interval: TimeInterval) {
         timer?.cancel()
         timer = nil
         timer = DispatchQueue.main.after(interval) { [weak self] in
@@ -38,7 +38,7 @@ final class Command<Success, Error: Swift.Error> {
     }
      
     @discardableResult
-    func send(_ event: Result<Success, Error>) -> Bool {
+    public func send(_ event: Result<Success, Error>) -> Bool {
         guard isValid else { return false }
         isValid = false
         switch event {
