@@ -22,15 +22,15 @@ public protocol TimeoutError: Swift.Error {
 /// 因为Swfit不允许闭包捕获输入输出参数，所以只好包装一层
 public final class AsyncReduceContext<Output, Sequence: Swift.Sequence> {
     /// 源序列
-    let sequence: Sequence
+    public let sequence: Sequence
     /// 累计的结果，外界可以修改
-    var result: Output
+    public var result: Output
     /// 当前迭代的索引
-    fileprivate(set) var index: Int = 0
+    public fileprivate(set) var index: Int = 0
     /// 当前迭代的元素
-    fileprivate(set) var element: Sequence.Element!
+    public fileprivate(set) var element: Sequence.Element!
     /// 当前迭代元素重试的次数
-    fileprivate(set) var retryCount: Int = 0
+    public fileprivate(set) var retryCount: Int = 0
     
     fileprivate init(initialResult: Output,
          sequence: Sequence) {

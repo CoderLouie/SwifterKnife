@@ -52,6 +52,36 @@ class ViewController: UIViewController {
 }
 
 
+// MARK: - Async
+private extension ViewController {
+    func async1() {
+        enum TestError: TimeoutError {
+            case timeout
+        }
+        [30, 40, 50].asyncReduce(into: [Int](),
+                                 errorType: TestError.self,
+                                 timeoutInterval: 5) { context, item, control in
+            print("开始请求 \(item)")
+            DispatchQueue.main.after(TimeInterval((1...3).randomElement()!)) {
+                print("\(item) 请求结束")
+                if item == 40, context.retryCount < 2 {
+                    control(.retry)
+                } else {
+                    context.result.append(item + 10)
+                    control(.next)
+                }
+            }
+        } onDone: { context, result in
+            result.unwrap { value in
+                print(value)
+            } onFailure: { err in
+                print(err)
+            }
+            print("")
+        }
+    }
+}
+
 // MARK: - Regex
 private extension ViewController {
     func regex2() {
