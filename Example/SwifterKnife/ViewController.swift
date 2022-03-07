@@ -54,9 +54,7 @@ class ViewController: UIViewController {
 
 // MARK: - Async
 private extension ViewController {
-    func tagViewTest() {
-        TagListView().do {
-        }
+    func tagViewTest() { 
     }
     func async1() {
         enum TestError: TimeoutError {

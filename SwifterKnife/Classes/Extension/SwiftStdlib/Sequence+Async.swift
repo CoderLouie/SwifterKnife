@@ -28,7 +28,7 @@ public final class AsyncReduceContext<Output, Sequence: Swift.Sequence> {
     /// 当前迭代的索引
     public fileprivate(set) var index: Int = 0
     /// 当前迭代的元素
-    public fileprivate(set) var element: Sequence.Element!
+    public fileprivate(set) var element: Sequence.Element?
     /// 当前迭代元素重试的次数
     public fileprivate(set) var retryCount: Int = 0
     
