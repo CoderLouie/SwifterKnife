@@ -1,5 +1,5 @@
 //
-//  GrowingTextView.swift
+//  CustomTextView.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2021/11/09.
@@ -7,6 +7,121 @@
 
 import Foundation
 import UIKit
+
+
+@IBDesignable
+open class PlaceholderTextView: UITextView {
+    override open var text: String! {
+        didSet { setNeedsDisplay() }
+    }
+    var onDidEndEditing: ((PlaceholderTextView) -> Void)?
+    // Maximum length of text. 0 means no limit.
+    @IBInspectable open var maxLength: Int = 0
+    
+    // Trim white space and newline characters when end editing. Default is true
+    @IBInspectable open var trimWhiteSpaceWhenEndEditing: Bool = true
+     
+    @IBInspectable open var placeholder: String? {
+        didSet { setNeedsDisplay() }
+    }
+    @IBInspectable open var placeholderColor: UIColor = UIColor(white: 0.8, alpha: 1.0) {
+        didSet { setNeedsDisplay() }
+    }
+    open var attributedPlaceholder: NSAttributedString? {
+        didSet { setNeedsDisplay() }
+    }
+    
+    // Initialize
+    override public init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        commonInit()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        contentMode = .redraw
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidEndEditing), name: UITextView.textDidEndEditingNotification, object: self)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    open override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: 30)
+    }
+    
+    private func scrollToCorrectPosition() {
+        if isFirstResponder {
+            scrollRangeToVisible(NSRange(location: -1, length: 0)) // Scroll to bottom
+        } else {
+            scrollRangeToVisible(NSRange(location: 0, length: 0)) // Scroll to top
+        }
+    }
+    
+    // Show placeholder if needed
+    override open func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        if text.isEmpty {
+            let xValue = textContainerInset.left + textContainer.lineFragmentPadding
+            let yValue = textContainerInset.top
+            let width = rect.size.width - xValue - textContainerInset.right
+            let height = rect.size.height - yValue - textContainerInset.bottom
+            let placeholderRect = CGRect(x: xValue, y: yValue, width: width, height: height)
+            
+            if let attributedPlaceholder = attributedPlaceholder {
+                // Prefer to use attributedPlaceholder
+                attributedPlaceholder.draw(in: placeholderRect)
+            } else if let placeholder = placeholder {
+                // Otherwise user placeholder and inherit `text` attributes
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = textAlignment
+                var attributes: [NSAttributedString.Key: Any] = [
+                    .foregroundColor: placeholderColor,
+                    .paragraphStyle: paragraphStyle
+                ]
+                if let font = font {
+                    attributes[.font] = font
+                }
+                
+                placeholder.draw(in: placeholderRect, withAttributes: attributes)
+            }
+        }
+    }
+    
+    // Trim white space and new line characters when end editing.
+    @objc func textDidEndEditing(notification: Notification) {
+        if let sender = notification.object as? PlaceholderTextView, sender == self {
+            if trimWhiteSpaceWhenEndEditing {
+                text = text?.trimmingCharacters(in: .whitespacesAndNewlines)
+                setNeedsDisplay()
+            }
+            scrollToCorrectPosition()
+            onDidEndEditing?(self)
+        }
+    }
+    
+    // Limit the length of text
+    @objc func textDidChange(notification: Notification) {
+        if let sender = notification.object as? PlaceholderTextView, sender == self {
+            if maxLength > 0 && text.count > maxLength {
+                let endIndex = text.index(text.startIndex, offsetBy: maxLength)
+                text = String(text[..<endIndex])
+                undoManager?.removeAllActions()
+            }
+            setNeedsDisplay()
+        }
+    }
+}
+
+
+
 
 @objc public protocol GrowingTextViewDelegate: UITextViewDelegate {
     @objc optional func textViewDidChangeHeight(_ textView: GrowingTextView, height: CGFloat)
@@ -126,10 +241,10 @@ open class GrowingTextView: UITextView {
     }
     
     private func scrollToCorrectPosition() {
-        if self.isFirstResponder {
-            self.scrollRangeToVisible(NSRange(location: -1, length: 0)) // Scroll to bottom
+        if isFirstResponder {
+            scrollRangeToVisible(NSRange(location: -1, length: 0)) // Scroll to bottom
         } else {
-            self.scrollRangeToVisible(NSRange(location: 0, length: 0)) // Scroll to top
+            scrollRangeToVisible(NSRange(location: 0, length: 0)) // Scroll to top
         }
     }
     

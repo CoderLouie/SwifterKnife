@@ -14,17 +14,17 @@ public final class Lazy<T> {
     public init(_ builder: @escaping () -> T) {
         self.builder = builder
     } 
-    public private(set) var rawValue: T?
+    public private(set) var wrapped: T?
     
-    public var wrapped: T {
-        if let v = rawValue { return v }
+    public var wrappedValue: T {
+        if let v = wrapped { return v }
         let v = builder()
         builder = nil
-        rawValue = v
+        wrapped = v
         return v
     }
-    public var isInitialized: Bool {
-        return rawValue != nil
+    public var hasBuilt: Bool {
+        return wrapped != nil
     }
 }
 

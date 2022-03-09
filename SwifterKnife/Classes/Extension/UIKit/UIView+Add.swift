@@ -279,6 +279,15 @@ public extension UIView {
 }
 
 public extension UIView {
+    var autoLayoutCompressedSize: CGSize {
+        systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    }
+    
+    /**
+     let effectView: UIImageView? = view.searchSubview(reversed: false) {
+        $0.bounds.size.height < 2
+     }
+     */
     func searchSubview<T: UIView>(reversed: Bool = true, where cond: (T) -> Bool) -> T? {
         var views = [self]
         var index = 0

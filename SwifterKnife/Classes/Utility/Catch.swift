@@ -8,8 +8,8 @@
 import Foundation
 
 
-enum Catch {
-    static func test<T>(_ work: @autoclosure () throws -> T) -> Bool {
+public enum Catch {
+    public static func test<T>(_ work: @autoclosure () throws -> T) -> Bool {
         do {
             let _ = try work()
             return true
@@ -17,7 +17,7 @@ enum Catch {
             return false
         }
     }
-    static func result<T>(_ work: @autoclosure () throws -> T) -> Result<T, Error> {
+    public static func result<T>(_ work: @autoclosure () throws -> T) -> Result<T, Error> {
         do {
             let val = try work()
             return .success(val)

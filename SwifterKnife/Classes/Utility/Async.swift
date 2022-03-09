@@ -40,9 +40,7 @@ import Foundation
 
  - SeeAlso: Grand Central Dispatch
  */
-fileprivate enum GCD {
-
-}
+fileprivate enum GCD { }
 fileprivate extension GCD {
     enum Queue {
         case main, userInteractive, userInitiated, utility, `default`, background, custom(queue: DispatchQueue)

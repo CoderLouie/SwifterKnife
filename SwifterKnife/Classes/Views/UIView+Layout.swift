@@ -17,19 +17,19 @@ public extension UIView {
             s.showsVerticalScrollIndicator = false
             s.showsHorizontalScrollIndicator = false
             s.backgroundColor = .clear
-            scrollConfig?(s)
             addSubview(s)
             s.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
+            scrollConfig?(s)
         }
         return FlexHView().then {
-            contentConfig($0)
             box.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.edges.equalTo(box)
                 make.height.equalTo(self.snp.height)
             }
+            contentConfig($0)
         }
     }
     func embedInVerticallyScrollView(
@@ -40,20 +40,19 @@ public extension UIView {
             s.showsVerticalScrollIndicator = false
             s.showsHorizontalScrollIndicator = false
             s.backgroundColor = .clear
-            scrollConfig?(s)
             addSubview(s)
             s.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
+            scrollConfig?(s)
         }
         return FlexVView().then {
-            contentConfig($0)
             box.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.edges.equalTo(box)
-                make.width.equalTo(self.snp.width)
-                make.width.equalToSuperview()
+                make.width.equalTo(self.snp.width) 
             }
+            contentConfig($0)
         }
     }
 }
