@@ -283,10 +283,9 @@ public extension Dictionary {
 
 public extension Dictionary {
     func pick(keys: Key...) -> [Key: Value] {
-        var result: [Key: Value] = [:]
-        keys.forEach { result[$0] = self[$0] }
-        return result
+        pick(keys: keys)
     }
+    
     func replaceKeys(using map: [Key: Key]) -> [Key: Value] {
         var result: [Key: Value] = [:]
         for item in self {

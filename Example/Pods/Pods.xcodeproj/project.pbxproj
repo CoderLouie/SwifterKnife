@@ -100,7 +100,7 @@
 		B68CE7762796DE3E0073C935 /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */; };
 		B68CE7782797F00F0073C935 /* UserDefaults+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */; };
 		B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696EE8527B273F00094C8F2 /* ScrollViewController.swift */; };
-		B6A4D4E027D1BBCB0063C788 /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A4D4DF27D1BBCB0063C788 /* TagListView.swift */; };
+		B6A4D4E027D1BBCB0063C788 /* LinearFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A4D4DF27D1BBCB0063C788 /* LinearFlowView.swift */; };
 		B6C9CEFE27CF506500ECFDA0 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9CEFD27CF506500ECFDA0 /* Command.swift */; };
 		B6C9CF0227CF53DD00ECFDA0 /* Sequence+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */; };
 		B6D681C127C8AA6200F92DCF /* CAAnimation+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */; };
@@ -306,7 +306,7 @@
 		B68CE7752796DE3D0073C935 /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
 		B696EE8527B273F00094C8F2 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
-		B6A4D4DF27D1BBCB0063C788 /* TagListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
+		B6A4D4DF27D1BBCB0063C788 /* LinearFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearFlowView.swift; sourceTree = "<group>"; };
 		B6C9CEFD27CF506500ECFDA0 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Async.swift"; sourceTree = "<group>"; };
 		B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Add.swift"; sourceTree = "<group>"; };
@@ -695,7 +695,7 @@
 				C4C0078F45DBCD5A4DB7D81803747FD1 /* PaddingLabel.swift */,
 				4BEBFBA3CCB24293FDBCBA8E855241BE /* UIView+Layout.swift */,
 				B696EE8527B273F00094C8F2 /* ScrollViewController.swift */,
-				B6A4D4DF27D1BBCB0063C788 /* TagListView.swift */,
+				B6A4D4DF27D1BBCB0063C788 /* LinearFlowView.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -1074,7 +1074,7 @@
 				AE817C05008DCF8B8BB39E49EB811C12 /* Deque.swift in Sources */,
 				87992954BEAE23A9ABABC4E336B067EF /* Device.swift in Sources */,
 				1611B7396C7EBCF0FC45B0823D57EAE2 /* Dictionary+Add.swift in Sources */,
-				B6A4D4E027D1BBCB0063C788 /* TagListView.swift in Sources */,
+				B6A4D4E027D1BBCB0063C788 /* LinearFlowView.swift in Sources */,
 				F0ED68A525E3CA87473720757A2F0629 /* DispatchQueue+Add.swift in Sources */,
 				D35269E87129394BB58AC7D0D7271CB0 /* ExCodable.swift in Sources */,
 				1EEE55424210BE99170225904FF6665E /* Files.swift in Sources */,

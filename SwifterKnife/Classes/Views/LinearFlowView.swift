@@ -1,5 +1,5 @@
 //
-//  TagListView.swift
+//  LinearFlowView.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2022/3/2.
@@ -7,7 +7,7 @@
 
 import UIKit
  
-open class TagListView: UIView {
+open class LinearFlowView: UIView {
     public enum Alignment: Int {
         case left
         case center
@@ -19,32 +19,32 @@ open class TagListView: UIView {
     public var contentInset: UIEdgeInsets = .zero {
         didSet {
             guard oldValue != contentInset else { return }
-            replaceTagsIfNeeded()
+            replaceArrangedViewsIfNeeded()
         }
     }
     
     public var isMultipleLines: Bool = true {
         didSet {
             guard oldValue != isMultipleLines else { return }
-            replaceTagsIfNeeded()
+            replaceArrangedViewsIfNeeded()
         }
     }
     public var alignment: Alignment = .leading {
         didSet {
             guard oldValue != alignment else { return }
-            replaceTagViews()
+            replaceArrangedViewsIfNeeded()
         }
     }
     public var marginY: CGFloat = 5 {
         didSet {
             guard oldValue != marginY else { return }
-            replaceTagsIfNeeded()
+            replaceArrangedViewsIfNeeded()
         }
     }
     public var marginX: CGFloat = 5 {
         didSet {
             guard oldValue != marginX else { return }
-            replaceTagsIfNeeded()
+            replaceArrangedViewsIfNeeded()
         }
     }
     
@@ -58,79 +58,80 @@ open class TagListView: UIView {
     
     open func setup() { }
     
-    open func addTagView(_ view: UIView) {
-        tagViews.append(view)
+    open func addArrangedView(_ view: UIView) {
+        arrangedViews.append(view)
     }
-    open func insertTagView(_ view: UIView, at index: Int) {
-        tagViews.insert(view, at: index)
+    open func insertArrangedView(_ view: UIView, at index: Int) {
+        arrangedViews.insert(view, at: index)
     }
-    open func addTagViews(_ views: [UIView]) {
+    open func addArrangedViews(_ views: [UIView]) {
         for view in views {
-            tagViews.append(view)
+            arrangedViews.append(view)
         }
     }
     
     @discardableResult
-    open func removeTagView(_ view: UIView) -> Bool {
-        if let index = tagViews.firstIndex(of: view) {
+    open func removeArrangedView(_ view: UIView) -> Bool {
+        if let index = arrangedViews.firstIndex(of: view) {
             view.removeFromSuperview()
-            tagViews.remove(at: index)
+            arrangedViews.remove(at: index)
             return true
         } else {
             return false
         }
     }
     @discardableResult
-    open func removeTagView(at index: Int) -> Bool {
-        guard tagViews.indices.contains(index) else {
+    open func removeArrangedView(at index: Int) -> Bool {
+        guard arrangedViews.indices.contains(index) else {
             return false
         }
-        let view = tagViews[index]
+        let view = arrangedViews[index]
         view.removeFromSuperview()
-        tagViews.remove(at: index)
+        arrangedViews.remove(at: index)
         return true
     }
-    open func removeAllTags() {
-        (tagViews + rowViews).forEach {
+    open func removeAllArrangedViews() {
+        (arrangedViews + rowViews).forEach {
             $0.removeFromSuperview()
         }
-        tagViews = []
+        arrangedViews = []
         rowViews = []
     }
     
     open override func layoutSubviews() {
-        defer { replaceTagViews() }
+        defer { replaceArrangedViews() }
         super.layoutSubviews()
     }
     
     open override var intrinsicContentSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
     }
-    public var tagViews: [UIView] = []
+    public var arrangedViews: [UIView] = []
     public private(set) var rowViews: [UIView] = []
     public private(set) var totalHeight: CGFloat = 0
     public private(set) var totalWidth: CGFloat = 0
     private var hasLayout: Bool = false
 }
 
-public extension TagListView {
-    func replaceTagsIfNeeded() {
+public extension LinearFlowView {
+    /// 如有必要，重新摆放其管理的子视图
+    func replaceArrangedViewsIfNeeded() {
         guard hasLayout else { return }
         hasLayout = false
-        replaceTagViews()
+        replaceArrangedViews()
     }
 }
 
-private extension TagListView {
-    
-    func replaceTagViews() {
+private extension LinearFlowView {
+    /// 重新摆放其管理的子视图
+    func replaceArrangedViews() {
         guard !hasLayout else { return }
         
         let frameWidth = frame.width
         if isMultipleLines, frameWidth <= 0 { return }
         if isMultipleLines { totalWidth = frameWidth }
         
-        let views = tagViews as [UIView] + rowViews
+        let views = arrangedViews as [UIView] + rowViews
         guard !views.isEmpty else { return }
         
         hasLayout = true
@@ -160,7 +161,7 @@ private extension TagListView {
         let inset = contentInset
         let placeWidth = frameWidth - inset.horizontal
         
-        for tagView in tagViews {
+        for tagView in arrangedViews {
             let tagViewSize = tagView.intrinsicContentSize
             currentTagH = tagViewSize.height
             currentTagW = min(tagViewSize.width, placeWidth)
