@@ -296,6 +296,24 @@ public extension UIView {
 
 }
 
+// MARK: - Constraints
+
+public extension UIView {
+    /// Search constraints until we find one for the given view
+    /// and attribute. This will enumerate ancestors since constraints are
+    /// always added to the common ancestor.
+    ///
+    /// - Parameter attribute: the attribute to find.
+    /// - Returns: matching constraint.
+    func findConstraint(attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
+        let constraint = constraints.first {
+            ($0.firstAttribute == attribute && $0.firstItem as? UIView == self) ||
+                ($0.secondAttribute == attribute && $0.secondItem as? UIView == self)
+        }
+        return constraint ?? superview?.findConstraint(attribute: attribute)
+    }
+}
+
 public extension UIView {
     var compressedSize: CGSize {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)

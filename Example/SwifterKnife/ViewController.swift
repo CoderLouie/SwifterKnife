@@ -54,7 +54,9 @@ class ViewController: UIViewController {
 
 // MARK: - Async
 private extension ViewController {
-    func tagViewTest() { 
+    func tagViewTest() {
+        let imag = UIImage(named: "")
+        imag?.withAlignmentRectInsets(.zero)
     }
     func async1() {
         enum TestError: TimeoutError {

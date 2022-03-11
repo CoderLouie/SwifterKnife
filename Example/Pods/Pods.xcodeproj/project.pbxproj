@@ -101,6 +101,7 @@
 		B68CE7782797F00F0073C935 /* UserDefaults+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */; };
 		B696EE8627B273F00094C8F2 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696EE8527B273F00094C8F2 /* ScrollViewController.swift */; };
 		B6A4D4E027D1BBCB0063C788 /* LinearFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A4D4DF27D1BBCB0063C788 /* LinearFlowView.swift */; };
+		B6A578B827D9D8FE00DB2784 /* UIFont+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A578B727D9D8FE00DB2784 /* UIFont+Add.swift */; };
 		B6C9CEFE27CF506500ECFDA0 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9CEFD27CF506500ECFDA0 /* Command.swift */; };
 		B6C9CF0227CF53DD00ECFDA0 /* Sequence+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */; };
 		B6D681C127C8AA6200F92DCF /* CAAnimation+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */; };
@@ -307,6 +308,7 @@
 		B68CE7772797F00F0073C935 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
 		B696EE8527B273F00094C8F2 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		B6A4D4DF27D1BBCB0063C788 /* LinearFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearFlowView.swift; sourceTree = "<group>"; };
+		B6A578B727D9D8FE00DB2784 /* UIFont+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Add.swift"; sourceTree = "<group>"; };
 		B6C9CEFD27CF506500ECFDA0 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		B6C9CF0127CF53DD00ECFDA0 /* Sequence+Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Async.swift"; sourceTree = "<group>"; };
 		B6D681C027C8AA6200F92DCF /* CAAnimation+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Add.swift"; sourceTree = "<group>"; };
@@ -680,6 +682,7 @@
 				20EE012EA776F04B38E0AB79753EB64D /* UIView+Add.swift */,
 				B3434721E4C129F8E14E4050FCBC73C9 /* UIViewController+Add.swift */,
 				21D1373AD567EEB1208598578CDAC51F /* UITableView+Add.swift */,
+				B6A578B727D9D8FE00DB2784 /* UIFont+Add.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -1064,6 +1067,7 @@
 				E8187266EC01E60BE9D1DE5A4B382310 /* Chain.swift in Sources */,
 				6446C1D90C79D90757283E404A5FFABD /* Character+Add.swift in Sources */,
 				CF67E36B0F0AEBA89EF4CC115AD7E5F1 /* Checkman.swift in Sources */,
+				B6A578B827D9D8FE00DB2784 /* UIFont+Add.swift in Sources */,
 				16F14B6D21B1E1A3F095BA8CB5E3AFD7 /* Collection+Add.swift in Sources */,
 				87512103E67D40F6F8E5F994421523F9 /* Comparable+Add.swift in Sources */,
 				AF144DB48450283573E18B1CC0C933C4 /* Console.swift in Sources */,
