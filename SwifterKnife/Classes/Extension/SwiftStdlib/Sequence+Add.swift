@@ -14,6 +14,7 @@ public extension Sequence {
     /// - Parameter condition: condition to evaluate each element against.
     /// - Returns: true when all elements in the array match the specified condition.
     func all(matching condition: (Element) throws -> Bool) rethrows -> Bool {
+        // 如果没有元素不满足它的话，那意味着所有元素都满足它
         return try !contains { try !condition($0) }
     }
 
@@ -25,6 +26,7 @@ public extension Sequence {
     /// - Parameter condition: condition to evaluate each element against.
     /// - Returns: true when no elements in the array match the specified condition.
     func none(matching condition: (Element) throws -> Bool) rethrows -> Bool {
+        // 如果没有元素满足它的话，那意味着所有元素都不满足它
         return try !contains { try condition($0) }
     }
 
@@ -185,8 +187,9 @@ public extension Sequence {
     /// - Parameters:
     ///     - keyPath1: Key path to sort by. Must be Comparable.
     ///     - keyPath2: Key path to sort by in case the values of `keyPath1` match. Must be Comparable.
-    func sorted<T: Comparable, U: Comparable>(by keyPath1: KeyPath<Element, T>,
-                                              and keyPath2: KeyPath<Element, U>) -> [Element] {
+    func sorted<T: Comparable, U: Comparable>(
+        by keyPath1: KeyPath<Element, T>,
+        and keyPath2: KeyPath<Element, U>) -> [Element] {
         return sorted {
             if $0[keyPath: keyPath1] != $1[keyPath: keyPath1] {
                 return $0[keyPath: keyPath1] < $1[keyPath: keyPath1]
@@ -201,9 +204,10 @@ public extension Sequence {
     ///     - keyPath1: Key path to sort by. Must be Comparable.
     ///     - keyPath2: Key path to sort by in case the values of `keyPath1` match. Must be Comparable.
     ///     - keyPath3: Key path to sort by in case the values of `keyPath1` and `keyPath2` match. Must be Comparable.
-    func sorted<T: Comparable, U: Comparable, V: Comparable>(by keyPath1: KeyPath<Element, T>,
-                                                             and keyPath2: KeyPath<Element, U>,
-                                                             and keyPath3: KeyPath<Element, V>) -> [Element] {
+    func sorted<T: Comparable, U: Comparable, V: Comparable>(
+        by keyPath1: KeyPath<Element, T>,
+        and keyPath2: KeyPath<Element, U>,
+        and keyPath3: KeyPath<Element, V>) -> [Element] {
         return sorted {
             if $0[keyPath: keyPath1] != $1[keyPath: keyPath1] {
                 return $0[keyPath: keyPath1] < $1[keyPath: keyPath1]
@@ -221,7 +225,8 @@ public extension Sequence {
     ///
     /// - Parameter keyPath: Key path of the `AdditiveArithmetic` property.
     /// - Returns: The sum of the `AdditiveArithmetic` properties at `keyPath`.
-    func sum<T: AdditiveArithmetic>(for keyPath: KeyPath<Element, T>) -> T {
+    func sum<T: AdditiveArithmetic>(
+        for keyPath: KeyPath<Element, T>) -> T {
         // Inspired by: https://swiftbysundell.com/articles/reducers-in-swift/
         return reduce(.zero) { $0 + $1[keyPath: keyPath] }
     }
@@ -297,6 +302,13 @@ public extension Sequence where Element: Hashable {
             }
         }
         return Array(duplicates)
+    }
+}
+
+public extension Sequence where Element: Hashable {
+    var frequencies: [Element:Int] {
+        let frequencyPairs = self.map { ($0, 1) }
+        return Dictionary(frequencyPairs, uniquingKeysWith: +)
     }
 }
 
