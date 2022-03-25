@@ -324,3 +324,11 @@ public extension Sequence where Element: AdditiveArithmetic {
         return reduce(.zero, +)
     }
 }
+
+@inlinable public func indexSequence<T>(first: T, next: @escaping (Int, T) -> T?) -> [T] {
+    var index = 0
+    return sequence(first: first) {
+        index += 1
+        return next(index, $0)
+    }.compactMap { $0 }
+}

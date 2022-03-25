@@ -38,7 +38,15 @@ class ViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        regex2()
         let nums = [1, 2, 3, 4]
-        let nums1 = nums[...]
+        var i1 = nums.makeIterator()
+        print(i1.next() ?? "nil")
+        print(i1.next() ?? "nil")
+        var i2 = AnyIterator(i1)
+        print(i1.next() ?? "nil")
+        print(i2.next() ?? "nil")
+//        print(i2.next() ?? "nil")
+         
+        
     }
 
     

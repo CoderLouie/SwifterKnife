@@ -169,8 +169,8 @@ private extension LinearFlowView {
             currentRowH = max(currentRowH, currentTagH)
             
             if isMultipleLines,
-               currentRowW + (currentRowTagCount > 0 ? marginX : 0) + currentTagW > placeWidth {
-                currentRowW -= marginX
+               currentRowW + currentTagW > placeWidth {
+                if currentRowTagCount > 0 { currentRowW -= marginX }
                 rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
                 
                 rowIndex += 1
@@ -188,11 +188,11 @@ private extension LinearFlowView {
             currentRowTagCount += 1
             currentRowW += currentTagW + marginX
         }
-        currentRowW -= marginX
+        if currentRowTagCount > 0 { currentRowW -= marginX }
         rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
         
         if !isMultipleLines {
-            totalWidth = currentRowW - marginX + inset.horizontal
+            totalWidth = currentRowW + inset.horizontal
         }
         
         var alignment = self.alignment
@@ -218,9 +218,8 @@ private extension LinearFlowView {
             }
             view.frame.origin = CGPoint(x: rowViewX, y: rowViewY)
             rowViewY += size.height + marginY
-            totalHeight += rowViewY
         }
-        totalHeight += inset.bottom - marginY
+        totalHeight = rowViewY - marginY + inset.bottom
         
         invalidateIntrinsicContentSize()
     }
