@@ -22,6 +22,9 @@ enum Step: Int, CaseIterable {
     var image: UIImage? {
         return UIImage(named: "img_tutorial_0\(rawValue)")
     }
+    func speak() {
+        print(title, "speak")
+    }
 }
  
 
@@ -37,16 +40,7 @@ class ViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        regex2()
-        let nums = [1, 2, 3, 4]
-        var i1 = nums.makeIterator()
-        print(i1.next() ?? "nil")
-        print(i1.next() ?? "nil")
-        var i2 = AnyIterator(i1)
-        print(i1.next() ?? "nil")
-        print(i2.next() ?? "nil")
-//        print(i2.next() ?? "nil")
-         
-        
+        otherTest2()
     }
 
     
@@ -63,6 +57,37 @@ class ViewController: UIViewController {
 
 // MARK: - Async
 private extension ViewController {
+    func otherTest2() {
+        let val: Int? = 5
+        var age = 3
+        age ??= val
+        print("age is \(age)")
+        
+        var step: Step? = nil
+        step?.speak() !? "step is nil"
+    }
+    func otherTest1() {
+        
+        let nums = [1, 2, 3, 4]
+        var i1 = nums.makeIterator()
+        print(i1.next() ?? "nil")
+        print(i1.next() ?? "nil")
+        var i2 = AnyIterator(i1)
+        print(i1.next() ?? "nil")
+        print(i2.next() ?? "nil")
+//        print(i2.next() ?? "nil")
+            
+        
+        var key1: UInt8 = 0
+        let val = associatedValue(for: &key1, policy: .nonatomic_retain, default: UIView())
+        
+        do {
+            let val: Double? = nil
+            let str = "the num is \(val ??? "nil")"
+            print(str)
+        }
+    }
+    
     func tagViewTest() {
         let imag = UIImage(named: "")
         imag?.withAlignmentRectInsets(.zero)

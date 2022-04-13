@@ -25,6 +25,10 @@ public extension Optional {
         guard let rhs = rhs else { return }
         lhs = rhs
     }
+    static func ??= (lhs: inout Wrapped, rhs: Optional) {
+        guard let rhs = rhs else { return }
+        lhs = rhs
+    }
 
     /// Assign an optional value to a variable only if the variable is nil.
     ///
@@ -42,9 +46,65 @@ public extension Optional {
             lhs = rhs()
         }
     }
+    
+    static func ???(optional: Optional, nilDescribing: @autoclosure () -> String) -> String {
+        switch optional {
+        case let value?: return String(describing: value)
+        case nil: return nilDescribing()
+        }
+    }
+    
+    static func !!(optional: Optional, failureText: @autoclosure () -> String) -> Wrapped {
+        if let x = optional { return x }
+        // "Expecting integer, bug got \"\(s)\""
+        fatalError(failureText())
+    }
+    
+    /*
+     fatalError 将接受一条信息，并且无条件地停止操作。
+     assert 来检查条件，当条件结果为 false 时，停止执 行并输出信息。在发布版本中，assert 会被移除掉，也就是说条件不会被检测，操作 也永远不会挂起。
+     precondition，它和 assert 有一样的接口，但是 在发布版本中不会被移除，也就是说，只要条件被判定为 false，执行就会被停止。
+     */
+    static func !?(optional: Optional, nilDefault: @autoclosure () -> (value: Wrapped, message: String)) -> Wrapped {
+        if let x = optional { return x }
+        let info = nilDefault()
+        /// Debug模式下生效，Release模式下不会生效
+        assert(false, info.message)
+        return info.value
+    }
+    /**
+     因为对于返回 Void 的函数，使用可选链进行调用时将返回 Void?，所以利用这一点，你也可以 写一个非泛型的版本来检测一个可选链调用碰到 nil，且无操作的情况
+     
+     var output: String? = nil
+     output?.write("something") !? "Wasn't expecting chained nil here"
+     */
+    static func !?(optional: Optional, failureText: @autoclosure () -> String) where Wrapped == Void {
+        assert(optional != nil, failureText())
+    }
 }
 
 // MARK: - Operators
 
 infix operator ??=: AssignmentPrecedence
 infix operator ?=: AssignmentPrecedence
+
+infix operator ???: NilCoalescingPrecedence
+
+infix operator !!
+
+infix operator !?
+
+
+
+//public func lift<A>(_ compare: @escaping (A) -> (A) -> ComparisonResult) -> (A?) -> (A?) -> ComparisonResult {
+//    return { lhs in
+//        { rhs in
+//            switch (lhs, rhs) {
+//            case (nil, nil): return .orderedSame
+//            case (nil, _): return .orderedAscending
+//            case (_, nil): return .orderedDescending
+//            case let (l?, r?): return compare(l)(r)
+//            }
+//        }
+//    }
+//}
