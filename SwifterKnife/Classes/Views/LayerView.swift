@@ -1,9 +1,8 @@
 //
 //  LayerView.swift
-//  SwifterKnife_Example
+//  SwifterKnife
 //
-//  Created by 李阳 on 2022/4/13.
-//  Copyright © 2022 CocoaPods. All rights reserved.
+//  Created by liyang on 2022/4/13. 
 //
 
 import UIKit

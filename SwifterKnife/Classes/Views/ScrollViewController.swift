@@ -50,6 +50,10 @@ open class ScrollViewController: UIViewController {
         view as! UIScrollView
     }
     public unowned var contentView: UIView!
+    
+    deinit {
+        Console.log("\(type(of: self)) deinit")
+    }
 }
 
 extension ScrollViewController: UIScrollViewDelegate { }

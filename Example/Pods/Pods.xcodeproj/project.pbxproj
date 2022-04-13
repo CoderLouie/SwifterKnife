@@ -110,6 +110,7 @@
 		B543FD108C1C6AF6129CB4991553218B /* ConstraintConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E41DBB680A3A2ECDDD2210311B230 /* ConstraintConfig.swift */; };
 		B62311532134D33D602B7ACF4A3F540F /* UINavigationController+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA2E7584799F9BA10CB737CC17C4BD4 /* UINavigationController+Add.swift */; };
 		B6A486EF2806727A00287BE1 /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A486EE2806727A00287BE1 /* ConstraintMakerRelatable+Add.swift */; };
+		B6A486F2280679D400287BE1 /* TypedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A486F0280679CD00287BE1 /* TypedViewController.swift */; };
 		BBEB31C25C8295AA93E6632762DE5E2E /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313FFDB0236F43DD170C8C01945D69F6 /* ScrollViewController.swift */; };
 		BD333CDBCF5D2FD55920336FC271DF33 /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474AFC560A8B414B467174737DBC891A /* ConstraintItem.swift */; };
 		BD9826CB91AE7949D46CA767A550B41E /* Collection+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B3D799F1BE314602B36BE89DA9B097 /* Collection+Add.swift */; };
@@ -319,6 +320,7 @@
 		B2A7FBBF9B1C7989DBAF6FC965DDD8FF /* Date+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Date+Add.swift"; sourceTree = "<group>"; };
 		B2C627044B124626A4AC99368D22F7AB /* Command.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		B6A486EE2806727A00287BE1 /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
+		B6A486F0280679CD00287BE1 /* TypedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedViewController.swift; sourceTree = "<group>"; };
 		BD118A0E9DFF07C83066C46040EF7BC8 /* StoryboardSceneBased.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryboardSceneBased.swift; sourceTree = "<group>"; };
 		BDBE53A24F581B2D5BFC877377ADB43F /* Persistencable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Persistencable.swift; sourceTree = "<group>"; };
 		BE0BE9F3D55FDB29EF516F6D6B1B6BCA /* ConstraintLayoutGuideDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutGuideDSL.swift; path = Source/ConstraintLayoutGuideDSL.swift; sourceTree = "<group>"; };
@@ -826,6 +828,7 @@
 				313FFDB0236F43DD170C8C01945D69F6 /* ScrollViewController.swift */,
 				1839814E23B2C7FA1DE2ACA8A5FFCB9A /* UIView+Layout.swift */,
 				442EB93ECCB4E4B1542D6DA7F12F9B07 /* SnapKit */,
+				B6A486F0280679CD00287BE1 /* TypedViewController.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -1101,6 +1104,7 @@
 				253FC5A6BB35198494274A24090EF654 /* Lazy.swift in Sources */,
 				CB25415E2FE5C7148724F089D4F1E187 /* LinearFlowView.swift in Sources */,
 				2C96DB213A55DB0B8C89CBFE62FD9A61 /* Locale+Add.swift in Sources */,
+				B6A486F2280679D400287BE1 /* TypedViewController.swift in Sources */,
 				08F32C6A3D3539983742500CA1A63E3C /* LocalizedKeyRepresentable.swift in Sources */,
 				5E8C7FF2904CE75FA77358C827E15395 /* Mems.swift in Sources */,
 				371F408DC69A5F64E45D8E397874DF43 /* MutableCollection+Add.swift in Sources */,
