@@ -34,13 +34,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupBody()
          
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        regex2()
-        otherTest2()
+        otherTest3()
     }
 
     
@@ -57,6 +58,21 @@ class ViewController: UIViewController {
 
 // MARK: - Async
 private extension ViewController {
+    func otherTest4() {
+//        ManagedBufferPointer
+    }
+    func otherTest3() {
+//        let num: Int? = nil
+        let res: Result<String, Error> = .success("3")
+        let res1 = res.flatMap { _ in res }
+        asyncRepeat { index, cond, cost in
+            print("asyncRepeat work", index, cost())
+            DispatchQueue.main.after(0.5) {
+                cond(index < 3)
+            }
+        }
+
+    }
     func otherTest2() {
         let val: Int? = 5
         var age = 3

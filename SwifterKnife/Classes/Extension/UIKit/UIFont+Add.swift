@@ -9,7 +9,7 @@ import Foundation
 
 
 public extension UIFont {
-    static func regular(size: CGFloat) -> UIFont {
+    static func regular(_ size: CGFloat) -> UIFont {
         UIFont.systemFont(ofSize: size, weight: .regular)
     }
     static func semibold(_ size: CGFloat) -> UIFont {

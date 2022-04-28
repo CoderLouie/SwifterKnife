@@ -81,6 +81,20 @@ public extension Optional {
     static func !?(optional: Optional, failureText: @autoclosure () -> String) where Wrapped == Void {
         assert(optional != nil, failureText())
     }
+    
+    func or(throws error: Error) throws -> Wrapped {
+        switch self {
+        case let x?: return x
+        case nil: throw error
+        }
+    }
+    
+    var isNil: Bool {
+        switch self {
+        case _?: return false
+        case nil: return true
+        }
+    }
 }
 
 // MARK: - Operators

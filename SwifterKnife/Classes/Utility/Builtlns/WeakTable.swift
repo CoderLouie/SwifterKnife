@@ -94,6 +94,7 @@ public final class WeakTable<E: AnyObject> {
     
     private func ptr(of element: E?) -> UnsafeMutableRawPointer? {
         guard let val = element else { return nil }
+        // 获取一个指向其val的原始指针
         return Unmanaged<AnyObject>.passUnretained(val).toOpaque()
     }
 }

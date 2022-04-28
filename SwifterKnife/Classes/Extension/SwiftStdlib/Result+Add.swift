@@ -66,6 +66,7 @@ public extension Result {
     /// - returns: A `Result` containing the result of the given closure. If this instance is a failure, returns the
     ///            same failure.
     func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> Result<NewSuccess, Error> {
+        
         switch self {
         case let .success(value):
             do {

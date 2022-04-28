@@ -219,7 +219,9 @@ extension UIFont {
     
     @objc public static var width: CGFloat { sw < sh ? sw : sh }
     @objc public static var height: CGFloat { sw < sh ? sh : sw }
-    
+    @objc public static var size: CGSize {
+        CGSize(width: width, height: height)
+    }
     @objc public static let scale = UIScreen.main.scale
     
     @objc public static var isIPad: Bool {
@@ -294,12 +296,6 @@ extension UIFont {
     }
     
     @objc public static var safeAreaInsets: UIEdgeInsets {
-        if global.top > 0 { return global }
-        global = _safeAreaInsets
-        return global
-    }
-    private static var global: UIEdgeInsets = .zero
-    private static var _safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
             guard let window = currentWindow else { return .zero }
             if let inset = window.rootViewController?.view.safeAreaInsets,
@@ -308,7 +304,7 @@ extension UIFont {
         }
         let height = UIApplication.shared.statusBarFrame.height
         return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
-    }
+    } 
     
     @objc public static var frontViewController: UIViewController {
         guard let window = currentWindow,
