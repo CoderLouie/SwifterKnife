@@ -53,7 +53,8 @@ import UIKit
     /// 中间安全区域参照高度
     @objc public var referenceBodyHeight: CGFloat {
         if !referenceIsIPhoneXSeries { return referenceH }
-        return referenceH - Screen.safeAreaT - Screen.safeAreaB
+        let inset = Screen.safeAreaInsets
+        return referenceH - inset.top - inset.bottom
     }
     /// 仅去除顶部后的安全区域参照高度
     @objc public var referenceWithoutHeaderHeight: CGFloat {
@@ -64,7 +65,7 @@ import UIKit
     @objc public var fitMultiple: CGFloat {
         return Screen.isIPad ? iPadFitMultiple : 1
     }
-     
+    
     /// 设置参照的相关参数
     /// - Parameters:
     ///   - width: 参照的宽度
@@ -263,7 +264,8 @@ extension UIFont {
     }
     
     @objc public static var bodyH: CGFloat {
-        return height - safeAreaT - safeAreaB
+        let inset = safeAreaInsets
+        return height - inset.top - inset.bottom
     }
     @objc public static var withoutHeaderH: CGFloat {
         return height - safeAreaT
@@ -286,7 +288,7 @@ extension UIFont {
         }
         if #available(iOS 13.0, *) {
             if let windowScene = UIApplication.shared.connectedScenes.first {
-                if let mainWindow = windowScene.value(forKey: "delegate.window") as? UIWindow {
+                if let mainWindow = windowScene.value(forKeyPath: "delegate.window") as? UIWindow {
                     return mainWindow
                 }
                 return UIApplication.shared.windows.last

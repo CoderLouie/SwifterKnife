@@ -61,9 +61,14 @@ public extension Optional {
     }
     
     /*
+     断言
+     有条件：
+     assert 当条件为 false 时，停止执行并输出信息。发布版本无效。
+     precondition，当条件为 false 时，停止执行并输出信息。发布版本依然有效。
+     
+     无条件：
      fatalError 将接受一条信息，并且无条件地停止操作。
-     assert 来检查条件，当条件结果为 false 时，停止执 行并输出信息。在发布版本中，assert 会被移除掉，也就是说条件不会被检测，操作 也永远不会挂起。
-     precondition，它和 assert 有一样的接口，但是 在发布版本中不会被移除，也就是说，只要条件被判定为 false，执行就会被停止。
+     assertionFailure，将接受一条信息，Debug环境下停止操作。
      */
     static func !?(optional: Optional, nilDefault: @autoclosure () -> (value: Wrapped, message: String)) -> Wrapped {
         if let x = optional { return x }
