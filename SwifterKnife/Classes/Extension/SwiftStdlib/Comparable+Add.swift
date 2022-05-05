@@ -34,4 +34,9 @@ public extension Comparable {
     func clamped(to range: ClosedRange<Self>) -> Self {
         return max(range.lowerBound, min(self, range.upperBound))
     }
+    
+    static func <>= (lhs: inout Self, rhs: ClosedRange<Self>) {
+        lhs = max(rhs.lowerBound, min(lhs, rhs.upperBound))
+    }
 }
+infix operator <>=: AssignmentPrecedence

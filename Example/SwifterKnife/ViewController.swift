@@ -41,7 +41,7 @@ class ViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        regex2()
-        otherTest3()
+        otherTest4()
     }
 
     
@@ -60,6 +60,9 @@ class ViewController: UIViewController {
 private extension ViewController {
     func otherTest4() {
 //        ManagedBufferPointer
+        var num = 3
+        num <>= 5...7
+        print(num)
     }
     func otherTest3() {
 //        let num: Int? = nil
@@ -72,6 +75,7 @@ private extension ViewController {
             }
         }
 
+        
     }
     func otherTest2() {
         let val: Int? = 5
