@@ -314,7 +314,7 @@
 		AAB696403869EA313B5FDB09851C998D /* DataCodable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DataCodable.swift; sourceTree = "<group>"; };
 		AE506533E474C5326DD29AECE9CF0B33 /* Checkman.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Checkman.swift; sourceTree = "<group>"; };
 		AF64BCA08CC3948636DDB921FDD0D292 /* Mems.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Mems.swift; sourceTree = "<group>"; };
-		B0109CD108F1D0F7A55B02BDE46D81CC /* Permission.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
+		B0109CD108F1D0F7A55B02BDE46D81CC /* Permission.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Permission.swift; path = ../../../Example/SwifterKnife/Permission.swift; sourceTree = "<group>"; };
 		B10E551603AEA63D5ECDEFE3FDFDDA97 /* Queue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		B2A7FBBF9B1C7989DBAF6FC965DDD8FF /* Date+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Date+Add.swift"; sourceTree = "<group>"; };
 		B2C627044B124626A4AC99368D22F7AB /* Command.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
