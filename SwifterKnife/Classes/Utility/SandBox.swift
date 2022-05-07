@@ -10,7 +10,9 @@ import Foundation
 public enum SandBox { 
     public static func enumerateContents(
         of path: String,
-        progress:(_ path: String, _ level: Int, _ stop: UnsafeMutablePointer<Bool>) throws -> Void) rethrows {
+        progress:(_ path: String,
+                  _ level: Int,
+                  _ stop: inout Bool) throws -> Void) rethrows {
         
         let manager = FileManager.default
         var isDirectory: ObjCBool = false
@@ -50,9 +52,9 @@ public enum SandBox {
         var isDirectory: ObjCBool = false
         
         if manager.fileExists(atPath: path, isDirectory: &isDirectory) {
-            if clear {
-                try manager.removeItem(atPath: path)
-            }
+            guard clear else { return }
+            
+            try manager.removeItem(atPath: path)
             if isDirectory.boolValue {
                 try manager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
             }
@@ -94,11 +96,6 @@ public enum SandBox {
         folder.path(for: item)
     }
     
-    public static func randomVideoPath(clear: Bool = true) -> String {
-        let directory = SandBox.path(forItem: "/Video/", in: .temporary)
-        try? SandBox.reset(path: directory, clear: clear)
-        return directory + "\(UUID().uuidString).mov"
-    }
 }
 
 

@@ -14,7 +14,7 @@ public enum TicketHandleResult {
     case retryWithDelay(TimeInterval)
     case skipWithDelay(TimeInterval)
 }
-public protocol TicketHandle: Persistencable {
+public protocol TicketHandle: Persistentable {
     static func handle(ticket: Self, for checkman: Checkman<Self>, completion: @escaping (TicketHandleResult) -> Void)
 }
  
@@ -60,7 +60,7 @@ public final class Checkman<T: TicketHandle> {
     private func _append(ticket item: T) {
         let path = (workspace as NSString).appendingPathComponent(item.t_filename)
         
-        item.save(toFile: path)
+        try? item.save(toFile: path)
         _awake()
     }
     
@@ -86,7 +86,7 @@ public final class Checkman<T: TicketHandle> {
         }
         let path = folder + filename
         
-        guard let item = T.load(fromFile: path) else {
+        guard let item = try? T.load(fromFile: path) else {
             // 此文件可能被损坏，删除此文件
             try? manager.removeItem(atPath: path)
             goon()

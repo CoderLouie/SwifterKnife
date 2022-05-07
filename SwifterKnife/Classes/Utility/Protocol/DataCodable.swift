@@ -1,5 +1,5 @@
 //
-//  DataConvertible.swift
+//  DataCodable.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2021/10/19.
@@ -75,7 +75,7 @@ public extension DataDecodable where Self: Decodable {
 public extension DataDecodable where Self: NSCoding {
     static func decode(with data: Data) throws -> Self {
         guard let model = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
-            fatalError()
+            throw NSError(domain: "com.data.decodable", code: -1, userInfo: ["message": "can't unarchive data to \(Self.self)"])
         }
         return model
     }

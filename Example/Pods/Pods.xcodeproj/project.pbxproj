@@ -76,7 +76,7 @@
 		6601C5D313754E9B35B1BA94A4CEA313 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168A343071FC5B07383ED100398DD0D /* Device.swift */; };
 		694E9E3A89DF1B51C5F9125B03A84FE8 /* SandBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E399445261A990198DF3717F283E085E /* SandBox.swift */; };
 		6B036D92602C4F5525BAED525971CA8F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		6C305F8C6526C76C5BAA804B25BEAEEB /* Persistencable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE53A24F581B2D5BFC877377ADB43F /* Persistencable.swift */; };
+		6C305F8C6526C76C5BAA804B25BEAEEB /* Persistentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE53A24F581B2D5BFC877377ADB43F /* Persistentable.swift */; };
 		708922CA96E94184ED71C888725A1980 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		73AB9398729D8D153663E32793DE12E7 /* Scanner+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DFAA47397268590E66BC96E0F79C55 /* Scanner+Add.swift */; };
 		7580FAAB1BDA52F5A969E5571D1A5973 /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F460233F2A555D41511B6CCA66A124 /* ConstraintAttributes.swift */; };
@@ -322,7 +322,7 @@
 		B6A486F0280679CD00287BE1 /* TypedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedViewController.swift; sourceTree = "<group>"; };
 		B6E2F1DA2817ED1700A219CB /* Funcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Funcs.swift; sourceTree = "<group>"; };
 		BD118A0E9DFF07C83066C46040EF7BC8 /* StoryboardSceneBased.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryboardSceneBased.swift; sourceTree = "<group>"; };
-		BDBE53A24F581B2D5BFC877377ADB43F /* Persistencable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Persistencable.swift; sourceTree = "<group>"; };
+		BDBE53A24F581B2D5BFC877377ADB43F /* Persistentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Persistentable.swift; sourceTree = "<group>"; };
 		BE0BE9F3D55FDB29EF516F6D6B1B6BCA /* ConstraintLayoutGuideDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutGuideDSL.swift; path = Source/ConstraintLayoutGuideDSL.swift; sourceTree = "<group>"; };
 		C198B85D3D002D85273E441DA76F1B02 /* Optional+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Optional+Add.swift"; sourceTree = "<group>"; };
 		C318BAC3F855F42AD953EEDE344B8024 /* Pods-SwifterKnife_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -468,7 +468,7 @@
 				531814913308FFFF7F006E93BE072A1A /* Copyable.swift */,
 				AAB696403869EA313B5FDB09851C998D /* DataCodable.swift */,
 				2BC2C122CF1B7189DDF2743B5747C70E /* ExCodable.swift */,
-				BDBE53A24F581B2D5BFC877377ADB43F /* Persistencable.swift */,
+				BDBE53A24F581B2D5BFC877377ADB43F /* Persistentable.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -1115,7 +1115,7 @@
 				3D6B82087C8D533CB40F6AB21C31EF91 /* PaddingButton.swift in Sources */,
 				8E97D31DC18F5BD0BBFBE60896245679 /* PaddingLabel.swift in Sources */,
 				EA88935F19C4F853E0AFAC88385C643B /* Permission.swift in Sources */,
-				6C305F8C6526C76C5BAA804B25BEAEEB /* Persistencable.swift in Sources */,
+				6C305F8C6526C76C5BAA804B25BEAEEB /* Persistentable.swift in Sources */,
 				18BA61A3CCCBE95EFB536D2C74DCA5FE /* PriorityQueue.swift in Sources */,
 				3DF94F1F93FFB36C6EB0CB47719B44AE /* PropertyWrappers.swift in Sources */,
 				2089A33736DE70274242AC6D34288496 /* Queue.swift in Sources */,

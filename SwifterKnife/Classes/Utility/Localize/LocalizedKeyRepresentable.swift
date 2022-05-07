@@ -1,9 +1,8 @@
 //
-//  LocalizedStringConvertible.swift
-//  VideoCutter
+//  LocalizedKeyRepresentable.swift
+//  SwifterKnife
 //
-//  Created by liyang on 07/20/2021.
-//  Copyright (c) 2021 gomo. All rights reserved.
+//  Created by liyang on 2021/07/20.
 //
 
 import Foundation
@@ -51,9 +50,7 @@ public extension LocalizedKeyRepresentable {
 
 
 extension LocalizedKeyRepresentable where Self: RawRepresentable, Self.RawValue == String {
-    public var localizeKey: String {
-        return rawValue
-    }
+    public var localizeKey: String { rawValue }
 }
 
 extension String: LocalizedKeyRepresentable {
