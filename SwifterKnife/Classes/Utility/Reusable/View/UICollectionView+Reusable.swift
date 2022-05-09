@@ -61,26 +61,7 @@ public extension UICollectionView {
         return cell
     }
     
-    /**
-     Register a NIB-Based `UICollectionReusableView` subclass (conforming to `Reusable` & `NibLoadable`)
-     as a Supplementary View
-     
-     - parameter supplementaryViewType: the `UIView` (`Reusable` & `NibLoadable`-conforming) subclass
-     to register as Supplementary View
-     - parameter elementKind: The kind of supplementary view to create.
-     
-     - seealso: `register(_:,forSupplementaryViewOfKind:,withReuseIdentifier:)`
-     */
-    final func register<T: UICollectionReusableView>(supplementaryViewType: T.Type, ofKind elementKind: String)
-    where T: Reusable & NibLoadable {
-        self.register(
-            supplementaryViewType.nib,
-            forSupplementaryViewOfKind: elementKind,
-            withReuseIdentifier: supplementaryViewType.reuseIdentifier
-        )
-    }
-    
-    enum SupplementaryViewKind: String {
+    enum SupplementaryKind {
         case header
         case footer
         
@@ -94,14 +75,31 @@ public extension UICollectionView {
         }
     }
     /**
+     Register a NIB-Based `UICollectionReusableView` subclass (conforming to `Reusable` & `NibLoadable`)
+     as a Supplementary View
+     - parameter supplementaryViewType: the `UIView` (`Reusable` & `NibLoadable`-conforming) subclass
+     to register as Supplementary View
+     - parameter elementKind: The kind of supplementary view to create.
+     - seealso: `register(_:,forSupplementaryViewOfKind:,withReuseIdentifier:)`
+     */
+    final func register<T: UICollectionReusableView>(supplementaryViewType: T.Type, ofKind kind: SupplementaryKind)
+    where T: Reusable & NibLoadable {
+        self.register(
+            supplementaryViewType.nib,
+            forSupplementaryViewOfKind: kind.identifier,
+            withReuseIdentifier: supplementaryViewType.reuseIdentifier
+        )
+    }
+    
+    /**
      Register a Class-Based `UICollectionReusableView` subclass (conforming to `Reusable`) as a Supplementary View
      
      - parameter supplementaryViewType: the `UIView` (`Reusable`-conforming) subclass to register as Supplementary View
-     - parameter elementKind: The kind of supplementary view to create.
+     - parameter kind: The kind of supplementary view to create.
      
      - seealso: `register(_:,forSupplementaryViewOfKind:,withReuseIdentifier:)`
      */
-    final func register<T: UICollectionReusableView>(supplementaryViewType: T.Type, ofKind kind: SupplementaryViewKind)
+    final func register<T: UICollectionReusableView>(supplementaryViewType: T.Type, ofKind kind: SupplementaryKind)
     where T: Reusable {
         self.register(
             supplementaryViewType.self,
@@ -113,7 +111,7 @@ public extension UICollectionView {
     /**
      Returns a reusable `UICollectionReusableView` object for the class inferred by the return-type
      
-     - parameter elementKind: The kind of supplementary view to retrieve.
+     - parameter kind: The kind of supplementary view to retrieve.
      - parameter indexPath:   The index path specifying the location of the cell.
      - parameter viewType: The view class to dequeue
      
@@ -124,7 +122,7 @@ public extension UICollectionView {
      - seealso: `dequeueReusableSupplementaryView(ofKind:,withReuseIdentifier:,for:)`
      */
     final func dequeueReusableSupplementaryView<T: UICollectionReusableView>
-    (ofKind kind: SupplementaryViewKind, for indexPath: IndexPath, viewType: T.Type = T.self) -> T
+    (ofKind kind: SupplementaryKind, for indexPath: IndexPath, viewType: T.Type = T.self) -> T
     where T: Reusable {
         let view = self.dequeueReusableSupplementaryView(
             ofKind: kind.identifier,

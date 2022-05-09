@@ -43,7 +43,9 @@ public extension DataEncodable where Self: Encodable {
 }
 public extension DataEncodable where Self: NSCoding {
     func encode() throws -> Data {
-        NSKeyedArchiver.archivedData(withRootObject: self)
+        let key = String(describing: type(of: self))
+        NSKeyedArchiver.setClassName(key, for: type(of: self))
+        return NSKeyedArchiver.archivedData(withRootObject: self)
     }
 }
 
@@ -74,6 +76,8 @@ public extension DataDecodable where Self: Decodable {
 
 public extension DataDecodable where Self: NSCoding {
     static func decode(with data: Data) throws -> Self {
+        let key = String(describing: Self.self)
+        NSKeyedUnarchiver.setClass(Self.self, forClassName: key)
         guard let model = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
             throw NSError(domain: "com.data.decodable", code: -1, userInfo: ["message": "can't unarchive data to \(Self.self)"])
         }
