@@ -332,7 +332,7 @@ public extension UIImage {
 
 
 public extension Bundle {
-    static var preferredScales: [Int] = {
+    static let preferredScales: [Int] = {
         let screenScale = UIScreen.main.scale
         if screenScale <= 1 { return [1, 2, 3] }
         if screenScale <= 2 { return [2, 3, 1] }
@@ -356,8 +356,10 @@ public extension UIImage {
         let ext = nspath.pathExtension
         let exts = ext.isEmpty ? ["", "png", "jpeg", "jpg", "gif", "webp", "apng"] : [ext]
         
-        for s in Bundle.preferredScales {
-            let scaledName = res + "@\(s)x"
+        let scales = Bundle.preferredScales + [nil]
+        for scale in scales {
+            let s = scale ?? 1
+            let scaledName = scale.map { res + "@\($0)x" } ?? res
             for e in exts {
                 if let path = bundle.path(forResource: scaledName, ofType: e),
                    let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {

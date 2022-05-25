@@ -341,6 +341,28 @@ public extension UIView {
         return nil
     }
     
+    @available(iOS 11.0, *)
+    func roundingCorners(_ radius: CGFloat,
+                         corners: UIRectCorner = .allCorners) {
+        guard radius > 0 else { return }
+        layer.masksToBounds = true
+        layer.cornerRadius = radius
+        var maskCorners: CACornerMask = []
+        if corners.contains(.topLeft) {
+            maskCorners.formUnion(.layerMinXMinYCorner)
+        }
+        if corners.contains(.topRight) {
+            maskCorners.formUnion(.layerMaxXMinYCorner)
+        }
+        if corners.contains(.bottomLeft) {
+            maskCorners.formUnion(.layerMinXMaxYCorner)
+        }
+        if corners.contains(.bottomRight) {
+            maskCorners.formUnion(.layerMaxXMaxYCorner)
+        }
+        layer.maskedCorners = maskCorners
+    }
+    
     /// Set some or all corners radiuses of view.
     ///
     /// - Parameters:
@@ -402,7 +424,7 @@ public extension ViewAddition where Self: UIView {
             Console.trace("onDidLayout end \(n)")
             closure(self)
         } else {
-            if n > 60 {
+            if n > 10 {
                 DispatchQueue.main.async { [weak self] in
                     self?.setNeedsLayout()
                     self?.layoutIfNeeded()

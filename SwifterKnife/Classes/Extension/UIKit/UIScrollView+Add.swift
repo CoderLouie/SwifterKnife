@@ -197,7 +197,7 @@ public extension UIScrollView {
         -contentInset.left
     }
     var offsetMaxL: CGFloat {
-        offsetMinR - frame.size.width
+        offsetMaxR - frame.size.width
     }
     var offsetMinR: CGFloat {
         offsetMinL + frame.size.width

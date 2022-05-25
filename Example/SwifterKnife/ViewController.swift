@@ -59,6 +59,7 @@ class ViewController: UIViewController {
 // MARK: - Async
 private extension ViewController {
     func otherTest4() {
+        let icon = UIImage(fileNamed: "h2000")
 //        ManagedBufferPointer
         var num = 3
         num <>= 5...7
@@ -170,6 +171,126 @@ extension ViewController: CarouselViewDelegate {
 // MARK: - Create Views
 extension ViewController {
     private func setupBody() {
+        let guide = VLayoutGuide(owningView: view, aligment: .end).then {
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }
+        let label = UILabel().then {
+            $0.text = "UILable"
+            guide.addSubview($0)
+        }
+        let testView = UIView().then {
+            $0.backgroundColor = .cyan
+            guide.addSubview($0)
+            
+            $0.snp.makeConstraints { make in
+                make.top.equalTo(label.snp.bottom).offset(20)
+                make.height.equalTo(40)
+                make.width.equalTo(120)
+            }
+        }
+        guide.makeSizeToFit()
+//        guide.makeHorizontalSizeToFit()
+        DispatchQueue.main.after(1) {
+            print(guide.layoutFrame)
+            print("")
+        }
+        let label2 = UILabel().then {
+            $0.text = "UILable2"
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerY.equalTo(guide)
+//                make.bottom.equalTo(guide.snp.top).offset(-30)
+                make.leading.equalTo(guide.snp.trailing).offset(10)
+            }
+        }
+    }
+    private func setupBody4() {
+        let guide = HLayoutGuide(owningView: view, aligment: .start).then {
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }
+        let label = UILabel().then {
+            $0.text = "UILable"
+            guide.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.equalTo(guide)
+            }
+        }
+        let testView = UIView().then {
+            $0.backgroundColor = .cyan
+            guide.addSubview($0)
+            
+            $0.snp.makeConstraints { make in
+                make.leading.equalTo(label.snp.trailing).offset(20)
+                make.trailing.equalTo(guide)
+                make.height.equalTo(40)
+                make.width.equalTo(120)
+            }
+        }
+//        guide.makeSizeToFit()
+        guide.makeHorizontalSizeToFit()
+        DispatchQueue.main.after(1) {
+            print(guide.layoutFrame)
+            print("")
+        }
+        let label2 = UILabel().then {
+            $0.text = "UILable2"
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalTo(guide)
+//                make.bottom.equalTo(guide.snp.top).offset(-30)
+                make.top.equalTo(guide.snp.bottom).offset(30)
+            }
+        }
+    }
+    private func setupBody3() {
+        let container = UILayoutGuide().then {
+            view.addLayoutGuide($0)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }
+        
+        let label = UILabel().then {
+            $0.text = "UILable"
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.centerY.equalTo(container)
+                make.top.greaterThanOrEqualTo(container)
+                make.bottom.lessThanOrEqualTo(container)
+            }
+        }
+        let testView = UIView().then {
+            $0.backgroundColor = .cyan
+            view.addSubview($0)
+            
+            $0.snp.makeConstraints { make in
+                make.leading.equalTo(label.snp.trailing).offset(20)
+                make.height.equalTo(40)
+                make.width.equalTo(120)
+                make.trailing.centerY.equalTo(container)
+                make.top.greaterThanOrEqualTo(container)
+                make.bottom.lessThanOrEqualTo(container)
+            }
+        }
+        let label2 = UILabel().then {
+            $0.text = "UILable2"
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalTo(container)
+                make.top.equalTo(container.snp.bottom).offset(10)
+//                make.trailing.equalTo(container.snp.leading).offset(-10)
+            }
+        }
+        DispatchQueue.main.after(1) {
+            print(container.layoutFrame)
+            print("")
+        }
+    }
+    private func setupBody2() {
         SudokuView().do { this in
             this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
             this.behaviour = .spacing(10, 15)

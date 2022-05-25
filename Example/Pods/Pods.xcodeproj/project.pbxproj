@@ -112,6 +112,7 @@
 		B6A486EF2806727A00287BE1 /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A486EE2806727A00287BE1 /* ConstraintMakerRelatable+Add.swift */; };
 		B6A486F2280679D400287BE1 /* TypedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A486F0280679CD00287BE1 /* TypedViewController.swift */; };
 		B6E2F1DB2817ED1700A219CB /* Funcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E2F1DA2817ED1700A219CB /* Funcs.swift */; };
+		B6FEE110283DDCA900D8BCB2 /* LayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEE10F283DDCA900D8BCB2 /* LayoutGuide.swift */; };
 		BBEB31C25C8295AA93E6632762DE5E2E /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313FFDB0236F43DD170C8C01945D69F6 /* ScrollViewController.swift */; };
 		BD333CDBCF5D2FD55920336FC271DF33 /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474AFC560A8B414B467174737DBC891A /* ConstraintItem.swift */; };
 		BD9826CB91AE7949D46CA767A550B41E /* Collection+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B3D799F1BE314602B36BE89DA9B097 /* Collection+Add.swift */; };
@@ -321,6 +322,7 @@
 		B6A486EE2806727A00287BE1 /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B6A486F0280679CD00287BE1 /* TypedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedViewController.swift; sourceTree = "<group>"; };
 		B6E2F1DA2817ED1700A219CB /* Funcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Funcs.swift; sourceTree = "<group>"; };
+		B6FEE10F283DDCA900D8BCB2 /* LayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutGuide.swift; sourceTree = "<group>"; };
 		BD118A0E9DFF07C83066C46040EF7BC8 /* StoryboardSceneBased.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoryboardSceneBased.swift; sourceTree = "<group>"; };
 		BDBE53A24F581B2D5BFC877377ADB43F /* Persistentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Persistentable.swift; sourceTree = "<group>"; };
 		BE0BE9F3D55FDB29EF516F6D6B1B6BCA /* ConstraintLayoutGuideDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutGuideDSL.swift; path = Source/ConstraintLayoutGuideDSL.swift; sourceTree = "<group>"; };
@@ -822,6 +824,7 @@
 				33144281BC7AC14A68BA269B69565082 /* CustomTextView.swift */,
 				6708CD25D697AB18328F6A980E096F76 /* LayerView.swift */,
 				CB57B01F3C7E5455581E05EC3A949A7F /* LayoutView.swift */,
+				B6FEE10F283DDCA900D8BCB2 /* LayoutGuide.swift */,
 				0C130AA5CADDF0CE1987D6716BDFE089 /* LinearFlowView.swift */,
 				240B3FBA5856BD8A78DF5A1D26A5C3B5 /* PaddingButton.swift */,
 				FE6C5F90B82D2FD6DEAFF9AB2A0CAAD2 /* PaddingLabel.swift */,
@@ -1159,6 +1162,7 @@
 				FF74EA0D648874694C5C65FC72CA21DF /* URL+Add.swift in Sources */,
 				78FA9150C93841920BDE8662863AA6C0 /* UserDefaults+Add.swift in Sources */,
 				532ABECB071A7CE0C78D6B324AD3BA2D /* WeakTable.swift in Sources */,
+				B6FEE110283DDCA900D8BCB2 /* LayoutGuide.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
