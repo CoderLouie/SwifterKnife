@@ -16,6 +16,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
+		B65A0A4B28470A5300EAAEE0 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65A0A4A28470A5300EAAEE0 /* Button.swift */; };
 		B6B2871C276361EA00486E61 /* DBStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28716276361EA00486E61 /* DBStorable.swift */; };
 		B6B2871D276361EA00486E61 /* ColumnKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28717276361EA00486E61 /* ColumnKey.swift */; };
 		B6B2871E276361EA00486E61 /* DBStorable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28718276361EA00486E61 /* DBStorable+Add.swift */; };
@@ -65,6 +66,7 @@
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
+		B65A0A4A28470A5300EAAEE0 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		B6B28716276361EA00486E61 /* DBStorable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBStorable.swift; sourceTree = "<group>"; };
 		B6B28717276361EA00486E61 /* ColumnKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnKey.swift; sourceTree = "<group>"; };
 		B6B28718276361EA00486E61 /* DBStorable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBStorable+Add.swift"; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				B65A0A4A28470A5300EAAEE0 /* Button.swift */,
 				B6ED867F2726A1E3003103F6 /* KKView.h */,
 				B6ED86802726A1E3003103F6 /* KKView.m */,
 				B650CC9F282374E8003170BB /* Permission.swift */,
@@ -434,6 +437,7 @@
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
+				B65A0A4B28470A5300EAAEE0 /* Button.swift in Sources */,
 				B650CCA0282374E8003170BB /* Permission.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,
 				B6B28720276361EA00486E61 /* Database.swift in Sources */,
@@ -594,7 +598,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "SwifterKnife/SwifterKnife_Example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -613,7 +617,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SwifterKnife/SwifterKnife_Example-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

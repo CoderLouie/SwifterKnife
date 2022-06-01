@@ -78,19 +78,15 @@ public final class HLayoutGuide: LayoutGuide {
         }
     }
     public override func makeVerticalSizeToFit() {
+        var height: CGFloat = 0
         for view in arrangedViews {
-            view.snp.makeConstraints { make in
-                switch aligment {
-                case .start:
-                    make.bottom.lessThanOrEqualTo(self)
-                case .center:
-                    make.top.greaterThanOrEqualTo(self)
-                    make.bottom.lessThanOrEqualTo(self)
-                case .end:
-                    make.top.greaterThanOrEqualTo(self)
-                }
-            }
+            let h = view.intrinsicContentSize.height
+            if h > height { height = h }
         }
+        guard height > 0 else { return }
+        self.snp.updateConstraints { make in
+            make.height.equalTo(ceil(height))
+        } 
     }
 }
 
@@ -109,18 +105,14 @@ public final class VLayoutGuide: LayoutGuide {
     }
     
     public override func makeHorizontalSizeToFit() {
+        var width: CGFloat = 0
         for view in arrangedViews {
-            view.snp.makeConstraints { make in
-                switch aligment {
-                case .start:
-                    make.trailing.lessThanOrEqualTo(self)
-                case .center:
-                    make.leading.greaterThanOrEqualTo(self)
-                    make.trailing.lessThanOrEqualTo(self)
-                case .end:
-                    make.leading.greaterThanOrEqualTo(self)
-                }
-            }
+            let w = view.intrinsicContentSize.width
+            if w > width { width = w }
+        }
+        guard width > 0 else { return }
+        self.snp.updateConstraints { make in
+            make.width.equalTo(ceil(width))
         }
     }
     public override func makeVerticalSizeToFit() {

@@ -32,14 +32,6 @@ open class VirtualView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     open func setup() {}
-    
-    open override func didMoveToSuperview() {
-        if let _ = superview {
-            self.snp.makeConstraints { make in
-                make.width.height.equalTo(1).priority(100)
-            }
-        }
-    }
 }
 
 /**
@@ -94,7 +86,7 @@ final public class SudokuView: VirtualView {
         
         switch behaviour {
         case let .itemLength(width, height):
-            for (i,v) in views.enumerated() {
+            for (i, v) in views.enumerated() {
                 
                 let currentRow = i / warpCount
                 let currentColumn = i % warpCount
@@ -203,6 +195,14 @@ open class LayoutView: VirtualView {
     }
     
     open func insertArrangedView(_ view: UIView, at index: Int, alignment: Alignment? = nil) { }
+    
+    open override func didMoveToSuperview() {
+        if let _ = superview {
+            self.snp.makeConstraints { make in
+                make.width.height.equalTo(1).priority(100)
+            }
+        }
+    }
 }
 
 open class SequenceView: LayoutView {
@@ -236,9 +236,15 @@ open class SequenceView: LayoutView {
     }
     
     public func removeArrangedView(_ view: UIView) {
-        items.removeAll { $0.view === view }
+        items.removeAll {
+            let flag = $0.view === view
+            if flag { $0.view.removeFromSuperview() }
+            return flag
+        }
     }
     public func removeArrangedViewAt(_ index: Int) {
+        let item = items[index]
+        item.view.removeFromSuperview()
         items.remove(at: index)
     }
     

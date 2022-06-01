@@ -14,4 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface ATButton : UIButton
+
+@property (nonatomic, assign, getter=isLoading) BOOL loading;
+
+@end
+
+@interface NSObject (Add)
++ (void)printAllMethods;
+@end
+
 NS_ASSUME_NONNULL_END

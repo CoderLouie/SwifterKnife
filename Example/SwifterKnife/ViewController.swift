@@ -41,7 +41,8 @@ class ViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        regex2()
-        otherTest4()
+//        otherTest4()
+//        progressLayer.strokeEnd += 0.1
     }
 
     
@@ -53,6 +54,8 @@ class ViewController: UIViewController {
     private unowned var stepView: CarouselView!
     private unowned var pageControl: UIPageControl!
     private var steps: [Step] = Step.allCases
+    
+    private var progressLayer: CAShapeLayer!
 }
 
 
@@ -170,7 +173,73 @@ extension ViewController: CarouselViewDelegate {
 
 // MARK: - Create Views
 extension ViewController {
+    @objc private func buttonDidClick(_ sender: ATButton) {
+//        UIControl.printAllMethods()
+//        NSLog("------------------")
+//        UIButton.printAllMethods()
+//        sender.isSelected = !sender.isSelected
+        sender.isLoading = !sender.isLoading;
+    }
     private func setupBody() {
+        ATButton().do {
+            $0.backgroundColor = .cyan
+            $0.setTitle("Normal", for: .normal)
+            $0.setTitle("Selected", for: .selected)
+            $0.setTitleColor(.black, for: .normal)
+            $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
+            $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
+//            $0.centerTextAndImage(imageAboveText: false, spacing: 10)
+            view.addSubview($0)
+            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+//            $0.snp.makeConstraints { make in
+//                make.center.equalToSuperview()
+//            }
+        }
+    }
+    private func setupBody7() {
+        let frame = view.frame.resizing(to: CGSize(width: 100, height: 150))
+        let path = UIBezierPath(roundedRect: frame, cornerRadius: 10)
+        let trackLayer = CAShapeLayer().then {
+            $0.path = path.cgPath
+            $0.fillColor = UIColor.clear.cgColor
+            $0.strokeColor = UIColor.gray.cgColor
+            $0.lineWidth = 5
+            $0.lineCap = .round
+            view.layer.addSublayer($0)
+        }
+        progressLayer = CAShapeLayer().then {
+            $0.path = path.cgPath
+            $0.fillColor = UIColor.clear.cgColor
+            $0.strokeColor = UIColor.red.cgColor
+            $0.lineWidth = 5
+            $0.lineCap = .round
+            $0.strokeEnd = 0
+            view.layer.addSublayer($0)
+        }
+    }
+    private func setupBody6() {
+        let frame = view.frame.resizing(to: CGSize(width: 100, height: 10))
+        let path = UIBezierPath().then {
+            $0.move(to: CGPoint(x: frame.minX, y: frame.midY))
+            $0.addLine(to: CGPoint(x: frame.maxX, y: frame.midY))
+        }
+        let trackLayer = CAShapeLayer().then {
+            $0.path = path.cgPath
+            $0.strokeColor = UIColor.gray.cgColor
+            $0.lineWidth = 10
+            $0.lineCap = .round
+            view.layer.addSublayer($0)
+        }
+        progressLayer = CAShapeLayer().then {
+            $0.path = path.cgPath
+            $0.strokeColor = UIColor.red.cgColor
+            $0.lineWidth = 10
+            $0.lineCap = .round
+            $0.strokeEnd = 0
+            view.layer.addSublayer($0)
+        }
+    }
+    private func setupBody5() {
         let guide = VLayoutGuide(owningView: view, aligment: .end).then {
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
@@ -179,6 +248,9 @@ extension ViewController {
         let label = UILabel().then {
             $0.text = "UILable"
             guide.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.top.equalTo(guide)
+            }
         }
         let testView = UIView().then {
             $0.backgroundColor = .cyan
@@ -187,11 +259,16 @@ extension ViewController {
             $0.snp.makeConstraints { make in
                 make.top.equalTo(label.snp.bottom).offset(20)
                 make.height.equalTo(40)
-                make.width.equalTo(120)
+//                make.width.equalTo(120)
+                make.width.equalToSelfHeight().multipliedBy(3)
             }
         }
-        guide.makeSizeToFit()
-//        guide.makeHorizontalSizeToFit()
+//        guide.makeSizeToFit()
+        guide.makeHorizontalSizeToFit()
+        guide.snp.makeConstraints { make in
+            make.height.equalToSelfWidth().multipliedBy(2)
+//            make.height.equalTo(guide.snp.width).multipliedBy(2)
+        }
         DispatchQueue.main.after(1) {
             print(guide.layoutFrame)
             print("")
