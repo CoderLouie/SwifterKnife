@@ -173,14 +173,29 @@ extension ViewController: CarouselViewDelegate {
 
 // MARK: - Create Views
 extension ViewController {
-    @objc private func buttonDidClick(_ sender: ATButton) {
+    @objc private func buttonDidClick(_ sender: UIControl) {
 //        UIControl.printAllMethods()
 //        NSLog("------------------")
 //        UIButton.printAllMethods()
-//        sender.isSelected = !sender.isSelected
-        sender.isLoading = !sender.isLoading;
+        sender.isSelected = !sender.isSelected
+//        sender.isLoading = !sender.isLoading;
     }
     private func setupBody() {
+        Button().do {
+            $0.backgroundColor = .cyan
+//            $0.setTitle("Normal", for: .normal)
+//            $0.setTitle("Selected", for: .selected)
+//            $0.setTitleColor(.black, for: .normal)
+//            $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
+            $0.configLabel(forState: .normal) {
+                $0.text = "Normal"
+            }
+            $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
+            view.addSubview($0)
+            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+        }
+    }
+    private func setupBody8() {
         ATButton().do {
             $0.backgroundColor = .cyan
             $0.setTitle("Normal", for: .normal)
@@ -188,12 +203,8 @@ extension ViewController {
             $0.setTitleColor(.black, for: .normal)
             $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
             $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
-//            $0.centerTextAndImage(imageAboveText: false, spacing: 10)
             view.addSubview($0)
             $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
-//            $0.snp.makeConstraints { make in
-//                make.center.equalToSuperview()
-//            }
         }
     }
     private func setupBody7() {
