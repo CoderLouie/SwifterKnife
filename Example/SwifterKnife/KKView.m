@@ -82,14 +82,21 @@
     _loading = loading;
     [self invalidateIntrinsicContentSize];
 }
-
+- (CGSize)sizeThatFits:(CGSize)size {
+    NSLog(@"%@", NSStringFromCGSize(size));
+    size = [super sizeThatFits:size];
+    NSLog(@"%@", NSStringFromCGSize(size));
+    return size;
+}
 - (void)setNeedsLayout {
     [super setNeedsLayout];
 }
 - (void)layoutSubviews {
     CGRect rect = self.frame;
+    NSLog(@"%@", NSStringFromCGRect(rect));
     [super layoutSubviews];
     rect = self.frame;
+    NSLog(@"%@", NSStringFromCGRect(rect));
     NSLog(@"");
 }
 

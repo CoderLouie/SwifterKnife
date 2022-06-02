@@ -21,7 +21,6 @@
     "tag": "0.1.4"
   },
   "source_files": "SwifterKnife/Classes/**/*",
-  "public_header_files": "SwifterKnife/Classes/Utility/**/*.h",
   "subspecs": [
     {
       "name": "Base",
@@ -42,8 +41,10 @@
       "name": "Views",
       "source_files": [
         "SwifterKnife/Classes/Base/*.swift",
-        "SwifterKnife/Classes/Views/**/*.swift"
+        "SwifterKnife/Classes/Views/**/*.{swift,h,m}"
       ],
+      "exclude_files": "SwifterKnife/Classes/Views/**/*.{h,m}",
+      "private_header_files": "SwifterKnife/Classes/Views/**/*.{h}",
       "dependencies": {
         "SnapKit": [
 

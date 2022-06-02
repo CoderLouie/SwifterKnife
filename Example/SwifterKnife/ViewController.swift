@@ -56,6 +56,7 @@ class ViewController: UIViewController {
     private var steps: [Step] = Step.allCases
     
     private var progressLayer: CAShapeLayer!
+    private unowned var imageView: UIImageView!
 }
 
 
@@ -170,41 +171,106 @@ extension ViewController: CarouselViewDelegate {
         pageControl.currentPage = index
     }
 }
+ 
 
 // MARK: - Create Views
 extension ViewController {
-    @objc private func buttonDidClick(_ sender: UIControl) {
-//        UIControl.printAllMethods()
-//        NSLog("------------------")
-//        UIButton.printAllMethods()
-        sender.isSelected = !sender.isSelected
-//        sender.isLoading = !sender.isLoading;
+    @objc private func buttonDidClick(_ sender: Button) {
+//            sender.isSelected = !sender.isSelected
+        sender.isLoading = !sender.isLoading
+        if sender.isLoading {
+            DispatchQueue.main.after(3) {
+                sender.isLoading = false
+            }
+        }
     }
-    private func setupBody() {
+    private func setupBody8() {
         Button().do {
             $0.backgroundColor = .cyan
 //            $0.setTitle("Normal", for: .normal)
 //            $0.setTitle("Selected", for: .selected)
 //            $0.setTitleColor(.black, for: .normal)
 //            $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
+            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+            $0.titleLayout = .left
+            $0.titleAndImageSpace = 5
+            $0.imageAndSpinnerSpace = 10
+            $0.roundedDirection = .vertical
+            $0.config(forState: .normal) {
+                $0.backgroundColor = .cyan
+            }
+            $0.config(forState: .loading) {
+                $0.backgroundColor = .darkGray
+            }
             $0.configLabel(forState: .normal) {
                 $0.text = "Normal"
             }
+            $0.configLabel(forState: .highlighted) {
+                $0.text = "highlighted"
+            }
+            $0.configImageView(forState: .normal) {
+                $0.image = UIImage(named: "ic_edit_contrast")
+            }
+            $0.configImageView(forState: .loading) {
+//                $0.image = UIImage(named: "ic_edit_filter")
+                $0.image = nil
+            }
+            $0.configLabel(forState: .loading) {
+                $0.text = "Loading,Loading"
+            }
+            $0.configSpinnerView(forState: .loading) {
+                $0.color = .red
+            }
             $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
             view.addSubview($0)
-            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+//            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(200)
+                make.height.equalTo(56)
+            }
         }
     }
-    private func setupBody8() {
-        ATButton().do {
+    @objc private func atbuttonDidClick(_ sender: ATButton) { 
+        imageView.drawMode += 1
+        if imageView.drawMode > 4 {
+            imageView.drawMode = 0
+        }
+        print(imageView.drawMode)
+        
+//        UIImageView.printAllMethods()
+//        NSLog("------------------")
+//        UIButton.printAllMethods()
+//        sender.isSelected = !sender.isSelected
+//        sender.isLoading = !sender.isLoading;
+    }
+    private func setupBody() {
+        imageView = UIImageView().then {
+            $0.backgroundColor = .cyan
+            $0.image = UIImage(named: "ic_edit_contrast")
+//            $0.drawMode = 0
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(-100)
+            }
+        }
+        
+        ATButton().do { 
             $0.backgroundColor = .cyan
             $0.setTitle("Normal", for: .normal)
             $0.setTitle("Selected", for: .selected)
             $0.setTitleColor(.black, for: .normal)
             $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
-            $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(atbuttonDidClick), for: .touchUpInside)
             view.addSubview($0)
-            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+            
+//            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+//            $0.sizeToFit()
+//            $0.center = view.bounds.center
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
         }
     }
     private func setupBody7() {

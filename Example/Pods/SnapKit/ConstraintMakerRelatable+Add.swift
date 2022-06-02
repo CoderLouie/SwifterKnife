@@ -43,12 +43,12 @@ UILabel().do {
  
 extension LayoutConstraintItem {
     
-    internal var dsl: ConstraintBasicAttributesDSL? {
+    internal var view: ConstraintView? {
         if let view = self as? ConstraintView {
-            return view.snp
+            return view
         }
         if #available(iOS 9.0, OSX 10.11, *), let guide = self as? ConstraintLayoutGuide {
-            return guide.snp
+            return guide.owningView
         }
         return nil
     }
@@ -57,11 +57,11 @@ extension LayoutConstraintItem {
 public extension ConstraintMakerRelatable {
     
     @discardableResult
-    func equalToSelf(_ keyPath: KeyPath<ConstraintBasicAttributesDSL, ConstraintItem>, _ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
-        guard let dsl = self.description.item.dsl else {
-            fatalError("Expected dsl but found nil when attempting make constraint `equalToSelf`.")
+    func equalToSelf(_ keyPath: KeyPath<ConstraintViewDSL, ConstraintItem>, _ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        guard let view = self.description.item.view else {
+            fatalError("Expected view but found nil when attempting make constraint `equalToSelf`.")
         }
-        return equalTo(dsl[keyPath: keyPath], file, line)
+        return equalTo(view.snp[keyPath: keyPath], file, line)
     }
     @discardableResult
     func equalToSelfWidth(_ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+ 
 extension UIControl.State: Hashable {
     public static var loading: UIControl.State {
         let disableFlag = UIControl.State.disabled.rawValue
@@ -34,7 +34,11 @@ public class Button: UIControl {
             return self == .left || self == .top
         }
     }
-    
+    public enum RoundedDirection {
+        case horizontal
+        case vertical
+    }
+    public var roundedDirection: RoundedDirection? = nil
     /// 文字 和 ImageView 的距离
     public var titleAndImageSpace: CGFloat = 0
     /// 图片 和 ActivityIndicatorView 的距离
@@ -42,27 +46,32 @@ public class Button: UIControl {
     /// 标题位置
     public var titleLayout: TitlePosition = .right
     
+    public var adjustsImageWhenHighlighted = true // default is YES. if YES, image is drawn darker when highlighted(pressed)
+
+    public var adjustsImageWhenDisabled = true // default is YES. if YES, image is drawn lighter when disabled
+    
+    public var contentEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
     
     /// 配置自身属性，比如背景颜色
-    func configSelf(forState state: UIControl.State, config: @escaping (UIView) -> Void) {
+    public func config(forState state: UIControl.State, config: @escaping (UIView) -> Void) {
         setConfigClosure(config, type: .me, forState: state)
     }
-    func configGradientLayer(forState state: UIControl.State, config: @escaping (CAGradientLayer) -> Void) {
+    public func configGradientLayer(forState state: UIControl.State, config: @escaping (CAGradientLayer) -> Void) {
         setConfigClosure(config, type: .gradientLayer, forState: state)
     }
-    func configLabel(forState state: UIControl.State, config: @escaping (UILabel) -> Void) {
+    public func configLabel(forState state: UIControl.State, config: @escaping (UILabel) -> Void) {
         setConfigClosure(config, type: .label, forState: state)
     }
-    func configImageView(forState state: UIControl.State, config: @escaping (UIImageView) -> Void) {
+    public func configImageView(forState state: UIControl.State, config: @escaping (UIImageView) -> Void) {
         setConfigClosure(config, type: .image, forState: state)
     }
-    func configBackgroundImageView(forState state: UIControl.State, config: @escaping (UIImageView) -> Void) {
+    public func configBackgroundImageView(forState state: UIControl.State, config: @escaping (UIImageView) -> Void) {
         setConfigClosure(config, type: .backgroundImage, forState: state)
     }
-    func configSpinnerView(forState state: UIControl.State, config: @escaping (UIActivityIndicatorView) -> Void) {
+    public func configSpinnerView(forState state: UIControl.State, config: @escaping (UIActivityIndicatorView) -> Void) {
         setConfigClosure(config, type: .spinner, forState: state)
     }
-    var isLoading: Bool = false {
+    public var isLoading: Bool = false {
         didSet {
             guard isLoading != oldValue else { return }
             super.isEnabled = !isLoading
@@ -71,14 +80,35 @@ public class Button: UIControl {
             } else {
                 _spinnerView?.stopAnimating()
             }
-            setNeedsLayout()
-            invalidateIntrinsicContentSize()
+            makeNeedUpdateConstraintsAndLayout()
         }
     }
     
     public override var isEnabled: Bool {
         get { super.isEnabled }
-        set { super.isEnabled = !isLoading && newValue }
+        set {
+            let oldValue = super.isEnabled
+            let newValue = !isLoading && newValue
+            guard newValue != oldValue else { return }
+            super.isEnabled = newValue
+            makeNeedUpdateConstraintsAndLayout()
+        }
+    }
+    public override var isHighlighted: Bool {
+        get { super.isHighlighted }
+        set {
+            guard newValue != super.isHighlighted else { return }
+            super.isHighlighted = newValue
+            makeNeedUpdateConstraintsAndLayout()
+        }
+    }
+    public override var isSelected: Bool {
+        get { super.isSelected }
+        set {
+            guard newValue != super.isSelected else { return }
+            super.isSelected = newValue
+            makeNeedUpdateConstraintsAndLayout()
+        }
     }
     public override var state: UIControl.State {
         var value = super.state
@@ -86,10 +116,16 @@ public class Button: UIControl {
         return value
     }
     
+    private func makeNeedUpdateConstraintsAndLayout() {
+        setNeedsLayout()
+        invalidateIntrinsicContentSize()
+    }
+    
     private var _spinnerView: UIActivityIndicatorView?
     private var spinnerView: UIActivityIndicatorView {
         if let view = _spinnerView { return view }
         let view = UIActivityIndicatorView()
+        view.style = .white
         contentView.addSubview(view)
         _spinnerView = view
         return view
@@ -107,6 +143,8 @@ public class Button: UIControl {
     private var label: UILabel {
         if let view = _label { return view }
         let view = UILabel()
+        view.textColor = .black
+        view.font = UIFont.systemFont(ofSize: 15)
         contentView.addSubview(view)
         _label = view
         return view
@@ -133,7 +171,7 @@ public class Button: UIControl {
         $0.isUserInteractionEnabled = false
         self.addSubview($0)
     }
-     
+    
     private func setConfigClosure(_ closure: Any, type: ConfigType, forState state: UIControl.State) {
         if var config = configs[state] {
             config[type] = closure
@@ -142,7 +180,8 @@ public class Button: UIControl {
         }
         configs[state] = [type: closure]
     }
-    private var _contentSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+    private var _state: UInt = .max
+    private var _contentSize: CGSize = .zero
     private var configs: [UIControl.State: [ConfigType: Any]] = [:]
     private enum ConfigType {
         case me
@@ -154,92 +193,143 @@ public class Button: UIControl {
     }
     
     public override var intrinsicContentSize: CGSize {
-        _contentSize
+        let size = contentSize
+        let inset = contentEdgeInsets
+        return CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
+    }
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
+        intrinsicContentSize
     }
     public override func layoutSubviews() {
         super.layoutSubviews()
         updateContent()
         let bounds = self.bounds
+        if let dir = roundedDirection {
+            layer.masksToBounds = true
+            switch dir {
+            case .horizontal:
+                layer.cornerRadius = bounds.width * 0.5
+            case .vertical:
+                layer.cornerRadius = bounds.height * 0.5
+            }
+        }
         contentView.center = bounds.center
+        
+        _bgImageView?.frame = bounds
+        _gradientLayer?.frame = bounds
     }
 }
- 
 
-fileprivate extension CGSize {
-    var _ceil: CGSize {
-        return CGSize(width: ceil(width), height: ceil(height))
-    }
+fileprivate func ceil(_ size: CGSize) -> CGSize {
+    CGSize(width: ceil(size.width), height: ceil(size.height))
 }
 
 private extension Button {
-    func updateContent() -> CGSize {
+    var contentSize: CGSize {
+        updateContent()
+        return _contentSize
+    }
+     
+    func updateContent() {
         let state = self.state
-        guard let config = configs[state] ?? configs[.normal] else { return _contentSize }
-        if let closure = config[.me] as? ((UIView) -> Void) {
-            closure(self)
-        }
-        if let closure = config[.gradientLayer] as? ((CAGradientLayer) -> Void) {
-            closure(gradientLayer)
-        }
-        if let closure = config[.backgroundImage] as? ((UIImageView) -> Void) {
-            closure(bgImageView)
+        guard _state != state.rawValue else { return }
+        _state = state.rawValue
+        
+        let config = { (type: ConfigType) -> Any? in
+            if let t = self.configs[state] { return t[type] }
+//            if state != .normal { return nil }
+            return self.configs[.normal]?[type]
         }
          
+        if let closure = config(.me) as? ((UIView) -> Void) {
+            closure(self)
+        }
+        if let closure = config(.gradientLayer) as? ((CAGradientLayer) -> Void) {
+            gradientLayer.isHidden = false
+            closure(gradientLayer)
+        } else { _gradientLayer?.isHidden = true }
+        
+        if let closure = config(.backgroundImage) as? ((UIImageView) -> Void) {
+            bgImageView.isHidden = false
+            bgImageView.drawMode = 0
+            closure(bgImageView)
+            if adjustsImageWhenHighlighted,
+               state.contains(.highlighted) {
+                bgImageView.drawMode = 1
+            }
+            if adjustsImageWhenDisabled,
+               state.contains(.disabled) {
+                bgImageView.drawMode = 2
+            }
+        } else { _bgImageView?.isHidden = true }
+        
         var needLayoutViews: [(UIView, CGFloat)?] = [nil, nil, nil]
         let layoutAtStart = titleLayout.atStart
         
-        if let closure = config[.label] as? ((UILabel) -> Void) {
+        if let closure = config(.label) as? ((UILabel) -> Void) {
+            label.isHidden = false
             closure(label)
-            if !label.isHidden,
-               (!(label.text?.isEmpty ?? true) ||
-                !(label.attributedText?.string.isEmpty ?? true)) {
+            if label.isHidden ||
+                (label.text?.isEmpty ?? true) ||
+                (label.attributedText?.string.isEmpty ?? true) {
+                label.isHidden = true
+            } else {
                 label.isHidden = false
-                var size = label.frame.size
-                if size.width == 0 || size.height == 0 {
-                    label.sizeToFit()
-                    size = label.frame.size._ceil
-                    label.frame.size = size
-                }
+                label.sizeToFit()
+                let size = ceil(label.frame.size)
+                label.frame.size = size
                 if layoutAtStart {
                     needLayoutViews[0] = (label, titleAndImageSpace)
                 } else {
                     needLayoutViews[2] = (label, 0)
                 }
-            } else { label.isHidden = true }
-        }
-        if let closure = config[.image] as? ((UIImageView) -> Void) {
+            }
+        } else { _label?.isHidden = true }
+        
+        if let closure = config(.image) as? ((UIImageView) -> Void) {
+            imageView.drawMode = 0
+            imageView.isHidden = false
             closure(imageView)
             if !imageView.isHidden, imageView.image != nil {
-                imageView.isHidden = false
-                let size = imageView.frame.size
-                if size.width == 0 || size.height == 0 {
-                    imageView.sizeToFit()
+                if adjustsImageWhenHighlighted,
+                   state.contains(.highlighted) {
+                    imageView.drawMode = 1
                 }
+                if adjustsImageWhenDisabled,
+                   state.contains(.disabled) {
+                    imageView.drawMode = 2
+                }
+                
+                imageView.isHidden = false
+                imageView.sizeToFit()
                 needLayoutViews[1] = (imageView, layoutAtStart ? imageAndSpinnerSpace : titleAndImageSpace)
             } else { imageView.isHidden = true }
-        }
-        if let closure = config[.spinner] as? ((UIActivityIndicatorView) -> Void) {
-            closure(spinnerView)
-            if !spinnerView.isHidden {
-                let size = spinnerView.frame.size
-                if size.width == 0 || size.height == 0 {
-                    spinnerView.sizeToFit()
-                }
-                if layoutAtStart {
-                    needLayoutViews[2] = (spinnerView, 0)
-                } else {
-                    needLayoutViews[0] = (spinnerView, imageAndSpinnerSpace)
-                }
+        } else { _imageView?.isHidden = true }
+        
+        if state == .loading {
+            var needConfigSpinner = _spinnerView?.isAnimating ?? false
+            if let closure = configs[state]?[.spinner] as? ((UIActivityIndicatorView) -> Void) {
+                spinnerView.isHidden = false
+                needConfigSpinner = true
+                closure(spinnerView)
             }
-        }
+            if needConfigSpinner {
+                if !spinnerView.isHidden {
+                    spinnerView.sizeToFit()
+                    if layoutAtStart {
+                        needLayoutViews[2] = (spinnerView, 0)
+                    } else {
+                        needLayoutViews[0] = (spinnerView, imageAndSpinnerSpace)
+                    }
+                }
+            } else { _spinnerView?.isHidden = true }
+        } else { _spinnerView?.isHidden = true }
+        
         var height: CGFloat = 0, width: CGFloat = 0
         let isHorizontalLayout = titleLayout.isHorizontal
         var prevSpace: CGFloat = 0
         for item in needLayoutViews {
             guard let item = item else {
-                if isHorizontalLayout { width -= prevSpace }
-                else { height -= prevSpace }
-                prevSpace = 0
                 continue
             }
             let view = item.0
@@ -255,6 +345,9 @@ private extension Button {
                 height += size.height + item.1
             }
         }
+        if isHorizontalLayout { width -= prevSpace }
+        else { height -= prevSpace }
+        
         let halfH = height * 0.5
         let halfW = width * 0.5
         for item in needLayoutViews {
@@ -270,6 +363,5 @@ private extension Button {
         contentView.bounds.size = contentSize
         
         _contentSize = contentSize
-        return _contentSize
     }
 }

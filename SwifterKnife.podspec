@@ -33,9 +33,7 @@ Pod::Spec.new do |s|
 #  'SwifterKnife/Classes/Utility/**/*',
 #  'SwifterKnife/Classes/Views/**/*'
   s.source_files = 'SwifterKnife/Classes/**/*'
-
-  s.public_header_files = 'SwifterKnife/Classes/**/*.h'
-  
+ 
   s.subspec 'Base' do |sp|
     sp.source_files = 'SwifterKnife/Classes/Base/*.swift'
   end
@@ -49,14 +47,15 @@ Pod::Spec.new do |s|
   # Utility Extensions
   s.subspec 'Utility' do |sp|
     sp.source_files = 'SwifterKnife/Classes/Utility/**/*'
-    s.public_header_files = 'SwifterKnife/Classes/Utility/**/*.h'
   end
   
   # Layout Extensions
   s.subspec 'Views' do |sp|
     sp.source_files =
     'SwifterKnife/Classes/Base/*.swift',
-    'SwifterKnife/Classes/Views/**/*.swift'
+    'SwifterKnife/Classes/Views/**/*.{swift,h,m}'
+    sp.exclude_files = 'SwifterKnife/Classes/Views/**/*.{h,m}'
+    sp.private_header_files = 'SwifterKnife/Classes/Views/**/*.{h}'
     
     sp.dependency 'SnapKit'
   end

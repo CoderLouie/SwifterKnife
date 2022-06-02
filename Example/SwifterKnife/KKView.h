@@ -24,4 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)printAllMethods;
 @end
 
+//@interface UIImageView (Private)
+//
+////@property (nonatomic, assign) NSInteger drawMode;
+//
+//@end
+
 NS_ASSUME_NONNULL_END

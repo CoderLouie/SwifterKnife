@@ -1,5 +1,5 @@
 PODS:
-  - SnapKit (5.0.1)
+  - SnapKit (5.6.0)
   - SwifterKnife (0.1.4):
     - SwifterKnife/Base (= 0.1.4)
     - SwifterKnife/Extension (= 0.1.4)
@@ -23,8 +23,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwifterKnife: 8503db48fc6afc8957e2954c65c2c8eec7057b80
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  SwifterKnife: f6eda0c9695bbb4bd80b41ee6bcc90610d1212d0
 
 PODFILE CHECKSUM: c752aef62df9f94ad8ecea3d3f4cf1ca8bdf6468
 
