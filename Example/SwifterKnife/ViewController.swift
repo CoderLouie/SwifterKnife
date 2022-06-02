@@ -176,6 +176,7 @@ extension ViewController: CarouselViewDelegate {
 // MARK: - Create Views
 extension ViewController {
     @objc private func buttonDidClick(_ sender: Button) {
+        UIImageView.printAllMethods()
 //            sender.isSelected = !sender.isSelected
         sender.isLoading = !sender.isLoading
         if sender.isLoading {
@@ -184,13 +185,8 @@ extension ViewController {
             }
         }
     }
-    private func setupBody8() {
+    private func setupBody() {
         Button().do {
-            $0.backgroundColor = .cyan
-//            $0.setTitle("Normal", for: .normal)
-//            $0.setTitle("Selected", for: .selected)
-//            $0.setTitleColor(.black, for: .normal)
-//            $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
             $0.titleLayout = .left
             $0.titleAndImageSpace = 5
@@ -199,9 +195,16 @@ extension ViewController {
             $0.config(forState: .normal) {
                 $0.backgroundColor = .cyan
             }
-            $0.config(forState: .loading) {
-                $0.backgroundColor = .darkGray
+            $0.configGradientLayer(forState: .normal) {
+                $0.colors = [UIColor(hexString: "#FFCA70"),
+                             UIColor(hexString: "#FFAF28")].map { $0.cgColor }
+                $0.locations = [0, 1]
+                $0.startPoint = CGPoint(x: 0, y: 0.5)
+                $0.endPoint = CGPoint(x: 1, y: 0.5)
             }
+//            $0.config(forState: .loading) {
+//                $0.backgroundColor = .darkGray
+//            }
             $0.configLabel(forState: .normal) {
                 $0.text = "Normal"
             }
@@ -211,10 +214,10 @@ extension ViewController {
             $0.configImageView(forState: .normal) {
                 $0.image = UIImage(named: "ic_edit_contrast")
             }
-            $0.configImageView(forState: .loading) {
+//            $0.configImageView(forState: .loading) {
 //                $0.image = UIImage(named: "ic_edit_filter")
-                $0.image = nil
-            }
+////                $0.image = nil
+//            }
             $0.configLabel(forState: .loading) {
                 $0.text = "Loading,Loading"
             }
@@ -226,8 +229,8 @@ extension ViewController {
 //            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
-                make.width.equalTo(200)
-                make.height.equalTo(56)
+//                make.width.equalTo(200)
+//                make.height.equalTo(56)
             }
         }
     }
@@ -237,18 +240,23 @@ extension ViewController {
             imageView.drawMode = 0
         }
         print(imageView.drawMode)
+//        sender.isEnabled = !sender.isEnabled
+//        if !sender.isEnabled {
+//            DispatchQueue.main.after(3) {
+//                sender.isEnabled = true
+//            }
+//        }
         
-//        UIImageView.printAllMethods()
+        UIImageView.printAllMethods()
 //        NSLog("------------------")
 //        UIButton.printAllMethods()
 //        sender.isSelected = !sender.isSelected
 //        sender.isLoading = !sender.isLoading;
     }
-    private func setupBody() {
+    private func setupBody8() {
         imageView = UIImageView().then {
             $0.backgroundColor = .cyan
             $0.image = UIImage(named: "ic_edit_contrast")
-//            $0.drawMode = 0
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.centerX.equalToSuperview()
@@ -258,8 +266,9 @@ extension ViewController {
         
         ATButton().do { 
             $0.backgroundColor = .cyan
-            $0.setTitle("Normal", for: .normal)
-            $0.setTitle("Selected", for: .selected)
+            $0.setTitle("normal", for: .normal)
+            $0.setTitle("disabled", for: .disabled)
+            $0.setTitle("highlighted", for: .highlighted)
             $0.setTitleColor(.black, for: .normal)
             $0.setImage(UIImage(named: "ic_edit_contrast"), for: .normal)
             $0.addTarget(self, action: #selector(atbuttonDidClick), for: .touchUpInside)

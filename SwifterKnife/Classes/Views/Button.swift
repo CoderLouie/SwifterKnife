@@ -216,7 +216,9 @@ public class Button: UIControl {
         contentView.center = bounds.center
         
         _bgImageView?.frame = bounds
-        _gradientLayer?.frame = bounds
+        aroundLayer {
+            _gradientLayer?.frame = bounds
+        }
     }
 }
 
@@ -230,14 +232,19 @@ private extension Button {
         return _contentSize
     }
      
+    private func aroundLayer(_ work: () -> Void) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        work()
+        CATransaction.commit()
+    }
     func updateContent() {
         let state = self.state
         guard _state != state.rawValue else { return }
         _state = state.rawValue
         
         let config = { (type: ConfigType) -> Any? in
-            if let t = self.configs[state] { return t[type] }
-//            if state != .normal { return nil }
+            if let t = self.configs[state]?[type] { return t }
             return self.configs[.normal]?[type]
         }
          
@@ -245,8 +252,10 @@ private extension Button {
             closure(self)
         }
         if let closure = config(.gradientLayer) as? ((CAGradientLayer) -> Void) {
-            gradientLayer.isHidden = false
-            closure(gradientLayer)
+            aroundLayer {
+                gradientLayer.isHidden = false
+                closure(gradientLayer)
+            }
         } else { _gradientLayer?.isHidden = true }
         
         if let closure = config(.backgroundImage) as? ((UIImageView) -> Void) {
@@ -255,11 +264,11 @@ private extension Button {
             closure(bgImageView)
             if adjustsImageWhenHighlighted,
                state.contains(.highlighted) {
-                bgImageView.drawMode = 1
+                bgImageView.drawMode = 2
             }
             if adjustsImageWhenDisabled,
                state.contains(.disabled) {
-                bgImageView.drawMode = 2
+                bgImageView.drawMode = 1
             }
         } else { _bgImageView?.isHidden = true }
         
@@ -293,11 +302,11 @@ private extension Button {
             if !imageView.isHidden, imageView.image != nil {
                 if adjustsImageWhenHighlighted,
                    state.contains(.highlighted) {
-                    imageView.drawMode = 1
+                    imageView.drawMode = 2
                 }
                 if adjustsImageWhenDisabled,
                    state.contains(.disabled) {
-                    imageView.drawMode = 2
+                    imageView.drawMode = 1
                 }
                 
                 imageView.isHidden = false
