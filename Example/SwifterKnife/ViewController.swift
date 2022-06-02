@@ -176,7 +176,7 @@ extension ViewController: CarouselViewDelegate {
 // MARK: - Create Views
 extension ViewController {
     @objc private func buttonDidClick(_ sender: Button) {
-        UIImageView.printAllMethods()
+//        UIImageView.printAllMethods()
 //            sender.isSelected = !sender.isSelected
         sender.isLoading = !sender.isLoading
         if sender.isLoading {
@@ -188,19 +188,29 @@ extension ViewController {
     private func setupBody() {
         Button().do {
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-            $0.titleLayout = .left
+            $0.titleLayout = .right
             $0.titleAndImageSpace = 5
             $0.imageAndSpinnerSpace = 10
             $0.roundedDirection = .vertical
             $0.config(forState: .normal) {
-                $0.backgroundColor = .cyan
+//                $0.adjustsImageWhenHighlighted = false
+                $0.adjustsImageWhenDisabled = false
+                $0.titleLayout = .right
             }
+            $0.config(forState: .disabled) {
+                $0.titleLayout = .left
+            }
+            
             $0.configGradientLayer(forState: .normal) {
                 $0.colors = [UIColor(hexString: "#FFCA70"),
                              UIColor(hexString: "#FFAF28")].map { $0.cgColor }
                 $0.locations = [0, 1]
                 $0.startPoint = CGPoint(x: 0, y: 0.5)
                 $0.endPoint = CGPoint(x: 1, y: 0.5)
+            }
+            $0.configGradientLayer(forState: .disabled) {
+                $0.colors = [UIColor.lightGray,
+                             UIColor.darkGray].map { $0.cgColor }
             }
 //            $0.config(forState: .loading) {
 //                $0.backgroundColor = .darkGray
@@ -219,7 +229,7 @@ extension ViewController {
 ////                $0.image = nil
 //            }
             $0.configLabel(forState: .loading) {
-                $0.text = "Loading,Loading"
+                $0.text = "Loading,Disabled"
             }
             $0.configSpinnerView(forState: .loading) {
                 $0.color = .red

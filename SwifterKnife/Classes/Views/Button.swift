@@ -14,9 +14,26 @@ extension UIControl.State: Hashable {
         return .init(rawValue: (1 << 16) | disableFlag)
     }
 }
-
+/**
+ 标题在左
+ spinner, image, title
+ 
+ 标题在右
+ title, image, spinner
+ 
+ 标题在上
+ title
+ image
+ spinner
+ 
+ 标题在下
+ spinner
+ image
+ title
+ */
 public class Button: UIControl {
-    /// 标题位置 (同时有标题和图片的时候生效)
+    
+    /// 标题位置
     public enum TitlePosition {
         /// 标题在左
         case left
@@ -38,7 +55,13 @@ public class Button: UIControl {
         case horizontal
         case vertical
     }
-    public var roundedDirection: RoundedDirection? = nil
+    public var roundedDirection: RoundedDirection? = nil {
+        didSet {
+            if roundedDirection == nil {
+                layer.cornerRadius = 0
+            }
+        }
+    }
     /// 文字 和 ImageView 的距离
     public var titleAndImageSpace: CGFloat = 0
     /// 图片 和 ActivityIndicatorView 的距离
@@ -53,7 +76,7 @@ public class Button: UIControl {
     public var contentEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
     
     /// 配置自身属性，比如背景颜色
-    public func config(forState state: UIControl.State, config: @escaping (UIView) -> Void) {
+    public func config(forState state: UIControl.State, config: @escaping (Button) -> Void) {
         setConfigClosure(config, type: .me, forState: state)
     }
     public func configGradientLayer(forState state: UIControl.State, config: @escaping (CAGradientLayer) -> Void) {
@@ -213,7 +236,7 @@ public class Button: UIControl {
                 layer.cornerRadius = bounds.height * 0.5
             }
         }
-        contentView.center = bounds.center
+        contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
         
         _bgImageView?.frame = bounds
         aroundLayer {
@@ -240,15 +263,23 @@ private extension Button {
     }
     func updateContent() {
         let state = self.state
-        guard _state != state.rawValue else { return }
+        guard _state != state.rawValue else {
+//            print("state 未发生变化 ", self.frame)
+            return
+        }
+//        print("state 发生变化 ", self.frame)
         _state = state.rawValue
         
         let config = { (type: ConfigType) -> Any? in
             if let t = self.configs[state]?[type] { return t }
+            if state == [.selected, .highlighted],
+               let t = self.configs[.selected]?[type] { return t }
+            if state == .loading,
+               let t = self.configs[.disabled]?[type] { return t }
             return self.configs[.normal]?[type]
         }
          
-        if let closure = config(.me) as? ((UIView) -> Void) {
+        if let closure = config(.me) as? ((Button) -> Void) {
             closure(self)
         }
         if let closure = config(.gradientLayer) as? ((CAGradientLayer) -> Void) {
