@@ -2,7 +2,7 @@
 //  Funcs.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/4/26.
+//  Created by liyang on 2022/4/26.
 //
 
 import Foundation

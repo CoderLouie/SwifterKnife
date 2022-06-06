@@ -177,25 +177,37 @@ extension ViewController: CarouselViewDelegate {
 extension ViewController {
     @objc private func buttonDidClick(_ sender: Button) {
 //        UIImageView.printAllMethods()
-//            sender.isSelected = !sender.isSelected
-        sender.isLoading = !sender.isLoading
-        if sender.isLoading {
-            DispatchQueue.main.after(3) {
-                sender.isLoading = false
-            }
-        }
+//        imageView.perform(Selector("setDrawModel:"), with: 1)
+        
+        
+        sender.isSelected = !sender.isSelected
+//        sender.isLoading = !sender.isLoading
+//        if sender.isLoading {
+//            DispatchQueue.main.after(3) {
+//                sender.isLoading = false
+//            }
+//        }
+//        sender.isEnabled = !sender.isEnabled
+//        if !sender.isEnabled {
+//            DispatchQueue.main.after(3) {
+//                sender.isEnabled = true
+//            }
+//        }
     }
     private func setupBody() {
         Button().do {
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-            $0.titleLayout = .right
+//            $0.titleLayout = .right
             $0.titleAndImageSpace = 5
             $0.imageAndSpinnerSpace = 10
-            $0.roundedDirection = .vertical
+//            $0.roundedDirection = .vertical
             $0.config(forState: .normal) {
 //                $0.adjustsImageWhenHighlighted = false
-                $0.adjustsImageWhenDisabled = false
+//                $0.adjustsImageWhenDisabled = false
                 $0.titleLayout = .right
+//                $0.frame.size = CGSize(width: 200, height: 80)
+                $0.layer.masksToBounds = true
+                $0.layer.cornerRadius = 10
             }
             $0.config(forState: .disabled) {
                 $0.titleLayout = .left
@@ -216,10 +228,20 @@ extension ViewController {
 //                $0.backgroundColor = .darkGray
 //            }
             $0.configLabel(forState: .normal) {
-                $0.text = "Normal"
+//                $0.numberOfLines = 0
+//                $0.textAlignment = .center
+                $0.preferredMaxLayoutWidth = 150
+                $0.adjustsFontSizeToFitWidth = true
+                $0.text = "backgroundColorbackgroundColor"
             }
             $0.configLabel(forState: .highlighted) {
                 $0.text = "highlighted"
+            }
+            $0.configLabel(forState: .disabled) {
+                $0.text = "disabled"
+            }
+            $0.configLabel(forState: .selected) {
+                $0.text = "selected"
             }
             $0.configImageView(forState: .normal) {
                 $0.image = UIImage(named: "ic_edit_contrast")
@@ -245,11 +267,23 @@ extension ViewController {
         }
     }
     @objc private func atbuttonDidClick(_ sender: ATButton) { 
-        imageView.drawMode += 1
-        if imageView.drawMode > 4 {
-            imageView.drawMode = 0
-        }
-        print(imageView.drawMode)
+//        imageView.drawMode += 1
+//        if imageView.drawMode > 4 {
+//            imageView.drawMode = 0
+//        }
+//        print(imageView.drawMode)
+//        let sel = NSSelectorFromString("setDrawMode:")
+//        let res = imageView.perform(sel, with: NSNumber(1))
+//        print(res)
+//        let sel = #selector(setter: UIImageView.image)
+//        let res = imageView.perform(sel, with: UIImage(named: "ic_edit_sharpen"))
+//        let sel = #selector(setter: UIImageView.drawMode)
+//        let str = NSStringFromSelector(sel)
+//        print(str)
+//        let res = imageView.perform(sel, with: NSNumber(2))
+//        print(res)
+        imageView.grayLevel = .dark
+        
 //        sender.isEnabled = !sender.isEnabled
 //        if !sender.isEnabled {
 //            DispatchQueue.main.after(3) {
@@ -257,7 +291,7 @@ extension ViewController {
 //            }
 //        }
         
-        UIImageView.printAllMethods()
+//        UIImageView.printAllMethods()
 //        NSLog("------------------")
 //        UIButton.printAllMethods()
 //        sender.isSelected = !sender.isSelected

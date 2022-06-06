@@ -1,9 +1,8 @@
 //
 //  Button.swift
-//  SwifterKnife_Example
+//  SwifterKnife
 //
-//  Created by 李阳 on 2022/6/1.
-//  Copyright © 2022 CocoaPods. All rights reserved.
+//  Created by liyang on 2022/6/1. 
 //
 
 import UIKit
@@ -168,6 +167,7 @@ public class Button: UIControl {
         let view = UILabel()
         view.textColor = .black
         view.font = UIFont.systemFont(ofSize: 15)
+        view.baselineAdjustment = .alignCenters
         contentView.addSubview(view)
         _label = view
         return view
@@ -291,15 +291,15 @@ private extension Button {
         
         if let closure = config(.backgroundImage) as? ((UIImageView) -> Void) {
             bgImageView.isHidden = false
-            bgImageView.drawMode = 0
+            bgImageView.grayLevel = .none
             closure(bgImageView)
             if adjustsImageWhenHighlighted,
                state.contains(.highlighted) {
-                bgImageView.drawMode = 2
+                bgImageView.grayLevel = .dark
             }
             if adjustsImageWhenDisabled,
                state.contains(.disabled) {
-                bgImageView.drawMode = 1
+                bgImageView.grayLevel = .light
             }
         } else { _bgImageView?.isHidden = true }
         
@@ -308,6 +308,7 @@ private extension Button {
         
         if let closure = config(.label) as? ((UILabel) -> Void) {
             label.isHidden = false
+            label.frame.size = .zero
             closure(label)
             if label.isHidden ||
                 (label.text?.isEmpty ?? true) ||
@@ -315,9 +316,19 @@ private extension Button {
                 label.isHidden = true
             } else {
                 label.isHidden = false
-                label.sizeToFit()
-                let size = ceil(label.frame.size)
-                label.frame.size = size
+                var size = label.frame.size
+                if size.width == 0 || size.height == 0 {
+                    size = label.intrinsicContentSize
+                    let maxW = label.preferredMaxLayoutWidth
+                    if label.adjustsFontSizeToFitWidth,
+                       maxW > 0,
+                       label.numberOfLines == 1,
+                       size.width > maxW {
+                        size.width = label.preferredMaxLayoutWidth
+                    }
+                    label.frame.size = ceil(size)
+                }
+                
                 if layoutAtStart {
                     needLayoutViews[0] = (label, titleAndImageSpace)
                 } else {
@@ -327,21 +338,25 @@ private extension Button {
         } else { _label?.isHidden = true }
         
         if let closure = config(.image) as? ((UIImageView) -> Void) {
-            imageView.drawMode = 0
+            imageView.grayLevel = .none
             imageView.isHidden = false
+            imageView.frame.size = .zero
             closure(imageView)
             if !imageView.isHidden, imageView.image != nil {
                 if adjustsImageWhenHighlighted,
                    state.contains(.highlighted) {
-                    imageView.drawMode = 2
+                    imageView.grayLevel = .dark
                 }
                 if adjustsImageWhenDisabled,
                    state.contains(.disabled) {
-                    imageView.drawMode = 1
+                    imageView.grayLevel = .light
                 }
                 
                 imageView.isHidden = false
-                imageView.sizeToFit()
+                let size = imageView.frame.size
+                if size.width == 0 || size.height == 0 {
+                    imageView.sizeToFit()
+                }
                 needLayoutViews[1] = (imageView, layoutAtStart ? imageAndSpinnerSpace : titleAndImageSpace)
             } else { imageView.isHidden = true }
         } else { _imageView?.isHidden = true }
@@ -351,11 +366,15 @@ private extension Button {
             if let closure = configs[state]?[.spinner] as? ((UIActivityIndicatorView) -> Void) {
                 spinnerView.isHidden = false
                 needConfigSpinner = true
+                spinnerView.frame.size = .zero
                 closure(spinnerView)
             }
             if needConfigSpinner {
                 if !spinnerView.isHidden {
-                    spinnerView.sizeToFit()
+                    let size = spinnerView.frame.size
+                    if size.width == 0 || size.height == 0 {
+                        spinnerView.sizeToFit()
+                    }
                     if layoutAtStart {
                         needLayoutViews[2] = (spinnerView, 0)
                     } else {

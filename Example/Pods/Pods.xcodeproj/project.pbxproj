@@ -112,6 +112,7 @@
 		B4DC53E8A66E06AA48C69314A0F11374 /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C686A9E0D232DB2521D17379C9B213C /* Then.swift */; };
 		B4FEE87A89A723C956F4240C204BEE6C /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E49D7EAD3891AC9FECAA8597E39E17 /* Stack.swift */; };
 		B50819F05058F8572F3F81FAF17C2DFB /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5769853423A4F05B25162C938254E5E4 /* Command.swift */; };
+		B62CBF1A284D979E003A23E1 /* UIView+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = B62CBF19284D979E003A23E1 /* UIView+Private.m */; };
 		B68290162848B73000C872FB /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		B8D9D1191659B0BD15364A9C6E2C28EF /* Copyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84282E4EC6A0CB85EFC12F9F0F18F2 /* Copyable.swift */; };
@@ -320,6 +321,7 @@
 		B29420F61C0058F6D1DD8A6DCD39F021 /* MutableCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MutableCollection+Add.swift"; sourceTree = "<group>"; };
 		B57B4B15AAC3AB24B43306829FAA77A0 /* ConstraintPriority.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriority.swift; path = Sources/ConstraintPriority.swift; sourceTree = "<group>"; };
 		B6053C109DD38D283ADE7F51CD7715EC /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		B62CBF19284D979E003A23E1 /* UIView+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Private.m"; sourceTree = "<group>"; };
 		B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B74F74300A7705C1E4B54C899DDC33D3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B90DC916A8D7A90B9C63B9B196635446 /* LayerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LayerView.swift; sourceTree = "<group>"; };
@@ -793,6 +795,7 @@
 				A12ED2AC203F30FE7D7BB2D0AA398F14 /* TypedViewController.swift */,
 				A38DB5D3E75583F28CE295F5A4E97C4C /* UIView+Layout.swift */,
 				A9EE7114F3B1D2DC512E1E8218D723E0 /* UIView+Private.h */,
+				B62CBF19284D979E003A23E1 /* UIView+Private.m */,
 				B351AC8F7704747C5A12E3AC37898C30 /* SnapKit */,
 			);
 			name = Views;
@@ -1094,6 +1097,7 @@
 				C21ACF5A6520ABFC37294C946223A34F /* BitSet.swift in Sources */,
 				5934B12934FED4484E7320EFAA71D38B /* Bool+Add.swift in Sources */,
 				F190364B4410F120B8AE7B95013986AE /* Button.swift in Sources */,
+				B62CBF1A284D979E003A23E1 /* UIView+Private.m in Sources */,
 				FCAF97B49538F11147F3E9ADA3E31F56 /* CAAnimation+Add.swift in Sources */,
 				9B2FCA0BAF1F84AA6E88FD3279A52760 /* CALayer+Add.swift in Sources */,
 				65827337AD8B904D0B7C19C9B6DD69F3 /* Calendar+Add.swift in Sources */,
