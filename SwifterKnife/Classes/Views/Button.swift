@@ -236,7 +236,33 @@ public class Button: UIControl {
                 layer.cornerRadius = bounds.height * 0.5
             }
         }
-        contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let inset = contentEdgeInsets
+        let newBounds = bounds.inset(by: inset)
+        let contentViewX: CGFloat
+        let contentViewY: CGFloat
+        
+        switch contentVerticalAlignment {
+        case .center, .fill:
+            contentViewY = newBounds.midY - _contentSize.height * 0.5
+        case .top:
+            contentViewY = newBounds.minY
+        case .bottom:
+            contentViewY = newBounds.maxY - _contentSize.height
+        @unknown default:
+            contentViewY = newBounds.midY - _contentSize.height * 0.5
+        }
+        
+        switch contentHorizontalAlignment {
+        case .center, .fill:
+            contentViewX = newBounds.midX - _contentSize.width * 0.5
+        case .leading, .left:
+            contentViewX = newBounds.minX
+        case .trailing, .right:
+            contentViewX = newBounds.maxX - _contentSize.width
+        @unknown default:
+            contentViewX = newBounds.midX - _contentSize.width * 0.5
+        }
+        contentView.frame.origin = CGPoint(x: contentViewX, y: contentViewY)
         
         _bgImageView?.frame = bounds
         aroundLayer {
@@ -419,7 +445,7 @@ private extension Button {
         }
         
         let contentSize = CGSize(width: width, height: height)
-        contentView.bounds.size = contentSize
+        contentView.frame.size = contentSize
         
         _contentSize = contentSize
     }

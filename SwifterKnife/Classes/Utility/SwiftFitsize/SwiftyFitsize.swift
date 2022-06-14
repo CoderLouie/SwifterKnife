@@ -223,6 +223,9 @@ extension UIFont {
     @objc public static var size: CGSize {
         CGSize(width: width, height: height)
     }
+    @objc public static var bounds: CGRect {
+        CGRect(origin: .zero, size: size)
+    }
     @objc public static let scale = UIScreen.main.scale
     
     @objc public static var isIPad: Bool {

@@ -196,7 +196,7 @@ extension ViewController {
     }
     private func setupBody() {
         Button().do {
-            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 100)
 //            $0.titleLayout = .right
             $0.titleAndImageSpace = 5
             $0.imageAndSpinnerSpace = 10
@@ -241,6 +241,8 @@ extension ViewController {
                 $0.text = "disabled"
             }
             $0.configLabel(forState: .selected) {
+                $0.frame.size = CGSize(width: 100, height: 25)
+                $0.textAlignment = .center
                 $0.text = "selected"
             }
             $0.configImageView(forState: .normal) {

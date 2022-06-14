@@ -68,6 +68,12 @@ public extension UIView {
         layer.render(in: context)
         return UIGraphicsGetImageFromCurrentImageContext()
     }
+    var screenshotView: UIImageView? {
+        guard let snapshot = screenshot else { return nil }
+        let imgView = UIImageView(image: snapshot)
+        imgView.frame = frame
+        return imgView
+    }
     
     /// Get view's parent view controller
     var parentViewController: UIViewController? {
