@@ -27,7 +27,14 @@ enum Step: Int, CaseIterable {
     }
 }
  
-
+class Person {
+    deinit {
+        Console.logFunc(whose: self)
+    }
+}
+class Student: Person {
+    
+}
 class ViewController: UIViewController {
     
 
@@ -36,10 +43,23 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupBody()
-         
+        Console.log("hello world", tag: .success)
+        Console.trace("hello world", tag: .warning)
+        Console.logFunc(whose: self)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        let s = Student()
+        Console.log("hello world", tag: .success)
+        Console.trace("hello world", tag: .warning)
+//        print(s)
+//        Console.logFunc(whose: self)
+//        UserDefaults.standard.do {
+//            print("------1", $0.dictionaryRepresentation() as NSDictionary)
+//            $0.set("launched", forKey: "app_is_first_start")
+//            print("------2", $0.dictionaryRepresentation() as NSDictionary)
+//        }
+        
 //        regex2()
 //        otherTest4()
 //        progressLayer.strokeEnd += 0.1

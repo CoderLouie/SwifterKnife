@@ -420,8 +420,8 @@ public extension ViewAddition where Self: UIView {
     }
     private func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int) {
         if n == 0 { Console.trace("onDidLayout begin") }
-        // 防止调用层次太深
-        if n > 1000 {
+        // 防止试图本身没有设置约束及frame
+        if n > 4 {
             Console.trace("onDidLayout too deep")
             closure(self)
             return
@@ -430,14 +430,25 @@ public extension ViewAddition where Self: UIView {
             Console.trace("onDidLayout end \(n)")
             closure(self)
         } else {
-            if n > 10 {
-                DispatchQueue.main.async { [weak self] in
-                    self?.setNeedsLayout()
-                    self?.layoutIfNeeded()
-                }
-            }
             DispatchQueue.main.async { [weak self] in
-                self?.onDidLayout(closure, n: n + 1)
+                guard let this = self else { return }
+                if let vc = this.parentViewController {
+                    vc.view.setNeedsLayout()
+                    vc.view.layoutIfNeeded()
+                } else {
+                    if var view = this.superview {
+                        var n = 2
+                        while let superV = view.superview,
+                              !superV.isKind(of: UIWindow.self),
+                              n > 0 {
+                            view = superV
+                            n -= 1
+                        }
+                        view.setNeedsLayout()
+                        view.layoutIfNeeded()
+                    }
+                }
+                this.onDidLayout(closure, n: n + 1)
             }
         }
     }
