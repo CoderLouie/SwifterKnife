@@ -9,6 +9,10 @@ import UIKit
 import SnapKit
 
 public extension UITableView {
+    func cellIsVisibleAt(_ indexPath: IndexPath) -> Bool {
+        bounds.intersects(rectForRow(at: indexPath))
+    }
+    
     func tableHeaderViewSizeToFit() {
         tableHeaderOrFooterViewSizeToFit(\.tableHeaderView)
     }

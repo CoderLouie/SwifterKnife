@@ -43,15 +43,23 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupBody()
-        Console.log("hello world", tag: .success)
-        Console.trace("hello world", tag: .warning)
-        Console.logFunc(whose: self)
+//        Console.log("hello world", tag: .success)
+//        Console.trace("hello world", tag: .warning)
+//        Console.logFunc(whose: self)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        label.textPosition = positions[index]
+        index += 1
+        if index == 1 {
+            label.textInsets = UIEdgeInsets(top: 1, left: 20, bottom: 6, right: 15)
+        }
+        if index >= positions.count { index = 0 }
 //        let s = Student()
-        Console.log("hello world", tag: .success)
-        Console.trace("hello world", tag: .warning)
+//        Console.log("hello world", tag: .success)
+//        Console.log("hello world", whose: self, tag: .success)
+//        Console.trace("hello world", tag: .warning)
+//        Console.trace("hello world", whose: self, tag: .warning)
 //        print(s)
 //        Console.logFunc(whose: self)
 //        UserDefaults.standard.do {
@@ -77,6 +85,9 @@ class ViewController: UIViewController {
     
     private var progressLayer: CAShapeLayer!
     private unowned var imageView: UIImageView!
+    private unowned var label: PaddingLabel!
+    private let positions = PaddingLabel.TextPosition.allCases
+    private var index = 0
 }
 
 
@@ -215,6 +226,19 @@ extension ViewController {
 //        }
     }
     private func setupBody() {
+        label = PaddingLabel().then {
+            $0.font = .semibold(16)
+            $0.textColor = .black
+            $0.text = "Body"
+            $0.backgroundColor = .cyan
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.width.equalTo(300)
+                make.height.equalTo(50)
+                make.centerX.equalToSuperview()
+                make.top.equalTo(100)
+            }
+        }
         Button().do {
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 100)
 //            $0.titleLayout = .right
