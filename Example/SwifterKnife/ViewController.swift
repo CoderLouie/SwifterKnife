@@ -198,7 +198,7 @@ extension ViewController: CarouselViewDelegate {
         }
         stepCell.reload(step: steps[index])
     }
-    func carouselView(_ carouselView: CarouselView, didSelect cell: CarouselViewCell, at index: Int) {
+    func carouselView(_ carouselView: CarouselView, didAppear cell: CarouselViewCell, at index: Int) {
         pageControl.currentPage = index
     }
 }

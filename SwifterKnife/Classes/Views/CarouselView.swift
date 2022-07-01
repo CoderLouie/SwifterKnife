@@ -10,7 +10,8 @@ import Foundation
 // MARK: - CarouselViewDelegate
 @objc public protocol CarouselViewDelegate {
     @objc optional func carouselView(_ carouselView: CarouselView, didSelect cell: CarouselViewCell, at index: Int)
-    @objc optional func carouselView(_ carouselView: CarouselView, didDeselect cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, didAppear cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, didDisappear cell: CarouselViewCell, at index: Int)
     @objc optional func carouselView(_ carouselView: CarouselView, willAppear cell: CarouselViewCell, at index: Int)
     @objc optional func carouselView(_ carouselView: CarouselView, willDisappear cell: CarouselViewCell, at index: Int)
 }
@@ -20,6 +21,7 @@ import Foundation
 // MARK: - CarouselViewCell
 
 open class CarouselViewCell: UIView {
+    fileprivate var carouselView: CarouselView!
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -28,6 +30,9 @@ open class CarouselViewCell: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     open func setup() { }
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        carouselView.didTouchCell(self)
+    }
 }
 
 
@@ -97,6 +102,9 @@ open class CarouselView: UIView {
     private var side: CGFloat = 0
     private var targetIndex: Int?
     
+    fileprivate func didTouchCell(_ cell: CarouselViewCell) {
+        delegate?.carouselView?(self, didSelect: cell, at: currentIndex)
+    }
     private enum PanDirection {
         case none
         case forward
@@ -181,7 +189,7 @@ open class CarouselView: UIView {
         }
         
         delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
-        delegate?.carouselView?(self, didSelect: currentCell, at: currentIndex)
+        delegate?.carouselView?(self, didAppear: currentCell, at: currentIndex)
     }
 }
 
@@ -246,8 +254,8 @@ extension CarouselView: UIScrollViewDelegate {
         let index = offset / side
         if index == 1 { return }
         
-        delegate?.carouselView?(self, didDeselect: currentCell, at: currentIndex)
-        delegate?.carouselView?(self, didSelect: nextCell, at: nextIndex)
+        delegate?.carouselView?(self, didDisappear: currentCell, at: currentIndex)
+        delegate?.carouselView?(self, didAppear: nextCell, at: nextIndex)
         
         reset()
     }

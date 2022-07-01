@@ -1157,4 +1157,8 @@ public extension String {
         if nums1.count == nums2.count { return .orderedSame }
         return nums1.count < nums2.count ? .orderedAscending : .orderedDescending
     }
+    
+    func splitBy(charactersIn string: String) -> [String] {
+        components(separatedBy: CharacterSet(charactersIn: string))
+    }
 }
