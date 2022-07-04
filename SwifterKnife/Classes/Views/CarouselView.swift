@@ -21,7 +21,7 @@ import Foundation
 // MARK: - CarouselViewCell
 
 open class CarouselViewCell: UIView {
-    fileprivate var carouselView: CarouselView!
+    fileprivate unowned var carouselView: CarouselView!
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -231,10 +231,12 @@ extension CarouselView {
     /// 注册cell
     open func register<T: CarouselViewCell>(_ cellClass: T.Type) {
         currentCell = T().then {
+            $0.carouselView = self
             $0.clipsToBounds = true
             scrollView.addSubview($0)
         }
         nextCell = T().then {
+            $0.carouselView = self
             $0.clipsToBounds = true
             scrollView.addSubview($0)
         }

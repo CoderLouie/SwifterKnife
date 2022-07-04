@@ -49,12 +49,20 @@ class ViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        label.textPosition = positions[index]
+        label1.textPosition = positions[index]
         index += 1
         if index == 1 {
-            label.textInsets = UIEdgeInsets(top: 1, left: 20, bottom: 6, right: 15)
+            label1.textInsets = UIEdgeInsets(top: 1, left: 20, bottom: 6, right: 15)
+        }
+        label1.gradientComponent = index == 2 ? .text : .background
+        label1.text = index == 3 ? "一旦把label层设置为mask层，label层就不能显示了,会直接从父层中移除，然后作为渐变层的mask层，且label层的父层会指向渐变层, 父层改了，坐标系也就改了，需要重新设置label的位置，才能正确的设置裁剪区域" : "Copyright (c) 2021 Copyright (c) 2021Copyright (c) 2021"
+        if index == 3 || index == 4 {
+//            label1.setNeedsLayout()
+            label1.invalidateIntrinsicContentSize()
         }
         if index >= positions.count { index = 0 }
+        
+        
 //        let s = Student()
 //        Console.log("hello world", tag: .success)
 //        Console.log("hello world", whose: self, tag: .success)
@@ -86,7 +94,12 @@ class ViewController: UIViewController {
     private var progressLayer: CAShapeLayer!
     private unowned var imageView: UIImageView!
     private unowned var label: PaddingLabel!
-    private let positions = PaddingLabel.TextPosition.allCases
+    
+    private unowned var label1: GradientLabel!
+    private let positions: [Position] = [
+        .leftTop, .leftCenter, .leftBottom,
+        .topCenter, .center, .bottomCenter,
+        .rightTop, .rightCenter, .rightBottom]
     private var index = 0
 }
 
@@ -226,17 +239,30 @@ extension ViewController {
 //        }
     }
     private func setupBody() {
-        label = PaddingLabel().then {
+//        label = PaddingLabel().then {
+//            $0.font = .semibold(16)
+//            $0.textColor = .black
+//            $0.text = "Body"
+//            $0.backgroundColor = .cyan
+//            view.addSubview($0)
+//            $0.snp.makeConstraints { make in
+//                make.width.equalTo(300)
+//                make.height.equalTo(50)
+//                make.centerX.equalToSuperview()
+//                make.top.equalTo(100)
+//            }
+//        }
+        label1 = GradientLabel().then {
+            $0.textInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
             $0.font = .semibold(16)
-            $0.textColor = .black
-            $0.text = "Body"
-            $0.backgroundColor = .cyan
+            $0.text = "Copyright (c) 2021 Copyright (c) 2021Copyright (c) 2021"
+            $0.numberOfLines = 0
             view.addSubview($0)
             $0.snp.makeConstraints { make in
-                make.width.equalTo(300)
-                make.height.equalTo(50)
-                make.centerX.equalToSuperview()
+                make.leading.equalTo(100)
+                make.trailing.equalTo(-100)
                 make.top.equalTo(100)
+//                make.height.equalTo(100)
             }
         }
         Button().do {

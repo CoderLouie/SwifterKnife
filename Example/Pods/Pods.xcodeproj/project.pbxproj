@@ -115,6 +115,8 @@
 		B62CBF1A284D979E003A23E1 /* UIView+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = B62CBF19284D979E003A23E1 /* UIView+Private.m */; };
 		B674BF93286BEE5700CA270E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674BF92286BEE5700CA270E /* TextField.swift */; };
 		B68290162848B73000C872FB /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */; };
+		B6BBFE522872829D002B7A1F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE512872829D002B7A1F /* Position.swift */; };
+		B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE5328728491002B7A1F /* GradientLabel.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		B8D9D1191659B0BD15364A9C6E2C28EF /* Copyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84282E4EC6A0CB85EFC12F9F0F18F2 /* Copyable.swift */; };
 		B943A2C02645F270F81646274BCDC047 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CC4C9AA5EE7CD7107004388435307 /* PriorityQueue.swift */; };
@@ -325,6 +327,8 @@
 		B62CBF19284D979E003A23E1 /* UIView+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Private.m"; sourceTree = "<group>"; };
 		B674BF92286BEE5700CA270E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
+		B6BBFE512872829D002B7A1F /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		B6BBFE5328728491002B7A1F /* GradientLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLabel.swift; sourceTree = "<group>"; };
 		B74F74300A7705C1E4B54C899DDC33D3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B90DC916A8D7A90B9C63B9B196635446 /* LayerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LayerView.swift; sourceTree = "<group>"; };
 		B989793EA916CA0A50F60C980FA18FA3 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
@@ -800,6 +804,8 @@
 				B62CBF19284D979E003A23E1 /* UIView+Private.m */,
 				B351AC8F7704747C5A12E3AC37898C30 /* SnapKit */,
 				B674BF92286BEE5700CA270E /* TextField.swift */,
+				B6BBFE512872829D002B7A1F /* Position.swift */,
+				B6BBFE5328728491002B7A1F /* GradientLabel.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -1138,6 +1144,7 @@
 				02A01E2CED080E1B5C7E891F1631E906 /* LayoutGuide.swift in Sources */,
 				158CE6946FE1EACAD6E6C89266BDFFF6 /* LayoutView.swift in Sources */,
 				FD139A11878590A060BBC9CEEB456C22 /* Lazy.swift in Sources */,
+				B6BBFE522872829D002B7A1F /* Position.swift in Sources */,
 				594E834E91EE167946BBB775BDD4D22C /* LinearFlowView.swift in Sources */,
 				B674BF93286BEE5700CA270E /* TextField.swift in Sources */,
 				276FE2353193FE15EC439035E5B529B9 /* Locale+Add.swift in Sources */,
@@ -1152,6 +1159,7 @@
 				8F284BCBF296F2FF474654C60C9BC7D0 /* PaddingLabel.swift in Sources */,
 				729EEF67B77ACB3762712FEA7DCB62A6 /* Persistentable.swift in Sources */,
 				B943A2C02645F270F81646274BCDC047 /* PriorityQueue.swift in Sources */,
+				B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */,
 				291329640983645030C8E5B2636920AF /* PropertyWrappers.swift in Sources */,
 				FCC8B189910A0C1B18B1134089E4A426 /* Queue.swift in Sources */,
 				10F79FAD7B59D20421BCC77B51A4CF7D /* RangeReplaceableCollection+Add.swift in Sources */,
