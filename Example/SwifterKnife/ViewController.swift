@@ -49,18 +49,7 @@ class ViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        label1.textPosition = positions[index]
-        index += 1
-        if index == 1 {
-            label1.textInsets = UIEdgeInsets(top: 1, left: 20, bottom: 6, right: 15)
-        }
-        label1.gradientComponent = index == 2 ? .text : .background
-        label1.text = index == 3 ? "一旦把label层设置为mask层，label层就不能显示了,会直接从父层中移除，然后作为渐变层的mask层，且label层的父层会指向渐变层, 父层改了，坐标系也就改了，需要重新设置label的位置，才能正确的设置裁剪区域" : "Copyright (c) 2021 Copyright (c) 2021Copyright (c) 2021"
-        if index == 3 || index == 4 {
-//            label1.setNeedsLayout()
-            label1.invalidateIntrinsicContentSize()
-        }
-        if index >= positions.count { index = 0 }
+        kviewTest()
         
         
 //        let s = Student()
@@ -96,6 +85,8 @@ class ViewController: UIViewController {
     private unowned var label: PaddingLabel!
     
     private unowned var label1: GradientLabel!
+    private unowned var kview: KView!
+    private unowned var kButton: UIButton!
     private let positions: [Position] = [
         .leftTop, .leftCenter, .leftBottom,
         .topCenter, .center, .bottomCenter,
@@ -216,9 +207,129 @@ extension ViewController: CarouselViewDelegate {
     }
 }
  
+class KView: UIView {
+    
+    var textInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) {
+        didSet {
+            guard textInsets != oldValue else { return }
+            setNeedsLayout()
+        }
+    }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    var text: String? {
+        set {
+            label.text = newValue
+            Console.log("setText", newValue ?? "nil")
+            setNeedsLayout()
+        }
+        get { label.text }
+    }
+    private func setup() {
+        backgroundColor = .groupTableViewBackground
+        label = UILabel().then {
+            $0.backgroundColor = .cyan
+            $0.textColor = .black
+            $0.font = .medium(14)
+            $0.text = "Slider to see the changes"
+            addSubview($0)
+        }
+    }
+    override var intrinsicContentSize: CGSize {
+        let size = label.intrinsicContentSize
+        let inset = textInsets
+        let res = CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
+        Console.log("intrinsicContentSize", res)
+        return res
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let bounds = bounds
+        let insetBounds = bounds.inset(by: textInsets)
+        var textSize = label.intrinsicContentSize
+        Console.log("layoutSubviews", bounds, insetBounds, textSize)
+        if textSize.width > insetBounds.width {
+            if label.numberOfLines != 1 {
+                label.preferredMaxLayoutWidth = insetBounds.width
+                textSize = label.intrinsicContentSize
+                invalidateIntrinsicContentSize()
+                Console.log("layoutSubviews 1", textSize)
+            }
+        }
+        textSize.width = min(textSize.width, insetBounds.width)
+        textSize.height = min(textSize.height, insetBounds.height)
+        label.frame.size = textSize
+        label.center = insetBounds.center
+    }
+    private(set) unowned var label: UILabel!
+}
 
 // MARK: - Create Views
 extension ViewController {
+    private func kviewTest() {
+        kview.text = "q2bEHYRGVIBX6E1zwVLox6DOVS7bRhq2bEHYRGVIBX6E1zwVLox6DOVS7bRh"
+    }
+    private func setupBody() {
+        kview = KView().then {
+            $0.label.numberOfLines = 0
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+//                make.centerX.equalToSuperview()
+                make.leading.equalTo(100)
+                make.trailing.equalTo(-100)
+                make.height.equalTo(44)
+                make.centerY.equalToSuperview()
+
+            }
+        }
+    }
+    
+    @objc private func kbuttonDidClick(_ sender: UIButton) {
+        Console.log("1", sender.intrinsicContentSize, sender.sizeThatFits(.zero), sender.titleLabel?.sizeThatFits(.zero) ??? "nil")
+        sender.isSelected = !sender.isSelected
+//        sender.invalidateIntrinsicContentSize()
+        sender.setNeedsLayout()
+        DispatchQueue.main.async {
+            Console.log("2", sender.intrinsicContentSize, sender.sizeThatFits(.zero), sender.titleLabel?.intrinsicContentSize ??? "nil")
+        }
+    }
+    private func setupKButton() {
+        kButton = UIButton().then {
+            $0.backgroundColor = .cyan
+            $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.numberOfLines = 0
+            $0.titleLabel?.preferredMaxLayoutWidth = 100
+            $0.setTitle("normal numberOfLines numberOfLines numberOfLines numberOfLines", for: .normal)
+            $0.setTitle("selected numberOfLines numberOfLines", for: .selected)
+            $0.addTarget(self, action: #selector(kbuttonDidClick(_:)), for: .touchUpInside)
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+//                make.leading.equalTo(100)
+//                make.trailing.equalTo(-100)
+                make.center.equalToSuperview()
+            }
+        }
+    }
+    
+    private func labelTest() {
+        label1.textPosition = positions[index]
+        index += 1
+        if index == 1 {
+            label1.textInsets = UIEdgeInsets(top: 1, left: 20, bottom: 6, right: 15)
+        }
+        label1.gradientComponent = index == 2 ? .text : .background
+        label1.text = index == 3 ? "一旦把label层设置为mask层，label层就不能显示了,会直接从父层中移除，然后作为渐变层的mask层，且label层的父层会指向渐变层, 父层改了，坐标系也就改了，需要重新设置label的位置，才能正确的设置裁剪区域" : "Copyright (c) 2021 Copyright (c) 2021Copyright (c) 2021"
+        if index == 3 || index == 4 {
+//            label1.setNeedsLayout()
+            label1.invalidateIntrinsicContentSize()
+        }
+        if index >= positions.count { index = 0 }
+    }
     @objc private func buttonDidClick(_ sender: Button) {
 //        UIImageView.printAllMethods()
 //        imageView.perform(Selector("setDrawModel:"), with: 1)
@@ -238,7 +349,7 @@ extension ViewController {
 //            }
 //        }
     }
-    private func setupBody() {
+    private func setupBody9() {
 //        label = PaddingLabel().then {
 //            $0.font = .semibold(16)
 //            $0.textColor = .black
@@ -252,6 +363,7 @@ extension ViewController {
 //                make.top.equalTo(100)
 //            }
 //        }
+
         label1 = GradientLabel().then {
             $0.textInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
             $0.font = .semibold(16)
@@ -298,10 +410,10 @@ extension ViewController {
 //                $0.backgroundColor = .darkGray
 //            }
             $0.configLabel(forState: .normal) {
-//                $0.numberOfLines = 0
+                $0.numberOfLines = 0
 //                $0.textAlignment = .center
-                $0.preferredMaxLayoutWidth = 150
-                $0.adjustsFontSizeToFitWidth = true
+//                $0.preferredMaxLayoutWidth = 150
+//                $0.adjustsFontSizeToFitWidth = true
                 $0.text = "backgroundColorbackgroundColor"
             }
             $0.configLabel(forState: .highlighted) {
@@ -333,8 +445,8 @@ extension ViewController {
 //            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
-//                make.width.equalTo(200)
-//                make.height.equalTo(56)
+                make.width.equalTo(200)
+                make.height.equalTo(56)
             }
         }
     }

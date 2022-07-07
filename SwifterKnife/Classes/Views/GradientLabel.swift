@@ -75,10 +75,7 @@ open class GradientLabel: UIView {
         backgroundColor = .clear
         
         gradientLayer = CAGradientLayer().then {
-//            let colors: [UIColor] = [.white.withAlphaComponent(0.5), .white] 
-            let colors: [UIColor] = [
-                UIColor(hexString: "#FFCA70"),
-                UIColor(hexString: "#FFAF28")]
+            let colors: [UIColor] = [.white.withAlphaComponent(0.5), .white]
             $0.colors = colors.map { $0.cgColor }
             $0.locations = [0, 1]
             $0.startPoint = CGPoint(x: 0, y: 0.5)
@@ -89,7 +86,7 @@ open class GradientLabel: UIView {
             $0.backgroundColor = .clear
             $0.textColor = .black
             $0.font = .medium(14)
-            $0.text = "Slider to see the changes"
+            $0.text = " "
             addSubview($0)
         }
     }
@@ -97,9 +94,11 @@ open class GradientLabel: UIView {
     
     public override var intrinsicContentSize: CGSize {
         let size = label.intrinsicContentSize
-        Console.log(size, whose: self)
         let inset = textInsets
         return CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
+    }
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        intrinsicContentSize
     }
     
     open override func layoutSubviews() {
@@ -107,17 +106,15 @@ open class GradientLabel: UIView {
         let bounds = bounds
         let insetBounds = bounds.inset(by: textInsets)
         var textSize = label.intrinsicContentSize
-        Console.log(textSize, whose: self)
         if textSize.width > insetBounds.width {
             if label.numberOfLines != 1 {
                 label.preferredMaxLayoutWidth = insetBounds.width
                 textSize = label.intrinsicContentSize
                 invalidateIntrinsicContentSize()
-                Console.log("invalidateIntrinsicContentSize", label.frame.size)
-            } else {
-                textSize.width = insetBounds.width
             }
         }
+        textSize.width = min(textSize.width, insetBounds.width)
+        textSize.height = min(textSize.height, insetBounds.height)
         let textOrigin = CGPoint(x: (insetBounds.width - textSize.width) * textPosition.x + insetBounds.minX, y: (insetBounds.height - textSize.height) * textPosition.y + insetBounds.minY)
         label.frame = CGRect(origin: textOrigin, size: textSize)
         

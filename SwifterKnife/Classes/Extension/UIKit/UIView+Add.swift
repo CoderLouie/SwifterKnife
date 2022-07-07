@@ -408,6 +408,14 @@ public extension UIView {
             }
         }
     }
+    
+    
+   static func noTransaction(_ work: () -> Void) {
+       CATransaction.begin()
+       CATransaction.setDisableActions(true)
+       work()
+       CATransaction.commit()
+   }
 }
 
 
