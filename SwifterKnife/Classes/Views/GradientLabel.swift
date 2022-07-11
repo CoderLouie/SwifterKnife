@@ -68,7 +68,13 @@ open class GradientLabel: UIView {
     
     public subscript<Value>(dynamicMember keyPath: WritableKeyPath<UILabel, Value>) -> Value {
         get { label[keyPath: keyPath] }
-        set { label[keyPath: keyPath] = newValue }
+        set {
+            label[keyPath: keyPath] = newValue
+            if keyPath == \UILabel.text ||
+                keyPath == \UILabel.attributedText {
+                invalidateIntrinsicContentSize()
+            }
+        }
     }
     
     private func setup() {

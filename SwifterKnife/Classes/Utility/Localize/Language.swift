@@ -55,9 +55,9 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         current = `default`
     }
     
-    private static var _current: Language?
-    
     private static let CurrentLanguageKey = "CurrentLanguageKey"
+    
+    private static var _current: Language?
     public static var current: Language {
         get {
             if let tmp = _current { return tmp }
@@ -71,13 +71,12 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         }
         set {
             if newValue == current { return }
-//            guard available().contains(newValue) else {
-//                return
-//            }
             _current = newValue
             UserDefaults.standard.set(newValue, forKey: CurrentLanguageKey)
             UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
+            }
         }
     }
     

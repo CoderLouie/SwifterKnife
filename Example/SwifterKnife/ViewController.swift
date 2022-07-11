@@ -42,14 +42,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupBody()
+        setupBody9()
 //        Console.log("hello world", tag: .success)
 //        Console.trace("hello world", tag: .warning)
 //        Console.logFunc(whose: self)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        kviewTest()
+//        kviewTest()
         
         
 //        let s = Student()
@@ -226,7 +226,8 @@ class KView: UIView {
         set {
             label.text = newValue
             Console.log("setText", newValue ?? "nil")
-            setNeedsLayout()
+//            setNeedsLayout()
+            invalidateIntrinsicContentSize()
         }
         get { label.text }
     }
@@ -236,7 +237,7 @@ class KView: UIView {
             $0.backgroundColor = .cyan
             $0.textColor = .black
             $0.font = .medium(14)
-            $0.text = "Slider to see the changes"
+            $0.text = "Slideratobseecthedchanges"
             addSubview($0)
         }
     }
@@ -244,7 +245,7 @@ class KView: UIView {
         let size = label.intrinsicContentSize
         let inset = textInsets
         let res = CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
-        Console.log("intrinsicContentSize", res)
+        Console.log("intrinsicContentSize", res, size)
         return res
     }
     override func layoutSubviews() {
@@ -275,6 +276,10 @@ extension ViewController {
         kview.text = "q2bEHYRGVIBX6E1zwVLox6DOVS7bRhq2bEHYRGVIBX6E1zwVLox6DOVS7bRh"
     }
     private func setupBody() {
+//        kview = KView(frame: CGRect(x: 100, y: 100, width: 175, height: 44)).then {
+//            $0.label.numberOfLines = 0
+//            view.addSubview($0)
+//        }
         kview = KView().then {
             $0.label.numberOfLines = 0
             view.addSubview($0)
@@ -282,7 +287,7 @@ extension ViewController {
 //                make.centerX.equalToSuperview()
                 make.leading.equalTo(100)
                 make.trailing.equalTo(-100)
-                make.height.equalTo(44)
+//                make.height.equalTo(44)
                 make.centerY.equalToSuperview()
 
             }
