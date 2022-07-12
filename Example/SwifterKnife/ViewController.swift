@@ -276,11 +276,16 @@ extension ViewController {
     
     @objc private func buttonDidClick(_ sender: Button) {
         sender.isSelected = !sender.isSelected
+//        sender.configLabel(forState: .normal) {
+//            $0.textAlignment = .center
+//            $0.text = "selected"
+//        }
     }
     private func setupButton1() { 
         Button().do {
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 30)
-//            $0.titleLayout = .right
+//            $0.labelFlexible = false
+//            $0.titleLayout = .left
             $0.titleAndImageSpace = 5
             $0.imageAndSpinnerSpace = 10
 //            $0.roundedDirection = .vertical
@@ -315,6 +320,7 @@ extension ViewController {
 //                $0.textAlignment = .center
 //                $0.preferredMaxLayoutWidth = 150
 //                $0.adjustsFontSizeToFitWidth = true
+                $0.textAlignment = .left
                 $0.text = "backgroundColorbackgroundColorbackgroundColorbackgroundColor"
             }
             $0.configLabel(forState: .highlighted) {
