@@ -42,7 +42,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupBody9()
+//        setupBody9()
+        setupButton1()
 //        Console.log("hello world", tag: .success)
 //        Console.trace("hello world", tag: .warning)
 //        Console.logFunc(whose: self)
@@ -270,6 +271,88 @@ class KView: UIView {
     private(set) unowned var label: UILabel!
 }
 
+// MARK: - Button
+extension ViewController {
+    
+    @objc private func buttonDidClick(_ sender: Button) {
+        sender.isSelected = !sender.isSelected
+    }
+    private func setupButton1() { 
+        Button().do {
+            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 30)
+//            $0.titleLayout = .right
+            $0.titleAndImageSpace = 5
+            $0.imageAndSpinnerSpace = 10
+//            $0.roundedDirection = .vertical
+            $0.config(forState: .normal) {
+//                $0.adjustsImageWhenHighlighted = false
+//                $0.adjustsImageWhenDisabled = false
+                $0.titleLayout = .right
+//                $0.frame.size = CGSize(width: 200, height: 80)
+                $0.layer.masksToBounds = true
+                $0.layer.cornerRadius = 10
+            }
+            $0.config(forState: .disabled) {
+                $0.titleLayout = .left
+            }
+            
+            $0.configGradientLayer(forState: .normal) {
+                $0.colors = [UIColor(hexString: "#FFCA70"),
+                             UIColor(hexString: "#FFAF28")].map { $0.cgColor }
+                $0.locations = [0, 1]
+                $0.startPoint = CGPoint(x: 0, y: 0.5)
+                $0.endPoint = CGPoint(x: 1, y: 0.5)
+            }
+            $0.configGradientLayer(forState: .disabled) {
+                $0.colors = [UIColor.lightGray,
+                             UIColor.darkGray].map { $0.cgColor }
+            }
+//            $0.config(forState: .loading) {
+//                $0.backgroundColor = .darkGray
+//            }
+            $0.configLabel(forState: .normal) {
+                $0.numberOfLines = 0
+//                $0.textAlignment = .center
+//                $0.preferredMaxLayoutWidth = 150
+//                $0.adjustsFontSizeToFitWidth = true
+                $0.text = "backgroundColorbackgroundColorbackgroundColorbackgroundColor"
+            }
+            $0.configLabel(forState: .highlighted) {
+                $0.text = "highlighted"
+            }
+            $0.configLabel(forState: .disabled) {
+                $0.text = "disabled"
+            }
+            $0.configLabel(forState: .selected) {
+//                $0.frame.size = CGSize(width: 100, height: 25)
+                $0.textAlignment = .center
+                $0.text = "selected"
+            }
+            $0.configImageView(forState: .normal) {
+                $0.image = UIImage(named: "ic_edit_contrast")
+            }
+//            $0.configImageView(forState: .loading) {
+//                $0.image = UIImage(named: "ic_edit_filter")
+////                $0.image = nil
+//            }
+            $0.configLabel(forState: .loading) {
+                $0.text = "Loading,Disabled"
+            }
+            $0.configSpinnerView(forState: .loading) {
+                $0.color = .red
+            }
+            $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
+            view.addSubview($0)
+//            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(200)
+//                make.height.equalTo(56)
+            }
+        }
+    }
+}
+
 // MARK: - Create Views
 extension ViewController {
     private func kviewTest() {
@@ -335,25 +418,6 @@ extension ViewController {
         }
         if index >= positions.count { index = 0 }
     }
-    @objc private func buttonDidClick(_ sender: Button) {
-//        UIImageView.printAllMethods()
-//        imageView.perform(Selector("setDrawModel:"), with: 1)
-        
-        
-        sender.isSelected = !sender.isSelected
-//        sender.isLoading = !sender.isLoading
-//        if sender.isLoading {
-//            DispatchQueue.main.after(3) {
-//                sender.isLoading = false
-//            }
-//        }
-//        sender.isEnabled = !sender.isEnabled
-//        if !sender.isEnabled {
-//            DispatchQueue.main.after(3) {
-//                sender.isEnabled = true
-//            }
-//        }
-    }
     private func setupBody9() {
 //        label = PaddingLabel().then {
 //            $0.font = .semibold(16)
@@ -382,78 +446,7 @@ extension ViewController {
 //                make.height.equalTo(100)
             }
         }
-        Button().do {
-            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 100)
-//            $0.titleLayout = .right
-            $0.titleAndImageSpace = 5
-            $0.imageAndSpinnerSpace = 10
-//            $0.roundedDirection = .vertical
-            $0.config(forState: .normal) {
-//                $0.adjustsImageWhenHighlighted = false
-//                $0.adjustsImageWhenDisabled = false
-                $0.titleLayout = .right
-//                $0.frame.size = CGSize(width: 200, height: 80)
-                $0.layer.masksToBounds = true
-                $0.layer.cornerRadius = 10
-            }
-            $0.config(forState: .disabled) {
-                $0.titleLayout = .left
-            }
-            
-            $0.configGradientLayer(forState: .normal) {
-                $0.colors = [UIColor(hexString: "#FFCA70"),
-                             UIColor(hexString: "#FFAF28")].map { $0.cgColor }
-                $0.locations = [0, 1]
-                $0.startPoint = CGPoint(x: 0, y: 0.5)
-                $0.endPoint = CGPoint(x: 1, y: 0.5)
-            }
-            $0.configGradientLayer(forState: .disabled) {
-                $0.colors = [UIColor.lightGray,
-                             UIColor.darkGray].map { $0.cgColor }
-            }
-//            $0.config(forState: .loading) {
-//                $0.backgroundColor = .darkGray
-//            }
-            $0.configLabel(forState: .normal) {
-                $0.numberOfLines = 0
-//                $0.textAlignment = .center
-//                $0.preferredMaxLayoutWidth = 150
-//                $0.adjustsFontSizeToFitWidth = true
-                $0.text = "backgroundColorbackgroundColor"
-            }
-            $0.configLabel(forState: .highlighted) {
-                $0.text = "highlighted"
-            }
-            $0.configLabel(forState: .disabled) {
-                $0.text = "disabled"
-            }
-            $0.configLabel(forState: .selected) {
-                $0.frame.size = CGSize(width: 100, height: 25)
-                $0.textAlignment = .center
-                $0.text = "selected"
-            }
-            $0.configImageView(forState: .normal) {
-                $0.image = UIImage(named: "ic_edit_contrast")
-            }
-//            $0.configImageView(forState: .loading) {
-//                $0.image = UIImage(named: "ic_edit_filter")
-////                $0.image = nil
-//            }
-            $0.configLabel(forState: .loading) {
-                $0.text = "Loading,Disabled"
-            }
-            $0.configSpinnerView(forState: .loading) {
-                $0.color = .red
-            }
-            $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
-            view.addSubview($0)
-//            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
-            $0.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalTo(200)
-                make.height.equalTo(56)
-            }
-        }
+        
     }
     @objc private func atbuttonDidClick(_ sender: ATButton) { 
 //        imageView.drawMode += 1

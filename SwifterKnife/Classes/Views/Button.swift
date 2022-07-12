@@ -74,7 +74,7 @@ public class Button: UIControl {
     
     public var contentEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
     
-    public var autoSetLabelMaxLayoutWidth = true
+    public var labelFlexible = true
     
     /// 配置自身属性，比如背景颜色
     public func config(forState state: UIControl.State, config: @escaping (Button) -> Void) {
@@ -97,7 +97,7 @@ public class Button: UIControl {
             self.config(.label) {
                 config(view)
             }
-            setNeedsLayout()
+            makeNeedUpdateConstraintsAndLayout()
         }
     }
     public func configImageView(forState state: UIControl.State, config: @escaping (UIImageView) -> Void) {
@@ -106,7 +106,7 @@ public class Button: UIControl {
             self.config(.image) {
                 config(view)
             }
-            setNeedsLayout()
+            makeNeedUpdateConstraintsAndLayout()
         }
     }
     public func configBackgroundImageView(forState state: UIControl.State, config: @escaping (UIImageView) -> Void) {
@@ -125,7 +125,7 @@ public class Button: UIControl {
             self.config(.spinner) {
                 config(view)
             }
-            setNeedsLayout()
+            makeNeedUpdateConstraintsAndLayout()
         }
     }
     public var isLoading: Bool = false {
@@ -174,8 +174,8 @@ public class Button: UIControl {
     }
     
     private func makeNeedUpdateConstraintsAndLayout() {
-        setNeedsLayout()
         invalidateIntrinsicContentSize()
+        setNeedsLayout()
     }
     
     private var _spinnerView: UIActivityIndicatorView?
@@ -229,7 +229,7 @@ public class Button: UIControl {
         $0.isUserInteractionEnabled = false
         self.addSubview($0)
     }
-    /// 需要布局的子视图
+    /// 子视图是否做出修改
     private var contentsModified: Bool = true
     
     private func appendConfigClosure(_ closure: Any, type: ConfigType, forState state: UIControl.State) {
@@ -281,6 +281,7 @@ public class Button: UIControl {
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
         intrinsicContentSize
     }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         updateContentIfNeeded()
@@ -297,35 +298,49 @@ public class Button: UIControl {
         }
         let inset = contentEdgeInsets
         let newBounds = bounds.inset(by: inset)
-        layoutContentViewIfNeeded()
-        if autoSetLabelMaxLayoutWidth,
-           _contentSize.width > newBounds.width,
-           let label: UILabel = contentView.searchSubview(where: {
-                !$0.isHidden
-           }) {
+        
+//        contentsModified = true
+//        layoutContentViewIfNeeded(limitedSize: newBounds.size)
+        if labelFlexible,
+           let label = _label, !label.isHidden,
+           label.preferredMaxLayoutWidth == 0 {
+            let totalW = newBounds.width
+            let totalH = newBounds.height
             let isHorizontalLayout = titleLayout.isHorizontal
-            if label.numberOfLines == 1 {
-                if isHorizontalLayout {
-                    let leftW = newBounds.width - (_contentSize.width - label.frame.width)
-                    label.frame.size.width = leftW
-                    _contentSize.width = newBounds.width
-                } else {
-                    let leftH = newBounds.height - (_contentSize.height - label.frame.height)
-                    label.frame.size.height = leftH
-                    _contentSize.height = newBounds.height
+            var width = _contentSize.width
+            var height = _contentSize.height
+            let lblSize = label.frame.size
+            if isHorizontalLayout {
+                let otherW = width - lblSize.width
+                if totalW > otherW, width > totalW {
+                    label.preferredMaxLayoutWidth = totalW - otherW
+                    label.frame = .zero
+                    contentsModified = true
+//                    invalidateIntrinsicContentSize()
+                    layoutContentViewIfNeeded()
+                    if label.frame.height > _contentSize.height {
+                        label.frame.size.height = _contentSize.height
+                    }
+//                    let s = ceil(label.intrinsicContentSize)
+//                    if s.height > height { height = s.height }
+//                    if height > totalH { height = totalH }
+//                    width += s.width - lblSize.width
+//                    label.frame.size = CGSize(width: s.width, height: min(s.height, height))
                 }
             } else {
-                let leftW = newBounds.width - (_contentSize.width - label.frame.width)
-                label.preferredMaxLayoutWidth = leftW
-                let textSize = label.intrinsicContentSize
-                if textSize.height > _contentSize.height {
-                    _contentSize.height = textSize.height
+                let otherH = height - lblSize.height
+                if totalH > otherH, lblSize.width > totalW {
+                    label.preferredMaxLayoutWidth = totalW
+                    label.frame = .zero
+                    contentsModified = true
+                    layoutContentViewIfNeeded()
+                    
+//                    let s = ceil(label.intrinsicContentSize)
+//                    width = s.width
+//                    label.frame.size = CGSize(width: s.width, height: lblSize.height + (totalH - height))
+//                    height = totalH
                 }
-                label.frame.size.height = textSize.height
-                _contentSize.width = newBounds.width
             }
-            contentView.frame.size = _contentSize
-            invalidateIntrinsicContentSize()
         }
         
         let pos = contentPosition
@@ -360,11 +375,32 @@ private extension Button {
         work()
         CATransaction.commit()
     }
-    private func layoutContentViewIfNeeded() {
+    private func layoutContentViewIfNeeded(limitedSize: CGSize? = nil) {
         guard contentsModified else { return }
         
         var needLayoutViews: [(UIView, CGFloat)?] = [nil, nil, nil]
         let layoutAtStart = titleLayout.atStart
+         
+        if let imageView = _imageView, !imageView.isHidden {
+            let size = imageView.frame.size
+            if size.width == 0 || size.height == 0 {
+                imageView.sizeToFit()
+            }
+            let space = layoutAtStart ? imageAndSpinnerSpace : titleAndImageSpace
+            needLayoutViews[1] = (imageView, space)
+        }
+        if let spinnerView = _spinnerView, !spinnerView.isHidden {
+            let size = spinnerView.frame.size
+            if size.width == 0 || size.height == 0 {
+                spinnerView.sizeToFit()
+            }
+            
+            if layoutAtStart {
+                needLayoutViews[2] = (spinnerView, 0)
+            } else {
+                needLayoutViews[0] = (spinnerView, imageAndSpinnerSpace)
+            }
+        }
         
         if let label = _label, !label.isHidden {
             var size = label.frame.size
@@ -386,24 +422,7 @@ private extension Button {
                 needLayoutViews[2] = (label, 0)
             }
         }
-        if let imageView = _imageView, !imageView.isHidden {
-            let size = imageView.frame.size
-            if size.width == 0 || size.height == 0 {
-                imageView.sizeToFit()
-            }
-            needLayoutViews[1] = (imageView, layoutAtStart ? imageAndSpinnerSpace : titleAndImageSpace)
-        }
-        if let spinnerView = _spinnerView, !spinnerView.isHidden {
-            let size = spinnerView.frame.size
-            if size.width == 0 || size.height == 0 {
-                spinnerView.sizeToFit()
-            }
-            if layoutAtStart {
-                needLayoutViews[2] = (spinnerView, 0)
-            } else {
-                needLayoutViews[0] = (spinnerView, imageAndSpinnerSpace)
-            }
-        }
+        
         var height: CGFloat = 0, width: CGFloat = 0
         let isHorizontalLayout = titleLayout.isHorizontal
         var prevSpace: CGFloat = 0
@@ -514,6 +533,7 @@ private extension Button {
         case .label:
             label.isHidden = false
             label.frame.size = .zero
+            label.preferredMaxLayoutWidth = 0
             work()
             if label.isHidden ||
                 (label.text?.isEmpty ?? true) ||
