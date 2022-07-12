@@ -130,7 +130,6 @@ fileprivate class ButtonContentView: UIView {
         
         let bounds = bounds
         
-        
         var height: CGFloat = 0, width: CGFloat = 0
         let isHorizontalLayout = titleLayout.isHorizontal
         
@@ -141,8 +140,7 @@ fileprivate class ButtonContentView: UIView {
                 label.frame.size.height += bounds.height - aspectSize.height
             }
         }
-        
-//        let needResize = isHorizontalLayout ? bounds.height < aspectSize.height : bounds.width < aspectSize.width
+         
         for item in needLayoutViews {
             guard let item = item else { continue }
             let view = item.0
@@ -216,7 +214,7 @@ fileprivate class ButtonContentView: UIView {
  image
  title
  */
-public class Button: UIControl {
+open class Button: UIControl {
     
     /// 标题位置
     public enum TitlePosition {
@@ -323,7 +321,7 @@ public class Button: UIControl {
             makeNeedUpdateConstraintsAndLayout()
         }
     }
-    public var isLoading: Bool = false {
+    open var isLoading: Bool = false {
         didSet {
             guard isLoading != oldValue else { return }
             super.isEnabled = !isLoading
@@ -336,7 +334,7 @@ public class Button: UIControl {
         }
     }
     
-    public override var isEnabled: Bool {
+    open override var isEnabled: Bool {
         get { super.isEnabled }
         set {
             let oldValue = super.isEnabled
@@ -346,7 +344,7 @@ public class Button: UIControl {
             makeNeedUpdateConstraintsAndLayout()
         }
     }
-    public override var isHighlighted: Bool {
+    open override var isHighlighted: Bool {
         get { super.isHighlighted }
         set {
             guard newValue != super.isHighlighted else { return }
@@ -354,7 +352,7 @@ public class Button: UIControl {
             makeNeedUpdateConstraintsAndLayout()
         }
     }
-    public override var isSelected: Bool {
+    open override var isSelected: Bool {
         get { super.isSelected }
         set {
             guard newValue != super.isSelected else { return }
@@ -362,7 +360,7 @@ public class Button: UIControl {
             makeNeedUpdateConstraintsAndLayout()
         }
     }
-    public override var state: UIControl.State {
+    open override var state: UIControl.State {
         var value = super.state
         if isLoading { value.formUnion(.loading) }
         return value
@@ -436,17 +434,17 @@ public class Button: UIControl {
         case spinner
     }
     
-    public override var intrinsicContentSize: CGSize {
+    open override var intrinsicContentSize: CGSize {
         updateContentIfNeeded()
         let size = contentView.intrinsicContentSize
         let inset = contentEdgeInsets
         return CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
     }
-    public override func sizeThatFits(_ size: CGSize) -> CGSize {
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
         intrinsicContentSize
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         updateContentIfNeeded()
         
