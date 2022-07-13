@@ -743,7 +743,11 @@ extension JSON { // : Swift.Bool
         get {
             switch type {
             case .bool: return rawBool
-            default:    return nil
+            case .number: return rawNumber.boolValue
+            case .string:
+                let target = rawString.lowercased()
+                return ["true", "y", "t", "yes", "1"].contains(target)
+            default: return nil
             }
         }
         set {
@@ -754,12 +758,7 @@ extension JSON { // : Swift.Bool
     //Non-optional bool
     public var boolValue: Bool {
         get {
-            switch type {
-            case .bool:   return rawBool
-            case .number: return rawNumber.boolValue
-            case .string: return ["true", "y", "t", "yes", "1"].contains { rawString.caseInsensitiveCompare($0) == .orderedSame }
-            default:      return false
-            }
+            return bool ?? false
         }
         set {
             object = newValue
@@ -775,7 +774,9 @@ extension JSON {
     public var string: String? {
         get {
             switch type {
-            case .string: return object as? String
+            case .string: return rawString
+            case .number: return rawNumber.stringValue
+            case .bool:   return String(rawBool)
             default:      return nil
             }
         }
@@ -787,12 +788,7 @@ extension JSON {
     //Non-optional string
     public var stringValue: String {
         get {
-            switch type {
-            case .string: return rawString
-            case .number: return rawNumber.stringValue
-            case .bool:   return String(rawBool)
-            default:      return ""
-            }
+            return string ?? ""
         }
         set {
             object = newValue
@@ -824,14 +820,7 @@ extension JSON {
     //Non-optional number
     public var numberValue: NSNumber {
         get {
-            switch type {
-            case .string:
-                let decimal = NSDecimalNumber(string: object as? String)
-                return decimal == .notANumber ? .zero : decimal
-            case .number: return rawNumber
-            case .bool: return NSNumber(value: rawBool ? 1 : 0)
-            default: return NSNumber(value: 0.0)
-            }
+            number ?? NSNumber(value: 0.0)
         }
         set {
             object = newValue
