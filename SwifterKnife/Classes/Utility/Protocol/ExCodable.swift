@@ -334,44 +334,86 @@ fileprivate extension KeyedDecodingContainer {
     
     func decodeForTypeConversion<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
         
-        if let digit = type as? IntegerValue.Type {
-            if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
-                return digit.init(ex_int: bool ? 1 : 0) as? T
+        if type is Bool.Type {
+            if let int = try? decodeIfPresent(Int.self, forKey: codingKey) {
+                return (int != 0) as? T
             }
-            if let double = try? decodeIfPresent(Double.self, forKey: codingKey) {
-                // include Float
-                return digit.init(ex_double: double) as? T
-            }
-            if let string = try? decodeIfPresent(String.self, forKey: codingKey),
-                      let value = digit.init(ex_string: string) {
-                return value as? T
-            }
-        }
-        else if let float = type as? FloatingValue.Type {
-            if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
-                return float.init(ex_int64: bool ? 1 : 0) as? T
-            }
-            if let int64 = try? decodeIfPresent(Int64.self, forKey: codingKey) {
-                // include all Int types
-                return float.init(ex_int64: int64) as? T
-            }
-            if let string = try? decodeIfPresent(String.self, forKey: codingKey),
-               let value = float.init(ex_string: string) {
-                return value as? T
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey) {
+                switch string.lowercased() {
+                case "true", "t", "yes", "y":
+                    return true as? T
+                case "false", "f", "no", "n", "":
+                    return false as? T
+                default:
+                    if let int = Int(string) { return (int != 0) as? T }
+                    else if let double = Double(string) { return (Int(double) != 0) as? T }
+                }
             }
         }
+        
+        else if type is Int.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int(double) as? T } // include Float
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int(string) { return value as? T }
+        }
+        else if type is Int8.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int8(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int8(double) as? T } // include Float
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int8(string) { return value as? T }
+        }
+        else if type is Int16.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int16(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int16(double) as? T } // include Float
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int16(string) { return value as? T }
+        }
+        else if type is Int32.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int32(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int32(double) as? T } // include Float
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int32(string) { return value as? T }
+        }
+        else if type is Int64.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int64(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int64(double) as? T } // include Float
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int64(string) { return value as? T }
+        }
+        else if type is UInt.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt(string) { return value as? T }
+        }
+        else if type is UInt8.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt8(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt8(string) { return value as? T }
+        }
+        else if type is UInt16.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt16(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt16(string) { return value as? T }
+        }
+        else if type is UInt32.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt32(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt32(string) { return value as? T }
+        }
+        else if type is UInt64.Type {
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt64(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt64(string) { return value as? T }
+        }
+        
+        else if type is Double.Type {
+            if let int64 = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return Double(int64) as? T } // include all Int types
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Double(string) { return value as? T }
+        }
+        else if type is CGFloat.Type {
+            if let int64 = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return CGFloat(int64) as? T } // include all Int types
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Double(string) { return CGFloat(value) as? T }
+        }
+        else if type is Float.Type {
+            if let int64 = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return Float(int64) as? T } // include all Int types
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Float(string) { return value as? T }
+        }
+        
         else if type is String.Type {
-            if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
-                return String(describing: bool) as? T
-            }
-            if let int64 = try? decodeIfPresent(Int64.self,  forKey: codingKey) {
-                // include all Int types
-                return String(describing: int64) as? T
-            }
-            if let double = try? decodeIfPresent(Double.self, forKey: codingKey) {
-                // include Float
-                return String(describing: double) as? T
-            }
+            if let bool = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return String(describing: bool) as? T }
+            else if let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return String(describing: int64) as? T } // include all Int types
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T } // include Float
         }
         if let custom = self as? ExCodableDecodingTypeConverter,
            let value = try? custom.decode(self, codingKey: codingKey, as: type) {
@@ -387,97 +429,4 @@ public protocol ExCodableDecodingTypeConverter {
 }
 
 public typealias Modelable = ExCodable & DataCodable
-
-fileprivate protocol IntegerValue {
-    init?(ex_int val: Int)
-    init?(ex_string val: String)
-    init?(ex_double val: Double)
-}
-fileprivate extension IntegerValue where Self: FixedWidthInteger {
-    init?(ex_int val: Int) { self = Self(val) }
-    init?(ex_string val: String) {
-        if let bool = bool(from: val) {
-            self = bool ? 1 : 0
-            return
-        }
-        if let x = Self(val) {
-            self = x
-        } else {
-            return nil
-        }
-    }
-    init?(ex_double val: Double) { self = Self(round(val)) }
-}
-extension Int: IntegerValue {}
-extension Int8: IntegerValue {}
-extension Int16: IntegerValue {}
-extension Int32: IntegerValue {}
-extension Int64: IntegerValue {}
-extension UInt: IntegerValue {}
-extension UInt8: IntegerValue {}
-extension UInt16: IntegerValue {}
-extension UInt32: IntegerValue {}
-extension UInt64: IntegerValue {}
-
-fileprivate func bool(from string: String) -> Bool? {
-    switch string.lowercased() {
-        case "true", "t", "yes", "y", "1":
-            return true
-        case "false", "f", "no", "n", "0", "":
-            return false
-        default:
-            return nil
-    }
-}
-
-extension Bool: IntegerValue {
-    init?(ex_int val: Int) { self = val != 0 }
-    init?(ex_double d: Double) { self = !(d == 0 || d.nextDown == 0 || d.nextUp == 0) }
-    init?(ex_string val: String) {
-        if let bool = bool(from: val) {
-            self = bool
-            return
-        }
-        if let int = Int(val) { self = int != 0 }
-        else if let double = Double(val) { self.init(ex_double: double) }
-        return nil
-    }
-}
-
-fileprivate protocol FloatingValue {
-    init?(ex_int64 val: Int64)
-    init?(ex_string val: String)
-}
-fileprivate protocol FixedWidthFloating: BinaryFloatingPoint {
-    init?(_ text: String)
-}
-
-fileprivate extension FloatingValue where Self: FixedWidthFloating {
-    init?(ex_int64 val: Int64) { self = Self(val) }
-    init?(ex_string val: String) {
-        if let bool = bool(from: val) {
-            self = bool ? 1.0 : 0.0
-            return
-        }
-        if let val = Self(val) {
-            self = val
-        } else {
-            return nil
-        }
-    }
-}
-
-extension Double: FixedWidthFloating {}
-extension Float: FixedWidthFloating {}
-extension Double: FloatingValue {}
-extension Float: FloatingValue {}
-#if canImport(CoreGraphics)
-import CoreGraphics
-extension CGFloat: FixedWidthFloating {
-    init?(_ text: String) {
-        guard let val = Double(text) else { return nil }
-        self = CGFloat(val)
-    }
-}
-extension CGFloat: FloatingValue {}
-#endif
+ 
