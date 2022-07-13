@@ -746,7 +746,9 @@ extension JSON { // : Swift.Bool
             case .number: return rawNumber.boolValue
             case .string:
                 let target = rawString.lowercased()
-                return ["true", "y", "t", "yes", "1"].contains(target)
+                if ["true", "y", "t", "yes", "1"].contains(target) { return true }
+                if ["false", "n", "f", "no", "0"].contains(target) { return false }
+                return nil
             default: return nil
             }
         }
