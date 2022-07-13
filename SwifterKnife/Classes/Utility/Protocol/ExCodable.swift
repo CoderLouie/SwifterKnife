@@ -58,7 +58,7 @@ public final class KeyMap<Root: Codable> {
 }
 
 public extension KeyMap {
-    convenience init<Value: Codable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+    convenience init<Value: Codable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
         self.init(encode: { (root, encoder, nonnullAll, throwsAll) in
             try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
         }, decode: { (root, decoder, nonnullAll, throwsAll) in
@@ -67,27 +67,27 @@ public extension KeyMap {
             }
         }, decodeReference: nil)
     }
-    convenience init<Value: Codable, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: Key ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+    convenience init<Value: Codable, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: Key..., nonnull: Bool? = nil, throws: Bool? = nil) {
         self.init(encode: { (root, encoder, nonnullAll, throwsAll) in
-            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
         }, decode: { (root, decoder, nonnullAll, throwsAll) in
             if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
                 root[keyPath: keyPath] = value
             }
         }, decodeReference: nil)
     }
-    convenience init<Value: Codable>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+    convenience init<Value: Codable>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
         self.init(encode: { (root, encoder, nonnullAll, throwsAll) in
-            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
         }, decode: nil, decodeReference: { (root, decoder, nonnullAll, throwsAll) in
             if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
                 root[keyPath: keyPath] = value
             }
         })
     }
-    convenience init<Value: Codable, Key: CodingKey>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: Key ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+    convenience init<Value: Codable, Key: CodingKey>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: Key..., nonnull: Bool? = nil, throws: Bool? = nil) {
         self.init(encode: { (root, encoder, nonnullAll, throwsAll) in
-            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
         }, decode: nil, decodeReference: { (root, decoder, nonnullAll, throwsAll) in
             if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
                 root[keyPath: keyPath] = value
@@ -113,13 +113,13 @@ public extension Decoder {
     subscript<T: Decodable>(stringKeys: [String]) -> T? {
         return decode(stringKeys, as: T.self)
     }
-    subscript<T: Decodable>(stringKeys: String ...) -> T? {
+    subscript<T: Decodable>(stringKeys: String...) -> T? {
         return decode(stringKeys, as: T.self)
     }
     subscript<T: Decodable, K: CodingKey>(codingKeys: [K]) -> T? {
         return decode(codingKeys, as: T.self)
     }
-    subscript<T: Decodable, K: CodingKey>(codingKeys: K ...) -> T? {
+    subscript<T: Decodable, K: CodingKey>(codingKeys: K...) -> T? {
         return decode(codingKeys, as: T.self)
     }
 }
@@ -180,19 +180,19 @@ public extension Encoder {
 
 public extension Decoder {
     
-    func decodeNonnullThrows<T: Decodable>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T {
+    func decodeNonnullThrows<T: Decodable>(_ stringKeys: String..., as type: T.Type = T.self) throws -> T {
         return try decodeNonnullThrows(stringKeys, as: type)
     }
     func decodeNonnullThrows<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T {
         return try decode(stringKeys, as: type, nonnull: true, throws: true)!
     }
-    func decodeThrows<T: Decodable>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T? {
+    func decodeThrows<T: Decodable>(_ stringKeys: String..., as type: T.Type = T.self) throws -> T? {
         return try decodeThrows(stringKeys, as: type)
     }
     func decodeThrows<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T? {
         return try decode(stringKeys, as: type, nonnull: false, throws: true)
     }
-    func decode<T: Decodable>(_ stringKeys: String ..., as type: T.Type = T.self) -> T? {
+    func decode<T: Decodable>(_ stringKeys: String..., as type: T.Type = T.self) -> T? {
         return decode(stringKeys, as: type)
     }
     func decode<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self) -> T? {
@@ -202,19 +202,19 @@ public extension Decoder {
         return try decode(stringKeys.map { ExCodingKey($0) }, as: type, nonnull: nonnull, throws: `throws`)
     }
     
-    func decodeNonnullThrows<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T {
+    func decodeNonnullThrows<T: Decodable, K: CodingKey>(_ codingKeys: K..., as type: T.Type = T.self) throws -> T {
         return try decodeNonnullThrows(codingKeys, as: type)
     }
     func decodeNonnullThrows<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T {
         return try decode(codingKeys, as: type, nonnull: true, throws: true)!
     }
-    func decodeThrows<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T? {
+    func decodeThrows<T: Decodable, K: CodingKey>(_ codingKeys: K..., as type: T.Type = T.self) throws -> T? {
         return try decodeThrows(codingKeys, as: type)
     }
     func decodeThrows<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
         return try decode(codingKeys, as: type, nonnull: false, throws: true)
     }
-    func decode<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) -> T? {
+    func decode<T: Decodable, K: CodingKey>(_ codingKeys: K..., as type: T.Type = T.self) -> T? {
         return decode(codingKeys, as: type)
     }
     func decode<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) -> T? {
@@ -222,7 +222,7 @@ public extension Decoder {
     }
     fileprivate func decode<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, nonnull: Bool = false, throws: Bool = false) throws -> T? {
         do {
-            let container = try self.container(keyedBy: K.self)
+            let container = try container(keyedBy: K.self)
             return try container.decodeForAlternativeKeys(codingKeys, as: type, nonnull: nonnull, throws: `throws`)
         }
         catch { if `throws` || nonnull { throw error } }
@@ -258,7 +258,7 @@ fileprivate extension KeyedDecodingContainer {
         
         var firstError: Error?
         do {
-            let codingKey = codingKeys.first!
+            let codingKey = codingKeys[0]
             if let value = try decodeForNestedKeys(codingKey, as: type, nonnull: nonnull, throws: `throws`) {
                 return value
             }
@@ -334,7 +334,7 @@ fileprivate extension KeyedDecodingContainer {
     
     func decodeForTypeConversion<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
         
-        if let digit = T.self as? IntegerValue.Type {
+        if let digit = type as? IntegerValue.Type {
             if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
                 return digit.init(ex_int: bool ? 1 : 0) as? T
             }
@@ -347,7 +347,7 @@ fileprivate extension KeyedDecodingContainer {
                 return value as? T
             }
         }
-        else if let float = T.self as? FloatingValue.Type {
+        else if let float = type as? FloatingValue.Type {
             if let bool = try? decodeIfPresent(Bool.self, forKey: codingKey) {
                 return float.init(ex_int64: bool ? 1 : 0) as? T
             }
@@ -406,7 +406,7 @@ fileprivate extension IntegerValue where Self: FixedWidthInteger {
             return nil
         }
     }
-    init?(ex_double val: Double) { self = Self(val) }
+    init?(ex_double val: Double) { self = Self(round(val)) }
 }
 extension Int: IntegerValue {}
 extension Int8: IntegerValue {}
