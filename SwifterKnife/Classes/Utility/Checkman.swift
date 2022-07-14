@@ -14,7 +14,7 @@ public enum TicketHandleResult {
     case retryWithDelay(TimeInterval)
     case skipWithDelay(TimeInterval)
 }
-public protocol TicketHandle: Persistentable {
+public protocol TicketHandle: DataCodable {
     static func handle(ticket: Self, for checkman: Checkman<Self>, completion: @escaping (TicketHandleResult) -> Void)
 }
  

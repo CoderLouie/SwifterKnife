@@ -34,6 +34,11 @@ public extension DataEncodable {
         }
         return string
     }
+    
+    func save(toFile path: String) throws {
+        let data = try encode()
+        try data.write(to: URL(fileURLWithPath: path), options: .atomic)
+    }
 }
 
 public extension DataEncodable where Self: Encodable {
@@ -63,6 +68,11 @@ public extension DataDecodable {
     }
     static func decode(from string: String) throws -> Self {
         let data = Data(string.utf8)
+        return try decode(with: data)
+    }
+    
+    static func load(fromFile path: String) throws -> Self {
+        let data = try Data(contentsOf: URL(fileURLWithPath: path))
         return try decode(with: data)
     }
 }

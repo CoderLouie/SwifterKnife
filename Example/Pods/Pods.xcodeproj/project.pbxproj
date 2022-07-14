@@ -77,7 +77,6 @@
 		6EAC8B6FA2D115DE708A58C601DD25E1 /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFDF096C3836F945945C9FFDB5090F5 /* Constraint.swift */; };
 		6FD75013EFD2DEC55063552DDC67CB60 /* UITableView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABC8439C74D9876CDEC6C7B60E51720 /* UITableView+Add.swift */; };
 		7199497EBB6C67C80DC84FE02864E742 /* Sequence+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAC290B08512D31CD7AAF90E9EF715F /* Sequence+Add.swift */; };
-		729EEF67B77ACB3762712FEA7DCB62A6 /* Persistentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF5378EF1EF2B44300B11BD07FDAC5F /* Persistentable.swift */; };
 		77B63349AD5DD6BF4CC9F7EDD7EB4715 /* UIButton+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18818F4A9DFE32EB7ED04737C07DC3B4 /* UIButton+Add.swift */; };
 		7809775F561B70AB000279A438A0AA66 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E2D1AD1AC8218D14D8699B084BB029 /* CGRect+Add.swift */; };
 		7AD0D0649D08894357E668E8988D1B5E /* UINavigationBar+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC8A6870690468965FAF0CA4082CCD4 /* UINavigationBar+Add.swift */; };
@@ -261,7 +260,6 @@
 		5769853423A4F05B25162C938254E5E4 /* Command.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		583BBF75085D255E27A5F9EF9EC203A5 /* ConstraintMakerRelatable+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ConstraintMakerRelatable+Extensions.swift"; path = "Sources/ConstraintMakerRelatable+Extensions.swift"; sourceTree = "<group>"; };
 		5BEB01317EEDD31046541239DF96D813 /* StringProtocol+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "StringProtocol+Add.swift"; sourceTree = "<group>"; };
-		5CF5378EF1EF2B44300B11BD07FDAC5F /* Persistentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Persistentable.swift; sourceTree = "<group>"; };
 		5DE21A6E7A12FD2C8FB56069D085CC7F /* Pods-SwifterKnife_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		5F2DCDFF2011C08759407B4E2038CA11 /* ConstraintAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintAttributes.swift; path = Sources/ConstraintAttributes.swift; sourceTree = "<group>"; };
 		60C59803C26FD35E350A15DB0CD92306 /* LinearFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LinearFlowView.swift; sourceTree = "<group>"; };
@@ -593,7 +591,6 @@
 				FE84282E4EC6A0CB85EFC12F9F0F18F2 /* Copyable.swift */,
 				04C00EF0B84C10332DF2848FCE5F9C6B /* DataCodable.swift */,
 				5759A851B26776CA244E5EDE7CAB82B7 /* ExCodable.swift */,
-				5CF5378EF1EF2B44300B11BD07FDAC5F /* Persistentable.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -1157,7 +1154,6 @@
 				AEAD26A7BDF5668440D3F30CB3A129FD /* Optional+Add.swift in Sources */,
 				5059197ECD1F6698EEB05335CDD00D83 /* PaddingButton.swift in Sources */,
 				8F284BCBF296F2FF474654C60C9BC7D0 /* PaddingLabel.swift in Sources */,
-				729EEF67B77ACB3762712FEA7DCB62A6 /* Persistentable.swift in Sources */,
 				B943A2C02645F270F81646274BCDC047 /* PriorityQueue.swift in Sources */,
 				B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */,
 				291329640983645030C8E5B2636920AF /* PropertyWrappers.swift in Sources */,
