@@ -46,6 +46,8 @@ public extension DataEncodable where Self: Encodable {
         try JSONEncoder().encode(self)
     }
 }
+extension Array: DataEncodable where Element: Encodable {}
+
 public extension DataEncodable where Self: NSCoding {
     func encode() throws -> Data {
         let key = String(describing: type(of: self))
@@ -83,6 +85,7 @@ public extension DataDecodable where Self: Decodable {
         try JSONDecoder().decode(Self.self, from: data)
     }
 }
+extension Array: DataDecodable where Element: Decodable {}
 
 public extension DataDecodable where Self: NSCoding {
     static func decode(with data: Data) throws -> Self {
