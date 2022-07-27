@@ -496,6 +496,26 @@ extension JSON {
         set { self[path] = newValue }
     }
     
+    public subscript(caseInsensitive key: String) -> JSON {
+        get {
+            var r = JSON.null
+            guard type == .dictionary else {
+                r.error = self.error ?? SwiftyJSONError.wrongType
+                return r
+            }
+            let lowKey = key.lowercased()
+            for (k, v) in rawDictionary {
+                if k.lowercased() == lowKey { return JSON(v) }
+            }
+            r.error = SwiftyJSONError.notExist
+            return .null
+        }
+        set {
+            guard type == .dictionary,
+                  newValue.error == nil else { return }
+            rawDictionary[key] = newValue.object
+        }
+    }
     public subscript(multiKeys keys: [String]) -> JSON {
         get {
             var r = JSON.null
