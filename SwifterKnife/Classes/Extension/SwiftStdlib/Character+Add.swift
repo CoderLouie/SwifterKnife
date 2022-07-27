@@ -67,6 +67,14 @@ public extension Character {
     var uppercased: Character {
         return String(self).uppercased().first!
     }
+    
+    /// 大写变小写，小写变大写
+    var flip: Character? {
+        guard let asciiV = self.asciiValue else {
+            return nil
+        }
+        return Character(Unicode.Scalar(asciiV ^ 32))
+    }
 }
 
 // MARK: - Methods

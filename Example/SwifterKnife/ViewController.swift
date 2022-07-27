@@ -281,7 +281,13 @@ extension ViewController {
 //            $0.text = "selected"
 //        }
     }
-    private func setupButton1() { 
+    private func setupButton1() {
+        
+        let e1: Either<Int, String>? = .left(3)
+        let right = e1.selectRight()
+        
+        let color1: UIColor = .createBy(10,20,30)
+        
         Button().do {
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 30)
 //            $0.labelFlexible = false

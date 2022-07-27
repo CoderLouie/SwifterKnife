@@ -131,7 +131,9 @@ public final class PriorityQueue<Element> {
         return val
     }
     
-    public var count: Int { return items.count }
+    public var count: Int {
+        items.reduce(0) { $0 + $1.count }
+    }
     public var isEmpty: Bool { return items.count == 0 }
 }
 

@@ -114,6 +114,9 @@
 		B62CBF1A284D979E003A23E1 /* UIView+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = B62CBF19284D979E003A23E1 /* UIView+Private.m */; };
 		B674BF93286BEE5700CA270E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674BF92286BEE5700CA270E /* TextField.swift */; };
 		B68290162848B73000C872FB /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */; };
+		B6A8296A2887DF0300E0190B /* Heap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A829692887DF0300E0190B /* Heap.swift */; };
+		B6A8296C2887DF1900E0190B /* UnionFind.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A8296B2887DF1900E0190B /* UnionFind.swift */; };
+		B6A82970288928B400E0190B /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A8296F288928B400E0190B /* Either.swift */; };
 		B6BBFE522872829D002B7A1F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE512872829D002B7A1F /* Position.swift */; };
 		B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE5328728491002B7A1F /* GradientLabel.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
@@ -325,6 +328,9 @@
 		B62CBF19284D979E003A23E1 /* UIView+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Private.m"; sourceTree = "<group>"; };
 		B674BF92286BEE5700CA270E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
+		B6A829692887DF0300E0190B /* Heap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Heap.swift; sourceTree = "<group>"; };
+		B6A8296B2887DF1900E0190B /* UnionFind.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnionFind.swift; sourceTree = "<group>"; };
+		B6A8296F288928B400E0190B /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		B6BBFE512872829D002B7A1F /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		B6BBFE5328728491002B7A1F /* GradientLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLabel.swift; sourceTree = "<group>"; };
 		B74F74300A7705C1E4B54C899DDC33D3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -439,6 +445,8 @@
 		24C653687C2035CC8A8F4D394CED169F /* Builtlns */ = {
 			isa = PBXGroup;
 			children = (
+				B6A8296B2887DF1900E0190B /* UnionFind.swift */,
+				B6A829692887DF0300E0190B /* Heap.swift */,
 				3FA10ADE9218D9EFF16551B9CA8DD73E /* BitSet.swift */,
 				4C0749E05B7637464B79A9680C27A5A7 /* Deque.swift */,
 				A20CC4C9AA5EE7CD7107004388435307 /* PriorityQueue.swift */,
@@ -772,6 +780,7 @@
 				2AE2FCB3E76148960210E837F9AC5447 /* SwiftyJSON.swift */,
 				965799593B87B38B2726F1699DE695AC /* SwiftyTimer.swift */,
 				CD77E7B4D52BC25565F7235D97386311 /* Throttle.swift */,
+				B6A8296F288928B400E0190B /* Either.swift */,
 				24C653687C2035CC8A8F4D394CED169F /* Builtlns */,
 				9AFC8937D6F5137F97932735854A651F /* Localize */,
 				916523A8B122249768E4EA229EE76DD3 /* Protocol */,
@@ -1101,6 +1110,8 @@
 				AA69E4A29621C3B9AD7AD99667FBC000 /* BidirectionalCollection+Add.swift in Sources */,
 				436FB99284BECD4B385DC7040CC6F5CA /* BinaryFloatingPoint+Add.swift in Sources */,
 				C21ACF5A6520ABFC37294C946223A34F /* BitSet.swift in Sources */,
+				B6A82970288928B400E0190B /* Either.swift in Sources */,
+				B6A8296A2887DF0300E0190B /* Heap.swift in Sources */,
 				5934B12934FED4484E7320EFAA71D38B /* Bool+Add.swift in Sources */,
 				F190364B4410F120B8AE7B95013986AE /* Button.swift in Sources */,
 				B62CBF1A284D979E003A23E1 /* UIView+Private.m in Sources */,
@@ -1174,6 +1185,7 @@
 				1B4788E282783B72B6655569FDA649CF /* StringProtocol+Add.swift in Sources */,
 				7AD859346831A2AF7354D349E2B9B7AE /* SwifterKnife-dummy.m in Sources */,
 				FE6AC96B4FF09EF57AF519685C68E6D8 /* SwiftyFitsize.swift in Sources */,
+				B6A8296C2887DF1900E0190B /* UnionFind.swift in Sources */,
 				B387794FFB1BDEC5005D8EC4DB9FBCAC /* SwiftyJSON.swift in Sources */,
 				E18ADA27ABAD735767DB74464E1068F6 /* SwiftyTimer.swift in Sources */,
 				B4DC53E8A66E06AA48C69314A0F11374 /* Then.swift in Sources */,
