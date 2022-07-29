@@ -185,53 +185,49 @@ public extension UIScrollView {
     }
     
     // bingo
-    var offsetMinT: CGFloat {
+    var offsetTMin: CGFloat {
         -contentInset.top
     }
     // bingo
-    var offsetMaxT: CGFloat {
-//        offsetMaxB - frame.size.height
+    var offsetTMax: CGFloat {
         max(0, contentSize.height - bounds.height) + contentInset.bottom
     }
     // bingo
-    var offsetMinB: CGFloat {
-        offsetMinT + bounds.size.height
+    var offsetBMin: CGFloat {
+        offsetTMin + bounds.size.height
     }
     // bingo
-    var offsetMaxB: CGFloat {
-//        contentSize.height + contentInset.bottom
-        offsetMaxT + bounds.height
+    var offsetBMax: CGFloat {
+        offsetTMax + bounds.height
     }
     // bingo
-    var offsetMinL: CGFloat {
+    var offsetLMin: CGFloat {
         -contentInset.left
     }
     // bingo
-    var offsetMaxL: CGFloat {
-//        offsetMaxR - frame.size.width
+    var offsetLMax: CGFloat {
         max(0, contentSize.width - bounds.width) + contentInset.right
     }
     // bingo
     var offsetMinR: CGFloat {
-        offsetMinL + bounds.size.width
+        offsetLMin + bounds.size.width
     }
     // bingo
     var offsetMaxR: CGFloat {
-//        contentSize.width + contentInset.right
-        offsetMaxL + bounds.size.width
+        offsetLMax + bounds.size.width
     }
     
     var atTopPosition: Bool {
-        offsetT == offsetMinT
+        offsetT == offsetTMin
     }
     var atBottomPosition: Bool {
-        offsetT == offsetMaxT
+        offsetT == offsetTMax
     }
     var atLeftPosition: Bool {
-        offsetL == offsetMinL
+        offsetL == offsetLMin
     }
     var atRightPosition: Bool {
-        offsetL == offsetMaxL
+        offsetL == offsetLMax
     }
 }
 
@@ -244,10 +240,10 @@ public extension UIScrollView {
     func pageIndex(at direction: ScrollDirection = .horizontal) -> Int {
         switch direction {
         case .horizontal:
-            let width = frame.size.width
+            let width = bounds.size.width
             return Int((contentOffset.x + width * 0.5) / width)
         case .vertical:
-            let height = frame.size.height
+            let height = bounds.size.height
             return Int((contentOffset.y + height * 0.5) / height)
         }
     }
@@ -263,7 +259,7 @@ public extension UIScrollView {
         setContentOffset(offset, animated: animated)
     }
     func roll(toPageIndex index: Int, at direction: ScrollDirection = .horizontal, animated: Bool = true) {
-        let size = frame.size
+        let size = bounds.size
         var offset: CGPoint = .zero
         switch direction {
         case .horizontal:

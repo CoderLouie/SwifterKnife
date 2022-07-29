@@ -503,9 +503,10 @@ extension JSON {
                 r.error = self.error ?? SwiftyJSONError.wrongType
                 return r
             }
-            let lowKey = key.lowercased()
             for (k, v) in rawDictionary {
-                if k.lowercased() == lowKey { return JSON(v) }
+                if k.compare(key, options: [.caseInsensitive]) == .orderedSame {
+                    return JSON(v)
+                }
             }
             r.error = SwiftyJSONError.notExist
             return .null

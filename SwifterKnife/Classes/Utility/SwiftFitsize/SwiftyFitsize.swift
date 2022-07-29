@@ -136,41 +136,41 @@ public extension SwiftyFitsizeable {
     }
 }
 
-fileprivate protocol CGFloatFitsizeable: SwiftyFitsizeable {
+public protocol CGFloatConvertable {
     var cgfloatValue: CGFloat { get }
 }
-extension CGFloatFitsizeable {
+//extension CGFloatConvertable where Self: BinaryInteger {
+//    public var cgfloatValue: CGFloat { return CGFloat(self) }
+//}
+//extension CGFloatConvertable where Self: BinaryFloatingPoint {
+//    public var cgfloatValue: CGFloat { return CGFloat(self) }
+//}
+
+
+extension SwiftyFitsizeable where Self: CGFloatConvertable {
     public func sf(_ type: SwiftyFitType) -> CGFloat {
         return SwiftyFitsize.shared.fitNumber(cgfloatValue, fitType: type)
     }
 }
-extension CGFloatFitsizeable where Self: BinaryInteger {
-    var cgfloatValue: CGFloat { return CGFloat(self) }
-}
- 
-extension Int: CGFloatFitsizeable {}
-extension Int64: CGFloatFitsizeable {}
-extension Int32: CGFloatFitsizeable {}
-extension Int16: CGFloatFitsizeable {}
-extension Int8: CGFloatFitsizeable {}
-extension UInt: CGFloatFitsizeable {}
-extension UInt64: CGFloatFitsizeable {}
-extension UInt32: CGFloatFitsizeable {}
-extension UInt16: CGFloatFitsizeable {}
-extension UInt8: CGFloatFitsizeable {}
+public typealias CGFloatFitsizeable = CGFloatConvertable & SwiftyFitsizeable
 
 
-extension CGFloatFitsizeable where Self: BinaryFloatingPoint {
-    var cgfloatValue: CGFloat { return CGFloat(self) }
+extension Int: CGFloatFitsizeable {
+    public var cgfloatValue: CGFloat { CGFloat(self) }
 }
-extension Double: CGFloatFitsizeable {}
-extension Float: CGFloatFitsizeable {}
-#if canImport(CoreGraphics)
-import CoreGraphics
+extension UInt: CGFloatFitsizeable {
+    public var cgfloatValue: CGFloat { CGFloat(self) }
+}
+
+extension Double: CGFloatFitsizeable {
+    public var cgfloatValue: CGFloat { CGFloat(self) }
+}
+extension Float: CGFloatFitsizeable {
+    public var cgfloatValue: CGFloat { CGFloat(self) }
+}
 extension CGFloat: CGFloatFitsizeable {
     public var cgfloatValue: CGFloat { return self }
 }
-#endif
 
 extension CGPoint: SwiftyFitsizeable {
     public func sf(_ type: SwiftyFitType) -> CGPoint {
@@ -285,6 +285,18 @@ extension UIFont {
         safeAreaB + 49
     }
     
+//    @objc public static var fontWindow: UIWindow? {
+//        for window in UIApplication.shared.windows.reversed() {
+//            if window.isKeyWindow,
+//               window.screen === UIScreen.main,
+//               (!window.isHidden && window.alpha > 0),
+//               window.windowLevel >= .normal {
+//                return window
+//            }
+//        }
+//        return nil
+//    }
+    
     @objc public static var currentWindow: UIWindow? {
         if let window = UIApplication.shared.delegate?.window {
             return window
@@ -328,13 +340,13 @@ public extension Screen {
         value.pix
     }
     @objc static func pixFloor(_ value: CGFloat) -> CGFloat {
-        value.pixel(.floor)
+        value.pixFloor
     }
     @objc static func pixRound(_ value: CGFloat) -> CGFloat {
-        value.pixel(.round)
+        value.pixRound
     }
     @objc static func pixCeil(_ value: CGFloat) -> CGFloat {
-        value.pixel(.ceil)
+        value.pixCeil
     }
     
     @objc static func fit(_ value: CGFloat) -> CGFloat {
@@ -376,19 +388,23 @@ extension UIViewController {
     }
 }
 
-public extension CGFloat {
+public extension CGFloatConvertable {
     /// 像素化对齐
     var pix: CGFloat { pixel(.round) }
+    var pixRound: CGFloat { pixel(.round) }
+    var pixFloor: CGFloat { pixel(.floor) }
+    var pixCeil: CGFloat { pixel(.ceil) }
     
     func pixel(_ aligment: PixelAligment) -> CGFloat {
+        let val = cgfloatValue
         let scale = Screen.scale
         switch aligment {
         case .floor:
-            return Darwin.floor(self * scale) / scale
+            return Darwin.floor(val * scale) / scale
         case .round:
-            return Darwin.round(self * scale) / scale
+            return Darwin.round(val * scale) / scale
         case .ceil:
-            return Darwin.ceil(self * scale) / scale
+            return Darwin.ceil(val * scale) / scale
         }
     }
 }
