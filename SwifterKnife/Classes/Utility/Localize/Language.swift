@@ -27,52 +27,48 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         return availableLanguages.map(Language.init(rawValue:))
     }
     
-    public static var loadDefault: ((_ code: String) -> Language)? = { code in
-        if code.hasPrefix("zh-") {
-            // // zh-Hant\zh-HK\zh-TW
-            return code.contains("Hans") ? .zhHans : .zhHant
-        }
-        return Language(rawValue: code)
-    }
-    public static var `default`: Language {
-//        guard let first = Bundle.main.preferredLocalizations.first else {
-//            return .en
+    public static var languageCodeTransform: ((_ code: String) -> Language)?
+//        = { code in
+//        if code.hasPrefix("zh-") {
+//            // zh-Hant\zh-HK\zh-TW
+//            return code.contains("Hans") ? .zhHans : .zhHant
 //        }
-        guard let code = Locale.preferredLanguages.first else { return .en }
-        if let config = loadDefault {
-            return config(code)
-        }
-        
-        let preferedLan = Language(rawValue: code)
-        return preferedLan
-//        if (available().contains(preferedLan)) {
-//            return preferedLan
-//        }
-//        return .en
-    }
+//        return Language(rawValue: code)
+//    }
+    public static var `default`: Language = .en
     
     public static func reset() {
         current = `default`
     }
     
-    private static let CurrentLanguageKey = "CurrentLanguageKey"
+    private static let CurrentLanguageCodeKey = "CurrentLanguageCodeKey"
     
+    private static func loadCurrent() -> Language? {
+        if let code = UserDefaults.standard.object(forKey: CurrentLanguageCodeKey) as? String {
+            if let transform = languageCodeTransform {
+                return transform(code)
+            }
+            return Language(rawValue: code)
+        }
+        guard let code = Locale.preferredLanguages.first else { return nil }
+        if let transform = languageCodeTransform {
+            return transform(code)
+        }
+        
+        let preferedLan = Language(rawValue: code)
+        return preferedLan
+    }
     private static var _current: Language?
     public static var current: Language {
         get {
             if let tmp = _current { return tmp }
-            if let current = UserDefaults.standard.object(forKey: CurrentLanguageKey) as? String {
-                let lan = Language(rawValue: current)
-                _current = lan
-                return lan
-            }
-            _current = `default`
+            _current = loadCurrent() ?? `default`
             return _current!
         }
         set {
             if newValue == current { return }
             _current = newValue
-            UserDefaults.standard.set(newValue, forKey: CurrentLanguageKey)
+            UserDefaults.standard.set(newValue.rawValue, forKey: CurrentLanguageCodeKey)
             UserDefaults.standard.synchronize()
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
