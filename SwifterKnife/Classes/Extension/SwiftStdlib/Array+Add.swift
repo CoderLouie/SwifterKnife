@@ -45,6 +45,32 @@ public extension Array {
 // MARK: - Methods (Equatable)
 
 public extension Array where Element: Equatable {
+    /// Remove all instances of an item from array.
+    ///
+    ///        [1, 2, 2, 3, 4, 5].removeAll(2) -> [1, 3, 4, 5]
+    ///        ["h", "e", "l", "l", "o"].removeAll("l") -> ["h", "e", "o"]
+    ///
+    /// - Parameter item: item to remove.
+    /// - Returns: self after removing all instances of item.
+    @discardableResult
+    mutating func removeAll(_ item: Element) -> [Element] {
+        removeAll(where: { $0 == item })
+        return self
+    }
+
+    /// Remove all instances contained in items parameter from array.
+    ///
+    ///        [1, 2, 2, 3, 4, 5].removeAll([2,5]) -> [1, 3, 4]
+    ///        ["h", "e", "l", "l", "o"].removeAll(["l", "h"]) -> ["e", "o"]
+    ///
+    /// - Parameter items: items to remove.
+    /// - Returns: self after removing all instances of all items in given array.
+    @discardableResult
+    mutating func removeAll(_ items: [Element]) -> [Element] {
+        guard !items.isEmpty else { return self }
+        removeAll(where: { items.contains($0) })
+        return self
+    }
 
     /// Remove all duplicate elements from Array.
     ///

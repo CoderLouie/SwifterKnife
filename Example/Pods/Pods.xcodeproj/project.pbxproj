@@ -338,7 +338,6 @@
 		CD77E7B4D52BC25565F7235D97386311 /* Throttle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Throttle.swift; sourceTree = "<group>"; };
 		D2FD9EFCFC3AA452137876B761FFB621 /* SnapKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SnapKit-Info.plist"; sourceTree = "<group>"; };
 		D4C198857FF00364742FE1633279170B /* UIViewController+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Add.swift"; sourceTree = "<group>"; };
-		D6E832671846939D16ADD6EC45BB58B9 /* Data+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
 		D77B498FC0A9A72D95E9580752A38FFB /* Pods-SwifterKnife_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwifterKnife_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		D8666BAD06ECB48327E60AC1B933C35D /* Device.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		DA6FDED96EDD297738FDF9D2D2F84526 /* Pods-SwifterKnife_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-SwifterKnife_Tests.modulemap"; sourceTree = "<group>"; };
@@ -554,7 +553,6 @@
 			isa = PBXGroup;
 			children = (
 				1AB5F6763A0299ADF24777C830EAB332 /* Calendar+Add.swift */,
-				D6E832671846939D16ADD6EC45BB58B9 /* Data+Add.swift */,
 				C6015FCB8AE89EF6ED3FAEF5316E0647 /* Date+Add.swift */,
 				45B6AFE61A70A376796D2358535003C0 /* Locale+Add.swift */,
 				0992719E4D440960598F05A2649F54B2 /* NSObject+Add.swift */,
