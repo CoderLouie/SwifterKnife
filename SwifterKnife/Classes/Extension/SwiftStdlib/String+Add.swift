@@ -1126,22 +1126,6 @@ public extension String {
     }
 }
 
-
-
-public extension String {
-    func group(by size: Int) -> [String] {
-        var res: [String] = []
-        var index = self.startIndex
-        while index != self.endIndex {
-            let startIdx = index
-            let endIdx = self.index(startIdx, offsetBy: size, limitedBy: self.endIndex) ?? self.endIndex
-            res.append(String(self[startIdx..<endIdx]))
-            index = endIdx
-        }
-        return res
-    }
-}
-
 public extension String {
     func compareVersion(_ version: String) -> ComparisonResult {
         guard !version.isEmpty else { return .orderedDescending }

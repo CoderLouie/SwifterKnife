@@ -34,7 +34,11 @@ public extension Comparable {
     func clamped(to range: ClosedRange<Self>) -> Self {
         return max(range.lowerBound, min(self, range.upperBound))
     }
-    
+    /**
+     var num = 3
+     num <>= 5...7
+     print(num) 5
+     */
     static func <>= (lhs: inout Self, rhs: ClosedRange<Self>) {
         lhs = max(rhs.lowerBound, min(lhs, rhs.upperBound))
     }

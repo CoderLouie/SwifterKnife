@@ -87,7 +87,12 @@ public enum SandBox {
         let cmps = filename.components(separatedBy: ".")
         let name = cmps[0]
         let bundle = bundleClass.map { Bundle(for: $0) } ?? Bundle.main
-        let type = ext ?? cmps[1]
+        
+        var type: String? {
+            if let t = ext { return t }
+            guard cmps.count > 1 else { return nil }
+            return cmps[1]
+        }
         
         return bundle.path(forResource: name, ofType: type)
     }

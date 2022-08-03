@@ -212,11 +212,6 @@ open class SequenceView: LayoutView {
     }
     public var behaviour: FixedBehaviour = .spacing(10.fit)
     
-    open func addArrangedViews(_ views: [UIView]) {}
-    public func addArrangedViews(_ views: UIView...) {
-        addArrangedViews(views)
-    }
-    
     fileprivate final class SequenceItem {
         let alignment: LayoutView.Alignment
         unowned let view: UIView
@@ -227,12 +222,15 @@ open class SequenceView: LayoutView {
     }
     
     fileprivate var items: [SequenceItem] = []
-    open override var arrangedViews: [UIView] { items.map(\.view) }
+    public override var arrangedViews: [UIView] { items.map(\.view) }
     
-    open override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
-        insertSubview(view, at: index)
-        let align = alignment ?? self.alignment
-        items.insert(.init(view: view, alignment: align), at: index)
+    public func addArrangedViews(_ views: [UIView]) {
+        items.append(contentsOf: views.map {
+            SequenceItem(view: $0, alignment: alignment)
+        })
+    }
+    public func addArrangedViews(_ views: UIView...) {
+        addArrangedViews(views)
     }
     
     public func removeArrangedView(_ view: UIView) {
@@ -248,11 +246,17 @@ open class SequenceView: LayoutView {
         items.remove(at: index)
     }
     
-    open func placeArrangedViews() {}
     public func replaceArrangedViews() {
         items.forEach { $0.view.snp.removeConstraints() }
         placeArrangedViews()
     }
+    
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
+        insertSubview(view, at: index)
+        let align = alignment ?? self.alignment
+        items.insert(.init(view: view, alignment: align), at: index)
+    }
+    open func placeArrangedViews() {}
 }
 
 
@@ -388,11 +392,43 @@ final public class SequenceVView: SequenceView {
 }
 
 
-open class QueueView: LayoutView { }
+open class QueueView: LayoutView {
+    public func makeHorizontalSizeToFit() { }
+    public func makeVerticalSizeToFit() { }
+    public func makeSizeToFit() {
+        makeHorizontalSizeToFit()
+        makeVerticalSizeToFit()
+    }
+}
 
 /// 垂直方向会自动根据对齐方式布局
 final public class QueueVView: QueueView {
-    
+    public override func makeHorizontalSizeToFit() {
+        let inset = contentInsets
+        if let view = arrangedViews.first {
+            view.snp.makeConstraints { make in
+                make.leading.equalTo(inset.left)
+            }
+        }
+        if let view = arrangedViews.last {
+            view.snp.makeConstraints { make in
+                make.trailing.equalTo(-inset.right)
+            }
+        }
+    }
+    public override func makeVerticalSizeToFit() {
+        let inset = contentInsets
+        var height: CGFloat = 0
+        for view in arrangedViews {
+            let h = view.intrinsicContentSize.height
+            if h > height { height = h }
+        }
+        guard height > 0 else { return }
+        height += inset.top + inset.bottom
+        self.snp.updateConstraints { make in
+            make.height.equalTo(ceil(height))
+        }
+    }
     public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertSubview(view, at: index)
         let inset = contentInsets
@@ -413,6 +449,32 @@ final public class QueueVView: QueueView {
 
 /// 水平方向会自动根据对齐方式布局
 final public class QueueHView: QueueView {
+    public override func makeHorizontalSizeToFit() {
+        let inset = contentInsets
+        var width: CGFloat = 0
+        for view in arrangedViews {
+            let w = view.intrinsicContentSize.width
+            if w > width { width = w }
+        }
+        guard width > 0 else { return }
+        width += inset.left + inset.right
+        self.snp.updateConstraints { make in
+            make.width.equalTo(ceil(width))
+        }
+    }
+    public override func makeVerticalSizeToFit() {
+        let inset = contentInsets
+        if let view = arrangedViews.first {
+            view.snp.makeConstraints { make in
+                make.top.equalTo(inset.top)
+            }
+        }
+        if let view = arrangedViews.last {
+            view.snp.makeConstraints { make in
+                make.bottom.equalTo(-inset.bottom)
+            }
+        }
+    }
     
     public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
         insertSubview(view, at: index)
@@ -487,498 +549,4 @@ final public class FlexHView: FlexView {
     }
 }
 
-
-open class BoxView: LayoutView {
-    public var spacing: CGFloat = .zero
-    
-    public func addArrangedView(_ view: UIView, spacing: CGFloat? = nil, alignment: LayoutView.Alignment? = nil) {
-        insertArrangedView(view, at: arrangedViewsCount, spacing: spacing, alignment: alignment)
-    }
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
-        insertArrangedView(view, at: index, spacing: spacing, alignment: alignment)
-    }
-    
-    open func insertArrangedView(_ view: UIView,
-                                 at index: Int,
-                                 spacing: CGFloat? = nil,
-                                 alignment: LayoutView.Alignment? = nil) { }
-    
-    
-    @discardableResult
-    public func showArrangedView<View: UIView>(_ view: View) -> View? {
-        guard let idx = indexOfArrangedView(view) else { return nil }
-        return showArrangedView(at: idx)
-    }
-    @discardableResult
-    open func showArrangedView<View: UIView>(at index: Int) -> View {
-        return subviews[index] as! View
-    }
-    
-    @discardableResult
-    public func hiddenArrangedView<View: UIView>(_ view: View) -> View? {
-        guard let idx = indexOfArrangedView(view) else { return nil }
-        return hiddenArrangedView(at: idx)
-    }
-    @discardableResult
-    open func hiddenArrangedView<View: UIView>(at index: Int) -> View {
-        return subviews[index] as! View
-    }
-    
-    @discardableResult
-    public func removeArrangedView<View: UIView>(_ view: View) -> View? {
-        guard let idx = indexOfArrangedView(view) else { return nil }
-        return removeArrangedView(at: idx)
-    }
-    @discardableResult
-    open func removeArrangedView<View: UIView>(at index: Int) -> View? {
-        let view = arrangedViews[index]
-        view.removeFromSuperview()
-        return view as? View
-    }
-    
-    open func indexOfArrangedView<View>(_ view: View) -> Int? where View : UIView {
-        return arrangedViews.firstIndex(of: view)
-    }
-}
-
-final public class BoxHView: BoxView {
-    private var items: [BoxHItem] = []
-    private var rightConstraint: Constraint?
-    
-    public override var arrangedViews: [UIView] {
-        return items.map { $0.view }
-    }
-    public override var arrangedViewsCount: Int {
-        return items.count
-    }
-    public override func indexOfArrangedView<View>(_ view: View) -> Int? where View : UIView {
-        items.firstIndex { $0.view === view }
-    }
-    
-    public override func insertArrangedView(_ view: UIView,
-                                            at index: Int,
-                                            spacing: CGFloat? = nil,
-                                            alignment: LayoutView.Alignment? = nil) {
-        let count = items.count
-        precondition(index <= count)
-        insertSubview(view, at: index)
-        
-        let inset = contentInsets
-        let align = alignment ?? self.alignment
-        let space = spacing ?? self.spacing
-        
-        let item = BoxHItem(view: view)
-        item.makeVCons(alignment: align, inset: inset)
-        item.margin = index == 0 ? 0 : space
-        
-        if view.isHidden {
-            let prevView: UIView? = index == 0 ? nil : items[index - 1].view
-            view.snp.makeConstraints { make in
-                if let prevView = prevView {
-                    item.leading = make.leading.equalTo(prevView.snp.trailing).offset(space).constraint
-                } else {
-                    item.leading = make.leading.equalTo(inset.left).constraint
-                }
-            }
-            item.uninstall()
-        } else {
-            let next = _firstNoHiddenItem(from: index)
-            if next?.margin == 0 { next?.margin = space }
-            
-            let prev = _lastNoHiddenItem(from: index - 1)
-            _reconnect(from: next, to: prev, through: item)
-        }
-        items.insert(item, at: index)
-    }
-    
-    public override func removeArrangedView<View>(at index: Int) -> View? where View : UIView {
-        let count = items.count
-        precondition(index < count)
-        
-        let item = items[index]
-        item.uninstall()
-        
-        let view = item.view
-        view.removeFromSuperview()
-        items.remove(at: index)
-
-        let next = _firstNoHiddenItem(from: index)
-        
-        let prev = _lastNoHiddenItem(from: index - 1)
-        _reconnect(from: next, to: prev, skipOver: item)
-        
-        return view as? View
-    }
-    
-    public override func hiddenArrangedView<View>(at index: Int) -> View where View : UIView {
-        let count = items.count
-        precondition(index < count)
-        
-        let item = items[index]
-        
-        let view = item.view
-        if view.isHidden { return view as! View }
-        
-        view.isHidden = true
-        item.uninstall()
-        
-        let next = _firstNoHiddenItem(from: index + 1)
-        let prev = _lastNoHiddenItem(from: index - 1)
-        _reconnect(from: next, to: prev, skipOver: item)
-        
-        return view as! View
-    }
-    
-    public override func showArrangedView<View>(at index: Int) -> View where View : UIView {
-        let count = items.count
-        precondition(index < count)
-        
-        let item = items[index]
-        
-        let view = item.view
-        if !view.isHidden { return view as! View }
-        
-        view.isHidden = false
-        item.installVCons()
-        
-        let next = _firstNoHiddenItem(from: index + 1)
-        let prev = _lastNoHiddenItem(from: index - 1)
-        _reconnect(from: next, to: prev, through: item)
-        
-        return view as! View
-    }
-    /*
-    before: prevItem <- nextItem
-    after: prevItem <- item <- nextItem
-    */
-    private func _reconnect(from nextItem: BoxHItem?, to prevItem: BoxHItem?, through item: BoxHItem) {
-        let inset = contentInsets
-        let view = item.view
-        if let nextItem = nextItem {
-            nextItem.leading?.deactivate()
-            let nextView = nextItem.view
-            nextView.snp.makeConstraints { make in
-                nextItem.leading = make.leading.equalTo(view.snp.trailing).offset(nextItem.margin).constraint
-            }
-            view.snp.makeConstraints { make in
-                if let prevView = prevItem?.view {
-                    item.leading = make.leading.equalTo(prevView.snp.trailing).offset(item.margin).constraint
-                } else {
-                    item.leading = make.leading.equalTo(inset.left).constraint
-                }
-            }
-        } else {
-            let prevView = prevItem?.view
-            rightConstraint?.deactivate()
-            
-            view.snp.makeConstraints { make in
-                if let prevView = prevView {
-                    item.leading = make.leading.equalTo(prevView.snp.trailing).offset(item.margin).constraint
-                } else {
-                    item.leading = make.leading.equalTo(inset.left).constraint
-                }
-                rightConstraint = make.trailing.equalTo(-inset.right).constraint
-            }
-        }
-    }
-    /*
-    before: prevItem <- item <- nextItem
-    after: prevItem <- nextItem
-    */
-    private func _reconnect(from nextItem: BoxHItem?, to prevItem: BoxHItem?, skipOver item: BoxHItem) {
-        let inset = contentInsets
-        if let nextItem = nextItem {
-            nextItem.leading?.deactivate()
-            nextItem.view.snp.makeConstraints { make in
-                if let prevView = prevItem?.view {
-                    nextItem.leading = make.leading.equalTo(prevView.snp.trailing).offset(nextItem.margin).constraint
-                } else {
-                    nextItem.leading = make.leading.equalTo(inset.left).constraint
-                }
-            }
-        } else {
-            rightConstraint?.deactivate()
-            if let prevView = prevItem?.view {
-                prevView.snp.makeConstraints { make in
-                    rightConstraint = make.trailing.equalTo(-inset.right).constraint
-                }
-            } else {
-                rightConstraint = nil
-            }
-        }
-    }
-    
-    private func _firstNoHiddenItem(from index: Int) -> BoxHItem? {
-        return items[index...].first { !$0.view.isHidden }
-    }
-    private func _lastNoHiddenItem(from index: Int) -> BoxHItem? {
-        return items[...index].last { !$0.view.isHidden }
-    }
-    
-    private final class BoxHItem {
-        var margin: CGFloat = .zero
-        var leading: Constraint?
-        var top: Constraint?
-        var centerY: Constraint?
-        var bottom: Constraint?
-        
-        unowned let view: UIView
-        init(view: UIView) {
-            self.view = view
-        }
-        func installCons() {
-            leading?.activate()
-            installVCons()
-        }
-        func installVCons() {
-            top?.activate()
-            centerY?.activate()
-            bottom?.activate()
-        }
-        func uninstall() {
-            leading?.deactivate()
-            top?.deactivate()
-            centerY?.deactivate()
-            bottom?.deactivate()
-        }
-        func makeVCons(alignment: LayoutView.Alignment, inset: UIEdgeInsets) {
-            view.snp.makeConstraints { make in
-                switch(alignment) {
-                    
-                case .start:
-                    top = make.top.equalTo(inset.top).constraint
-                    bottom = make.bottom.lessThanOrEqualTo(-inset.bottom).constraint
-                case .center:
-                    top = make.top.greaterThanOrEqualTo(inset.top).constraint
-                    bottom = make.bottom.lessThanOrEqualTo(-inset.bottom).constraint
-                    centerY = make.centerY.equalTo(view.superview!).constraint
-                case .end:
-                    top = make.top.greaterThanOrEqualTo(inset.top).constraint
-                    bottom = make.bottom.equalTo(-inset.bottom).constraint
-                }
-            }
-        }
-    }
-}
-
-
-final public class BoxVView: BoxView {
-    private var items: [BoxVItem] = []
-    private var bottomConstraint: Constraint?
-    
-    public override var arrangedViews: [UIView] {
-        return items.map { $0.view }
-    }
-    public override var arrangedViewsCount: Int {
-        return items.count
-    }
-    public override func indexOfArrangedView<View>(_ view: View) -> Int? where View : UIView {
-        items.firstIndex { $0.view === view }
-    }
-    
-    public override func insertArrangedView(_ view: UIView,
-                                            at index: Int,
-                                            spacing: CGFloat? = nil,
-                                            alignment: LayoutView.Alignment? = nil) {
-        let count = items.count
-        precondition(index <= count)
-        insertSubview(view, at: index)
-        
-        let inset = contentInsets
-        let align = alignment ?? self.alignment
-        let space = spacing ?? self.spacing
-        
-        let item = BoxVItem(view: view)
-        item.makeHCons(alignment: align, inset: inset)
-        item.margin = index == 0 ? 0 : space
-        
-        if view.isHidden {
-            let prevView: UIView? = index == 0 ? nil : items[index - 1].view
-            view.snp.makeConstraints { make in
-                if let prevView = prevView {
-                    item.top = make.top.equalTo(prevView.snp.bottom).offset(space).constraint
-                } else {
-                    item.top = make.leading.equalTo(inset.top).constraint
-                }
-            }
-            item.uninstall()
-        } else {
-            let next = _firstNoHiddenItem(from: index)
-            if next?.margin == 0 { next?.margin = space }
-            
-            let prev = _lastNoHiddenItem(from: index - 1)
-            _reconnect(from: next, to: prev, through: item)
-        }
-        items.insert(item, at: index)
-    }
-    
-    public override func removeArrangedView<View>(at index: Int) -> View? where View : UIView {
-        let count = items.count
-        precondition(index < count)
-        
-        let item = items[index]
-        item.uninstall()
-        
-        let view = item.view
-        view.removeFromSuperview()
-        items.remove(at: index)
-
-        let next = _firstNoHiddenItem(from: index)
-        
-        let prev = _lastNoHiddenItem(from: index - 1)
-        _reconnect(from: next, to: prev, skipOver: item)
-        
-        return view as? View
-    }
-    
-    public override func hiddenArrangedView<View>(at index: Int) -> View where View : UIView {
-        let count = items.count
-        precondition(index < count)
-        
-        let item = items[index]
-        
-        let view = item.view
-        if view.isHidden { return view as! View }
-        
-        view.isHidden = true
-        item.uninstall()
-        
-        let next = _firstNoHiddenItem(from: index + 1)
-        let prev = _lastNoHiddenItem(from: index - 1)
-        _reconnect(from: next, to: prev, skipOver: item)
-        
-        return view as! View
-    }
-    
-    public override func showArrangedView<View>(at index: Int) -> View where View : UIView {
-        let count = items.count
-        precondition(index < count)
-        
-        let item = items[index]
-        
-        let view = item.view
-        if !view.isHidden { return view as! View }
-        
-        view.isHidden = false
-        item.installHCons()
-        
-        let next = _firstNoHiddenItem(from: index + 1)
-        let prev = _lastNoHiddenItem(from: index - 1)
-        _reconnect(from: next, to: prev, through: item)
-        
-        return view as! View
-    }
-    /*
-    before: prevItem <- nextItem
-    after: prevItem <- item <- nextItem
-    */
-    private func _reconnect(from nextItem: BoxVItem?, to prevItem: BoxVItem?, through item: BoxVItem) {
-        let inset = contentInsets
-        let view = item.view
-        if let nextItem = nextItem {
-            nextItem.top?.deactivate()
-            let nextView = nextItem.view
-            nextView.snp.makeConstraints { make in
-                nextItem.top = make.top.equalTo(view.snp.bottom).offset(nextItem.margin).constraint
-            }
-            view.snp.makeConstraints { make in
-                if let prevView = prevItem?.view {
-                    item.top = make.top.equalTo(prevView.snp.bottom).offset(item.margin).constraint
-                } else {
-                    item.top = make.leading.equalTo(inset.top).constraint
-                }
-            }
-        } else {
-            let prevView = prevItem?.view
-            bottomConstraint?.deactivate()
-            
-            view.snp.makeConstraints { make in
-                if let prevView = prevView {
-                    item.top = make.top.equalTo(prevView.snp.bottom).offset(item.margin).constraint
-                } else {
-                    item.top = make.top.equalTo(inset.top).constraint
-                }
-                bottomConstraint = make.bottom.equalTo(-inset.bottom).constraint
-            }
-        }
-    }
-    /*
-    before: prevItem <- item <- nextItem
-    after: prevItem <- nextItem
-    */
-    private func _reconnect(from nextItem: BoxVItem?, to prevItem: BoxVItem?, skipOver item: BoxVItem) {
-        let inset = contentInsets
-        if let nextItem = nextItem {
-            nextItem.top?.deactivate()
-            nextItem.view.snp.makeConstraints { make in
-                if let prevView = prevItem?.view {
-                    nextItem.top = make.top.equalTo(prevView.snp.bottom).offset(nextItem.margin).constraint
-                } else {
-                    nextItem.top = make.top.equalTo(inset.top).constraint
-                }
-            }
-        } else {
-            bottomConstraint?.deactivate()
-            if let prevView = prevItem?.view {
-                prevView.snp.makeConstraints { make in
-                    bottomConstraint = make.bottom.equalTo(-inset.bottom).constraint
-                }
-            } else {
-                bottomConstraint = nil
-            }
-        }
-    }
-    
-    private func _firstNoHiddenItem(from index: Int) -> BoxVItem? {
-        return items[index...].first { !$0.view.isHidden }
-    }
-    private func _lastNoHiddenItem(from index: Int) -> BoxVItem? {
-        return items[...index].last { !$0.view.isHidden }
-    }
-    
-    private final class BoxVItem {
-        var margin: CGFloat = .zero
-        var top: Constraint?
-        var leading: Constraint?
-        var centerX: Constraint?
-        var trailing: Constraint?
-        
-        unowned let view: UIView
-        init(view: UIView) {
-            self.view = view
-        }
-        func installCons() {
-            top?.activate()
-            installHCons()
-        }
-        func installHCons() {
-            leading?.activate()
-            centerX?.activate()
-            trailing?.activate()
-        }
-        func uninstall() {
-            top?.deactivate()
-            leading?.deactivate()
-            centerX?.deactivate()
-            trailing?.deactivate()
-        }
-        func makeHCons(alignment: LayoutView.Alignment, inset: UIEdgeInsets) {
-            view.snp.makeConstraints { make in
-                
-                switch(alignment) {
-                
-                case .start:
-                    leading = make.leading.equalTo(inset.left).constraint
-                    trailing = make.trailing.lessThanOrEqualTo(-inset.right).constraint
-                case .center:
-                    leading = make.leading.greaterThanOrEqualTo(inset.left).constraint
-                    trailing = make.trailing.lessThanOrEqualTo(-inset.right).constraint
-                    centerX = make.centerX.equalTo(view.superview!).constraint
-                case .end:
-                    leading = make.leading.greaterThanOrEqualTo(inset.left).constraint
-                    trailing = make.trailing.equalTo(-inset.right).constraint
-                }
-            }
-        }
-    }
-}
+ 

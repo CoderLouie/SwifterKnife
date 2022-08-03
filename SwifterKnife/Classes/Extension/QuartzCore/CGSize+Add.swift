@@ -12,8 +12,11 @@ import CoreGraphics
 public extension CGSize {
 
     /// Returns the aspect ratio.
-    var aspectRatio: CGFloat {
+    var whRatio: CGFloat {
         return height == 0 ? 0 : width / height
+    }
+    var hwRatio: CGFloat {
+        return width == 0 ? 0 : height / width
     }
 
     /// Returns width or height, whichever is the bigger value.

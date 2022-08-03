@@ -17,22 +17,7 @@ public extension Int {
     /// Degree value of radian input.
     var radiansToDegrees: Double {
         return Double(self) * 180 / Double.pi
-    }
-    
-    /// Double.
-    var double: Double {
-        return Double(self)
-    }
-
-    /// Float.
-    var float: Float {
-        return Float(self)
-    }
-
-    /// CGFloat.
-    var cgFloat: CGFloat {
-        return CGFloat(self)
-    }
+    } 
 }
 
 

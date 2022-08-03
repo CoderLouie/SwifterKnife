@@ -65,15 +65,6 @@ public extension Sequence {
         return count
     }
 
-    /// Iterate over a collection in reverse order. (right to left)
-    ///
-    ///        [0, 2, 4, 7].forEachReversed({ print($0)}) -> // Order of print: 7,4,2,0
-    ///
-    /// - Parameter body: a closure that takes an element of the array as a parameter.
-    func forEachReversed(_ body: (Element) throws -> Void) rethrows {
-        try reversed().forEach(body)
-    }
-
     /// Calls the given closure with each element where condition is true.
     ///
     ///        [0, 2, 4, 7].forEach(where: {$0 % 2 == 0}, body: { print($0)}) -> // print: 0, 2, 4

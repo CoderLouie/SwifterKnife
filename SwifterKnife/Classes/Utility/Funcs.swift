@@ -38,10 +38,11 @@ public func asyncWhile(
 }
 
 
-public func asyncRepeat(_ work: @escaping (
-                            _ index: Int,
-                            _ cond: @escaping (Bool) -> Void,
-                            _ cost: () -> TimeInterval) -> Void) {
+public func asyncRepeat(
+    _ work: @escaping (
+        _ index: Int,
+        _ cond: @escaping (Bool) -> Void,
+        _ cost: () -> TimeInterval) -> Void) {
     
     let start = CACurrentMediaTime()
     let cost = { CACurrentMediaTime() - start }

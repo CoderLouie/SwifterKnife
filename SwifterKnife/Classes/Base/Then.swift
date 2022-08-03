@@ -23,10 +23,7 @@
 import Foundation
 #if !os(Linux)
 import CoreGraphics
-#endif
-#if os(iOS) || os(tvOS)
-import UIKit.UIGeometry
-#endif
+#endif 
 
 public protocol Then {}
 
@@ -82,7 +79,6 @@ extension NSObject: Then {}
 extension CGPoint: Then {}
 extension CGRect: Then {}
 extension CGSize: Then {}
-extension CGVector: Then {}
 #endif
 
 extension Array: Then {}
@@ -91,6 +87,5 @@ extension Set: Then {}
 
 #if os(iOS) || os(tvOS)
 extension UIEdgeInsets: Then {}
-extension UIOffset: Then {}
 extension UIRectEdge: Then {}
 #endif
