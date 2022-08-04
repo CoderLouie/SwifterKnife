@@ -107,14 +107,14 @@ private extension ViewController {
     }
     func otherTest3() {
 //        let num: Int? = nil
-        let res: Result<String, Error> = .success("3")
-        let res1 = res.flatMap { _ in res }
-        asyncRepeat { index, cond, cost in
-            print("asyncRepeat work", index, cost())
-            DispatchQueue.main.after(0.5) {
-                cond(index < 3)
-            }
-        }
+//        let res: Result<String, Error> = .success("3")
+//        let res1 = res.flatMap { _ in res }
+//        asyncRepeat { index, cond, cost in
+//            print("asyncRepeat work", index, cost())
+//            DispatchQueue.main.after(0.5) {
+//                cond(index < 3)
+//            }
+//        }
 
         
     }

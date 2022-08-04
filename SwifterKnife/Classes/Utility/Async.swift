@@ -158,8 +158,8 @@ public struct AsyncBlock<In, Out> {
     /**
      Private init that takes a `@convention(block) () -> Swift.Void`
      */
-    private init(_ block: DispatchWorkItem, input: Reference<In>? = nil, output: Reference<Out> = Reference()) {
-        self.block = block
+    private init(_ item: DispatchWorkItem, input: Reference<In>? = nil, output: Reference<Out> = Reference()) {
+        self.block = item
         self.input = input
         self.output_ = output
     }
@@ -283,19 +283,19 @@ public struct AsyncBlock<In, Out> {
 
     private static func async<O>(after seconds: Double? = nil, block: @escaping () -> O, queue: GCD.Queue) -> AsyncBlock<Void, O> {
         let reference = Reference<O>()
-        let block = DispatchWorkItem(block: {
+        let item = DispatchWorkItem {
             reference.value = block()
-        })
+        }
 
         if let seconds = seconds {
             let time = DispatchTime.now() + seconds
-            queue.rawValue.asyncAfter(deadline: time, execute: block)
+            queue.rawValue.asyncAfter(deadline: time, execute: item)
         } else {
-            queue.rawValue.async(execute: block)
+            queue.rawValue.async(execute: item)
         }
 
         // Wrap block in a struct since @convention(block) () -> Swift.Void can't be extended
-        return AsyncBlock<Void, O>(block, output: reference)
+        return AsyncBlock<Void, O>(item, output: reference)
     }
 
 
@@ -465,9 +465,9 @@ public struct AsyncBlock<In, Out> {
 
     private func chain<O>(after seconds: Double? = nil, block chainingBlock: @escaping (Out) -> O, queue: GCD.Queue) -> AsyncBlock<Out, O> {
         let reference = Reference<O>()
-        let dispatchWorkItem = DispatchWorkItem(block: {
+        let dispatchWorkItem = DispatchWorkItem {
             reference.value = chainingBlock(self.output_.value!)
-        })
+        }
 
         let queue = queue.rawValue
         if let seconds = seconds {

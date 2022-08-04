@@ -77,18 +77,17 @@ public enum App {
         if let name = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String {
             return name
         }
-        if let name = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String {
+        if let name = string(for: "CFBundleDisplayName") {
             return name
         }
-        if let name = Bundle.main.infoDictionary?["CFBundleName"] as? String {
+        if let name = string(for: "CFBundleName") {
             return name
         }
         return nil
     }
     
     private static func string(for key: String) -> String? {
-        guard let infoDictionary = Bundle.main.infoDictionary,
-            let value = infoDictionary[key] as? String else {
+        guard let value = Bundle.main.infoDictionary?[key] as? String else {
                 return nil
         }
         return value
