@@ -12,17 +12,6 @@ import UIKit
 // MARK: Reusable support for UICollectionView
 
 public extension UICollectionView {
-    /**
-     Register a NIB-Based `UICollectionViewCell` subclass (conforming to `Reusable` & `NibLoadable`)
-     
-     - parameter cellType: the `UICollectionViewCell` (`Reusable` & `NibLoadable`-conforming) subclass to register
-     
-     - seealso: `register(_:,forCellWithReuseIdentifier:)`
-     */
-    final func register<T: UICollectionViewCell>(cellType: T.Type)
-    where T: Reusable & NibLoadable {
-        self.register(cellType.nib, forCellWithReuseIdentifier: cellType.reuseIdentifier)
-    }
     
     /**
      Register a Class-Based `UICollectionViewCell` subclass (conforming to `Reusable`)
@@ -54,8 +43,8 @@ public extension UICollectionView {
         guard let cell = bareCell as? T else {
             fatalError(
                 "Failed to dequeue a cell with identifier \(cellType.reuseIdentifier) matching type \(cellType.self). "
-                    + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
-                    + "and that you registered the cell beforehand"
+                + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
+                + "and that you registered the cell beforehand"
             )
         }
         return cell
@@ -73,22 +62,6 @@ public extension UICollectionView {
                 return UICollectionView.elementKindSectionFooter
             }
         }
-    }
-    /**
-     Register a NIB-Based `UICollectionReusableView` subclass (conforming to `Reusable` & `NibLoadable`)
-     as a Supplementary View
-     - parameter supplementaryViewType: the `UIView` (`Reusable` & `NibLoadable`-conforming) subclass
-     to register as Supplementary View
-     - parameter elementKind: The kind of supplementary view to create.
-     - seealso: `register(_:,forSupplementaryViewOfKind:,withReuseIdentifier:)`
-     */
-    final func register<T: UICollectionReusableView>(supplementaryViewType: T.Type, ofKind kind: SupplementaryKind)
-    where T: Reusable & NibLoadable {
-        self.register(
-            supplementaryViewType.nib,
-            forSupplementaryViewOfKind: kind.identifier,
-            withReuseIdentifier: supplementaryViewType.reuseIdentifier
-        )
     }
     
     /**
@@ -132,9 +105,9 @@ public extension UICollectionView {
         guard let typedView = view as? T else {
             fatalError(
                 "Failed to dequeue a supplementary view with identifier \(viewType.reuseIdentifier) "
-                    + "matching type \(viewType.self). "
-                    + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
-                    + "and that you registered the supplementary view beforehand"
+                + "matching type \(viewType.self). "
+                + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
+                + "and that you registered the supplementary view beforehand"
             )
         }
         return typedView

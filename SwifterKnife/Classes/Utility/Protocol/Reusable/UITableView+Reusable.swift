@@ -12,17 +12,6 @@ import UIKit
 // MARK: Reusable support for UITableView
 
 public extension UITableView {
-    /**
-     Register a NIB-Based `UITableViewCell` subclass (conforming to `Reusable` & `NibLoadable`)
-     
-     - parameter cellType: the `UITableViewCell` (`Reusable` & `NibLoadable`-conforming) subclass to register
-     
-     - seealso: `register(_:,forCellReuseIdentifier:)`
-     */
-    final func register<T: UITableViewCell>(cellType: T.Type)
-    where T: Reusable & NibLoadable {
-        self.register(cellType.nib, forCellReuseIdentifier: cellType.reuseIdentifier)
-    }
     
     /**
      Register a Class-Based `UITableViewCell` subclass (conforming to `Reusable`)
@@ -53,24 +42,11 @@ public extension UITableView {
         guard let cell = self.dequeueReusableCell(withIdentifier: cellType.reuseIdentifier, for: indexPath) as? T else {
             fatalError(
                 "Failed to dequeue a cell with identifier \(cellType.reuseIdentifier) matching type \(cellType.self). "
-                    + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
-                    + "and that you registered the cell beforehand"
+                + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
+                + "and that you registered the cell beforehand"
             )
         }
         return cell
-    }
-    
-    /**
-     Register a NIB-Based `UITableViewHeaderFooterView` subclass (conforming to `Reusable` & `NibLoadable`)
-     
-     - parameter headerFooterViewType: the `UITableViewHeaderFooterView` (`Reusable` & `NibLoadable`-conforming)
-     subclass to register
-     
-     - seealso: `register(_:,forHeaderFooterViewReuseIdentifier:)`
-     */
-    final func register<T: UITableViewHeaderFooterView>(headerFooterViewType: T.Type)
-    where T: Reusable & NibLoadable {
-        self.register(headerFooterViewType.nib, forHeaderFooterViewReuseIdentifier: headerFooterViewType.reuseIdentifier)
     }
     
     /**
@@ -101,9 +77,9 @@ public extension UITableView {
         guard let view = self.dequeueReusableHeaderFooterView(withIdentifier: viewType.reuseIdentifier) as? T? else {
             fatalError(
                 "Failed to dequeue a header/footer with identifier \(viewType.reuseIdentifier) "
-                    + "matching type \(viewType.self). "
-                    + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
-                    + "and that you registered the header/footer beforehand"
+                + "matching type \(viewType.self). "
+                + "Check that the reuseIdentifier is set properly in your XIB/Storyboard "
+                + "and that you registered the header/footer beforehand"
             )
         }
         return view
