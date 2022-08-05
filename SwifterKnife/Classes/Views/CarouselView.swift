@@ -199,6 +199,14 @@ extension CarouselView {
     public var isDragging: Bool { scrollView.isDragging }
     public var isDecelerating: Bool { scrollView.isDecelerating }
     
+    public var isSilent: Bool {
+        if scrollView.isTracking ||
+            scrollView.isDragging ||
+            scrollView.isDecelerating ||
+            scrollView.isZooming { return false }
+        return true
+    }
+    
     public var isScrollEnabled: Bool {
         get { scrollView.isScrollEnabled }
         set { scrollView.isScrollEnabled = newValue }

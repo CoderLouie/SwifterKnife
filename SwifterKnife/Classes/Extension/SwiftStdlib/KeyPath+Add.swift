@@ -40,3 +40,20 @@ public prefix func !<T>(keyPath: KeyPath<T, Bool>) -> (T) -> Bool {
 public func ==<T, V: Equatable>(lhs: KeyPath<T, V>, rhs: V) -> (T) -> Bool {
     return { $0[keyPath: lhs] == rhs }
 }
+
+
+/*
+ + 的意思是 如果 $0 > $1 则 $0 - $1 是正数
+ let shortestArticle = articles.max(by: +\.title.count)
+ */
+public prefix func +<T, V: Comparable>(keyPath: KeyPath<T, V>) -> (T, T) -> Bool {
+   return { $0[keyPath: keyPath] > $1[keyPath: keyPath] }
+}
+
+/*
+ - 的意思是 如果 $0 < $1 则 $0 - $1 是负数
+ let longestArticle = articles.max(by: -\.title.count)
+ */
+public prefix func -<T, V: Comparable>(keyPath: KeyPath<T, V>) -> (T, T) -> Bool {
+   return { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+}

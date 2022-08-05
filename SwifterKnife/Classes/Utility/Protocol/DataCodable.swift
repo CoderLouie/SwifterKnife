@@ -13,26 +13,13 @@ public protocol DataEncodable {
     func encode() throws -> Data
 }
 public extension DataEncodable {
-    func toJSON() -> [String: Any] {
-        guard let data = try? encode(),
-              let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
-            return [:]
-        }
-        return json
+    func toJSON() throws -> Any {
+        let data = try encode()
+        return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
     }
-    func toArray() -> [Any] {
-        guard let data = try? encode(),
-              let array = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Any] else {
-            return []
-        }
-        return array
-    }
-    func toString() -> String {
-        guard let data = try? encode(),
-              let string = String(data: data, encoding: .utf8) else {
-            return ""
-        }
-        return string
+    func toString() throws -> String {
+        let data = try encode()
+        return String(data: data, encoding: .utf8) ?? ""
     }
     
     func save(toFile path: String) throws {
@@ -46,6 +33,10 @@ public extension DataEncodable where Self: Encodable {
         try JSONEncoder().encode(self)
     }
 }
+/*
+ 当Element遵守 Encodable 协议时，Array自动遵守 Encodable
+ 所以可以自动扩展 Array 遵守 DataEncodable
+ */
 extension Array: DataEncodable where Element: Encodable {}
 
 public extension DataEncodable where Self: NSCoding {
@@ -85,6 +76,10 @@ public extension DataDecodable where Self: Decodable {
         try JSONDecoder().decode(Self.self, from: data)
     }
 }
+/*
+ 当Element遵守 Decodable 协议时，Array自动遵守 Decodable
+ 所以可以自动扩展 Array 遵守 DataDecodable
+ */
 extension Array: DataDecodable where Element: Decodable {}
 
 public extension DataDecodable where Self: NSCoding {
