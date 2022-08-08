@@ -34,14 +34,11 @@ public extension LocalizedKeyRepresentable {
     }
     func i18n(using language: Language) -> String {
         let key = localizeKey
-        func query(in code: Language) -> String? {
-            if let path = Self.bundle.path(forResource: code.rawValue, ofType: "lproj"),
-                  let bundle = Bundle(path: path)  {
-                return bundle.localizedString(forKey: key, value: nil, table: table)
-            }
-            return nil
+        if let path = Self.bundle.path(forResource: language.rawValue, ofType: "lproj"),
+              let bundle = Bundle(path: path)  {
+            return bundle.localizedString(forKey: key, value: nil, table: table)
         }
-        return query(in: language) ?? query(in: .base) ?? key
+        return key
     }
     func i18nFormat(with args: CVarArg..., using lan: Language = .current) -> String {
         return String(format: i18n(using: lan), arguments: args)

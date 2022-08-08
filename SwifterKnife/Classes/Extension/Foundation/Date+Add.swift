@@ -15,16 +15,16 @@ public extension Date {
     /// - threeLetters: 3 letter day abbreviation of day name.
     /// - oneLetter: 1 letter day abbreviation of day name.
     /// - full: Full day name.
-    enum DayNameStyle {
+    enum DayNameStyle: String {
 
         /// 3 letter day abbreviation of day name.
-        case threeLetters
+        case threeLetters = "EEE"
 
         /// 1 letter day abbreviation of day name.
-        case oneLetter
+        case oneLetter = "EEEEE"
 
         /// Full day name.
-        case full
+        case full = "EEEE"
 
     }
 
@@ -33,16 +33,16 @@ public extension Date {
     /// - threeLetters: 3 letter month abbreviation of month name.
     /// - oneLetter: 1 letter month abbreviation of month name.
     /// - full: Full month name.
-    enum MonthNameStyle {
+    enum MonthNameStyle: String {
 
         /// 3 letter month abbreviation of month name.
-        case threeLetters
+        case threeLetters = "MMM"
 
         /// 1 letter month abbreviation of month name.
-        case oneLetter
+        case oneLetter = "MMMMM"
 
         /// Full month name.
-        case full
+        case full = "MMMM"
 
     }
 
@@ -230,52 +230,6 @@ public extension Date {
             let currentSeconds = calendar.component(.second, from: self)
             let secondsToAdd = newValue - currentSeconds
             if let date = calendar.date(byAdding: .second, value: secondsToAdd, to: self) {
-                self = date
-            }
-        }
-    }
-
-    /// Nanoseconds.
-    ///
-    ///     Date().nanosecond -> 981379985
-    ///
-    ///     var someDate = Date()
-    ///     someDate.nanosecond = 981379985 // sets someDate's seconds to 981379985.
-    ///
-    var nanosecond: Int {
-        get {
-            return calendar.component(.nanosecond, from: self)
-        }
-        set {
-            let allowedRange = calendar.range(of: .nanosecond, in: .second, for: self)!
-            guard allowedRange.contains(newValue) else { return }
-
-            let currentNanoseconds = calendar.component(.nanosecond, from: self)
-            let nanosecondsToAdd = newValue - currentNanoseconds
-
-            if let date = calendar.date(byAdding: .nanosecond, value: nanosecondsToAdd, to: self) {
-                self = date
-            }
-        }
-    }
-
-    /// Milliseconds.
-    ///
-    ///     Date().millisecond -> 68
-    ///
-    ///     var someDate = Date()
-    ///     someDate.millisecond = 68 // sets someDate's nanosecond to 68000000.
-    ///
-    var millisecond: Int {
-        get {
-            return calendar.component(.nanosecond, from: self) / 1_000_000
-        }
-        set {
-            let nanoSeconds = newValue * 1_000_000
-            let allowedRange = calendar.range(of: .nanosecond, in: .second, for: self)!
-            guard allowedRange.contains(nanoSeconds) else { return }
-
-            if let date = calendar.date(bySetting: .nanosecond, value: nanoSeconds, of: self) {
                 self = date
             }
         }
@@ -714,54 +668,6 @@ public extension Date {
         return dateFormatter.string(from: self)
     }
 
-    /// Date string from date.
-    ///
-    ///     Date().dateString(ofStyle: .short) -> "1/12/17"
-    ///     Date().dateString(ofStyle: .medium) -> "Jan 12, 2017"
-    ///     Date().dateString(ofStyle: .long) -> "January 12, 2017"
-    ///     Date().dateString(ofStyle: .full) -> "Thursday, January 12, 2017"
-    ///
-    /// - Parameter style: DateFormatter style (default is .medium).
-    /// - Returns: date string.
-    func dateString(ofStyle style: DateFormatter.Style = .medium) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .none
-        dateFormatter.dateStyle = style
-        return dateFormatter.string(from: self)
-    }
-
-    /// Date and time string from date.
-    ///
-    ///     Date().dateTimeString(ofStyle: .short) -> "1/12/17, 7:32 PM"
-    ///     Date().dateTimeString(ofStyle: .medium) -> "Jan 12, 2017, 7:32:00 PM"
-    ///     Date().dateTimeString(ofStyle: .long) -> "January 12, 2017 at 7:32:00 PM GMT+3"
-    ///     Date().dateTimeString(ofStyle: .full) -> "Thursday, January 12, 2017 at 7:32:00 PM GMT+03:00"
-    ///
-    /// - Parameter style: DateFormatter style (default is .medium).
-    /// - Returns: date and time string.
-    func dateTimeString(ofStyle style: DateFormatter.Style = .medium) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = style
-        dateFormatter.dateStyle = style
-        return dateFormatter.string(from: self)
-    }
-
-    /// Time string from date
-    ///
-    ///     Date().timeString(ofStyle: .short) -> "7:37 PM"
-    ///     Date().timeString(ofStyle: .medium) -> "7:37:02 PM"
-    ///     Date().timeString(ofStyle: .long) -> "7:37:02 PM GMT+3"
-    ///     Date().timeString(ofStyle: .full) -> "7:37:02 PM GMT+03:00"
-    ///
-    /// - Parameter style: DateFormatter style (default is .medium).
-    /// - Returns: time string.
-    func timeString(ofStyle style: DateFormatter.Style = .medium) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = style
-        dateFormatter.dateStyle = .none
-        return dateFormatter.string(from: self)
-    }
-
     /// Day name from date.
     ///
     ///     Date().dayName(ofStyle: .oneLetter) -> "T"
@@ -773,16 +679,7 @@ public extension Date {
     func dayName(ofStyle style: DayNameStyle = .full) -> String {
         // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
         let dateFormatter = DateFormatter()
-        var format: String {
-            switch style {
-            case .oneLetter:
-                return "EEEEE"
-            case .threeLetters:
-                return "EEE"
-            case .full:
-                return "EEEE"
-            }
-        }
+        let format = style.rawValue
         dateFormatter.setLocalizedDateFormatFromTemplate(format)
         return dateFormatter.string(from: self)
     }
@@ -798,16 +695,7 @@ public extension Date {
     func monthName(ofStyle style: MonthNameStyle = .full) -> String {
         // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
         let dateFormatter = DateFormatter()
-        var format: String {
-            switch style {
-            case .oneLetter:
-                return "MMMMM"
-            case .threeLetters:
-                return "MMM"
-            case .full:
-                return "MMMM"
-            }
-        }
+        let format = style.rawValue
         dateFormatter.setLocalizedDateFormatFromTemplate(format)
         return dateFormatter.string(from: self)
     }
@@ -888,31 +776,6 @@ public extension Date {
         return Date(timeIntervalSinceReferenceDate:
             TimeInterval.random(in: range.lowerBound.timeIntervalSinceReferenceDate...range.upperBound.timeIntervalSinceReferenceDate))
     }
-
-    /// Returns a random date within the specified range, using the given generator as a source for randomness.
-    ///
-    /// - Parameters:
-    ///   - range: The range in which to create a random date. `range` must not be empty.
-    ///   - generator: The random number generator to use when creating the new random date.
-    /// - Returns: A random date within the bounds of `range`.
-    static func random<T>(in range: Range<Date>, using generator: inout T) -> Date where T: RandomNumberGenerator {
-        return Date(timeIntervalSinceReferenceDate:
-            TimeInterval.random(in: range.lowerBound.timeIntervalSinceReferenceDate..<range.upperBound.timeIntervalSinceReferenceDate,
-                                using: &generator))
-    }
-
-    /// Returns a random date within the specified range, using the given generator as a source for randomness.
-    ///
-    /// - Parameters:
-    ///   - range: The range in which to create a random date.
-    ///   - generator: The random number generator to use when creating the new random date.
-    /// - Returns: A random date within the bounds of `range`.
-    static func random<T>(in range: ClosedRange<Date>, using generator: inout T) -> Date where T: RandomNumberGenerator {
-        return Date(timeIntervalSinceReferenceDate:
-            TimeInterval.random(in: range.lowerBound.timeIntervalSinceReferenceDate...range.upperBound.timeIntervalSinceReferenceDate,
-                                using: &generator))
-    }
-
 }
 
 // MARK: - Initializers
@@ -939,26 +802,5 @@ public extension Date {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         guard let date = dateFormatter.date(from: iso8601String) else { return nil }
         self = date
-    }
-
-    /// Create new date object from UNIX timestamp.
-    ///
-    ///     let date = Date(unixTimestamp: 1484239783.922743) // "Jan 12, 2017, 7:49 PM"
-    ///
-    /// - Parameter unixTimestamp: UNIX timestamp.
-    init(unixTimestamp: Double) {
-        self.init(timeIntervalSince1970: unixTimestamp)
-    }
-
-    /// Create date object from Int literal
-    ///
-    ///     let date = Date(integerLiteral: 2017_12_25) // "2017-12-25 00:00:00 +0000"
-    /// - Parameter value: Int value, e.g. 20171225, or 2017_12_25 etc.
-    init?(integerLiteral value: Int) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd"
-        guard let date = formatter.date(from: String(value)) else { return nil }
-        self = date
-    }
-
+    }  
 }

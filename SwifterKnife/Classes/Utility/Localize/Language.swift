@@ -17,17 +17,12 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         .init("LanguageDidChangeNotification")
     }
     
-    public static func available(excludeBase: Bool = false) -> [Language] {
-        var availableLanguages = Bundle.main.localizations
-        // If excludeBase = true, don't include "Base" in available languages
-        if excludeBase == true,
-           let indexOfBase = availableLanguages.firstIndex(of: "Base") {
-            availableLanguages.remove(at: indexOfBase)
-        }
-        return availableLanguages.map(Language.init(rawValue:))
+    public static func available() -> [Language] {
+        let languages = Bundle.main.localizations
+        return languages.map(Language.init(rawValue:))
     }
     
-    public static var languageCodeTransform: ((_ code: String) -> Language)?
+    public static var customized: ((_ code: String) -> Language)?
 //        = { code in
 //        if code.hasPrefix("zh-") {
 //            // zh-Hant\zh-HK\zh-TW
@@ -45,13 +40,13 @@ public struct Language: RawRepresentable, Equatable, Hashable {
     
     private static func loadCurrent() -> Language? {
         if let code = UserDefaults.standard.object(forKey: CurrentLanguageCodeKey) as? String {
-            if let transform = languageCodeTransform {
+            if let transform = customized {
                 return transform(code)
             }
             return Language(rawValue: code)
         }
         guard let code = Locale.preferredLanguages.first else { return nil }
-        if let transform = languageCodeTransform {
+        if let transform = customized {
             return transform(code)
         }
         
@@ -89,18 +84,16 @@ public struct Language: RawRepresentable, Equatable, Hashable {
 
 public extension Language {
     
-    static var base: Language { .init(rawValue: "Base") }
+    // static var base: Language { .init(rawValue: "Base") }
+    
     /// 英语 English
     static var en: Language { .init(rawValue: "en") }
     /// 简体中文 Chinese, Simplified
-    static var zhHans: Language { .init(rawValue: "zh-Hans") }
-    
-    
-    // 请在你的项目中自行扩展添加支持的多语言
-
+    static var zhHans: Language { .init(rawValue: "zh-Hans") } 
     /// 繁体中文 Chinese, Traditional
     static var zhHant: Language { .init(rawValue: "zh-Hant") }
     
+    // 请在你的项目中自行扩展添加支持的多语言
     /*
     /// 繁体中文(香港) Chinese, Hong Kong
     static var zhHK: Language { .init(rawValue: "zh-HK") }

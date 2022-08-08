@@ -11,17 +11,17 @@ import Foundation
 // MARK: - KeyPath
 /*
  struct Article {
- var title: String
- var body: String
- var category: Category
- var isRead: Bool
+     var title: String
+     var body: String
+     var category: Category
+     var isRead: Bool
  }
  extension Article {
- enum Category {
- case fullLength
- case quickReads
- case basics
- }
+     enum Category {
+         case fullLength
+         case quickReads
+         case basics
+     }
  }
  let articles: [Article] = []
  let readArticles = articles.filter(\.isRead)
@@ -56,23 +56,6 @@ public func <<T, V: Comparable>(lhs: KeyPath<T, V>, rhs: V) -> (T) -> Bool {
 public prefix func +<T, V: Comparable>(keyPath: KeyPath<T, V>) -> (T, T) -> Bool {
     return { $0[keyPath: keyPath] > $1[keyPath: keyPath] }
 }
-//public prefix func +<T, V: Comparable>(keyPaths: [KeyPath<T, V>]) -> (T, T) -> Bool {
-//   return {
-//       guard !keyPaths.isEmpty else { fatalError() }
-//       let n = keyPaths.count
-//       if n == 1 {
-//           let keyPath = keyPaths[0]
-//           return $0[keyPath: keyPath] > $1[keyPath: keyPath]
-//       }
-//       for kp in keyPaths.dropLast() {
-//           if $0[keyPath: kp] != $1[keyPath: kp] {
-//               return $0[keyPath: kp] > $1[keyPath: kp]
-//           }
-//       }
-//       let kp = keyPaths[n - 1]
-//       return $0[keyPath: kp] > $1[keyPath: kp]
-//   }
-//}
 
 /*
  - 的意思是 如果 $0 < $1 则 $0 - $1 是负数
