@@ -13,13 +13,26 @@ public protocol DataEncodable {
     func encode() throws -> Data
 }
 public extension DataEncodable {
-    func toJSON() throws -> Any {
-        let data = try encode()
-        return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+    func toJSON() -> [String: Any] {
+        guard let data = try? encode(),
+              let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+            return [:]
+        }
+        return json
     }
-    func toString() throws -> String {
-        let data = try encode()
-        return String(data: data, encoding: .utf8) ?? ""
+    func toArray() -> [Any] {
+        guard let data = try? encode(),
+              let array = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Any] else {
+            return []
+        }
+        return array
+    }
+    func toString() -> String {
+        guard let data = try? encode(),
+              let string = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return string
     }
     
     func save(toFile path: String) throws {

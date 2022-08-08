@@ -13,17 +13,7 @@ public extension FloatingPoint {
     /// Absolute value of number.
     var abs: Self {
         return Swift.abs(self)
-    }
-
-    /// Check if number is positive.
-    var isPositive: Bool {
-        return self > 0
-    }
-
-    /// Check if number is negative.
-    var isNegative: Bool {
-        return self < 0
-    }
+    } 
 
     /// Ceil of number.
     var ceil: Self {

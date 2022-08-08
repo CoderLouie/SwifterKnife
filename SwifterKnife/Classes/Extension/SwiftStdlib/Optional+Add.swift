@@ -100,6 +100,20 @@ public extension Optional {
         case nil: return true
         }
     }
+    
+    
+    func extract<U>(_ transform: (Wrapped) throws -> U, or nilValue: @autoclosure () -> U) rethrows -> U {
+        switch self {
+        case let x?: return try transform(x)
+        case nil: return nilValue()
+        }
+    }
+    func flatExtract<U>(_ transform: (Wrapped) throws -> U?, or nilValue: @autoclosure () -> U) rethrows -> U {
+        switch self {
+        case let x?: return try transform(x) ?? nilValue()
+        case nil: return nilValue()
+        }
+    }
 }
 
 // MARK: - Operators
@@ -127,25 +141,7 @@ infix operator !?
 //        }
 //    }
 //}
-
-
-// MARK: - Methods (Collection)
-public extension Optional where Wrapped: Collection {
-
-    /// Check if optional is nil or empty collection.
-    var isNilOrEmpty: Bool {
-        guard let collection = self else { return true }
-        return collection.isEmpty
-    }
-
-    /// Returns the collection only if it is not nill and not empty.
-    var nonEmpty: Wrapped? {
-        guard let collection = self else { return nil }
-        guard !collection.isEmpty else { return nil }
-        return collection
-    }
-
-}
+ 
 
 // MARK: - Methods (RawRepresentable, RawValue: Equatable)
 public extension Optional where Wrapped: RawRepresentable, Wrapped.RawValue: Equatable {

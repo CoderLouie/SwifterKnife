@@ -45,28 +45,6 @@ public extension String {
         return plainData?.base64EncodedString()
     }
 
-    /// Array of characters of a string.
-    var charactersArray: [Character] {
-        return Array(self)
-    }
- 
-    /// CamelCase of string.
-    ///
-    ///        "sOme vAriable naMe".camelCased -> "someVariableName"
-    ///
-    var camelCased: String {
-        let source = lowercased()
-        let first = source[..<source.index(after: source.startIndex)]
-        if source.contains(" ") {
-            let connected = source.capitalized.replacingOccurrences(of: " ", with: "")
-            let camel = connected.replacingOccurrences(of: "\n", with: "")
-            let rest = String(camel.dropFirst())
-            return first + rest
-        }
-        let rest = String(source.dropFirst())
-        return first + rest
-    }
-
     /// Check if string contains one or more emojis.
     ///
     ///        "Hello 😀".containEmoji -> true
@@ -220,90 +198,12 @@ public extension String {
         return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: self))
     }
  
-  
- 
-    /// Bool value from string (if applicable).
-    ///
-    ///        "1".bool -> true
-    ///        "False".bool -> false
-    ///        "Hello".bool = nil
-    ///
-    var bool: Bool? {
-        let selfLowercased = trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        switch selfLowercased {
-        case "true", "yes", "1":
-            return true
-        case "false", "no", "0":
-            return false
-        default:
-            return nil
-        }
-    }
- 
-    /// Date object from "yyyy-MM-dd" formatted string.
-    ///
-    ///        "2007-06-29".date -> Optional(Date)
-    ///
-    var date: Date? {
-        let selfLowercased = trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone.current
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.date(from: selfLowercased)
-    }
- 
-    /// Date object from "yyyy-MM-dd HH:mm:ss" formatted string.
-    ///
-    ///        "2007-06-29 14:23:09".dateTime -> Optional(Date)
-    ///
-    var dateTime: Date? {
-        let selfLowercased = trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone.current
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter.date(from: selfLowercased)
-    }
-
-    /// Integer value from string (if applicable).
-    ///
-    ///        "101".int -> 101
-    ///
-    var int: Int? {
-        return Int(self)
-    }
- 
- 
-    /// URL from string (if applicable).
-    ///
-    ///        "https://google.com".url -> URL(string: "https://google.com")
-    ///        "not url".url -> nil
-    ///
-    var url: URL? {
-        return URL(string: self)
-    }
- 
     /// String with no spaces or new lines in beginning and end.
     ///
     ///        "   hello  \n".trimmed -> "hello"
     ///
     var trimmed: String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
-    }
- 
-    /// Readable string from a URL string.
-    ///
-    ///        "it's%20easy%20to%20decode%20strings".urlDecoded -> "it's easy to decode strings"
-    ///
-    var urlDecoded: String {
-        return removingPercentEncoding ?? self
-    }
- 
-    /// URL escaped string.
-    ///
-    ///        "it's easy to encode strings".urlEncoded -> "it's%20easy%20to%20encode%20strings"
-    ///
-    var urlEncoded: String {
-        return addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
     }
  
     /// Escaped string for inclusion in a regular expression pattern.
@@ -331,66 +231,6 @@ public extension String {
 // MARK: - Methods
 
 public extension String {
-    /// Float value from string (if applicable).
-    ///
-    /// - Parameter locale: Locale (default is Locale.current)
-    /// - Returns: Optional Float value from given string.
-    func float(locale: Locale = .current) -> Float? {
-        let formatter = NumberFormatter()
-        formatter.locale = locale
-        formatter.allowsFloats = true
-        return formatter.number(from: self)?.floatValue
-    }
- 
-    /// Double value from string (if applicable).
-    ///
-    /// - Parameter locale: Locale (default is Locale.current)
-    /// - Returns: Optional Double value from given string.
-    func double(locale: Locale = .current) -> Double? {
-        let formatter = NumberFormatter()
-        formatter.locale = locale
-        formatter.allowsFloats = true
-        return formatter.number(from: self)?.doubleValue
-    }
- 
-    /// CGFloat value from string (if applicable).
-    ///
-    /// - Parameter locale: Locale (default is Locale.current)
-    /// - Returns: Optional CGFloat value from given string.
-    func cgFloat(locale: Locale = .current) -> CGFloat? {
-        let formatter = NumberFormatter()
-        formatter.locale = locale
-        formatter.allowsFloats = true
-        return formatter.number(from: self) as? CGFloat
-    }
- 
-    /// Array of strings separated by new lines.
-    ///
-    ///        "Hello\ntest".lines() -> ["Hello", "test"]
-    ///
-    /// - Returns: Strings separated by new lines.
-    func lines() -> [String] {
-        var result = [String]()
-        enumerateLines { line, _ in
-            result.append(line)
-        }
-        return result
-    }
-  
-
-    /// The most common character in string.
-    ///
-    ///        "This is a test, since e is appearing everywhere e should be the common character".mostCommonCharacter() -> "e"
-    ///
-    /// - Returns: The most common character.
-    func mostCommonCharacter() -> Character? {
-        let mostCommon = withoutSpacesAndNewLines.reduce(into: [Character: Int]()) {
-            let count = $0[$1] ?? 0
-            $0[$1] = count + 1
-        }.max { $0.1 < $1.1 }?.key
-
-        return mostCommon
-    }
 
     /// Array with unicodes for all characters in a string.
     ///
@@ -419,39 +259,7 @@ public extension String {
     ///
     /// - Returns: The count of words contained in a string.
     func wordCount() -> Int {
-        // https://stackoverflow.com/questions/42822838
-        let chararacterSet = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
-        let comps = components(separatedBy: chararacterSet)
-        let words = comps.filter { !$0.isEmpty }
-        return words.count
-    }
- 
-    /// Transforms the string into a slug string.
-    ///
-    ///        "Swift is amazing".toSlug() -> "swift-is-amazing"
-    ///
-    /// - Returns: The string in slug format.
-    func toSlug() -> String {
-        let lowercased = self.lowercased()
-        let latinized = lowercased.folding(options: .diacriticInsensitive, locale: Locale.current)
-        let withDashes = latinized.replacingOccurrences(of: " ", with: "-")
-
-        let alphanumerics = NSCharacterSet.alphanumerics
-        var filtered = withDashes.filter {
-            guard String($0) != "-" else { return true }
-            guard String($0) != "&" else { return true }
-            return String($0).rangeOfCharacter(from: alphanumerics) != nil
-        }
-
-        while filtered.lastCharacterAsString == "-" {
-            filtered = String(filtered.dropLast())
-        }
-
-        while filtered.firstCharacterAsString == "-" {
-            filtered = String(filtered.dropFirst())
-        }
-
-        return filtered.replacingOccurrences(of: "--", with: "-")
+        return words().count
     }
 
     /// Safely subscript string with index.
@@ -491,51 +299,6 @@ public extension String {
     ///
     func copyToPasteboard() {
         UIPasteboard.general.string = self
-    }
-
-    /// Converts string format to CamelCase.
-    ///
-    ///        var str = "sOme vaRiabLe Name"
-    ///        str.camelize()
-    ///        print(str) // prints "someVariableName"
-    ///
-    @discardableResult
-    mutating func camelize() -> String {
-        let source = lowercased()
-        let first = source[..<source.index(after: source.startIndex)]
-        if source.contains(" ") {
-            let connected = source.capitalized.replacingOccurrences(of: " ", with: "")
-            let camel = connected.replacingOccurrences(of: "\n", with: "")
-            let rest = String(camel.dropFirst())
-            self = first + rest
-            return self
-        }
-        let rest = String(source.dropFirst())
-
-        self = first + rest
-        return self
-    }
-
-    /// First character of string uppercased(if applicable) while keeping the original string.
-    ///
-    ///        "hello world".firstCharacterUppercased() -> "Hello world"
-    ///        "".firstCharacterUppercased() -> ""
-    ///
-    mutating func firstCharacterUppercased() {
-        guard let first = first else { return }
-        self = String(first).uppercased() + dropFirst()
-    }
-
-    /// Check if string contains only unique characters.
-    ///
-    func hasUniqueCharacters() -> Bool {
-        guard count > 0 else { return false }
-        var uniqueChars = Set<String>()
-        for char in self {
-            if uniqueChars.contains(String(char)) { return false }
-            uniqueChars.insert(String(char))
-        }
-        return true
     }
  
     /// Check if string contains one or more instance of substring.
@@ -644,40 +407,6 @@ public extension String {
         return self
     }
 
-    /// Slice given string from a start index to an end index (if applicable).
-    ///
-    ///        var str = "Hello World"
-    ///        str.slice(from: 6, to: 11)
-    ///        print(str) // prints "World"
-    ///
-    /// - Parameters:
-    ///   - start: string index the slicing should start from.
-    ///   - end: string index the slicing should end at.
-    @discardableResult
-    mutating func slice(from start: Int, to end: Int) -> String {
-        guard end >= start else { return self }
-        if let str = self[safe: start..<end] {
-            self = str
-        }
-        return self
-    }
-
-    /// Slice given string from a start index (if applicable).
-    ///
-    ///        var str = "Hello World"
-    ///        str.slice(at: 6)
-    ///        print(str) // prints "World"
-    ///
-    /// - Parameter index: string index the slicing should start from.
-    @discardableResult
-    mutating func slice(at index: Int) -> String {
-        guard index < count else { return self }
-        if let str = self[safe: index..<count] {
-            self = str
-        }
-        return self
-    }
-
     /// Check if string starts with substring.
     ///
     ///        "hello World".starts(with: "h") -> true
@@ -706,7 +435,6 @@ public extension String {
         dateFormatter.dateFormat = format
         return dateFormatter.date(from: self)
     }
- 
     /// Removes spaces and new lines in beginning and end of string.
     ///
     ///        var str = "  \n Hello World \n\n\n"
@@ -751,34 +479,6 @@ public extension String {
         return self[startIndex..<index(startIndex, offsetBy: length)] + (trailing ?? "")
     }
  
-    /// Convert URL string to readable string.
-    ///
-    ///        var str = "it's%20easy%20to%20decode%20strings"
-    ///        str.urlDecode()
-    ///        print(str) // prints "it's easy to decode strings"
-    ///
-    @discardableResult
-    mutating func urlDecode() -> String {
-        if let decoded = removingPercentEncoding {
-            self = decoded
-        }
-        return self
-    }
- 
-    /// Escape string.
-    ///
-    ///        var str = "it's easy to encode strings"
-    ///        str.urlEncode()
-    ///        print(str) // prints "it's%20easy%20to%20encode%20strings"
-    ///
-    @discardableResult
-    mutating func urlEncode() -> String {
-        if let encoded = addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
-            self = encoded
-        }
-        return self
-    }
- 
     /// https://www.jianshu.com/p/e4754d8609cc
     /// #"\\[A-Z]+[A-Za-z]+\.[a-z]+"#
     /// Verify if string matches the regex pattern.
@@ -809,119 +509,6 @@ public extension String {
     func matches(regex: NSRegularExpression, options: NSRegularExpression.MatchingOptions = []) -> Bool {
         let range = NSRange(startIndex..<endIndex, in: self)
         return regex.firstMatch(in: self, options: options, range: range) != nil
-    }
- 
-    /// Overload Swift's 'contains' operator for matching regex pattern.
-    ///
-    /// - Parameters:
-    ///   - lhs: String to check on regex pattern.
-    ///   - rhs: Regex pattern to match against.
-    /// - Returns: true if string matches the pattern.
-    static func ~= (lhs: String, rhs: String) -> Bool {
-        return lhs.range(of: rhs, options: .regularExpression) != nil
-    }
- 
-    /// Overload Swift's 'contains' operator for matching regex.
-    ///
-    /// - Parameters:
-    ///   - lhs: String to check on regex.
-    ///   - rhs: Regex to match against.
-    /// - Returns: `true` if there is at least one match for the regex in the string.
-    static func ~= (lhs: String, rhs: NSRegularExpression) -> Bool {
-        let range = NSRange(lhs.startIndex..<lhs.endIndex, in: lhs)
-        return rhs.firstMatch(in: lhs, range: range) != nil
-    }
- 
-    /// Returns a new string in which all occurrences of a regex in a specified range of the receiver are replaced by the template.
-    /// - Parameters:
-    ///   - regex Regex to replace.
-    ///   - template: The template to replace the regex.
-    ///   - options: The matching options to use
-    ///   - searchRange: The range in the receiver in which to search.
-    /// - Returns: A new string in which all occurrences of regex in searchRange of the receiver are replaced by template.
-    func replacingOccurrences(
-        of regex: NSRegularExpression,
-        with template: String,
-        options: NSRegularExpression.MatchingOptions = [],
-        range searchRange: Range<String.Index>? = nil) -> String {
-        let range = NSRange(searchRange ?? startIndex..<endIndex, in: self)
-        return regex.stringByReplacingMatches(in: self, options: options, range: range, withTemplate: template)
-    }
-
-    /// Pad string to fit the length parameter size with another string in the start.
-    ///
-    ///   "hue".padStart(10) -> "       hue"
-    ///   "hue".padStart(10, with: "br") -> "brbrbrbhue"
-    ///
-    /// - Parameters:
-    ///   - length: The target length to pad.
-    ///   - string: Pad string. Default is " ".
-    @discardableResult
-    mutating func padStart(_ length: Int, with string: String = " ") -> String {
-        self = paddingStart(length, with: string)
-        return self
-    }
-
-    /// Returns a string by padding to fit the length parameter size with another string in the start.
-    ///
-    ///   "hue".paddingStart(10) -> "       hue"
-    ///   "hue".paddingStart(10, with: "br") -> "brbrbrbhue"
-    ///
-    /// - Parameters:
-    ///   - length: The target length to pad.
-    ///   - string: Pad string. Default is " ".
-    /// - Returns: The string with the padding on the start.
-    func paddingStart(_ length: Int, with string: String = " ") -> String {
-        guard count < length else { return self }
-
-        let padLength = length - count
-        if padLength < string.count {
-            return string[string.startIndex..<string.index(string.startIndex, offsetBy: padLength)] + self
-        } else {
-            var padding = string
-            while padding.count < padLength {
-                padding.append(string)
-            }
-            return padding[padding.startIndex..<padding.index(padding.startIndex, offsetBy: padLength)] + self
-        }
-    }
-
-    /// Pad string to fit the length parameter size with another string in the start.
-    ///
-    ///   "hue".padEnd(10) -> "hue       "
-    ///   "hue".padEnd(10, with: "br") -> "huebrbrbrb"
-    ///
-    /// - Parameters:
-    ///   - length: The target length to pad.
-    ///   - string: Pad string. Default is " ".
-    @discardableResult
-    mutating func padEnd(_ length: Int, with string: String = " ") -> String {
-        self = paddingEnd(length, with: string)
-        return self
-    }
-
-    /// Returns a string by padding to fit the length parameter size with another string in the end.
-    ///
-    ///   "hue".paddingEnd(10) -> "hue       "
-    ///   "hue".paddingEnd(10, with: "br") -> "huebrbrbrb"
-    ///
-    /// - Parameters:
-    ///   - length: The target length to pad.
-    ///   - string: Pad string. Default is " ".
-    /// - Returns: The string with the padding on the end.
-    func paddingEnd(_ length: Int, with string: String = " ") -> String {
-        guard count < length else { return self }
-
-        let padLength = length - count
-        if padLength < string.count {
-            return self + string[string.startIndex..<string.index(string.startIndex, offsetBy: padLength)]
-        } else {
-            var padding = string
-            while padding.count < padLength {
-                padding.append(string)
-            }
-            return self + padding[padding.startIndex..<padding.index(padding.startIndex, offsetBy: padLength)]
-        }
     }
 
     /// Removes given prefix from the string.
@@ -972,25 +559,6 @@ public extension String {
         guard let decodedData = Data(base64Encoded: base64) else { return nil }
         guard let str = String(data: decodedData, encoding: .utf8) else { return nil }
         self.init(str)
-    }
-
-    /// Create a new random string of given length.
-    ///
-    ///        String(randomOfLength: 10) -> "gY8r3MHvlQ"
-    ///
-    /// - Parameter length: number of characters in string.
-    init(randomOfLength length: Int) {
-        guard length > 0 else {
-            self.init()
-            return
-        }
-
-        let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        var randomString = ""
-        for _ in 1...length {
-            randomString.append(base.randomElement()!)
-        }
-        self = randomString
     }
 }
 
@@ -1100,29 +668,6 @@ public extension String {
     subscript(bounds: NSRange) -> Substring {
         guard let range = Range(bounds, in: self) else { fatalError("Failed to find range \(bounds) in \(self)") }
         return self[range]
-    }
-}
-
-
-public extension String {
-    /// Last character of string (if applicable).
-    ///
-    ///        "Hello".lastCharacterAsString -> Optional("o")
-    ///        "".lastCharacterAsString -> nil
-    ///
-    var lastCharacterAsString: String? {
-        guard let last = last else { return nil }
-        return String(last)
-    }
-    
-    /// First character of string (if applicable).
-    ///
-    ///        "Hello".firstCharacterAsString -> Optional("H")
-    ///        "".firstCharacterAsString -> nil
-    ///
-    var firstCharacterAsString: String? {
-        guard let first = first else { return nil }
-        return String(first)
     }
 }
 
