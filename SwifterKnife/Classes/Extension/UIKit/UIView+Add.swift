@@ -298,14 +298,21 @@ public extension UIView {
 }
 
 public extension UIView {
-    var compressedSize: CGSize {
+    func fittingSize(withRequiredWidth width: CGFloat) -> CGSize {
+        systemLayoutSizeFitting(
+            CGSize(width: width, height: 0),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel)
+    }
+    func fittingSize(withRequiredHeight height: CGFloat) -> CGSize {
+        systemLayoutSizeFitting(
+            CGSize(width: 0, height: height),
+            withHorizontalFittingPriority: .fittingSizeLevel,
+            verticalFittingPriority: .required)
+    }
+    var fittingSize: CGSize {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    }
-    
-    func compressedSizeToFit() {
-        let size = systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        frame.size = size
-    }
+    } 
     
     /**
      let effectView: UIImageView? = view.searchSubview(reversed: false) {

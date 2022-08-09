@@ -89,36 +89,36 @@ public extension Optional {
     
     func or(throws error: Error) throws -> Wrapped {
         switch self {
-        case let x?: return x
-        case nil: throw error
+        case .some(let x): return x
+        case .none: throw error
         }
     }
     
     var isNil: Bool {
         switch self {
-        case _?: return false
-        case nil: return true
+        case .some: return false
+        case .none: return true
         }
     }
     
     func filter(_ predicate: (Wrapped) throws -> Bool) rethrows -> Optional {
         switch self {
-        case let x?:
+        case .some(let x):
             return try predicate(x) ? self : .none
-        case nil: return .none
+        case .none: return .none
         }
     }
     
-    func extract<U>(_ transform: (Wrapped) throws -> U, or nilValue: @autoclosure () -> U) rethrows -> U {
+    func extract<U>(_ transform: (Wrapped) throws -> U, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
         switch self {
-        case let x?: return try transform(x)
-        case nil: return nilValue()
+        case .some(let x): return try transform(x)
+        case .none: return try defaultValue()
         }
     }
-    func flatExtract<U>(_ transform: (Wrapped) throws -> U?, or nilValue: @autoclosure () -> U) rethrows -> U {
+    func flatExtract<U>(_ transform: (Wrapped) throws -> U?, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
         switch self {
-        case let x?: return try transform(x) ?? nilValue()
-        case nil: return nilValue()
+        case .some(let x): return try transform(x) ?? defaultValue()
+        case .none: return try defaultValue()
         }
     }
 }

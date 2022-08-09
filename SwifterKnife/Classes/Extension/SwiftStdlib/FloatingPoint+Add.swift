@@ -10,10 +10,6 @@ import Foundation
 // MARK: - Properties
 
 public extension FloatingPoint {
-    /// Absolute value of number.
-    var abs: Self {
-        return Swift.abs(self)
-    } 
 
     /// Ceil of number.
     var ceil: Self {
