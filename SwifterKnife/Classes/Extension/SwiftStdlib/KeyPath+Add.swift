@@ -118,3 +118,30 @@ public prefix func -<R, T: Comparable, U: Comparable, V: Comparable>
 -> (R, R) -> Bool {
     return sort(first: keyPaths.0, second: keyPaths.1, thrid: keyPaths.2, areInIncreasingOrder: true)
 }
+
+//
+//public typealias AreInIncreasingOrder<R> = (R, R) -> Bool
+//public prefix func +<R>(predicates: [AreInIncreasingOrder<R>])
+//-> (R, R) -> Bool {
+//    return {
+//        for predicate in predicates {
+//            if !predicate($0, $1), !predicate($1, $0) {
+//                continue
+//            }
+//            return predicate($1, $0)
+//        }
+//        return false
+//    }
+//}
+//public prefix func -<R>(predicates: [AreInIncreasingOrder<R>])
+//-> (R, R) -> Bool {
+//    return {
+//        for predicate in predicates {
+//            if !predicate($0, $1), !predicate($1, $0) {
+//                continue
+//            }
+//            return predicate($0, $1)
+//        }
+//        return true
+//    }
+//}

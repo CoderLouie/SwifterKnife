@@ -135,7 +135,9 @@ public extension UIView {
     
     /// Remove all subviews in view.
     func removeSubviews() {
-        subviews.forEach { $0.removeFromSuperview() }
+        while let lastView = subviews.last {
+            lastView.removeFromSuperview()
+        }
     }
 
     /// Remove all gesture recognizers from view.
@@ -298,6 +300,11 @@ public extension UIView {
 }
 
 public extension UIView {
+    
+    func addTap(target: Any?, selector: Selector?) {
+        addGestureRecognizer(UITapGestureRecognizer(target: target, action: selector))
+    }
+    
     func fittingSize(withRequiredWidth width: CGFloat) -> CGSize {
         systemLayoutSizeFitting(
             CGSize(width: width, height: 0),

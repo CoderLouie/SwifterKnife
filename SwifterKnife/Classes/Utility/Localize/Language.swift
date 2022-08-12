@@ -17,19 +17,23 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         .init("LanguageDidChangeNotification")
     }
     
-    public static func available() -> [Language] {
-        let languages = Bundle.main.localizations
+    public static func available(for bundle: Bundle = .main) -> [Language] {
+        let languages = bundle.localizations
         return languages.map(Language.init(rawValue:))
     }
     
     public static var customized: ((_ code: String) -> Language)?
-//        = { code in
+    = { code in
+        let availables = Set(Bundle.main.localizations)
+        guard availables.contains(code) else {
+            return .default
+        }
 //        if code.hasPrefix("zh-") {
 //            // zh-Hant\zh-HK\zh-TW
 //            return code.contains("Hans") ? .zhHans : .zhHant
 //        }
-//        return Language(rawValue: code)
-//    }
+        return Language(rawValue: code)
+    }
     public static var `default`: Language = .en
     
     public static func reset() {
