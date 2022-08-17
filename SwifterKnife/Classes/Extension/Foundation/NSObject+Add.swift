@@ -7,56 +7,34 @@
 
 import Foundation
 
-public enum AssociationPolicy: RawRepresentable {
-    case assign
-    case retain
-    case copy
-    case nonatomic_retain
-    case nonatomic_copy
-    
-    public init?(rawValue: objc_AssociationPolicy) {
-        switch rawValue {
-        case .OBJC_ASSOCIATION_ASSIGN:
-            self = .assign
-        case .OBJC_ASSOCIATION_RETAIN:
-            self = .retain
-        case .OBJC_ASSOCIATION_COPY:
-            self = .copy
-        case .OBJC_ASSOCIATION_RETAIN_NONATOMIC:
-            self = .nonatomic_retain
-        case .OBJC_ASSOCIATION_COPY_NONATOMIC:
-            self = .nonatomic_copy
-        @unknown default:
-            return nil
-        }
-    }
-    
-    public var rawValue: objc_AssociationPolicy {
-        switch self {
-        case .assign:
-            return .OBJC_ASSOCIATION_ASSIGN
-        case .retain:
-            return .OBJC_ASSOCIATION_RETAIN
-        case .copy:
-        return .OBJC_ASSOCIATION_COPY
-        case .nonatomic_retain:
-            return .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        case .nonatomic_copy:
-            return .OBJC_ASSOCIATION_COPY_NONATOMIC
-        }
+private final class Associated<T> {
+    let value: T
+    init(_ value: T) {
+        self.value = value
     }
 }
 
-public extension NSObject {
-    func associatedValue<T>(
+public protocol Associable {}
+
+extension Associable where Self: AnyObject {
+    func lazyAssociatedObject<T>(
         for key: UnsafeRawPointer,
-        policy: AssociationPolicy,
-        default builder: @autoclosure () -> T) -> T {
-        if let target = objc_getAssociatedObject(self, key) as? T {
-            return target
+        default builder: @autoclosure () -> T
+    ) -> T {
+        if let v: T = associatedObject(for: key) {
+            return v
         }
         let value = builder()
-        objc_setAssociatedObject(self, key, value, policy.rawValue)
+        setAssociatedObject(value, for: key)
         return value
     }
+    func associatedObject<T>(for key: UnsafeRawPointer) -> T? {
+        return (objc_getAssociatedObject(self, key) as? Associated<T>).map { $0.value }
+    }
+    
+    func setAssociatedObject<T>(_ value: T?, for key: UnsafeRawPointer) {
+        objc_setAssociatedObject(self, key, value.map { Associated<T>($0) }, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
 }
+
+extension NSObject: Associable {}

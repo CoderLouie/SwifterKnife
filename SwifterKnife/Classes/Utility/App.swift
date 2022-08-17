@@ -9,6 +9,10 @@ import UIKit
  
 public enum App {
     
+    public static func suspend() {
+        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+    }
+    
     public static func delegate<T: UIApplicationDelegate>(as type: T.Type = T.self) -> T {
         guard let delegate = UIApplication.shared.delegate as? T else {
             fatalError("Cann't convert UIApplication.shared.delegate to \(type.self)")

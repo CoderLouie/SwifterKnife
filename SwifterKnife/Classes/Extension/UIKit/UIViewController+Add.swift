@@ -83,8 +83,21 @@ public extension UIViewController {
     }
 }
 
-// MARK: - Alert
-public extension UIViewController {
+// MARK: - Present
+public extension UIViewController { 
+    
+    func share(items: [Any],
+               excludedTypes: [UIActivity.ActivityType]? = nil,
+               completion: UIActivityViewController.CompletionWithItemsHandler? = nil) {
+        let vc = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        vc.excludedActivityTypes = excludedTypes
+        vc.completionWithItemsHandler = { [unowned vc] type, completed, returnedItems, error in
+            vc.dismiss(animated: true) {
+                completion?(type, completed, returnedItems, error)
+            }
+        }
+        present(vc, animated: true, completion: nil)
+    }
     
     @discardableResult
     func present(style: UIAlertController.Style = .alert,

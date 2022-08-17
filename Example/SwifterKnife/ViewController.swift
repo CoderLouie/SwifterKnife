@@ -28,6 +28,9 @@ enum Step: Int, CaseIterable {
 }
  
 class Person {
+    let age: Int = 10
+    let score: Int = 80
+    let name: String = "xiaoming"
     deinit {
         Console.logFunc(whose: self)
     }
@@ -35,6 +38,8 @@ class Person {
 class Student: Person {
     
 }
+
+
 class ViewController: UIViewController {
     
 
@@ -44,6 +49,11 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
 //        setupBody9()
         setupButton1()
+        
+//        let stus: [Student] = []
+//        let newStus = stus.sorted(by: +[+\.age, +\.score, +\.name])
+        
+        print("home".i18n)
 //        Console.log("hello world", tag: .success)
 //        Console.trace("hello world", tag: .warning)
 //        Console.logFunc(whose: self)
@@ -99,6 +109,7 @@ class ViewController: UIViewController {
 // MARK: - Async
 private extension ViewController {
     func otherTest4() {
+        UIColor.blue.alpha
         let icon = UIImage(fileNamed: "h2000")
 //        ManagedBufferPointer
         var num = 3
@@ -139,8 +150,8 @@ private extension ViewController {
 //        print(i2.next() ?? "nil")
             
         
-        var key1: UInt8 = 0
-        let val = associatedValue(for: &key1, policy: .nonatomic_retain, default: UIView())
+//        var key1: UInt8 = 0
+//        let val = associatedValue(for: &key1, policy: .nonatomic_retain, default: UIView())
         
         do {
             let val: Double? = nil

@@ -301,8 +301,8 @@ public extension UIView {
 
 public extension UIView {
     
-    func addTap(target: Any?, selector: Selector?) {
-        addGestureRecognizer(UITapGestureRecognizer(target: target, action: selector))
+    func addTap(target: Any?, action: Selector?) {
+        addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }
     
     func fittingSize(withRequiredWidth width: CGFloat) -> CGSize {

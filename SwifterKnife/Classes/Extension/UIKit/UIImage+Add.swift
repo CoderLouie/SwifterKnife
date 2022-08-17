@@ -327,9 +327,9 @@ public extension Bundle {
 }
 
 public extension UIImage {
-    func stretchableImage(anchor point: CGPoint = CGPoint(x: 0.5, y: 0.5)) -> UIImage? {
+    func stretchableImage(anchorX x: CGFloat = 0.5, y: CGFloat = 0.5) -> UIImage? {
         let tmp = size;
-        return stretchableImage(withLeftCapWidth: Int(tmp.width * point.x), topCapHeight: Int(tmp.height * point.y))
+        return stretchableImage(withLeftCapWidth: Int(tmp.width * x), topCapHeight: Int(tmp.height * y))
     }
     
     convenience init?(fileNamed name: String,
