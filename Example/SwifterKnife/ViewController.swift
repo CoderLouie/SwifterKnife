@@ -48,7 +48,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
 //        setupBody9()
-        setupButton1()
+//        setupButton1()
+        setupRatingView()
         
 //        let stus: [Student] = []
 //        let newStus = stus.sorted(by: +[+\.age, +\.score, +\.name])
@@ -284,6 +285,40 @@ class KView: UIView {
 
 // MARK: - Button
 extension ViewController {
+    
+    private func setupRatingView() {
+        view.backgroundColor = UIColor(gray: 43)
+        
+        let label = UILabel().then { this in
+            this.textColor = .white
+            this.font = .semibold(17)
+            view.addSubview(this)
+            this.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(-50)
+            }
+        }
+        let ratingView = RatingView(
+            count: 5,
+            normalImage: UIImage(named: "img_star_inactive"),
+            highlightedImage: UIImage(named: "img_star_active"),
+            margin: 22).then {
+                $0.isPanEnable = true
+                $0.weight = 20
+                $0.accuracy = 0.2
+                view.addSubview($0)
+                $0.snp.makeConstraints { make in
+                    make.center.equalToSuperview()
+                }
+            }
+        label.text = "\(ratingView.grade)"
+        ratingView.gradeDidChange = {
+            label.text = "\($0.grade)"
+        }
+//        ratingView.endEditingGrade = {
+//            label.text = "\($0.grade)"
+//        }
+    }
     
     @objc private func buttonDidClick(_ sender: Button) {
         sender.isSelected = !sender.isSelected
