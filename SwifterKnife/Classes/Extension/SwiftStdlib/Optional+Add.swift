@@ -107,20 +107,7 @@ public extension Optional {
             return try predicate(x) ? self : .none
         case .none: return .none
         }
-    }
-    
-    func extract<U>(_ transform: (Wrapped) throws -> U, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
-        switch self {
-        case .some(let x): return try transform(x)
-        case .none: return try defaultValue()
-        }
-    }
-    func flatExtract<U>(_ transform: (Wrapped) throws -> U?, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
-        switch self {
-        case .some(let x): return try transform(x) ?? defaultValue()
-        case .none: return try defaultValue()
-        }
-    }
+    } 
 }
 
 // MARK: - Operators

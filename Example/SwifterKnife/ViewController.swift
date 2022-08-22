@@ -303,9 +303,9 @@ extension ViewController {
             normalImage: UIImage(named: "img_star_inactive"),
             highlightedImage: UIImage(named: "img_star_active"),
             margin: 22).then {
-                $0.isPanEnable = true
+//                $0.isPanEnable = true
                 $0.weight = 20
-                $0.accuracy = 0.2
+                $0.accuracy = 0.5
                 view.addSubview($0)
                 $0.snp.makeConstraints { make in
                     make.center.equalToSuperview()

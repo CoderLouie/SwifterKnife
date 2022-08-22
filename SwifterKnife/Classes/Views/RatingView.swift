@@ -95,6 +95,7 @@ fileprivate class StarsView: UIView {
         var width: CGFloat = 0
         for _ in 0..<count {
             let imgView = UIImageView(image: image)
+            imgView.contentMode = .scaleAspectFit
             addSubview(imgView)
             imgView.frame = CGRect(origin: CGPoint(x: width, y: 0), size: size)
             width += size.width + margin
@@ -102,6 +103,22 @@ fileprivate class StarsView: UIView {
         width -= margin
         aspectSize = CGSize(width: width, height: size.height)
         frame.size = aspectSize
+    }
+    override var contentMode: UIView.ContentMode {
+        set {
+            for view in subviews {
+                guard let imgView = view as? UIImageView else { continue }
+                imgView.contentMode = newValue
+            }
+        }
+        get {
+            for view in subviews {
+                guard let imgView = view as? UIImageView else { continue }
+                return imgView.contentMode
+            }
+            return super.contentMode
+        }
+        
     }
     override var intrinsicContentSize: CGSize {
         aspectSize
@@ -116,10 +133,9 @@ fileprivate class StarsView: UIView {
 }
 
 fileprivate extension Double {
-    func accuracy(_ v: Double) -> Double {
-        let a = self / v
-        let vv = Darwin.round(a)
-        return v * vv
+    func nearestMultiple(_ v: Double) -> Double {
+        if v == 0 { return self }
+        return v * Darwin.round(self / v)
     }
 }
 
@@ -148,6 +164,15 @@ public class RatingView: UIView {
     public var endEditingGrade: ((RatingView) -> Void)?
     public var gradeDidChange: ((RatingView) -> Void)?
     
+    public override var contentMode: UIView.ContentMode {
+        set {
+            frontView.contentMode = newValue
+            backView.contentMode = newValue
+        }
+        get {
+            backView.contentMode
+        }
+    }
     /// 是否允许滑动评分
     public var isPanEnable: Bool = false
     
@@ -171,7 +196,7 @@ public class RatingView: UIView {
                 progress = _maxProgress
             }
             if let a = accuracy {
-                progress = progress.accuracy(a)
+                progress = progress.nearestMultiple(a)
             }
             
             let width = widthForProgress(progress)
@@ -201,7 +226,7 @@ public class RatingView: UIView {
             var left: Double = 0
             var right = modf(progress, &left)
             if let a = accuracy {
-                right = right.accuracy(a)
+                right = right.nearestMultiple(a)
             }
             _progress = left + right
             let width = (starSize.width + margin) * left + right * starSize.width
@@ -239,7 +264,6 @@ public class RatingView: UIView {
     }
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isPanEnable else { return }
-        handleTouches(touches)
         endEditingGrade?(self)
     }
     
@@ -257,7 +281,7 @@ public class RatingView: UIView {
         } else {
             right = left / starSize.width
             if let a = accuracy {
-                right = right.accuracy(a)
+                right = right.nearestMultiple(a)
             }
         }
         var progress = Double(int) + right
