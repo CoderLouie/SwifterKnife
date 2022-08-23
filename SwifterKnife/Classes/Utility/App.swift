@@ -9,6 +9,13 @@ import UIKit
  
 public enum App {
     
+    public var isIdleTimerEnable: Bool {
+        get { !UIApplication.shared.isIdleTimerDisabled }
+        set {
+            UIApplication.shared.isIdleTimerDisabled = !newValue
+        }
+    }
+    
     public static func suspend() {
         UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
     }
@@ -77,7 +84,7 @@ public enum App {
     }
     
     /// 桌面上的应用名称，多语言
-    static var desktopName: String? {
+    public static var desktopName: String? {
         if let name = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String {
             return name
         }

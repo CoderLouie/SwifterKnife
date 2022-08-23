@@ -44,3 +44,13 @@ public extension Comparable {
     }
 }
 infix operator <>=: AssignmentPrecedence
+
+
+@inlinable public func sk_min<T>(_ x: T, _ y: T) -> (T, Bool) where T : Comparable {
+    if x < y { return (x, true) }
+    return (y, false)
+}
+@inlinable public func sk_max<T>(_ x: T, _ y: T) -> (T, Bool) where T : Comparable {
+    if x > y { return (x, true) }
+    return (y, false)
+}

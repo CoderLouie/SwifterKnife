@@ -102,6 +102,7 @@
 		B67F61DB28A0C2B4008AD997 /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67F61DA28A0C2B4008AD997 /* UICollectionView+Add.swift */; };
 		B68290162848B73000C872FB /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */; };
 		B6A82970288928B400E0190B /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A8296F288928B400E0190B /* Either.swift */; };
+		B6B48C1328B47F7A0041EB74 /* AspectImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */; };
 		B6BBFE522872829D002B7A1F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE512872829D002B7A1F /* Position.swift */; };
 		B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE5328728491002B7A1F /* GradientLabel.swift */; };
 		B6C85FCF289B6244009CDEBB /* Data+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C85FCE289B6244009CDEBB /* Data+Add.swift */; };
@@ -288,6 +289,7 @@
 		B67F61DA28A0C2B4008AD997 /* UICollectionView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Add.swift"; sourceTree = "<group>"; };
 		B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B6A8296F288928B400E0190B /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
+		B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectImageView.swift; sourceTree = "<group>"; };
 		B6BBFE512872829D002B7A1F /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		B6BBFE5328728491002B7A1F /* GradientLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLabel.swift; sourceTree = "<group>"; };
 		B6C85FCE289B6244009CDEBB /* Data+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
@@ -715,6 +717,7 @@
 				B674BF92286BEE5700CA270E /* TextField.swift */,
 				B6BBFE512872829D002B7A1F /* Position.swift */,
 				B6BBFE5328728491002B7A1F /* GradientLabel.swift */,
+				B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -1067,6 +1070,7 @@
 				7AD859346831A2AF7354D349E2B9B7AE /* SwifterKnife-dummy.m in Sources */,
 				FE6AC96B4FF09EF57AF519685C68E6D8 /* SwiftyFitsize.swift in Sources */,
 				B387794FFB1BDEC5005D8EC4DB9FBCAC /* SwiftyJSON.swift in Sources */,
+				B6B48C1328B47F7A0041EB74 /* AspectImageView.swift in Sources */,
 				E18ADA27ABAD735767DB74464E1068F6 /* SwiftyTimer.swift in Sources */,
 				B4DC53E8A66E06AA48C69314A0F11374 /* Then.swift in Sources */,
 				B67F61DB28A0C2B4008AD997 /* UICollectionView+Add.swift in Sources */,
