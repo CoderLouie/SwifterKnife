@@ -12,7 +12,7 @@ import UIKit
  适用于使用图片作为背景，在背景图的标注位置上创建其他视图
  */
 public class AspectImageView: UIImageView {
-    private lazy var aspectSize = image?.size ?? CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+    private lazy var aspectSize: CGSize = .zero
     
     public private(set) var ratio: CGFloat = 1
     
@@ -58,6 +58,10 @@ public class AspectImageView: UIImageView {
         return info.1 ? .vertical : .horizontal
     }
     public override var intrinsicContentSize: CGSize {
-        return aspectSize
+        if aspectSize.width > 0,
+           aspectSize.height > 0 {
+            return aspectSize
+        }
+        return super.intrinsicContentSize
     }
 }

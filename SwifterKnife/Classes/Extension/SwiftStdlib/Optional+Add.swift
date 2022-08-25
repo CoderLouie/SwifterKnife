@@ -107,7 +107,13 @@ public extension Optional {
             return try predicate(x) ? self : .none
         case .none: return .none
         }
-    } 
+    }
+    
+    @discardableResult
+    func onSome(_ work: (Wrapped) -> Void) -> Optional {
+        if let value = self { work(value) }
+        return self
+    }
 }
 
 // MARK: - Operators
