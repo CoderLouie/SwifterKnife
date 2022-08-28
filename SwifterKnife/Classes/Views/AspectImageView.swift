@@ -8,6 +8,7 @@
 import UIKit
 
 /*
+/*
  适用场景：
  适用于使用图片作为背景，在背景图的标注位置上创建其他视图
  */
@@ -63,5 +64,72 @@ public class AspectImageView: UIImageView {
             return aspectSize
         }
         return super.intrinsicContentSize
+    }
+}
+*/
+open class BaseImageView: UIImageView {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    public convenience init() {
+        self.init(frame: .zero)
+    }
+    open func setup() {
+        contentMode = .scaleAspectFit
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    open override var image: UIImage? {
+        didSet {
+            invalidateIntrinsicContentSize()
+        }
+    }
+    private var firstLayout = true
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if firstLayout, !bounds.isEmpty {
+            invalidateIntrinsicContentSize()
+            firstLayout = false
+        }
+    }
+}
+open class HImageView: BaseImageView {
+    open var maxHeight: CGFloat = -1
+    
+    open override var intrinsicContentSize: CGSize {
+        let bounds = bounds
+        guard !bounds.isEmpty,
+            let imgS = image?.size,
+            !imgS.isEmpty else {
+            return super.intrinsicContentSize
+        }
+        var size = bounds.size
+        var aspectH = (size.width * imgS.height / imgS.width)
+        if maxHeight > 0 {
+            aspectH = min(aspectH, maxHeight)
+        }
+        size.height = aspectH.pix
+        return size
+    }
+}
+open class VImageView: BaseImageView {
+    open var maxWidth: CGFloat = -1
+    
+    open override var intrinsicContentSize: CGSize {
+        let bounds = bounds
+        guard !bounds.isEmpty,
+            let imgS = image?.size,
+            !imgS.isEmpty else {
+            return super.intrinsicContentSize
+        }
+        var size = bounds.size
+        var aspectW = (size.height * imgS.width / imgS.height)
+        if maxWidth > 0 {
+            aspectW = min(aspectW, maxWidth)
+        }
+        size.width = aspectW.pix
+        return size
     }
 }
