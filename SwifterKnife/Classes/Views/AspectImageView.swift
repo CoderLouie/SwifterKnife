@@ -113,6 +113,9 @@ open class HImageView: BaseImageView {
         size.height = aspectH.pix
         return size
     }
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        intrinsicContentSize
+    }
 }
 open class VImageView: BaseImageView {
     open var maxWidth: CGFloat = -1
@@ -131,5 +134,8 @@ open class VImageView: BaseImageView {
         }
         size.width = aspectW.pix
         return size
+    }
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        intrinsicContentSize
     }
 }

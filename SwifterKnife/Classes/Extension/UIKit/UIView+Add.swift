@@ -17,11 +17,11 @@ public extension UIView {
     enum ShakeDirection {
         /// Shake left and right.
         case horizontal
-
+        
         /// Shake up and down.
         case vertical
     }
-
+    
     /// Angle units.
     ///
     /// - degrees: degrees.
@@ -29,11 +29,11 @@ public extension UIView {
     enum AngleUnit {
         /// degrees.
         case degrees
-
+        
         /// radians.
         case radians
     }
-
+    
     /// Shake animations types.
     ///
     /// - linear: linear animation.
@@ -43,13 +43,13 @@ public extension UIView {
     enum ShakeAnimationType {
         /// linear animation.
         case linear
-
+        
         /// easeIn animation.
         case easeIn
-
+        
         /// easeOut animation.
         case easeOut
-
+        
         /// easeInOut animation.
         case easeInOut
     }
@@ -118,7 +118,7 @@ public extension UIView {
             self.alpha = 1
         }, completion: completion)
     }
-
+    
     /// Fade out view.
     ///
     /// - Parameters:
@@ -139,7 +139,7 @@ public extension UIView {
             lastView.removeFromSuperview()
         }
     }
-
+    
     /// Remove all gesture recognizers from view.
     func removeGestureRecognizers() {
         gestureRecognizers?.forEach(removeGestureRecognizer)
@@ -159,13 +159,13 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         completion: ((Bool) -> Void)? = nil) {
-        let angleWithType = (type == .degrees) ? .pi * angle / 180.0 : angle
-        let aDuration = animated ? duration : 0
-        UIView.animate(withDuration: aDuration, delay: 0, options: .curveLinear, animations: { () -> Void in
-            self.transform = self.transform.rotated(by: angleWithType)
-        }, completion: completion)
-    }
-
+            let angleWithType = (type == .degrees) ? .pi * angle / 180.0 : angle
+            let aDuration = animated ? duration : 0
+            UIView.animate(withDuration: aDuration, delay: 0, options: .curveLinear, animations: { () -> Void in
+                self.transform = self.transform.rotated(by: angleWithType)
+            }, completion: completion)
+        }
+    
     /// Rotate view to angle on fixed axis.
     ///
     /// - Parameters:
@@ -180,13 +180,13 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         completion: ((Bool) -> Void)? = nil) {
-        let angleWithType = (type == .degrees) ? .pi * angle / 180.0 : angle
-        let aDuration = animated ? duration : 0
-        UIView.animate(withDuration: aDuration, animations: {
-            self.transform = self.transform.concatenating(CGAffineTransform(rotationAngle: angleWithType))
-        }, completion: completion)
-    }
-
+            let angleWithType = (type == .degrees) ? .pi * angle / 180.0 : angle
+            let aDuration = animated ? duration : 0
+            UIView.animate(withDuration: aDuration, animations: {
+                self.transform = self.transform.concatenating(CGAffineTransform(rotationAngle: angleWithType))
+            }, completion: completion)
+        }
+    
     /// Scale view by offset.
     ///
     /// - Parameters:
@@ -199,16 +199,16 @@ public extension UIView {
         animated: Bool = false,
         duration: TimeInterval = 1,
         completion: ((Bool) -> Void)? = nil) {
-        if animated {
-            UIView.animate(withDuration: duration, delay: 0, options: .curveLinear, animations: { () -> Void in
-                self.transform = self.transform.scaledBy(x: offset.x, y: offset.y)
-            }, completion: completion)
-        } else {
-            transform = transform.scaledBy(x: offset.x, y: offset.y)
-            completion?(true)
+            if animated {
+                UIView.animate(withDuration: duration, delay: 0, options: .curveLinear, animations: { () -> Void in
+                    self.transform = self.transform.scaledBy(x: offset.x, y: offset.y)
+                }, completion: completion)
+            } else {
+                transform = transform.scaledBy(x: offset.x, y: offset.y)
+                completion?(true)
+            }
         }
-    }
-
+    
     /// Shake view.
     ///
     /// - Parameters:
@@ -221,30 +221,30 @@ public extension UIView {
         duration: TimeInterval = 1,
         animationType: ShakeAnimationType = .easeOut,
         completion: (() -> Void)? = nil) {
-        CATransaction.begin()
-        let animation: CAKeyframeAnimation
-        switch direction {
-        case .horizontal:
-            animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        case .vertical:
-            animation = CAKeyframeAnimation(keyPath: "transform.translation.y")
+            CATransaction.begin()
+            let animation: CAKeyframeAnimation
+            switch direction {
+            case .horizontal:
+                animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+            case .vertical:
+                animation = CAKeyframeAnimation(keyPath: "transform.translation.y")
+            }
+            switch animationType {
+            case .linear:
+                animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+            case .easeIn:
+                animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
+            case .easeOut:
+                animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+            case .easeInOut:
+                animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            }
+            CATransaction.setCompletionBlock(completion)
+            animation.duration = duration
+            animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0]
+            layer.add(animation, forKey: "shake")
+            CATransaction.commit()
         }
-        switch animationType {
-        case .linear:
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        case .easeIn:
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
-        case .easeOut:
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        case .easeInOut:
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        }
-        CATransaction.setCompletionBlock(completion)
-        animation.duration = duration
-        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0]
-        layer.add(animation, forKey: "shake")
-        CATransaction.commit()
-    }
     
     /// Search all superviews until a view with the condition is found.
     ///
@@ -255,7 +255,7 @@ public extension UIView {
         }
         return superview?.ancestorView(where: predicate)
     }
-
+    
     /// Search all superviews until a view with this class is found.
     ///
     /// - Parameter name: class of the view to search.
@@ -278,7 +278,7 @@ public extension UIView {
             }
         }
         return views
-    } 
+    }
 }
 
 // MARK: - Constraints
@@ -293,7 +293,7 @@ public extension UIView {
     func findConstraint(attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint? {
         let constraint = constraints.first {
             ($0.firstAttribute == attribute && $0.firstItem as? UIView == self) ||
-                ($0.secondAttribute == attribute && $0.secondItem as? UIView == self)
+            ($0.secondAttribute == attribute && $0.secondItem as? UIView == self)
         }
         return constraint ?? superview?.findConstraint(attribute: attribute)
     }
@@ -319,26 +319,26 @@ public extension UIView {
     }
     var fittingSize: CGSize {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    } 
+    }
     
     /**
      let effectView: UIImageView? = view.searchSubview(reversed: false) {
-        $0.bounds.size.height < 2
+     $0.bounds.size.height < 2
      }
      */
     func searchSubview<T: UIView>(
         reversed: Bool = true,
         where cond: (T) -> Bool) -> T? {
-        var views = [self]
-        var index = 0
-        repeat {
-            let view = views[index]
-            if let type = view as? T, cond(type) { return type }
-            index += 1
-            views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
-        } while index < views.count
-        return nil
-    }
+            var views = [self]
+            var index = 0
+            repeat {
+                let view = views[index]
+                if let type = view as? T, cond(type) { return type }
+                index += 1
+                views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
+            } while index < views.count
+            return nil
+        }
     
     @available(iOS 11.0, *)
     func roundingCorners(_ radius: CGFloat,
@@ -371,10 +371,10 @@ public extension UIView {
     ///   - borderWidth: borderWidth
     ///   - borderColor: borderColor
     func roundCorners(_ radius: CGFloat,
-                     corners: UIRectCorner,
-                     fillColor: UIColor? = nil,
-                     borderWidth: CGFloat? = nil,
-                     borderColor: UIColor? = nil) {
+                      corners: UIRectCorner,
+                      fillColor: UIColor? = nil,
+                      borderWidth: CGFloat? = nil,
+                      borderColor: UIColor? = nil) {
         onDidLayout { this in
             let path = UIBezierPath(roundedRect: this.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
             let maskLayer = CAShapeLayer()
@@ -403,13 +403,34 @@ public extension UIView {
     }
     
     
-   static func noTransaction(_ work: () -> Void) {
-       CATransaction.begin()
-       CATransaction.setDisableActions(true)
-       work()
-       CATransaction.commit()
-   }
+    static func noTransaction(_ work: () -> Void) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        work()
+        CATransaction.commit()
+    }
+    
+    /// 很容易被压缩
+    func setEasyCompress(for axis: NSLayoutConstraint.Axis) {
+        setContentCompressionResistancePriority(.defaultLow, for: axis)
+    }
+    /// 很难被压缩
+    func setHardCompress(for axis: NSLayoutConstraint.Axis) {
+        setContentCompressionResistancePriority(.required, for: axis)
+    }
 }
+/*
+ Content Hugging Priority
+ 抗拉伸 值(默认250)越小 越容易被拉伸，
+ 当子视图不足以填充满父视图的空间时，优先满足此属性值较大的子视图的内容展示，而拉伸属性值较低的子视图。
+ 控制当内容不足以填充满空间时，优先满足此属性值较大的子view的内容展示，而拉伸属性值较低的子view。
+ $0.setContentHuggingPriority(.required, for: .horizontal)
+ 
+ Content Compression Resistance Priority
+ 抗压缩，值(默认750)越小，越容易被压缩
+ 当子视图所需的内容超出父视图的空间时，优先展示此值较大的子视图，而省略压缩此值较小的子视图。
+ $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+ */
 
 
 public protocol ViewAddition {}
@@ -454,16 +475,4 @@ public extension ViewAddition where Self: UIView {
         }
     }
 }
-/*
- Content Hugging Priority
- 抗拉伸 值(默认250)越小 越容易被拉伸，
- 当子视图不足以填充满父视图的空间时，优先满足此属性值较大的子视图的内容展示，而拉伸属性值较低的子视图。
- 控制当内容不足以填充满空间时，优先满足此属性值较大的子view的内容展示，而拉伸属性值较低的子view。
- $0.setContentHuggingPriority(.required, for: .horizontal)
- 
- Content Compression Resistance Priority
- 抗压缩，值(默认750)越小，越容易被压缩
- 当子视图所需的内容超出父视图的空间时，优先展示此值较大的子视图，而省略压缩此值较小的子视图。
- $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
- */
- 
+
