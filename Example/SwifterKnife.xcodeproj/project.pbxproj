@@ -17,6 +17,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
+		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
 		B6B2871C276361EA00486E61 /* DBStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28716276361EA00486E61 /* DBStorable.swift */; };
 		B6B2871D276361EA00486E61 /* ColumnKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28717276361EA00486E61 /* ColumnKey.swift */; };
 		B6B2871E276361EA00486E61 /* DBStorable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28718276361EA00486E61 /* DBStorable+Add.swift */; };
@@ -70,6 +71,7 @@
 		B67F61E328A34A56008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		B67F61E428A34A57008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B67F61E528A34A60008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "banner_home_1aging@2x.jpg"; sourceTree = "<group>"; };
 		B6B28716276361EA00486E61 /* DBStorable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBStorable.swift; sourceTree = "<group>"; };
 		B6B28717276361EA00486E61 /* ColumnKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnKey.swift; sourceTree = "<group>"; };
 		B6B28718276361EA00486E61 /* DBStorable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DBStorable+Add.swift"; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */,
+				B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */,
 				B6B28715276361EA00486E61 /* SwiftyDB */,
 				B6B5FAF2272BE558001BBBE1 /* IAP */,
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
@@ -340,6 +343,7 @@
 			files = (
 				B67F61E028A34A44008AD997 /* Localizable.strings in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 				B6FEE108283CB5EC00D8BCB2 /* h2000.jpg in Resources */,

@@ -97,7 +97,18 @@ open class BaseImageView: UIImageView {
 }
 open class HImageView: BaseImageView {
     open var maxHeight: CGFloat = -1
-    
+    open override func setup() {
+        super.setup()
+        // 水平方向可以拉伸
+        setContentHuggingPriority(UILayoutPriority(rawValue: 249), for: .horizontal)
+        // 垂直方向尽量不要拉伸
+        setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .vertical)
+        
+        // 水平方向可以压缩
+        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 749), for: .horizontal)
+        // 垂直方向尽量不要压缩
+        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 751), for: .vertical)
+    }
     open override var intrinsicContentSize: CGSize {
         let bounds = bounds
         guard !bounds.isEmpty,
@@ -119,6 +130,18 @@ open class HImageView: BaseImageView {
 }
 open class VImageView: BaseImageView {
     open var maxWidth: CGFloat = -1
+    open override func setup() {
+        super.setup()
+        // 垂直方向可以拉伸
+        setContentHuggingPriority(UILayoutPriority(rawValue: 249), for: .vertical)
+        // 水平方向尽量不要拉伸
+        setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .horizontal)
+        
+        // 垂直方向可以压缩
+        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 749), for: .vertical)
+        // 水平方向尽量不要压缩
+        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 751), for: .horizontal)
+    }
     
     open override var intrinsicContentSize: CGSize {
         let bounds = bounds

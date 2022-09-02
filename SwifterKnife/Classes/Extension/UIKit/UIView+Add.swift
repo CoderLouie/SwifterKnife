@@ -409,15 +409,33 @@ public extension UIView {
         work()
         CATransaction.commit()
     }
+     
     
-    /// 很容易被压缩
-    func setEasyCompress(for axis: NSLayoutConstraint.Axis) {
-        setContentCompressionResistancePriority(.defaultLow, for: axis)
+    var contentHorCompressionResistanceLevel: Float {
+        get { contentCompressionResistancePriority(for: .horizontal).rawValue }
+        set {
+            setContentCompressionResistancePriority(UILayoutPriority(rawValue: newValue), for: .horizontal)
+        }
     }
-    /// 很难被压缩
-    func setHardCompress(for axis: NSLayoutConstraint.Axis) {
-        setContentCompressionResistancePriority(.required, for: axis)
+    var contentVerCompressionResistanceLevel: Float {
+        get { contentCompressionResistancePriority(for: .vertical).rawValue }
+        set {
+            setContentCompressionResistancePriority(UILayoutPriority(rawValue: newValue), for: .vertical)
+        }
     }
+    
+    var contentHorHuggingLevel: Float {
+        get { contentHuggingPriority(for: .horizontal).rawValue }
+        set {
+            setContentHuggingPriority(UILayoutPriority(rawValue: newValue), for: .horizontal)
+        }
+    }
+    var contentVerHuggingLevel: Float {
+        get { contentHuggingPriority(for: .vertical).rawValue }
+        set {
+            setContentHuggingPriority(UILayoutPriority(rawValue: newValue), for: .vertical)
+        }
+    } 
 }
 /*
  Content Hugging Priority

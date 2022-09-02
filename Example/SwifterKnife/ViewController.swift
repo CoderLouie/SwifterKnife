@@ -49,7 +49,8 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
 //        setupBody9()
 //        setupButton1()
-        setupRatingView()
+//        setupRatingView()
+        setupImageView()
         
 //        let stus: [Student] = []
 //        let newStus = stus.sorted(by: +[+\.age, +\.score, +\.name])
@@ -283,9 +284,37 @@ class KView: UIView {
     private(set) unowned var label: UILabel!
 }
 
+extension UIView {
+    var info: [Float] {
+        [contentCompressionResistancePriority(for: .vertical).rawValue,
+         contentCompressionResistancePriority(for: .horizontal).rawValue,
+         contentHuggingPriority(for: .vertical).rawValue,
+         contentHuggingPriority(for: .horizontal).rawValue
+        ]
+    }
+}
+
 // MARK: - Button
 extension ViewController {
-    
+    private func setupImageView() {
+        let view = UIView()
+        let label = UILabel()
+        let imgView = UIImageView()
+        let button = UIButton()
+        print([view, label, imgView, button].map(\.info))
+        
+        let img1View = UIImageView().then { this in
+            this.contentMode = .scaleAspectFill
+            this.image = UIImage(fileNamed: "banner_home_1aging")
+            view.addSubview(this)
+            this.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(40)
+                make.centerY.equalToSuperview()
+//                make.center.equalToSuperview()
+            }
+        }
+        print(img1View.info)
+    }
     private func setupRatingView() {
         view.backgroundColor = UIColor(gray: 43)
         
