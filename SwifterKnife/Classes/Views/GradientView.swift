@@ -1,5 +1,5 @@
 //
-//  GradientLabel.swift
+//  GradientView.swift
 //  SwifterKnife
 //
 //  Created by 李阳 on 2022/7/4.
@@ -138,3 +138,108 @@ open class GradientLabel: UIView {
     public private(set) var label: UILabel!
     public private(set) var gradientLayer: CAGradientLayer!
 }
+
+
+open class GradientControl: UIControl {
+    
+    public enum GradientComponent: Equatable {
+        /// 背景渐变
+        case background
+        /// 文字渐变
+        case border(_ width: CGFloat)
+        
+        public var isBorder: Bool {
+            if case .border = self { return true }
+            return false
+        }
+        
+        public static func == (lhs: GradientComponent, rhs: GradientComponent) -> Bool {
+            switch (lhs, rhs) {
+            case (.background, .background): return true
+            case let (.border(lw), .border(rw)):
+                return lw == rw
+            default: return false
+            }
+        }
+    }
+    public enum RoundedDirection {
+        case horizontal
+        case vertical
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        layer.masksToBounds = true
+        gradientLayer = CAGradientLayer().then {
+            $0.locations = [0, 1]
+            $0.startPoint = CGPoint(x: 0, y: 0.5)
+            $0.endPoint = CGPoint(x: 1, y: 0.5)
+            layer.insertSublayer($0, at: 0)
+        }
+        setup()
+    }
+    
+    public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    open func setup() {
+    }
+    public var gradientComponent: GradientComponent = .background {
+        didSet {
+            guard gradientComponent != oldValue else { return }
+            setNeedsLayout()
+        }
+    }
+    public var roundedDirection: RoundedDirection? = nil {
+        didSet {
+            guard roundedDirection != oldValue else { return }
+            setNeedsLayout()
+        }
+    }
+    public var gradientColors: [UIColor]? {
+        set {
+            gradientLayer.colors = newValue.map { $0.map(\.cgColor) }
+        }
+        get {
+            guard let colors = gradientLayer.colors as? [CGColor] else {
+                return nil
+            }
+            return colors.map(UIColor.init(cgColor:))
+        }
+    }
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let bounds = bounds
+        gradientLayer.frame = bounds
+        
+        if let dir = roundedDirection {
+            let radius = dir == .horizontal ? bounds.width * 0.5 : bounds.height * 0.5
+            layer.cornerRadius = radius
+        } else {
+            layer.cornerRadius = 0
+        }
+        
+        switch gradientComponent {
+        case .background:
+            gradientLayer.mask = nil
+        case .border(let w):
+            let maskLayer = CAShapeLayer()
+            maskLayer.lineWidth = w
+            if let dir = roundedDirection {
+                let w2 = w * 0.5
+                let pathBounds = bounds.inset(by: UIEdgeInsets(top: w2, left: w2, bottom: w2, right: w2))
+                let radius = dir == .horizontal ? pathBounds.width * 0.5 : pathBounds.height * 0.5
+                maskLayer.path = UIBezierPath(roundedRect: pathBounds, cornerRadius: radius).cgPath
+            } else {
+                maskLayer.path = UIBezierPath(rect: bounds).cgPath
+            }
+            maskLayer.fillColor = UIColor.clear.cgColor
+            maskLayer.strokeColor = UIColor.black.cgColor
+            
+            gradientLayer.mask = maskLayer
+        }
+    }
+    private unowned var gradientLayer: CAGradientLayer!
+}
+

@@ -105,7 +105,7 @@
 		B6B48C1328B47F7A0041EB74 /* AspectImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */; };
 		B6B48C3B28B5C3690041EB74 /* NSAttributedString+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B48C3A28B5C3690041EB74 /* NSAttributedString+Add.swift */; };
 		B6BBFE522872829D002B7A1F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE512872829D002B7A1F /* Position.swift */; };
-		B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE5328728491002B7A1F /* GradientLabel.swift */; };
+		B6BBFE5428728491002B7A1F /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE5328728491002B7A1F /* GradientView.swift */; };
 		B6C85FCF289B6244009CDEBB /* Data+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C85FCE289B6244009CDEBB /* Data+Add.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		B943A2C02645F270F81646274BCDC047 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CC4C9AA5EE7CD7107004388435307 /* PriorityQueue.swift */; };
@@ -293,7 +293,7 @@
 		B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectImageView.swift; sourceTree = "<group>"; };
 		B6B48C3A28B5C3690041EB74 /* NSAttributedString+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Add.swift"; sourceTree = "<group>"; };
 		B6BBFE512872829D002B7A1F /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
-		B6BBFE5328728491002B7A1F /* GradientLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLabel.swift; sourceTree = "<group>"; };
+		B6BBFE5328728491002B7A1F /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		B6C85FCE289B6244009CDEBB /* Data+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
 		B74F74300A7705C1E4B54C899DDC33D3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B989793EA916CA0A50F60C980FA18FA3 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
@@ -719,7 +719,7 @@
 				B351AC8F7704747C5A12E3AC37898C30 /* SnapKit */,
 				B674BF92286BEE5700CA270E /* TextField.swift */,
 				B6BBFE512872829D002B7A1F /* Position.swift */,
-				B6BBFE5328728491002B7A1F /* GradientLabel.swift */,
+				B6BBFE5328728491002B7A1F /* GradientView.swift */,
 				B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */,
 			);
 			name = Views;
@@ -1059,7 +1059,7 @@
 				5059197ECD1F6698EEB05335CDD00D83 /* PaddingButton.swift in Sources */,
 				8F284BCBF296F2FF474654C60C9BC7D0 /* PaddingLabel.swift in Sources */,
 				B943A2C02645F270F81646274BCDC047 /* PriorityQueue.swift in Sources */,
-				B6BBFE5428728491002B7A1F /* GradientLabel.swift in Sources */,
+				B6BBFE5428728491002B7A1F /* GradientView.swift in Sources */,
 				FCC8B189910A0C1B18B1134089E4A426 /* Queue.swift in Sources */,
 				10F79FAD7B59D20421BCC77B51A4CF7D /* RangeReplaceableCollection+Add.swift in Sources */,
 				DD848AD5D3718B1581C1B84AF6659E12 /* Result+Add.swift in Sources */,

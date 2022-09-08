@@ -50,18 +50,40 @@ class ViewController: UIViewController {
 //        setupBody9()
 //        setupButton1()
 //        setupRatingView()
-        setupImageView()
+//        setupImageView()
+        setupGradientControl()
         
 //        let stus: [Student] = []
 //        let newStus = stus.sorted(by: +[+\.age, +\.score, +\.name])
         
-        print("home".i18n)
+//        print("home".i18n)
 //        Console.log("hello world", tag: .success)
 //        Console.trace("hello world", tag: .warning)
 //        Console.logFunc(whose: self)
     }
-    
+    private func setupGradientControl() {
+        control = GradientControl().then {
+            $0.gradientComponent = .border(4)
+            $0.backgroundColor = .lightGray
+            $0.gradientColors = [UIColor(hexString: "#FFCA70"),
+                                 UIColor(hexString: "#FFAF28")]
+            $0.roundedDirection = .vertical
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(200)
+                make.height.equalTo(50)
+            }
+        }
+    }
+    private unowned var control: GradientControl!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if control.gradientComponent.isBorder {
+            control.gradientComponent = .background
+        } else {
+            control.gradientComponent = .border(8)
+        }
+        
 //        kviewTest()
         
         
@@ -297,6 +319,9 @@ extension UIView {
 // MARK: - Button
 extension ViewController {
     private func setupImageView() {
+        
+        
+        
         let view = UIView()
         let label = UILabel()
         let imgView = UIImageView()

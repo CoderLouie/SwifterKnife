@@ -83,6 +83,7 @@ open class BaseImageView: UIImageView {
     }
     open override var image: UIImage? {
         didSet {
+            if firstLayout { return }
             invalidateIntrinsicContentSize()
         }
     }
