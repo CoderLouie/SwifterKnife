@@ -43,6 +43,12 @@ public enum SandBox {
         try manager.removeItem(atPath: path)
     }
     
+    public static func fileExists(atPath path: String) -> (exists: Bool, isDirector: Bool) {
+        var isDirectory: ObjCBool = false
+        let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
+        return (exists, isDirectory.boolValue)
+    }
+    
     /*
      如果path是文件夹：存在则会清空文件夹，不存在则会创建路径
      如果path是文件 ：存在则会删除，不存在则会创建文件所在路径
@@ -101,6 +107,60 @@ public enum SandBox {
         folder.path(for: item)
     }
     
+    public static func totalSize(for directory: String) -> Int {
+        let manager = FileManager.default
+        guard let enumerator = manager.enumerator(atPath: directory) else { return 0 }
+        var size = 0
+        let nsDirectory = directory as NSString
+        while let fileName = enumerator.nextObject() as? String {
+            guard let attr = try? manager.attributesOfItem(atPath: nsDirectory.appendingPathComponent(fileName)),
+                    let s = attr[.size] as? Int else { continue }
+            size += s
+        }
+        return size
+    }
+    
+    public static func totalCount(for directory: String) -> Int {
+        let manager = FileManager.default
+        guard let enumerator = manager.enumerator(atPath: directory) else { return 0 }
+        return enumerator.allObjects.count
+    }
+    
+    
+    public static func moveDirectory(atPath srcPath: String, toPath dstPath: String) throws {
+        guard srcPath != dstPath else { return }
+        
+        let manager = FileManager.default
+        var isDirectory: ObjCBool = false
+        
+        // 如果源文件夹不存在或者不是文件夹，直接返回
+        if !manager.fileExists(atPath: srcPath, isDirectory: &isDirectory) ||
+            !isDirectory.boolValue {
+            return
+        }
+        let nssrcPath = srcPath as NSString
+        let nsdstPath = dstPath as NSString
+        if !manager.fileExists(atPath: dstPath, isDirectory: &isDirectory) ||
+            !isDirectory.boolValue {
+            if !isDirectory.boolValue {
+                try manager.removeItem(atPath: dstPath)
+            }
+            let dstParentPath = nsdstPath.deletingLastPathComponent
+            if !manager.fileExists(atPath: dstParentPath) {
+                try manager.createDirectory(atPath: dstParentPath, withIntermediateDirectories: true, attributes: nil)
+            }
+            try manager.moveItem(atPath: srcPath, toPath: dstPath)
+        } else {
+            guard let enumerator = manager.enumerator(atPath: srcPath) else {
+                return
+            }
+            while let next = enumerator.nextObject() {
+                guard let fileName = next as? String else { continue }
+                try manager.moveItem(atPath: nssrcPath.appendingPathComponent(fileName), toPath: nsdstPath.appendingPathComponent(fileName))
+            }
+            try manager.removeItem(atPath: srcPath)
+        }
+    }
 }
 
 
