@@ -77,13 +77,13 @@ class ViewController: UIViewController {
         }
     }
     private unowned var control: GradientControl!
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { 
         if control.gradientComponent.isBorder {
             control.gradientComponent = .background
         } else {
             control.gradientComponent = .border(8)
         }
-        
+         
 //        kviewTest()
         
         

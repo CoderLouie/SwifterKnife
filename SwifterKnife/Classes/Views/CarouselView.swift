@@ -79,7 +79,6 @@ open class CarouselView: UIView {
     private var isHorizontal: Bool {
         scrollDirection == .horizontal
     }
-//    public var isInfinitely = true
     
     /// 当前索引, 用于currentCell
     public private(set) var currentIndex = 0
@@ -90,12 +89,33 @@ open class CarouselView: UIView {
     /// 数据源数量
     open var itemsCount: Int = 0 {
         willSet {
-            guard itemsCount == 0 else {
-                fatalError("this property only can modify once")
-            }
             guard newValue > 1 else {
                 fatalError("the items count should be at least 2")
             }
+        }
+        didSet {
+            if itemsCount == oldValue { return }
+            if isFirstLayout { return }
+            
+            targetIndex = nil
+            currentIndex = 0
+            nextIndex = 1
+            
+            if isHorizontal {
+                scrollView.contentOffset = CGPoint(x: side, y: 0)
+                // cells
+                currentCell.frame.origin = CGPoint(x: side, y: 0)
+                nextCell.frame.origin = CGPoint(x: side * 2, y: 0)
+            } else {
+                scrollView.contentOffset = CGPoint(x: 0, y: side)
+                
+                // cells
+                currentCell.frame.origin = CGPoint(x: 0, y: side)
+                nextCell.frame.origin = CGPoint(x: 0, y: side * 2)
+            }
+            
+            delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
+            delegate?.carouselView?(self, didAppear: currentCell, at: currentIndex)
         }
     }
     
@@ -120,7 +140,6 @@ open class CarouselView: UIView {
             case .forward:
                 nextIndex = targetIndex ?? (currentIndex + 1)
                 if nextIndex >= itemsCount {
-//                    guard isInfinitely else { return }
                     nextIndex = 0
                 }
                 nextCell.frame = nextCell.frame.with {
@@ -134,8 +153,7 @@ open class CarouselView: UIView {
                 reset()
             case .backward:
                 nextIndex = targetIndex ?? (currentIndex - 1)
-                if nextIndex < 0 { 
-//                    guard isInfinitely else { return }
+                if nextIndex < 0 {
                     nextIndex = itemsCount - 1
                 }
                 nextCell.frame = nextCell.frame.with {
@@ -238,6 +256,9 @@ extension CarouselView {
     
     /// 注册cell
     open func register<T: CarouselViewCell>(_ cellClass: T.Type) {
+        if !isFirstLayout {
+            fatalError("this method can only be called onece!!!")
+        }
         currentCell = T().then {
             $0.carouselView = self
             $0.clipsToBounds = true

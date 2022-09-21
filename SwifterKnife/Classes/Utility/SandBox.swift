@@ -126,6 +126,23 @@ public enum SandBox {
         return enumerator.allObjects.count
     }
     
+    /// 搜索文件夹中符合条件的文件
+    static func search<Result>(in directory: String, passMap: (_ fileURL: URL) -> Result?) -> (URL, Result)? {
+        let keys: [URLResourceKey] = [.isDirectoryKey]
+        guard let enumerator = FileManager.default.enumerator(at: URL(fileURLWithPath: directory), includingPropertiesForKeys: keys, options: .skipsHiddenFiles, errorHandler: nil) else {
+            return nil
+        }
+                
+        while let next = enumerator.nextObject() {
+            guard let fileURL = next as? URL,
+            let values = try? fileURL.resourceValues(forKeys: Set(keys)) else { continue }
+            guard let v = values.allValues[.isDirectoryKey] as? Bool, !v else {
+                continue
+            }
+            if let res = passMap(fileURL) { return (fileURL, res) }
+        }
+        return nil
+    }
     
     public static func moveDirectory(atPath srcPath: String, toPath dstPath: String) throws {
         guard srcPath != dstPath else { return }
@@ -162,69 +179,104 @@ public enum SandBox {
         }
     }
 }
-
+ 
+/*
+#if canImport(Zip)
+import Zip
 
 extension SandBox {
-    /*
-     bundle:
-     /var/containers/Bundle/Application/E2AD65EF-A541-4279-A2DA-CCB8927F46D6/VideoCutter_dev.app
-     
-     home:
-     /var/mobile/Containers/Data/Application/6CEBBEAF-1DEA-446E-A2D1-D5B03960F2B5
-     /home/
-          /Documents/
-          /Library/
-                  /Caches/
-                  /Preferences/
-          /SystemData/
-          /tmp/
-     */
-    
-    public struct Folder: RawRepresentable {
-        public let rawValue: String
-        public init(rawValue: String) {
-            self.rawValue = rawValue
+    static func unzipFile(_ zipFileURL: URL) throws {
+        let destPath = zipFileURL.deletingPathExtension().path + "/"
+        let destURL = URL(fileURLWithPath: destPath)
+        let tmpDestPath = zipFileURL.deletingLastPathComponent().path + "TEMPLATE/"
+        let tmpDestURL = URL(fileURLWithPath: tmpDestPath)
+        let manager = FileManager.default
+        do {
+            try SandBox.reset(path: destPath)
+            try SandBox.reset(path: tmpDestPath)
+            var unzippedURL: [URL] = []
+            try Zip.unzipFile(zipFileURL, destination: tmpDestURL, overwrite: true, password: nil, progress: nil) { unzippedFile in
+                let path = unzippedFile.path
+                if SandBox.fileExists(atPath: path).isDirector { return }
+                let filename = unzippedFile.lastPathComponent
+                if filename.hasPrefix(".") { return }
+                unzippedURL.append(URL(fileURLWithPath: path))
+            }
+            for url in unzippedURL {
+                try manager.moveItem(at: url, to: destURL.appendingPathComponent(url.lastPathComponent))
+            }
+            try manager.removeItem(at: tmpDestURL)
+        } catch {
+            try? manager.removeItem(at: destURL)
+            try? manager.removeItem(at: tmpDestURL)
+            throw error
         }
-        
     }
 }
-public extension SandBox.Folder {
-    static var home: SandBox.Folder {
+#endif
+ */
+
+/*
+ bundle:
+ /var/containers/Bundle/Application/E2AD65EF-A541-4279-A2DA-CCB8927F46D6/VideoCutter_dev.app
+ 
+ home:
+ /var/mobile/Containers/Data/Application/6CEBBEAF-1DEA-446E-A2D1-D5B03960F2B5
+ /home/
+      /Documents/
+      /Library/
+              /Caches/
+              /Preferences/
+      /SystemData/
+      /tmp/
+ */
+public struct Folder: RawRepresentable {
+   public let rawValue: String
+   public init(rawValue: String) {
+       self.rawValue = rawValue
+   }
+}
+public extension Folder {
+    static var home: Folder {
         .init(rawValue: NSHomeDirectory())
     }
-    static var document: SandBox.Folder {
+    static var document: Folder {
         .init(rawValue: NSHomeDirectory() + "/Documents")
     }
-    static var library: SandBox.Folder {
+    static var library: Folder {
         .init(rawValue: NSHomeDirectory() + "/Library")
     }
-    static var caches: SandBox.Folder {
+    static var caches: Folder {
         .init(rawValue: NSHomeDirectory() + "/Library/Caches")
     }
-    static var preference: SandBox.Folder {
+    static var preference: Folder {
         .init(rawValue: NSHomeDirectory() + "/Library/Preference")
     }
-    static var temporary: SandBox.Folder {
+    static var temporary: Folder {
         .init(rawValue: NSHomeDirectory() + "/tmp")
     }
-    static var bundle: SandBox.Folder {
+    static var bundle: Folder {
         .init(rawValue: Bundle.main.bundlePath)
     }
 }
 
 
 extension String {
-    public func filePath(under folder: SandBox.Folder) -> String {
+    public func filePath(under folder: Folder) -> String {
         return folder.path(for: self)
     }
 }
 
-extension SandBox.Folder {
-    fileprivate func path(for item: String) -> String {
+public extension Folder {
+    func path(for item: String) -> String {
         let home = rawValue
         if item.hasPrefix("/") { return home + item }
         return home + "/\(item)"
     }
+    static func + (lhs: Folder, rhs: String) -> String {
+        return lhs.path(for: rhs)
+    }
+    
 //    var path: String {
 //        switch self {
 //        case .home:
