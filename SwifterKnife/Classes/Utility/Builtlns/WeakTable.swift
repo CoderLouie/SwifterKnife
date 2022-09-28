@@ -158,8 +158,8 @@ extension WeakTable: MutableCollection {
 }
 
 
-extension WeakTable: RandomAccessCollection { }
-
-extension WeakTable: RangeReplaceableCollection { }
-
-extension WeakTable: LazyCollectionProtocol { }
+//extension WeakTable: RandomAccessCollection { }
+//
+//extension WeakTable: RangeReplaceableCollection { }
+//
+//extension WeakTable: LazyCollectionProtocol { }
