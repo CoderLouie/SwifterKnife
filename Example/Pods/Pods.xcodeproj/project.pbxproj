@@ -107,6 +107,8 @@
 		B6BBFE522872829D002B7A1F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE512872829D002B7A1F /* Position.swift */; };
 		B6BBFE5428728491002B7A1F /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BBFE5328728491002B7A1F /* GradientView.swift */; };
 		B6C85FCF289B6244009CDEBB /* Data+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C85FCE289B6244009CDEBB /* Data+Add.swift */; };
+		B6E1AF1228E6FED1005A7CBA /* Promise+Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E1AF1028E6FED1005A7CBA /* Promise+Extras.swift */; };
+		B6E1AF1328E6FED1005A7CBA /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E1AF1128E6FED1005A7CBA /* Promise.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		B943A2C02645F270F81646274BCDC047 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CC4C9AA5EE7CD7107004388435307 /* PriorityQueue.swift */; };
 		BB3FF7C90AF84C112F60F20B704AA08D /* UIView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = A9EE7114F3B1D2DC512E1E8218D723E0 /* UIView+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -237,7 +239,7 @@
 		617252216432C739A459A8E7A5704C42 /* Comparable+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Comparable+Add.swift"; sourceTree = "<group>"; };
 		619A57EFE0D912DFEBD4DE168DB50242 /* Pods-SwifterKnife_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwifterKnife_Example-umbrella.h"; sourceTree = "<group>"; };
 		61F42B6B406A34BE76547C0580137836 /* RangeReplaceableCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RangeReplaceableCollection+Add.swift"; sourceTree = "<group>"; };
-		6639457C903B8AC67B43425E1AB0E5E4 /* Pods-SwifterKnife_Example */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-SwifterKnife_Example"; path = Pods_SwifterKnife_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6639457C903B8AC67B43425E1AB0E5E4 /* Pods_SwifterKnife_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A82B92C1AF551376ED341BFA5340674 /* UIColor+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIColor+Add.swift"; sourceTree = "<group>"; };
 		7096225ED146E16EC168C99FEDD215B5 /* ConstraintPriorityTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriorityTarget.swift; path = Sources/ConstraintPriorityTarget.swift; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -295,6 +297,8 @@
 		B6BBFE512872829D002B7A1F /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		B6BBFE5328728491002B7A1F /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		B6C85FCE289B6244009CDEBB /* Data+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
+		B6E1AF1028E6FED1005A7CBA /* Promise+Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Promise+Extras.swift"; sourceTree = "<group>"; };
+		B6E1AF1128E6FED1005A7CBA /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		B74F74300A7705C1E4B54C899DDC33D3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B989793EA916CA0A50F60C980FA18FA3 /* UserDefaults+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Add.swift"; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
@@ -468,7 +472,7 @@
 		69FA17FCF1E48EBF3B903A82648C0513 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6639457C903B8AC67B43425E1AB0E5E4 /* Pods-SwifterKnife_Example */,
+				6639457C903B8AC67B43425E1AB0E5E4 /* Pods_SwifterKnife_Example.framework */,
 				E6746702AF7BFF70C2B2B0BB25F72DE9 /* Pods-SwifterKnife_Tests */,
 				979486118B3E90C08386079D57962701 /* SnapKit */,
 				2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife */,
@@ -602,6 +606,15 @@
 			path = Reusable;
 			sourceTree = "<group>";
 		};
+		B6E1AF0F28E6FEBC005A7CBA /* Promise */ = {
+			isa = PBXGroup;
+			children = (
+				B6E1AF1128E6FED1005A7CBA /* Promise.swift */,
+				B6E1AF1028E6FED1005A7CBA /* Promise+Extras.swift */,
+			);
+			path = Promise;
+			sourceTree = "<group>";
+		};
 		C6915401FABF7E93F878EB79B47E0742 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -693,6 +706,7 @@
 				B6A8296F288928B400E0190B /* Either.swift */,
 				0E4D5282EC256B9E2100054E6C7D03BB /* SwiftyFitsize.swift */,
 				B661A1DD28AA54CD00602105 /* Haptic.swift */,
+				B6E1AF0F28E6FEBC005A7CBA /* Promise */,
 				24C653687C2035CC8A8F4D394CED169F /* Builtlns */,
 				9AFC8937D6F5137F97932735854A651F /* Localize */,
 				916523A8B122249768E4EA229EE76DD3 /* Protocol */,
@@ -842,7 +856,7 @@
 			);
 			name = "Pods-SwifterKnife_Example";
 			productName = Pods_SwifterKnife_Example;
-			productReference = 6639457C903B8AC67B43425E1AB0E5E4 /* Pods-SwifterKnife_Example */;
+			productReference = 6639457C903B8AC67B43425E1AB0E5E4 /* Pods_SwifterKnife_Example.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		72BCFDB69F9EBD5B69811FE56D8C2F3C /* Pods-SwifterKnife_Tests */ = {
@@ -891,6 +905,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					1A6353DE248448AC9EB8D24AD6DA0043 = {
+						LastSwiftMigration = 1320;
+					};
+				};
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -995,7 +1014,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6E1AF1228E6FED1005A7CBA /* Promise+Extras.swift in Sources */,
 				1E6F60FA734011335C5EB842102DC5C4 /* Pods-SwifterKnife_Example-dummy.m in Sources */,
+				B6E1AF1328E6FED1005A7CBA /* Promise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1298,6 +1319,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1320,6 +1342,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1459,6 +1483,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1481,6 +1506,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
