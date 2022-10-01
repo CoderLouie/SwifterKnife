@@ -17,13 +17,13 @@ public enum Promises {
         return Promise<[T]> { fulfill, reject in
             guard !promises.isEmpty else { fulfill([]); return }
             for promise in promises {
-                promise.then({ value in
+                promise.then { value in
                     if !promises.contains(where: { $0.isRejected || $0.isPending }) {
-                        fulfill(promises.compactMap({ $0.value }))
+                        fulfill(promises.compactMap(\.value))
                     }
-                }).catch({ error in
+                }.catchs { error in
                     reject(error)
-                })
+                }
             }
         }
     }
@@ -32,9 +32,9 @@ public enum Promises {
     /// - parameter delay: In seconds
     public static func delay(_ delay: TimeInterval) -> Promise<()> {
         return Promise<()> { fulfill, reject in
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                 fulfill(())
-            })
+            }
         }
     }
 
@@ -67,10 +67,10 @@ public enum Promises {
         }
         return Promise<T> { fulfill, reject in
             generate().recover { error in
-                return self.delay(delay).then({
+                return self.delay(delay).then {
                     return retry(count: count-1, delay: delay, generate: generate)
-                })
-            }.then(fulfill).catch(reject)
+                }
+            }.then(fulfill).catchs(reject)
         }
     }
 
@@ -161,7 +161,7 @@ extension Promise {
 
     @discardableResult
     public func finally(
-        on queue: ExecutionContext = DispatchQueue.main,
+        on queue: DispatchQueue = .main,
         _ onComplete: @escaping () -> Void) ->
     Promise<Value> {
         return then(on: queue, { _ in
@@ -174,10 +174,10 @@ extension Promise {
     public func recover(
         _ recovery: @escaping (Error) throws -> Promise<Value>) -> Promise<Value> {
         return Promise { fulfill, reject in
-            self.then(fulfill).catch { error in
+            self.then(fulfill).catchs { error in
                 do {
                     try recovery(error).then(fulfill, reject)
-                } catch (let error) {
+                } catch {
                     reject(error)
                 }
             }
@@ -201,11 +201,11 @@ extension Promise {
     public func `catch`<E: Error>(
         as errorType: E.Type,
         _ onRejected: @escaping (E) -> Void) -> Promise<Value> {
-        return self.catch({ error in
+        catchs { error in
             if let castedError = error as? E {
                 onRejected(castedError)
             }
-        })
+        }
     }
 }
  
