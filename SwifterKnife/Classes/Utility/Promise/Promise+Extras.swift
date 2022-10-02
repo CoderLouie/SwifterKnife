@@ -161,7 +161,7 @@ extension Promise {
 
     @discardableResult
     public func finally(
-        on queue: DispatchQueue = .main,
+        on queue: ExecutionContext = DispatchQueue.main,
         _ onComplete: @escaping () -> Void) ->
     Promise<Value> {
         return then(on: queue, { _ in

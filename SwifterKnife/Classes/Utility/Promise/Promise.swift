@@ -7,16 +7,46 @@
 //
 
 import Foundation 
- 
+
+public protocol ExecutionContext {
+    func execute(_ work: @escaping () -> Void)
+}
+
+extension DispatchQueue: ExecutionContext {
+    public func execute(_ work: @escaping () -> Void) {
+        async(execute: work)
+    }
+}
+
+public final class InvalidatableQueue: ExecutionContext {
+
+    private var valid = true
+
+    private var queue: DispatchQueue
+
+    public init(queue: DispatchQueue = .main) {
+        self.queue = queue
+    }
+
+    public func invalidate() {
+        valid = false
+    }
+
+    public func execute(_ work: @escaping () -> Void) {
+        guard valid else { return }
+        self.queue.async(execute: work)
+    }
+}
+
 struct Callback<Value> {
     let onFulfilled: (Value) -> Void
     let onRejected: (Error) -> Void
-    let queue: DispatchQueue
+    let executionContext: ExecutionContext
     
     func callFulfill(
         _ value: Value,
         completion: @escaping () -> Void = { }) {
-        queue.async {
+        executionContext.execute {
             self.onFulfilled(value)
             completion()
         }
@@ -25,7 +55,7 @@ struct Callback<Value> {
     func callReject(
         _ error: Error,
         completion: @escaping () -> Void = { }) {
-        queue.async {
+        executionContext.execute {
             self.onRejected(error)
             completion()
         }
@@ -149,7 +179,7 @@ public final class Promise<Value> {
     /// - note: This one is "flatMap"
     @discardableResult
     public func then<NewValue>(
-        on queue: DispatchQueue = .main,
+        on queue: ExecutionContext = DispatchQueue.main,
         _ onFulfilled: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
             self.addCallbacks(
@@ -169,7 +199,7 @@ public final class Promise<Value> {
     /// - note: This one is "map"
     @discardableResult
     public func then<NewValue>(
-        on queue: DispatchQueue = .main, _
+        on queue: ExecutionContext = DispatchQueue.main, _
         onFulfilled: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
         return then(on: queue) { (value) -> Promise<NewValue> in
             do {
@@ -182,7 +212,7 @@ public final class Promise<Value> {
     
     @discardableResult
     public func then(
-        on queue: DispatchQueue = .main,
+        on queue: ExecutionContext = DispatchQueue.main,
         _ onFulfilled: @escaping (Value) -> Void,
         _ onRejected: @escaping (Error) -> Void = { _ in })
     -> Promise<Value> {
@@ -192,7 +222,7 @@ public final class Promise<Value> {
     
     @discardableResult
     public func catchs(
-        on queue: DispatchQueue = .main,
+        on queue: ExecutionContext = DispatchQueue.main,
         _ onRejected: @escaping (Error) -> Void) ->
     Promise<Value> {
         return then(on: queue, { _ in }, onRejected)
@@ -250,10 +280,10 @@ public final class Promise<Value> {
     }
     
     private func addCallbacks(
-        on queue: DispatchQueue = .main,
+        on queue: ExecutionContext = DispatchQueue.main,
         onFulfilled: @escaping (Value) -> Void,
         onRejected: @escaping (Error) -> Void) {
-        let callback = Callback(onFulfilled: onFulfilled, onRejected: onRejected, queue: queue)
+        let callback = Callback(onFulfilled: onFulfilled, onRejected: onRejected, executionContext: queue)
         lockQueue.async(flags: .barrier) {
             switch self.state {
             case .pending(let callbacks):
