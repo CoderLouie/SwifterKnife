@@ -119,4 +119,15 @@ public enum App {
         }
     }
      
+//    public static var appID: String = ""
+//    //评价应用
+//    public static func writeReview(completion: ((Bool) -> Void)? = nil) {
+//        guard !appID.isEmpty else {
+//            completion?(false)
+//            return
+//        }
+//
+//        let url = "itms-apps://itunes.apple.com/app/id\(appID)?action=write-review"
+//        App.openURL(URL(string: url), completion: completion)
+//    }
 }

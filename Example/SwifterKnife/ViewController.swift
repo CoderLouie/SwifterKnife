@@ -9,6 +9,7 @@
 import UIKit
 import SwifterKnife
 import SnapKit
+import Pods_SwifterKnife_Example
 
 enum Step: Int, CaseIterable {
     case step1 = 1
@@ -39,10 +40,10 @@ class Student: Person {
     
 }
 
-
+enum SomeError: Swift.Error {
+    case timeout
+}
 class ViewController: UIViewController {
-    
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,13 +78,27 @@ class ViewController: UIViewController {
         }
     }
     private unowned var control: GradientControl!
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { 
+    private func testControl() {
         if control.gradientComponent.isBorder {
             control.gradientComponent = .background
         } else {
             control.gradientComponent = .border(8)
         }
-         
+    }
+    private func testPromise() {
+        let nums = [1, 2, 3]
+
+        let promise = Promise<Int>.reject(SomeError.timeout)
+        promise.then { val in
+            print("reolve", val)
+        } onRejected: { err in
+            print("reject", err)
+        }.catchs { err in
+            print("catch", err)
+        }
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+         testPromise()
 //        kviewTest()
         
         

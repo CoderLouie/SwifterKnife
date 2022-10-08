@@ -132,7 +132,6 @@
 		E98DC8FB2578E76A812E0C94BA10E1B1 /* ConstraintDirectionalInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8DFD8FEE78807F86F0544749C80450 /* ConstraintDirectionalInsets.swift */; };
 		EF21586EC3DFF6097A58EEC87376A0C1 /* ConstraintLayoutGuideDSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F91B010D4991E838DAC578595BA7A /* ConstraintLayoutGuideDSL.swift */; };
 		F190364B4410F120B8AE7B95013986AE /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3457732446926746D5E281FC86FAB29A /* Button.swift */; };
-		F39DBA0681D149954CBA207009AF6612 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3BB6B481C07A195028CE7FC2E3A8A7 /* Async.swift */; };
 		F495C222E785EF36F0B445EBEF758585 /* UIScrollView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889BDD0754E9012E32CAB1C5AA5B1754 /* UIScrollView+Add.swift */; };
 		F7C0960CEEB8F0C18F4503B405EAC08F /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00529F62152FE0E9A82AF6D8EAAAE2E1 /* ConstraintMultiplierTarget.swift */; };
 		F953AA9104BFE0C2DAD639EA60104A75 /* ConstraintView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83141A7BA266489296BCBEF99AC5412 /* ConstraintView+Extensions.swift */; };
@@ -332,7 +331,6 @@
 		E6DA8ABCA82C75C80F576BCF3FA4686B /* LayoutGuide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LayoutGuide.swift; sourceTree = "<group>"; };
 		E6DC3B2CF30DBB6E24C602EBB64A98E3 /* UICollectionView+Reusable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Reusable.swift"; sourceTree = "<group>"; };
 		EABC8439C74D9876CDEC6C7B60E51720 /* UITableView+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Add.swift"; sourceTree = "<group>"; };
-		ED3BB6B481C07A195028CE7FC2E3A8A7 /* Async.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		EEE15C12D4B2736CB1D1B07F4838FCA7 /* LayoutConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutConstraintItem.swift; path = Sources/LayoutConstraintItem.swift; sourceTree = "<group>"; };
 		EF9C1932A198AE62B87CB5CBEF6FF44E /* ConstraintArrayDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConstraintArrayDSL.swift; sourceTree = "<group>"; };
 		F4CBE69DD3B611E4180FCBDD8CDE8814 /* Debugging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Debugging.swift; path = Sources/Debugging.swift; sourceTree = "<group>"; };
@@ -698,7 +696,6 @@
 			isa = PBXGroup;
 			children = (
 				52601D3C3115411B185073C05D3C4FCB /* App.swift */,
-				ED3BB6B481C07A195028CE7FC2E3A8A7 /* Async.swift */,
 				7633A3CB0068BB2C13595855FA6DF000 /* Console.swift */,
 				271E8580B8100FBF2AE3891DC65043B5 /* SandBox.swift */,
 				2AE2FCB3E76148960210E837F9AC5447 /* SwiftyJSON.swift */,
@@ -1035,7 +1032,6 @@
 				B661A1EA28AE30DB00602105 /* Range+Add.swift in Sources */,
 				CCF868DB571BDC13EFE010B251EE9515 /* App.swift in Sources */,
 				A99192BE1C87A9D258524F9D9FCF99A4 /* Array+Add.swift in Sources */,
-				F39DBA0681D149954CBA207009AF6612 /* Async.swift in Sources */,
 				B661A1DE28AA54CD00602105 /* Haptic.swift in Sources */,
 				AA69E4A29621C3B9AD7AD99667FBC000 /* BidirectionalCollection+Add.swift in Sources */,
 				436FB99284BECD4B385DC7040CC6F5CA /* BinaryFloatingPoint+Add.swift in Sources */,

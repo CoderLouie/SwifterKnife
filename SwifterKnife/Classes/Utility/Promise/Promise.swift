@@ -149,6 +149,13 @@ public final class Promise<Value> {
         state = .rejected(error: error)
     }
     
+    public static func resolve(_ value: Value) -> Promise<Value> {
+        return Promise(value: value)
+    }
+    public static func reject(_ error: Error) -> Promise<Value> {
+        return Promise(error: error)
+    }
+    
     public convenience init(
         queue: DispatchQueue = .global(qos: .userInitiated),
         work: @escaping (
@@ -180,13 +187,13 @@ public final class Promise<Value> {
     @discardableResult
     public func then<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
-        _ onFulfilled: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
+        onFulfilled: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
             self.addCallbacks(
                 on: queue,
                 onFulfilled: { value in
                     do {
-                        try onFulfilled(value).then(on: queue, fulfill, reject)
+                        try onFulfilled(value).then(on: queue, onFulfilled:      fulfill, onRejected: reject)
                     } catch {
                         reject(error)
                     }
@@ -213,8 +220,8 @@ public final class Promise<Value> {
     @discardableResult
     public func then(
         on queue: ExecutionContext = DispatchQueue.main,
-        _ onFulfilled: @escaping (Value) -> Void,
-        _ onRejected: @escaping (Error) -> Void = { _ in })
+        onFulfilled: @escaping (Value) -> Void,
+        onRejected: @escaping (Error) -> Void = { _ in })
     -> Promise<Value> {
         addCallbacks(on: queue, onFulfilled: onFulfilled, onRejected: onRejected)
         return self
@@ -223,9 +230,9 @@ public final class Promise<Value> {
     @discardableResult
     public func catchs(
         on queue: ExecutionContext = DispatchQueue.main,
-        _ onRejected: @escaping (Error) -> Void) ->
+        onRejected: @escaping (Error) -> Void) ->
     Promise<Value> {
-        return then(on: queue, { _ in }, onRejected)
+        return then(on: queue, onFulfilled: { _ in }, onRejected: onRejected)
     }
     
     public func reject(_ error: Error) {

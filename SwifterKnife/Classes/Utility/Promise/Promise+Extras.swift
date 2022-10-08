@@ -53,7 +53,7 @@ public enum Promises {
         return Promise<T> { fulfill, reject in
             guard !promises.isEmpty else { fatalError() }
             for promise in promises {
-                promise.then(fulfill, reject)
+                promise.then(onFulfilled: fulfill, onRejected: reject)
             }
         }
     }
@@ -70,14 +70,14 @@ public enum Promises {
                 return self.delay(delay).then {
                     return retry(count: count-1, delay: delay, generate: generate)
                 }
-            }.then(fulfill).catchs(reject)
+            }.then(fulfill).catchs(onRejected: reject)
         }
     }
 
     public static func kickoff<T>(
         _ block: @escaping () throws -> Promise<T>)
     -> Promise<T> {
-        return Promise(value: ()).then(block)
+        return Promise(value: ()).then(onFulfilled: block)
     }
 
     public static func kickoff<T>(
@@ -99,8 +99,8 @@ public enum Promises {
                     fulfill((firstValue, secondValue))
                 }
             }
-            first.then(resolver, reject)
-            second.then(resolver, reject)
+            first.then(onFulfilled: resolver, onRejected: reject)
+            second.then(onFulfilled: resolver, onRejected: reject)
         }
     }
 
@@ -123,9 +123,9 @@ public enum Promises {
                     fulfill((value1, value2, value3))
                 }
             }
-            p1.then(resolver, reject)
-            p2.then(resolver, reject)
-            p3.then(resolver, reject)
+            p1.then(onFulfilled: resolver, onRejected: reject)
+            p2.then(onFulfilled: resolver, onRejected: reject)
+            p3.then(onFulfilled: resolver, onRejected: reject)
         }
     }
 
@@ -146,10 +146,10 @@ public enum Promises {
                     fulfill((val1, val2, val3, val4))
                 }
             }
-            p1.then(resolver, reject)
-            p2.then(resolver, reject)
-            p3.then(resolver, reject)
-            p4.then(resolver, reject)
+            p1.then(onFulfilled: resolver, onRejected: reject)
+            p2.then(onFulfilled: resolver, onRejected: reject)
+            p3.then(onFulfilled: resolver, onRejected: reject)
+            p4.then(onFulfilled: resolver, onRejected: reject)
         }
     }
 }
@@ -162,13 +162,13 @@ extension Promise {
     @discardableResult
     public func finally(
         on queue: ExecutionContext = DispatchQueue.main,
-        _ onComplete: @escaping () -> Void) ->
+        onComplete: @escaping () -> Void) ->
     Promise<Value> {
-        return then(on: queue, { _ in
+        return then(on: queue) { _ in
             onComplete()
-        }, { _ in
+        } onRejected: { _ in
             onComplete()
-        })
+        }
     }
 
     public func recover(
@@ -176,7 +176,7 @@ extension Promise {
         return Promise { fulfill, reject in
             self.then(fulfill).catchs { error in
                 do {
-                    try recovery(error).then(fulfill, reject)
+                    try recovery(error).then(onFulfilled: fulfill, onRejected: reject)
                 } catch {
                     reject(error)
                 }
@@ -185,10 +185,10 @@ extension Promise {
     }
 
     public func filter(
-        _ check: @escaping (Value) throws -> Bool) -> Promise<Value> {
+        _ isValid: @escaping (Value) throws -> Bool) -> Promise<Value> {
         return then { (value: Value) -> Value in
             do {
-                guard try check(value) else {
+                guard try isValid(value) else {
                     throw PromiseCheckError()
                 }
                 return value
@@ -198,12 +198,12 @@ extension Promise {
         }
     }
     
-    public func `catch`<E: Error>(
+    public func catchs<E: Error>(
         as errorType: E.Type,
-        _ onRejected: @escaping (E) -> Void) -> Promise<Value> {
+        onHit: @escaping (E) -> Void) -> Promise<Value> {
         catchs { error in
             if let castedError = error as? E {
-                onRejected(castedError)
+                onHit(castedError)
             }
         }
     }
