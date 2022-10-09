@@ -339,3 +339,11 @@ public final class Promise<Value> {
         }
     }
 }
+
+public typealias AnyPromise = Promise<Any>
+public typealias VoidPromise = Promise<Void>
+public typealias IntPromise = Promise<Int>
+public typealias StringPromise = Promise<String>
+public typealias DataPromise = Promise<Data>
+public typealias JSONPromise = Promise<[String: Any]>
+public typealias ArrayPromise<Element> = Promise<[Element]>

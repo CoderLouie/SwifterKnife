@@ -8,7 +8,10 @@
 
 import Foundation 
 
-struct PromiseCheckError: Error { }
+public enum PromiseError: Swift.Error {
+    case timeout
+    case missed
+}
 
 public enum Promises {
     /// Wait for all the promises you give it to fulfill, and once they have, fulfill itself
@@ -44,7 +47,7 @@ public enum Promises {
     public static func timeout<T>(_ timeout: TimeInterval) -> Promise<T> {
         return Promise<T> { _, reject in
             DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
-                reject(NSError(domain: "com.khanlou.Promise", code: -1111, userInfo: [ NSLocalizedDescriptionKey: "Timed out" ]))
+                reject(PromiseError.timeout)
             }
         }
     }
@@ -190,7 +193,7 @@ extension Promise {
         return map { (value: Value) -> Value in
             do {
                 guard try isValid(value) else {
-                    throw PromiseCheckError()
+                    throw PromiseError.missed
                 }
                 return value
             } catch {
