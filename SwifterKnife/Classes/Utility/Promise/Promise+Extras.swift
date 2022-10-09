@@ -26,7 +26,7 @@ public enum Promises {
                     if !promises.contains(where: { $0.isRejected || $0.isPending }) {
                         fulfill(promises.compactMap(\.value))
                     }
-                }.catchs { error in
+                } onRejected: { error in
                     reject(error)
                 }
             }
@@ -66,16 +66,16 @@ public enum Promises {
     public static func retry<T>(
         count: Int,
         delay: TimeInterval,
-        generate: @escaping () -> Promise<T>) -> Promise<T> {
+        generate: @escaping (Int) -> Promise<T>) -> Promise<T> {
         if count <= 0 {
-            return generate()
+            return generate(count)
         }
         return Promise<T> { fulfill, reject in
-            generate().recover { error in
+            generate(count).recover { error in
                 return self.delay(delay).flatMap {
                     return retry(count: count-1, delay: delay, generate: generate)
                 }
-            }.then(onFulfilled: fulfill).catchs(onRejected: reject)
+            }.then(onFulfilled: fulfill, onRejected: reject)
         }
     }
 
@@ -178,7 +178,7 @@ extension Promise {
     public func recover(
         _ recovery: @escaping (Error) throws -> Promise<Value>) -> Promise<Value> {
         return Promise { fulfill, reject in
-            self.then(onFulfilled: fulfill).catchs { error in
+            self.then(onFulfilled: fulfill) { error in
                 do {
                     try recovery(error).then(onFulfilled: fulfill, onRejected: reject)
                 } catch {
