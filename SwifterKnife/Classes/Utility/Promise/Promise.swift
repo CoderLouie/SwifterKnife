@@ -170,6 +170,13 @@ public final class Promise<Value> {
             }
         }
     }
+    public static func create(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        work: @escaping (
+            _ fulfill: @escaping (Value) -> Void,
+            _ reject: @escaping (Error) -> Void) throws -> Void) -> Promise<Value> {
+        return .init(queue: queue, work: work)
+    }
     public convenience init(
         queue: DispatchQueue = .global(qos: .userInitiated),
         value: Value?,
@@ -181,6 +188,14 @@ public final class Promise<Value> {
         } else {
             self.init(queue: queue, work: work)
         }
+    }
+    public static func create(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        value: Value?,
+        work: @escaping (
+            _ fulfill: @escaping (Value) -> Void,
+            _ reject: @escaping (Error) -> Void) throws -> Void) -> Promise<Value> {
+        return .init(queue: queue, value: value, work: work)
     }
 
     /// - note: This one is "flatMap"
