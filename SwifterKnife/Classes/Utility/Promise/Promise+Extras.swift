@@ -15,9 +15,11 @@ public enum Promises {
     /// with the array of all fulfilled values.
     public static func all<T>(_ promises: [Promise<T>]) -> Promise<[T]> {
         return Promise<[T]> { fulfill, reject in
-            guard !promises.isEmpty else { fulfill([]); return }
+            guard !promises.isEmpty else { fulfill([]);
+                return
+            }
             for promise in promises {
-                promise.then { value in
+                promise.then { _ in
                     if !promises.contains(where: { $0.isRejected || $0.isPending }) {
                         fulfill(promises.compactMap(\.value))
                     }
@@ -31,7 +33,7 @@ public enum Promises {
     /// Resolves itself after some delay.
     /// - parameter delay: In seconds
     public static func delay(_ delay: TimeInterval) -> Promise<()> {
-        return Promise<()> { fulfill, reject in
+        return Promise<()> { fulfill, _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                 fulfill(())
             }
@@ -40,8 +42,8 @@ public enum Promises {
 
     /// This promise will be rejected after a delay.
     public static func timeout<T>(_ timeout: TimeInterval) -> Promise<T> {
-        return Promise<T> { fulfill, reject in
-            delay(timeout).then { _ in
+        return Promise<T> { _, reject in
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
                 reject(NSError(domain: "com.khanlou.Promise", code: -1111, userInfo: [ NSLocalizedDescriptionKey: "Timed out" ]))
             }
         }
@@ -50,8 +52,8 @@ public enum Promises {
     /// Fulfills or rejects with the first promise that completes
     /// (as opposed to waiting for all of them, like `.all()` does).
     public static func race<T>(_ promises: [Promise<T>]) -> Promise<T> {
+        guard !promises.isEmpty else { fatalError() }
         return Promise<T> { fulfill, reject in
-            guard !promises.isEmpty else { fatalError() }
             for promise in promises {
                 promise.then(onFulfilled: fulfill, onRejected: reject)
             }
@@ -67,17 +69,17 @@ public enum Promises {
         }
         return Promise<T> { fulfill, reject in
             generate().recover { error in
-                return self.delay(delay).then {
+                return self.delay(delay).flatMap {
                     return retry(count: count-1, delay: delay, generate: generate)
                 }
-            }.then(fulfill).catchs(onRejected: reject)
+            }.then(onFulfilled: fulfill).catchs(onRejected: reject)
         }
     }
 
     public static func kickoff<T>(
         _ block: @escaping () throws -> Promise<T>)
     -> Promise<T> {
-        return Promise(value: ()).then(onFulfilled: block)
+        return Promise(value: ()).flatMap(transform: block)
     }
 
     public static func kickoff<T>(
@@ -156,14 +158,13 @@ public enum Promises {
 
 extension Promise {
     public func addTimeout(_ timeout: TimeInterval) -> Promise<Value> {
-        return Promises.race(Array([self, Promises.timeout(timeout)]))
+        return Promises.race([self, Promises.timeout(timeout)])
     }
 
     @discardableResult
     public func finally(
         on queue: ExecutionContext = DispatchQueue.main,
-        onComplete: @escaping () -> Void) ->
-    Promise<Value> {
+        onComplete: @escaping () -> Void) -> Promise<Value> {
         return then(on: queue) { _ in
             onComplete()
         } onRejected: { _ in
@@ -174,7 +175,7 @@ extension Promise {
     public func recover(
         _ recovery: @escaping (Error) throws -> Promise<Value>) -> Promise<Value> {
         return Promise { fulfill, reject in
-            self.then(fulfill).catchs { error in
+            self.then(onFulfilled: fulfill).catchs { error in
                 do {
                     try recovery(error).then(onFulfilled: fulfill, onRejected: reject)
                 } catch {
@@ -186,7 +187,7 @@ extension Promise {
 
     public func filter(
         _ isValid: @escaping (Value) throws -> Bool) -> Promise<Value> {
-        return then { (value: Value) -> Value in
+        return map { (value: Value) -> Value in
             do {
                 guard try isValid(value) else {
                     throw PromiseCheckError()

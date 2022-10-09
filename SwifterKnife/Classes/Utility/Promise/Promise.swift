@@ -198,17 +198,16 @@ public final class Promise<Value> {
         return .init(queue: queue, value: value, work: work)
     }
 
-    /// - note: This one is "flatMap"
     @discardableResult
-    public func then<NewValue>(
+    public func flatMap<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
-        onFulfilled: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
+        transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
             self.addCallbacks(
                 on: queue,
                 onFulfilled: { value in
                     do {
-                        try onFulfilled(value).then(on: queue, onFulfilled:      fulfill, onRejected: reject)
+                        try transform(value).then(on: queue, onFulfilled:      fulfill, onRejected: reject)
                     } catch {
                         reject(error)
                     }
@@ -217,15 +216,14 @@ public final class Promise<Value> {
             )
         }
     }
-    
-    /// - note: This one is "map"
+
     @discardableResult
-    public func then<NewValue>(
+    public func map<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main, _
-        onFulfilled: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
-        return then(on: queue) { (value) -> Promise<NewValue> in
+        transform: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
+        return flatMap(on: queue) { (value) -> Promise<NewValue> in
             do {
-                return Promise<NewValue>(value: try onFulfilled(value))
+                return Promise<NewValue>(value: try transform(value))
             } catch {
                 return Promise<NewValue>(error: error)
             }
@@ -236,8 +234,7 @@ public final class Promise<Value> {
     public func then(
         on queue: ExecutionContext = DispatchQueue.main,
         onFulfilled: @escaping (Value) -> Void,
-        onRejected: @escaping (Error) -> Void = { _ in })
-    -> Promise<Value> {
+        onRejected: @escaping (Error) -> Void = { _ in }) -> Promise<Value> {
         addCallbacks(on: queue, onFulfilled: onFulfilled, onRejected: onRejected)
         return self
     }
@@ -245,8 +242,7 @@ public final class Promise<Value> {
     @discardableResult
     public func catchs(
         on queue: ExecutionContext = DispatchQueue.main,
-        onRejected: @escaping (Error) -> Void) ->
-    Promise<Value> {
+        onRejected: @escaping (Error) -> Void) -> Promise<Value> {
         return then(on: queue, onFulfilled: { _ in }, onRejected: onRejected)
     }
     
@@ -325,12 +321,14 @@ public final class Promise<Value> {
         lockQueue.async {
             switch self.state {
             case .pending: break
+                
             case let .fulfilled(value):
                 var mutableCallbacks = callbacks
                 let firstCallback = mutableCallbacks.removeFirst()
                 firstCallback.callFulfill(value) {
                     self.fireIfCompleted(callbacks: mutableCallbacks)
                 }
+                
             case let .rejected(error):
                 var mutableCallbacks = callbacks
                 let firstCallback = mutableCallbacks.removeFirst()

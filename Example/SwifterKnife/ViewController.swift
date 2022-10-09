@@ -87,7 +87,7 @@ class ViewController: UIViewController {
     }
     private func testPromise() {
         let nums = [1, 2, 3]
-
+        
         let promise = Promise<Int>.reject(SomeError.timeout)
         promise.then { val in
             print("reolve", val)
