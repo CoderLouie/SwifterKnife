@@ -86,6 +86,21 @@ class ViewController: UIViewController {
         }
     }
     private func testPromise() {
+        
+        let promise = Promise<Int>.create { fulfill, reject in
+            DispatchQueue.main.after(2) {
+                fulfill(100)
+            }
+        }
+        promise.then { val in
+            print("reolve", val)
+        } onRejected: { err in
+            print("reject", err)
+        }.catchs { err in
+            print("catch", err)
+        }
+    }
+    private func testPromise1() {
         let nums = [1, 2, 3]
         
         let promise = Promise<Int>.reject(SomeError.timeout)

@@ -202,6 +202,7 @@ extension Promise {
         }
     }
     
+    @discardableResult
     public func catchs<E: Error>(
         as errorType: E.Type,
         onHit: @escaping (E) -> Void) -> Promise<Value> {

@@ -6,7 +6,7 @@
 //
 //
 
-import Foundation 
+import Foundation
 
 public protocol ExecutionContext {
     func execute(_ work: @escaping () -> Void)
@@ -118,7 +118,6 @@ enum State<Value>: CustomStringConvertible {
         return nil
     }
 
-
     var description: String {
         switch self {
         case .fulfilled(let value):
@@ -131,6 +130,17 @@ enum State<Value>: CustomStringConvertible {
     }
 }
 
+/*
+ reject 这个类型的error将来可以知道是第几步出错
+ */
+public struct StepError: Swift.Error {
+    public let step: Int
+    public let error: Swift.Error
+    public init(step: Int, error: Swift.Error) {
+        self.step = step
+        self.error = error
+    }
+}
 
 public final class Promise<Value> {
     
@@ -155,7 +165,31 @@ public final class Promise<Value> {
     public static func reject(_ error: Error) -> Promise<Value> {
         return Promise(error: error)
     }
-    
+    /*
+    public convenience init(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        work: @escaping (
+            _ fulfill: @escaping (Value) -> Void,
+            _ reject: @escaping (Error) -> Void) throws -> Void) {
+        self.init()
+        queue.async {
+            do {
+                // 这样的写法Promise会立即释放
+                let fulfill = { [weak self] (v: Value) -> Void in
+                    guard let s = self else { return }
+                    s.fulfill(v)
+                }
+                let reject = { [weak self] (e: Error) -> Void in
+                    guard let s = self else { return }
+                    s.reject(e)
+                }
+                try work(fulfill, reject)
+            } catch {
+                self.reject(error)
+            }
+        }
+    }
+     */
     public convenience init(
         queue: DispatchQueue = .global(qos: .userInitiated),
         work: @escaping (
@@ -177,28 +211,7 @@ public final class Promise<Value> {
             _ reject: @escaping (Error) -> Void) throws -> Void) -> Promise<Value> {
         return .init(queue: queue, work: work)
     }
-    public convenience init(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        value: Value?,
-        work: @escaping (
-            _ fulfill: @escaping (Value) -> Void,
-            _ reject: @escaping (Error) -> Void) throws -> Void) {
-        if let v = value {
-            self.init(value: v)
-        } else {
-            self.init(queue: queue, work: work)
-        }
-    }
-    public static func create(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        value: Value?,
-        work: @escaping (
-            _ fulfill: @escaping (Value) -> Void,
-            _ reject: @escaping (Error) -> Void) throws -> Void) -> Promise<Value> {
-        return .init(queue: queue, value: value, work: work)
-    }
 
-    @discardableResult
     public func flatMap<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
@@ -207,7 +220,7 @@ public final class Promise<Value> {
                 on: queue,
                 onFulfilled: { value in
                     do {
-                        try transform(value).then(on: queue, onFulfilled:      fulfill, onRejected: reject)
+                        try transform(value).then(on: queue, onFulfilled: fulfill, onRejected: reject)
                     } catch {
                         reject(error)
                     }
@@ -217,9 +230,8 @@ public final class Promise<Value> {
         }
     }
 
-    @discardableResult
     public func map<NewValue>(
-        on queue: ExecutionContext = DispatchQueue.main, _
+        on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
         return flatMap(on: queue) { (value) -> Promise<NewValue> in
             do {
@@ -227,6 +239,34 @@ public final class Promise<Value> {
             } catch {
                 return Promise<NewValue>(error: error)
             }
+        }
+    }
+    
+    public func mapError(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
+        return Promise<Value> { fulfill, reject in
+            self.addCallbacks(
+                on: queue,
+                onFulfilled: fulfill) { error in
+                    do {
+                        let newError = try transform(error)
+                        reject(newError)
+                    } catch {
+                        reject(error)
+                    }
+                }
+        }
+    }
+
+    /**
+     用于在catchs 方法中知道是第几步出错
+     */
+    public func step(
+        _ s: Int,
+        on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
+        return mapError(on: queue) {
+            return StepError(step: s, error: $0)
         }
     }
     
