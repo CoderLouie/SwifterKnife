@@ -143,6 +143,9 @@ public struct StepError: Swift.Error {
 }
 
 public final class Promise<Value> {
+//    deinit {
+//        print("Promise \(state) deinit")
+//    }
     
     private var state: State<Value>
     private let lockQueue = DispatchQueue(label: "promise_lock_queue", qos: .userInitiated)
@@ -165,31 +168,7 @@ public final class Promise<Value> {
     public static func reject(_ error: Error) -> Promise<Value> {
         return Promise(error: error)
     }
-    /*
-    public convenience init(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        work: @escaping (
-            _ fulfill: @escaping (Value) -> Void,
-            _ reject: @escaping (Error) -> Void) throws -> Void) {
-        self.init()
-        queue.async {
-            do {
-                // 这样的写法Promise会立即释放
-                let fulfill = { [weak self] (v: Value) -> Void in
-                    guard let s = self else { return }
-                    s.fulfill(v)
-                }
-                let reject = { [weak self] (e: Error) -> Void in
-                    guard let s = self else { return }
-                    s.reject(e)
-                }
-                try work(fulfill, reject)
-            } catch {
-                self.reject(error)
-            }
-        }
-    }
-     */
+    
     public convenience init(
         queue: DispatchQueue = .global(qos: .userInitiated),
         work: @escaping (
@@ -259,9 +238,7 @@ public final class Promise<Value> {
         }
     }
 
-    /**
-     用于在catchs 方法中知道是第几步出错
-     */
+    /// 便于在catchs 方法中知道是第几步出错
     public func step(
         _ s: Int,
         on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
