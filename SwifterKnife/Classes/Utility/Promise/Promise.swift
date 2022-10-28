@@ -242,8 +242,11 @@ public final class Promise<Value> {
     public func step(
         _ s: Int,
         on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
-        return mapError(on: queue) {
-            return StepError(step: s, error: $0)
+        return mapError(on: queue) { error in
+            if let stepErr = error as? StepError {
+                return StepError(step: s, error: stepErr.error)
+            }
+            return StepError(step: s, error: error)
         }
     }
     
@@ -262,6 +265,19 @@ public final class Promise<Value> {
         onRejected: @escaping (Error) -> Void) -> Promise<Value> {
         return then(on: queue, onFulfilled: { _ in }, onRejected: onRejected)
     }
+    @discardableResult
+    public func catchStep(
+        on queue: ExecutionContext = DispatchQueue.main,
+        onRejected: @escaping (_ error: Error, _ step: Int?) -> Void) -> Promise<Value> {
+            return then(on: queue, onFulfilled: { _ in }) { err in
+                guard let stepErr = err as? StepError else {
+                    onRejected(err, nil)
+                    return
+                }
+                onRejected(stepErr.error, stepErr.step)
+            }
+    }
+
     
     public func reject(_ error: Error) {
         updateState(.rejected(error: error))

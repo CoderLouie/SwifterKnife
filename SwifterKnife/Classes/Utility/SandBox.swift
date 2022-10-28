@@ -122,7 +122,7 @@ public enum SandBox {
     
     public static func totalCount(for directory: String) -> Int {
         let manager = FileManager.default
-        guard let enumerator = manager.enumerator(atPath: directory) else { return 0 }
+        guard let enumerator = manager.enumerator(at: URL(fileURLWithPath: directory), includingPropertiesForKeys: nil, options: .skipsHiddenFiles) else { return 0 }
         return enumerator.allObjects.count
     }
     

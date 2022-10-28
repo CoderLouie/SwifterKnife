@@ -264,6 +264,9 @@ public class RatingView: UIView {
     }
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isPanEnable else { return }
+        if handleTouches(touches) {
+            gradeDidChange?(self)
+        }
         endEditingGrade?(self)
     }
     
