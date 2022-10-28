@@ -35,7 +35,6 @@
 		B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 		B6FEE108283CB5EC00D8BCB2 /* h2000.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */; };
-		B6FEE10C283CE20A00D8BCB2 /* UILayoutGuide+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FEE10B283CE20A00D8BCB2 /* UILayoutGuide+Add.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,7 +91,6 @@
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		B6ED86802726A1E3003103F6 /* KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKView.m; sourceTree = "<group>"; };
 		B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = h2000.jpg; sourceTree = "<group>"; };
-		B6FEE10B283CE20A00D8BCB2 /* UILayoutGuide+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILayoutGuide+Add.swift"; sourceTree = "<group>"; };
 		FDF23D8F2334AA5654A348C1 /* Pods-SwifterKnife_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Example.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -165,7 +163,6 @@
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */,
-				B6FEE10B283CE20A00D8BCB2 /* UILayoutGuide+Add.swift */,
 			);
 			name = "Example for SwifterKnife";
 			path = SwifterKnife;
@@ -445,7 +442,6 @@
 				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
-				B6FEE10C283CE20A00D8BCB2 /* UILayoutGuide+Add.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,

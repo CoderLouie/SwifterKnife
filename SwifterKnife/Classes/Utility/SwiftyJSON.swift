@@ -173,11 +173,11 @@ public struct JSON {
      - returns: The created JSON
      */
     fileprivate init(jsonObject: Any) {
-        object = jsonObject
+        kind = JSONKind(rawValue: jsonObject)
     }
     
-    fileprivate init(error: JSONError) {
-        kind = .error(error)
+    fileprivate init(kind: JSONKind) {
+        self.kind = kind
     }
     
     /**
@@ -254,12 +254,12 @@ public struct JSON {
     }
     
     /// The static null JSON
-    public static var null: JSON { return JSON(NSNull()) }
+    public static var null: JSON { return JSON(kind: .null) }
     fileprivate static func error(_ error: JSONError) -> JSON {
-        JSON(error: error)
+        JSON(kind: .error(error))
     }
     fileprivate func orError(_ error: JSONError) -> JSON {
-        return JSON(error: self.error ?? error)
+        return JSON(kind: .error(self.error ?? error))
     }
 }
 
@@ -609,15 +609,16 @@ extension JSON: Swift.ExpressibleByArrayLiteral {
 
 extension JSON: Swift.RawRepresentable {
     public init?(rawValue: Any) {
-        if case .error = JSON(rawValue).kind {
+        let kind = JSONKind(rawValue: rawValue)
+        if case .error = kind {
             return nil
         } else {
-            self.init(rawValue)
+            self.init(kind: kind)
         }
     }
     
     public var rawValue: Any {
-        return object
+        return kind.rawValue
     }
     
     public func rawData(options opt: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Data {
@@ -804,7 +805,7 @@ extension JSON {
 
 // MARK: - Bool
 
-extension JSON { // : Swift.Bool
+extension JSON {
     
     //Optional bool
     public var bool: Bool? {
