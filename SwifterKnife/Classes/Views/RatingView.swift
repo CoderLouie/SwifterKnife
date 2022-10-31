@@ -135,7 +135,7 @@ fileprivate class StarsView: UIView {
 fileprivate extension Double {
     func nearestMultiple(_ v: Double) -> Double {
         if v == 0 { return self }
-        return v * Darwin.round(self / v)
+        return v * (self / v).rounded(.up)
     }
 }
 
