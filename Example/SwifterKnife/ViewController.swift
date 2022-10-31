@@ -40,9 +40,10 @@ class Student: Person {
     
 }
 
-extension DefaultsKey {
-    static let cached = Key<Int>("nihao")
-}
+//extension DefaultsKey {
+//    static let cached = Key<Int>("nihao")
+//    static let saved = DefaultKey<Bool>("nihao", defaultValue: true)
+//}
 
 enum SomeError: Swift.Error {
     case timeout
@@ -117,11 +118,13 @@ class ViewController: UIViewController {
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let key = Key<Int>("hahahha")
-        Defaults.shared.set(99, for: key)
-        let val = Defaults.shared.get(for: key)
-//        Defaults.shared.get(for: .cached)
-        print(val ?? "nil")
+//        let key = Key<Int>("hahahha")
+//        Defaults.set(99, for: key)
+//        let val = Defaults.get(for: key)
+////        Defaults.shared.get(for: .cached)
+////        let f = Defaults.shared.get(for: .saved)
+//        let f = Defaults[.saved]
+//        print(val ?? "nil")
 //         testPromise()
 //        kviewTest()
         

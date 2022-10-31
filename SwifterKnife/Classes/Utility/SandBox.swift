@@ -127,7 +127,7 @@ public enum SandBox {
     }
     
     /// 搜索文件夹中符合条件的文件
-    static func search<Result>(in directory: String, passMap: (_ fileURL: URL) -> Result?) -> (URL, Result)? {
+    public static func search<Result>(in directory: String, passMap: (_ fileURL: URL) -> Result?) -> (URL, Result)? {
         let keys: [URLResourceKey] = [.isDirectoryKey]
         guard let enumerator = FileManager.default.enumerator(at: URL(fileURLWithPath: directory), includingPropertiesForKeys: keys, options: .skipsHiddenFiles, errorHandler: nil) else {
             return nil
