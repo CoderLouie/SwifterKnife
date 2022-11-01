@@ -142,11 +142,18 @@ public struct StepError: Swift.Error {
     }
 }
 
+private func rawError(_ error: Swift.Error) -> Swift.Error {
+    if let err = error as? StepError {
+        return rawError(err.error)
+    }
+    return error
+}
+
 public final class Promise<Value> {
 //    deinit {
 //        print("Promise \(state) deinit")
 //    }
-    
+    private var _step: Int? = nil
     private var state: State<Value>
     private let lockQueue = DispatchQueue(label: "promise_lock_queue", qos: .userInitiated)
     
@@ -239,15 +246,9 @@ public final class Promise<Value> {
     }
 
     /// 便于在catchs 方法中知道是第几步出错
-    public func step(
-        _ s: Int,
-        on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
-        return mapError(on: queue) { error in
-            if let stepErr = error as? StepError {
-                return StepError(step: s, error: stepErr.error)
-            }
-            return StepError(step: s, error: error)
-        }
+    public func step(_ s: Int) -> Promise<Value> {
+        _step = s
+        return self
     }
     
     @discardableResult
@@ -268,19 +269,20 @@ public final class Promise<Value> {
     @discardableResult
     public func catchStep(
         on queue: ExecutionContext = DispatchQueue.main,
-        onRejected: @escaping (_ error: Error, _ step: Int?) -> Void) -> Promise<Value> {
+        onRejected: @escaping (_ error: Error, _ step: Int) -> Void) -> Promise<Value> {
             return then(on: queue, onFulfilled: { _ in }) { err in
-                guard let stepErr = err as? StepError else {
-                    onRejected(err, nil)
-                    return
+                if let stepErr = err as? StepError {
+                    onRejected(stepErr.error, stepErr.step)
                 }
-                onRejected(stepErr.error, stepErr.step)
             }
     }
 
     
     public func reject(_ error: Error) {
-        updateState(.rejected(error: error))
+        let err = _step.map {
+            StepError(step: $0, error: rawError(error))
+        } ?? error
+        updateState(.rejected(error: err))
     }
     
     public func fulfill(_ value: Value) {
@@ -373,8 +375,32 @@ public final class Promise<Value> {
     }
 }
 
+
+extension Promise {
+    public func chain<T1>(
+            on queue: ExecutionContext = DispatchQueue.main,
+            transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
+        return Promise<(Value, T1)> { fulfill, reject in
+            self.addCallbacks(
+                on: queue,
+                onFulfilled: { value in
+                    do {
+                        try transform(value).then(on: queue, onFulfilled: {
+                            fulfill((value, $0))
+                        }, onRejected: reject)
+                    } catch {
+                        reject(error)
+                    }
+                },
+                onRejected: reject
+            )
+        }
+    }
+}
+
 public typealias AnyPromise = Promise<Any>
 public typealias VoidPromise = Promise<Void>
+public typealias BoolPromise = Promise<Bool>
 public typealias IntPromise = Promise<Int>
 public typealias StringPromise = Promise<String>
 public typealias DataPromise = Promise<Data>
