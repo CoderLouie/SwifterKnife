@@ -140,6 +140,10 @@ public struct StepError: Swift.Error {
         self.step = step
         self.error = error
     }
+    public init(step: Int) {
+        self.step = step
+        self.error = PromiseError.empty
+    }
 }
 
 private func rawError(_ error: Swift.Error) -> Swift.Error {
@@ -153,7 +157,10 @@ public final class Promise<Value> {
 //    deinit {
 //        print("Promise \(state) deinit")
 //    }
-    private var _step: Int? = nil
+//    private var _step: Int? = nil
+    private var _errorTransform: ((Swift.Error) throws -> Swift.Error)?
+    private var _valueTransform: ((Value) throws -> Value)?
+    
     private var state: State<Value>
     private let lockQueue = DispatchQueue(label: "promise_lock_queue", qos: .userInitiated)
     
@@ -228,26 +235,16 @@ public final class Promise<Value> {
         }
     }
     
-    public func mapError(
-        on queue: ExecutionContext = DispatchQueue.main,
-        transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
-        return Promise<Value> { fulfill, reject in
-            self.addCallbacks(
-                on: queue,
-                onFulfilled: fulfill) { error in
-                    do {
-                        let newError = try transform(error)
-                        reject(newError)
-                    } catch {
-                        reject(error)
-                    }
-                }
-        }
+    public func mapError(transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
+        _errorTransform = transform
+        return self
     }
 
     /// 便于在catchs 方法中知道是第几步出错
     public func step(_ s: Int) -> Promise<Value> {
-        _step = s
+        _errorTransform = {
+            StepError(step: s, error: rawError($0))
+        }
         return self
     }
     
@@ -278,15 +275,31 @@ public final class Promise<Value> {
     }
 
     
-    public func reject(_ error: Error) {
-        let err = _step.map {
-            StepError(step: $0, error: rawError(error))
-        } ?? error
+    public func reject(_ errorParam: Error) {
+        let err: Swift.Error
+        if let transform = _errorTransform {
+            do {
+                err = try transform(errorParam)
+            } catch {
+                err = error
+            }
+        } else {
+            err = errorParam
+        }
         updateState(.rejected(error: err))
     }
     
     public func fulfill(_ value: Value) {
-        updateState(.fulfilled(value: value))
+        if let transform = _valueTransform {
+            do {
+                let val = try transform(value)
+                updateState(.fulfilled(value: val))
+            } catch {
+                updateState(.rejected(error: error))
+            }
+        } else {
+            updateState(.fulfilled(value: value))
+        }
     }
     
     public var isPending: Bool {
@@ -377,6 +390,11 @@ public final class Promise<Value> {
 
 
 extension Promise {
+    public func preproccess(transform: @escaping (Value) throws -> Value) -> Promise<Value> {
+        _valueTransform = transform
+        return self
+    }
+    
     public func chain<T1>(
             on queue: ExecutionContext = DispatchQueue.main,
             transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {

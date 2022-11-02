@@ -11,6 +11,7 @@ import Foundation
 public enum PromiseError: Swift.Error {
     case timeout
     case missed
+    case empty
 }
 
 public enum Promises {
@@ -190,7 +191,7 @@ extension Promise {
 
     public func filter(
         _ isValid: @escaping (Value) throws -> Bool) -> Promise<Value> {
-        return map { (value: Value) -> Value in
+        return preproccess { (value: Value) -> Value in
             do {
                 guard try isValid(value) else {
                     throw PromiseError.missed
