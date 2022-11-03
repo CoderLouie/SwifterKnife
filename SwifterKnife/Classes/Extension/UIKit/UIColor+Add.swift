@@ -6,18 +6,16 @@
 //
 
 import UIKit
-/// Color
-public typealias Color = UIColor
 
 // MARK: - Properties
 
-public extension Color {
+public extension UIColor {
     /// Random color.
-    static var random: Color {
+    static var random: UIColor {
         let red = Int.random(in: 0...255)
         let green = Int.random(in: 0...255)
         let blue = Int.random(in: 0...255)
-        return Color(r: CGFloat(red), g: CGFloat(green), b: CGFloat(blue))
+        return UIColor(r: CGFloat(red), g: CGFloat(green), b: CGFloat(blue))
     }
  
     /// RGB components for a Color (between 0 and 255).
@@ -108,7 +106,7 @@ public extension Color {
  
 
 // MARK: - Initializers
-public extension Color {
+public extension UIColor {
     static func createBy(_ rgba: CGFloat...) -> UIColor {
         guard rgba.count > 2 else { fatalError() }
         let alpha = rgba.count > 3 ? rgba[3] : 1.0

@@ -157,9 +157,6 @@ public final class Promise<Value> {
 //    deinit {
 //        print("Promise \(state) deinit")
 //    }
-//    private var _step: Int? = nil
-    private var _errorTransform: ((Swift.Error) throws -> Swift.Error)?
-    private var _valueTransform: ((Value) throws -> Value)?
     
     private var state: State<Value>
     private let lockQueue = DispatchQueue(label: "promise_lock_queue", qos: .userInitiated)
@@ -209,44 +206,58 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
-            self.addCallbacks(
-                on: queue,
-                onFulfilled: { value in
-                    do {
-                        try transform(value).then(on: queue, onFulfilled: fulfill, onRejected: reject)
-                    } catch {
-                        reject(error)
-                    }
-                },
-                onRejected: reject
-            )
+            self.addCallbacks(on: queue, onFulfilled: { value in
+                do {
+                    try transform(value).then(on: queue, onFulfilled: fulfill, onRejected: reject)
+                } catch {
+                    reject(error)
+                }
+            }, onRejected: reject)
         }
     }
 
     public func map<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
-        return flatMap(on: queue) { (value) -> Promise<NewValue> in
-            do {
-                return Promise<NewValue>(value: try transform(value))
-            } catch {
-                return Promise<NewValue>(error: error)
-            }
+        return Promise<NewValue> { fulfill, reject in
+            self.addCallbacks(on: queue, onFulfilled: { val in
+                do {
+                    let newVal = try transform(val)
+                    fulfill(newVal)
+                } catch {
+                    reject(error)
+                }
+            }, onRejected: reject)
         }
     }
     
-    public func mapError(transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
-        _errorTransform = transform
-        return self
+    public func mapError(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
+        return Promise<Value> { fulfill, reject in
+            self.addCallbacks(on: queue, onFulfilled: fulfill) { error in
+                do {
+                    let newError = try transform(error)
+                    reject(newError)
+                } catch {
+                    reject(error)
+                }
+            }
+        }
     }
 
     /// 便于在catchs 方法中知道是第几步出错
-    public func step(_ s: Int) -> Promise<Value> {
-        _errorTransform = {
-            StepError(step: s, error: rawError($0))
+    public func step(
+        _ s: Int,
+        on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
+        return mapError(on: queue) { error in
+            if let stepErr = error as? StepError {
+                return StepError(step: s, error: rawError(stepErr))
+            }
+            return StepError(step: s, error: rawError(error))
         }
-        return self
     }
+
     
     @discardableResult
     public func then(
@@ -267,39 +278,19 @@ public final class Promise<Value> {
     public func catchStep(
         on queue: ExecutionContext = DispatchQueue.main,
         onRejected: @escaping (_ error: Error, _ step: Int) -> Void) -> Promise<Value> {
-            return then(on: queue, onFulfilled: { _ in }) { err in
-                if let stepErr = err as? StepError {
-                    onRejected(stepErr.error, stepErr.step)
-                }
+        return then(on: queue, onFulfilled: { _ in }) { err in
+            if let stepErr = err as? StepError {
+                onRejected(stepErr.error, stepErr.step)
             }
-    }
-
-    
-    public func reject(_ errorParam: Error) {
-        let err: Swift.Error
-        if let transform = _errorTransform {
-            do {
-                err = try transform(errorParam)
-            } catch {
-                err = error
-            }
-        } else {
-            err = errorParam
         }
-        updateState(.rejected(error: err))
+    }
+    
+    public func reject(_ error: Error) {
+        updateState(.rejected(error: error))
     }
     
     public func fulfill(_ value: Value) {
-        if let transform = _valueTransform {
-            do {
-                let val = try transform(value)
-                updateState(.fulfilled(value: val))
-            } catch {
-                updateState(.rejected(error: error))
-            }
-        } else {
-            updateState(.fulfilled(value: value))
-        }
+        updateState(.fulfilled(value: value))
     }
     
     public var isPending: Bool {
@@ -390,28 +381,19 @@ public final class Promise<Value> {
 
 
 extension Promise {
-    public func preproccess(transform: @escaping (Value) throws -> Value) -> Promise<Value> {
-        _valueTransform = transform
-        return self
-    }
-    
     public func chain<T1>(
             on queue: ExecutionContext = DispatchQueue.main,
             transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
         return Promise<(Value, T1)> { fulfill, reject in
-            self.addCallbacks(
-                on: queue,
-                onFulfilled: { value in
-                    do {
-                        try transform(value).then(on: queue, onFulfilled: {
-                            fulfill((value, $0))
-                        }, onRejected: reject)
-                    } catch {
-                        reject(error)
-                    }
-                },
-                onRejected: reject
-            )
+            self.addCallbacks(on: queue, onFulfilled: { value in
+                do {
+                    try transform(value).then(on: queue, onFulfilled: {
+                        fulfill((value, $0))
+                    }, onRejected: reject)
+                } catch {
+                    reject(error)
+                }
+            }, onRejected: reject)
         }
     }
 }
