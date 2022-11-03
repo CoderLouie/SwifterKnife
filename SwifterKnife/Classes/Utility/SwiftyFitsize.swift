@@ -12,26 +12,25 @@ import UIKit
 @objc public enum SwiftyFitType: Int {
     /// Original Value
     case none = 0
-    
+    /// ~
     case flexibleWidth = 1
-    
+    /// ≈
     case forceWidth = 2
-    
+    /// ∣
     case flexibleHeight = 3
-    
+    /// ∥
     case forceHeight = 4
-    
+    /// ∣=
     case flexibleSafeAreaCenterHeight = 5
-    
+    /// ∥=
     case forceSafeAreaCenterHeight = 6
-    
+    /// ∣-
     case flexibleSafeAreaWithoutTopHeight = 7
-    
+    /// ∥-
     case forceSafeAreaWithoutTopHeight = 8
     /// 小屏手机(height < 570)才会适配高度
     case flexibleHeightOnlyOnSmallDevcie = 9
 }
-
 
 @objc public enum PixelAligment: Int {
     case floor, round, ceil
@@ -137,31 +136,8 @@ public extension SwiftyFitsizeable {
     }
 }
 
-
 public protocol CGFloatConvertable {
     var cgfloatValue: CGFloat { get }
-}
- 
-
-public extension CGFloatConvertable {
-    /// 像素化对齐
-    var pix: CGFloat { pixel(.round) }
-    var pixRound: CGFloat { pixel(.round) }
-    var pixFloor: CGFloat { pixel(.floor) }
-    var pixCeil: CGFloat { pixel(.ceil) }
-    
-    func pixel(_ aligment: PixelAligment) -> CGFloat {
-        let val = cgfloatValue
-        let scale = Screen.scale
-        switch aligment {
-        case .floor:
-            return Darwin.floor(val * scale) / scale
-        case .round:
-            return Darwin.round(val * scale) / scale
-        case .ceil:
-            return Darwin.ceil(val * scale) / scale
-        }
-    }
 }
 //extension CGFloatConvertable where Self: BinaryInteger {
 //    public var cgfloatValue: CGFloat { return CGFloat(self) }
@@ -258,7 +234,7 @@ extension UIFont {
     @objc public static let isIPhoneXSeries: Bool = {
         var bottomSafeInset: CGFloat = 0
         if #available(iOS 11.0, *) {
-            bottomSafeInset = rootWindow?.safeAreaInsets.bottom ?? 0
+            bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
         }
         return bottomSafeInset > 0
     }()
@@ -309,19 +285,19 @@ extension UIFont {
         safeAreaB + 49
     }
     
-    @objc public static var fontWindow: UIWindow? {
-        for window in UIApplication.shared.windows.reversed() {
-            if window.isKeyWindow,
-               window.screen === UIScreen.main,
-               (!window.isHidden && window.alpha > 0),
-               window.windowLevel >= .normal {
-                return window
-            }
-        }
-        return nil
-    }
+//    @objc public static var fontWindow: UIWindow? {
+//        for window in UIApplication.shared.windows.reversed() {
+//            if window.isKeyWindow,
+//               window.screen === UIScreen.main,
+//               (!window.isHidden && window.alpha > 0),
+//               window.windowLevel >= .normal {
+//                return window
+//            }
+//        }
+//        return nil
+//    }
     
-    @objc public static var rootWindow: UIWindow? {
+    @objc public static var currentWindow: UIWindow? {
         if let window = UIApplication.shared.delegate?.window {
             return window
         }
@@ -338,7 +314,7 @@ extension UIFont {
     
     @objc public static var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
-            guard let window = rootWindow else { return .zero }
+            guard let window = currentWindow else { return .zero }
             if let inset = window.rootViewController?.view.safeAreaInsets,
                inset.top > 0 { return inset }
             return window.safeAreaInsets
@@ -348,7 +324,7 @@ extension UIFont {
     } 
     
     @objc public static var frontViewController: UIViewController {
-        guard let window = rootWindow,
+        guard let window = currentWindow,
               let rootVC = window.rootViewController else {
             fatalError()
         }
@@ -412,3 +388,23 @@ extension UIViewController {
     }
 }
 
+public extension CGFloatConvertable {
+    /// 像素化对齐
+    var pix: CGFloat { pixel(.round) }
+    var pixRound: CGFloat { pixel(.round) }
+    var pixFloor: CGFloat { pixel(.floor) }
+    var pixCeil: CGFloat { pixel(.ceil) }
+    
+    func pixel(_ aligment: PixelAligment) -> CGFloat {
+        let val = cgfloatValue
+        let scale = Screen.scale
+        switch aligment {
+        case .floor:
+            return Darwin.floor(val * scale) / scale
+        case .round:
+            return Darwin.round(val * scale) / scale
+        case .ceil:
+            return Darwin.ceil(val * scale) / scale
+        }
+    }
+}

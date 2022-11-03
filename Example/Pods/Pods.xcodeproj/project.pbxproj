@@ -100,7 +100,6 @@
 		B661A1EA28AE30DB00602105 /* Range+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B661A1E928AE30DB00602105 /* Range+Add.swift */; };
 		B674BF93286BEE5700CA270E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674BF92286BEE5700CA270E /* TextField.swift */; };
 		B67F61DB28A0C2B4008AD997 /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67F61DA28A0C2B4008AD997 /* UICollectionView+Add.swift */; };
-		B680F0552913C71A002ECF33 /* SwiftyAdaptable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B680F0542913C71A002ECF33 /* SwiftyAdaptable.swift */; };
 		B68290162848B73000C872FB /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */; };
 		B6A82970288928B400E0190B /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A8296F288928B400E0190B /* Either.swift */; };
 		B6B48C1328B47F7A0041EB74 /* AspectImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */; };
@@ -290,7 +289,6 @@
 		B661A1E928AE30DB00602105 /* Range+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Range+Add.swift"; sourceTree = "<group>"; };
 		B674BF92286BEE5700CA270E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		B67F61DA28A0C2B4008AD997 /* UICollectionView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Add.swift"; sourceTree = "<group>"; };
-		B680F0542913C71A002ECF33 /* SwiftyAdaptable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyAdaptable.swift; sourceTree = "<group>"; };
 		B68290152848B73000C872FB /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B6A8296F288928B400E0190B /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		B6B48C1228B47F7A0041EB74 /* AspectImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectImageView.swift; sourceTree = "<group>"; };
@@ -704,7 +702,6 @@
 				965799593B87B38B2726F1699DE695AC /* SwiftyTimer.swift */,
 				B6A8296F288928B400E0190B /* Either.swift */,
 				0E4D5282EC256B9E2100054E6C7D03BB /* SwiftyFitsize.swift */,
-				B680F0542913C71A002ECF33 /* SwiftyAdaptable.swift */,
 				B661A1DD28AA54CD00602105 /* Haptic.swift */,
 				B6E1AF0F28E6FEBC005A7CBA /* Promise */,
 				24C653687C2035CC8A8F4D394CED169F /* Builtlns */,
@@ -1032,7 +1029,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B680F0552913C71A002ECF33 /* SwiftyAdaptable.swift in Sources */,
 				B661A1EA28AE30DB00602105 /* Range+Add.swift in Sources */,
 				CCF868DB571BDC13EFE010B251EE9515 /* App.swift in Sources */,
 				A99192BE1C87A9D258524F9D9FCF99A4 /* Array+Add.swift in Sources */,

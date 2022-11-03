@@ -7,8 +7,36 @@
 
 import Foundation
 
-
+/*
+public struct AnyDimension {
+    public let reference: CGFloat
+    public let standard: CGFloat
+}
 //
+public protocol SwiftyAdaptable {
+    func fit(_ value: CGFloat, using screenDimension: AnyDimension) -> CGFloat
+}
+extension SwiftyAdaptable {
+    public func fit(_ value: CGFloat, using dimension: AnyDimension) -> CGFloat {
+        (dimension.standard / dimension.reference * value).pix
+    }
+}
+ 
+public struct ScreenDimension<T: SwiftyAdaptable> {
+    /// 设计稿参考尺寸 比如设计稿按iPhoneX出，就是375
+    public let reference: CGFloat
+    /// 实际尺寸 比如屏幕宽度
+    public let standard: CGFloat
+    public let value: T
+    
+    private func map(_ val: CGFloat) -> CGFloat {
+        value.fit(val, using: dimension)
+    }
+    private var dimension: AnyDimension {
+        .init(reference: reference, standard: standard)
+    }
+}
+ */
 public protocol SwiftyAdaptable {
 }
 public struct ScreenDimension<T> {
@@ -18,13 +46,14 @@ public struct ScreenDimension<T> {
     public let standard: CGFloat
     public let value: T
     
-    public func map(_ val: CGFloatConvertable) -> CGFloat {
-        (standard / reference * val.cgfloatValue).pix
+    public func map(_ val: CGFloat) -> CGFloat {
+        (standard / reference * val).pix
     }
 }
+
 extension ScreenDimension where T: CGFloatConvertable {
     public var fit: CGFloat {
-        map(value)
+        map(value.cgfloatValue)
     }
 }
 extension ScreenDimension where T == CGPoint {
@@ -79,9 +108,15 @@ public extension SwiftyAdaptable {
     }
 }
 extension Int: SwiftyAdaptable {}
+extension Double: SwiftyAdaptable {}
+extension Float: SwiftyAdaptable {}
 extension CGPoint: SwiftyAdaptable {}
 extension CGSize: SwiftyAdaptable {}
+extension CGRect: SwiftyAdaptable {}
+extension UIEdgeInsets: SwiftyAdaptable {}
 extension UIFont: SwiftyAdaptable {}
+/*
+ */
 /*
 public extension ScreenDimension {
     // iPhone X Width
