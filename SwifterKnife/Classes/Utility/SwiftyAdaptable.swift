@@ -116,6 +116,20 @@ public struct ScreenAdaptor {
         map(val).pix
     }
 }
+public extension ScreenAdaptor {
+    static func uiwidth(reference: CGFloat) -> ScreenAdaptor {
+        .init(reference: reference, standard: Screen.width)
+    }
+    static func uiheight(reference: CGFloat) -> ScreenAdaptor {
+        .init(reference: reference, standard: Screen.height)
+    }
+    static func uiwithoutHeaderHeight(reference: CGFloat) -> ScreenAdaptor {
+        .init(reference: reference, standard: Screen.withoutHeaderH)
+    }
+    static func uibodyHeight(reference: CGFloat) -> ScreenAdaptor {
+        .init(reference: reference, standard: Screen.bodyH)
+    }
+}
 public protocol BaseDesignable {
     associatedtype Adaptable: SwiftyAdaptable
     var adaptable: Adaptable { get }
@@ -161,17 +175,17 @@ public struct iPhoneXDesign<T: SwiftyAdaptable>: UIDesignable {
         self.adaptable = adaptable
     }
     public static var width: ScreenAdaptor {
-        .init(reference: 375, standard: Screen.width)
+        .uiwidth(reference: 375)
     }
     
     public static var height: ScreenAdaptor {
-        .init(reference: 812, standard: Screen.height)
+        .uiheight(reference: 812)
     }
     public static var withoutHeaderHeight: ScreenAdaptor {
-        .init(reference: 768, standard: Screen.withoutHeaderH)
+        .uiwithoutHeaderHeight(reference: 768)
     }
     public static var bodyHeight: ScreenAdaptor {
-        .init(reference: 734, standard: Screen.bodyH)
+        .uibodyHeight(reference: 734)
     }
 }
 
