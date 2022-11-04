@@ -95,11 +95,18 @@ extension UIEdgeInsets: SwiftyAdaptable {
             right: tramsform(right))
     }
 }
-extension UIFont: SwiftyAdaptable {
-    public func adaptive(tramsform: (CGFloat) -> CGFloat) -> UIFont {
-        withSize(round(tramsform(pointSize)))
+//extension UIFont: SwiftyAdaptable {
+//    public func adaptive(tramsform: (CGFloat) -> CGFloat) -> UIFont {
+//        withSize(round(tramsform(pointSize)))
+//    }
+//}
+extension UIFont {
+    @objc public var fit: UIFont {
+        let adaptor = iPhoneXDesign<Int>.width 
+        return withSize(round(adaptor.map(pointSize)))
     }
 }
+
 
 
 // MARK: - Designable
