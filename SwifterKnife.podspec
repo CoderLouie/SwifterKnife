@@ -27,12 +27,13 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source           = { :git => 'https://github.com/CoderLouie/SwifterKnife.git', :tag => s.version.to_s }
   
-#  s.source_files =
-#  'SwifterKnife/Classes/Base/**/*',
-#  'SwifterKnife/Classes/Extension/**/*',
-#  'SwifterKnife/Classes/Utility/**/*',
-#  'SwifterKnife/Classes/Views/**/*'
-  s.source_files = 'SwifterKnife/Classes/**/*'
+  s.source_files =
+  'SwifterKnife/Classes/Base/**/*',
+  'SwifterKnife/Classes/Extension/**/*',
+  'SwifterKnife/Classes/Utility/**/*',
+  'SwifterKnife/Classes/Views/**/*',
+  'SwifterKnife/Classes/PagingView/**/*'
+#  s.source_files = 'SwifterKnife/Classes/**/*'
  
   s.subspec 'Base' do |sp|
     sp.source_files = 'SwifterKnife/Classes/Base/*.swift'
@@ -49,7 +50,7 @@ Pod::Spec.new do |s|
     sp.source_files = 'SwifterKnife/Classes/Utility/**/*'
   end
   
-  # Layout Extensions
+  # Views Extensions
   s.subspec 'Views' do |sp|
     sp.source_files =
     'SwifterKnife/Classes/Base/*.swift',
@@ -60,6 +61,12 @@ Pod::Spec.new do |s|
     sp.dependency 'SnapKit'
   end
   
+  # Utility Extensions
+  s.subspec 'PagingView' do |sp|
+      sp.source_files =
+      'SwifterKnife/Classes/Base/*.swift',
+      'SwifterKnife/Classes/PagingView/**/*.swift'
+  end
   # s.resource_bundles = {
   #   'SwifterKnife' => ['SwifterKnife/Assets/*.png']
   # }

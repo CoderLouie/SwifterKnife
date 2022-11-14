@@ -38,12 +38,12 @@ public class ConstraintMakerFinalizable {
     
     @discardableResult
     public func labeled(_ label: String) -> ConstraintMakerFinalizable {
-        self.description.label = label
+        description.label = label
         return self
     }
     
     public var constraint: Constraint {
-        return self.description.constraint!
+        return description.constraint!
     }
     
 }

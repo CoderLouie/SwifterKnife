@@ -107,10 +107,10 @@ class ViewController: UIViewController {
     }
     private func testPromise1() {
         let size1 = CGSize.zero
-        let new1 = size1.wx.fit
+        let new1 = size1.ui.fit
         
         let font = UIFont.semibold(12)
-        let font1 = font.wx.fit
+        let font1 = font.fit
         
         let nums = [1, 2, 3]
         

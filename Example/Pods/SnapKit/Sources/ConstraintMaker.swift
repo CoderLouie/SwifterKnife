@@ -28,139 +28,155 @@
 #endif
 
 public class ConstraintMaker {
+    @discardableResult
+    public func widthHeightRatioEqualTo(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable {
+        return makeExtendableWithAttributes(.width)
+            .equalToSelfHeight().multipliedBy(amount)
+    }
+    @discardableResult
+    public func whRatioEqualTo(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable {
+        return makeExtendableWithAttributes(.width)
+            .equalToSelfHeight().multipliedBy(amount)
+    }
+    
+    @discardableResult
+    public func heightWidthRatioEqualTo(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable {
+        return makeExtendableWithAttributes(.height)
+            .equalToSelfWidth().multipliedBy(amount)
+    }
+    @discardableResult
+    public func hwRatioEqualTo(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable {
+        return makeExtendableWithAttributes(.height)
+            .equalToSelfWidth().multipliedBy(amount)
+    }
     
     public var left: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.left)
+        return makeExtendableWithAttributes(.left)
     }
     
     public var top: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.top)
+        return makeExtendableWithAttributes(.top)
     }
     
     public var bottom: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.bottom)
+        return makeExtendableWithAttributes(.bottom)
     }
     
     public var right: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.right)
+        return makeExtendableWithAttributes(.right)
     }
     
     public var leading: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.leading)
+        return makeExtendableWithAttributes(.leading)
     }
     
     public var trailing: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.trailing)
+        return makeExtendableWithAttributes(.trailing)
     }
     
     public var width: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.width)
+        return makeExtendableWithAttributes(.width)
     }
     
     public var height: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.height)
+        return makeExtendableWithAttributes(.height)
     }
     
     public var centerX: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.centerX)
+        return makeExtendableWithAttributes(.centerX)
     }
     
     public var centerY: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.centerY)
-    }
-    
-    @available(*, deprecated, renamed:"lastBaseline")
-    public var baseline: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.lastBaseline)
-    }
+        return makeExtendableWithAttributes(.centerY)
+    } 
     
     public var lastBaseline: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.lastBaseline)
+        return makeExtendableWithAttributes(.lastBaseline)
     }
     
     @available(iOS 8.0, OSX 10.11, *)
     public var firstBaseline: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.firstBaseline)
+        return makeExtendableWithAttributes(.firstBaseline)
     }
     
     @available(iOS 8.0, *)
     public var leftMargin: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.leftMargin)
+        return makeExtendableWithAttributes(.leftMargin)
     }
     
     @available(iOS 8.0, *)
     public var rightMargin: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.rightMargin)
+        return makeExtendableWithAttributes(.rightMargin)
     }
     
     @available(iOS 8.0, *)
     public var topMargin: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.topMargin)
+        return makeExtendableWithAttributes(.topMargin)
     }
     
     @available(iOS 8.0, *)
     public var bottomMargin: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.bottomMargin)
+        return makeExtendableWithAttributes(.bottomMargin)
     }
     
     @available(iOS 8.0, *)
     public var leadingMargin: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.leadingMargin)
+        return makeExtendableWithAttributes(.leadingMargin)
     }
     
     @available(iOS 8.0, *)
     public var trailingMargin: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.trailingMargin)
+        return makeExtendableWithAttributes(.trailingMargin)
     }
     
     @available(iOS 8.0, *)
     public var centerXWithinMargins: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.centerXWithinMargins)
+        return makeExtendableWithAttributes(.centerXWithinMargins)
     }
     
     @available(iOS 8.0, *)
     public var centerYWithinMargins: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.centerYWithinMargins)
+        return makeExtendableWithAttributes(.centerYWithinMargins)
     }
     
     public var edges: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.edges)
+        return makeExtendableWithAttributes(.edges)
     }
     public var horizontalEdges: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.horizontalEdges)
+        return makeExtendableWithAttributes(.horizontalEdges)
     }
     public var verticalEdges: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.verticalEdges)
+        return makeExtendableWithAttributes(.verticalEdges)
     }
     public var directionalEdges: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.directionalEdges)
+        return makeExtendableWithAttributes(.directionalEdges)
     }
     public var directionalHorizontalEdges: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.directionalHorizontalEdges)
+        return makeExtendableWithAttributes(.directionalHorizontalEdges)
     }
     public var directionalVerticalEdges: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.directionalVerticalEdges)
+        return makeExtendableWithAttributes(.directionalVerticalEdges)
     }
     public var size: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.size)
+        return makeExtendableWithAttributes(.size)
     }
     public var center: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.center)
+        return makeExtendableWithAttributes(.center)
     }
     
     @available(iOS 8.0, *)
     public var margins: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.margins)
+        return makeExtendableWithAttributes(.margins)
     }
     
     @available(iOS 8.0, *)
     public var directionalMargins: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.directionalMargins)
+        return makeExtendableWithAttributes(.directionalMargins)
     }
 
     @available(iOS 8.0, *)
     public var centerWithinMargins: ConstraintMakerExtendable {
-        return self.makeExtendableWithAttributes(.centerWithinMargins)
+        return makeExtendableWithAttributes(.centerWithinMargins)
     }
     
     public let item: LayoutConstraintItem
@@ -172,8 +188,8 @@ public class ConstraintMaker {
     }
     
     internal func makeExtendableWithAttributes(_ attributes: ConstraintAttributes) -> ConstraintMakerExtendable {
-        let description = ConstraintDescription(item: self.item, attributes: attributes)
-        self.descriptions.append(description)
+        let description = ConstraintDescription(item: item, attributes: attributes)
+        descriptions.append(description)
         return ConstraintMakerExtendable(description)
     }
     
@@ -198,13 +214,13 @@ public class ConstraintMaker {
     }
     
     internal static func remakeConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) {
-        self.removeConstraints(item: item)
-        self.makeConstraints(item: item, closure: closure)
+        removeConstraints(item: item)
+        makeConstraints(item: item, closure: closure)
     }
     
     internal static func updateConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) {
         guard item.constraints.count > 0 else {
-            self.makeConstraints(item: item, closure: closure)
+            makeConstraints(item: item, closure: closure)
             return
         }
         

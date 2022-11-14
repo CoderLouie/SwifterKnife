@@ -4,6 +4,7 @@ platform :ios, '11.0'
 
 target 'SwifterKnife_Example' do
   pod 'SwifterKnife', :path => '../'
+  pod 'SnapKit', :git => 'https://github.com/CoderLouie/SnapKit.git', :branch => 'my_source'
 
   
   target 'SwifterKnife_Tests' do

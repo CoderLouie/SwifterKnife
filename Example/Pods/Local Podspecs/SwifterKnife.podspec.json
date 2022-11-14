@@ -20,7 +20,13 @@
     "git": "https://github.com/CoderLouie/SwifterKnife.git",
     "tag": "0.1.4"
   },
-  "source_files": "SwifterKnife/Classes/**/*",
+  "source_files": [
+    "SwifterKnife/Classes/Base/**/*",
+    "SwifterKnife/Classes/Extension/**/*",
+    "SwifterKnife/Classes/Utility/**/*",
+    "SwifterKnife/Classes/Views/**/*",
+    "SwifterKnife/Classes/PagingView/**/*"
+  ],
   "subspecs": [
     {
       "name": "Base",
@@ -50,6 +56,13 @@
 
         ]
       }
+    },
+    {
+      "name": "PagingView",
+      "source_files": [
+        "SwifterKnife/Classes/Base/*.swift",
+        "SwifterKnife/Classes/PagingView/**/*.swift"
+      ]
     }
   ],
   "swift_version": "5.3"
