@@ -79,14 +79,14 @@ extension PagingViewController: JXSegmentedViewDelegate {
 }
 
 extension PagingViewController: PagingViewDataSource {
-    func heightForHeader(in pagingView: PagingView) -> CGFloat {
+    func heightForHeader(in pagingView: PagingView) -> CGFloat? {
         return 300
     }
 
     func viewForHeader(in pagingView: PagingView) -> UIView {
         return headerView
     }
-    func heightForPinHeader(in pagingView: PagingView) -> CGFloat {
+    func heightForPinHeader(in pagingView: PagingView) -> CGFloat? {
         return 50
     }
 
@@ -120,13 +120,6 @@ class TestTableView: UITableView {
 }
 
 class SmoothListViewController: UIViewController, PagingListViewConvertible, UITableViewDataSource, UITableViewDelegate {
-    func hostViewDidAppear() {
-        
-    }
-    
-    func hostViewDidDisappear() {
-        
-    }
     
     deinit {
         print("SmoothListViewController deinit")

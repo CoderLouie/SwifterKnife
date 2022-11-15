@@ -25,22 +25,26 @@ public protocol PagingListViewConvertible: AnyObject {
     func hostViewDidAppear()
     func hostViewDidDisappear()
 }
-extension PagingListViewConvertible {
+public extension PagingListViewConvertible {
     func hostViewDidAppear() {}
     func hostViewDidDisappear() {}
 }
 
 
 public protocol PagingViewDataSource: AnyObject {
-    func heightForHeader(in pagingView: PagingView) -> CGFloat
+    func heightForHeader(in pagingView: PagingView) -> CGFloat?
     func viewForHeader(in pagingView: PagingView) -> UIView
     
-    func heightForPinHeader(in pagingView: PagingView) -> CGFloat
+    func heightForPinHeader(in pagingView: PagingView) -> CGFloat?
     func viewForPinHeader(in pagingView: PagingView) -> UIView
     
     func numberOfLists(in pagingView: PagingView) -> Int
     
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingListViewConvertible
+}
+public extension PagingViewDataSource {
+    func heightForHeader(in pagingView: PagingView) -> CGFloat? { nil }
+    func heightForPinHeader(in pagingView: PagingView) -> CGFloat? { nil }
 }
 public protocol PagingViewDelegate: AnyObject {
     func pagingViewDidScroll(_ scrollView: UIScrollView)
@@ -100,7 +104,16 @@ open class PagingView: UIView {
             addSubview($0)
         }
     }
-    
+//    open override func didMoveToSuperview() {
+//        super.didMoveToSuperview()
+//        if let vc = parentViewController {
+//            for item in listMap.values {
+//                guard let subvc = item.list as? UIViewController else { continue }
+//                vc.addChild(subvc)
+//                subvc.didMove(toParent: vc)
+//            }
+//        }
+//    }
     open override func layoutSubviews() {
         super.layoutSubviews()
         collectionView.frame = bounds
@@ -140,13 +153,14 @@ extension PagingView {
     public func reloadData() {
         headerContainerViewY = 0
         removeObserver()
-        listMap.forEach {
-            $0.value.list.hostView.removeFromSuperview()
+        for item in listMap.values {
+//            if let vc = item.list as? UIViewController {
+//                vc.willMove(toParent: nil)
+//                vc.removeFromParent()
+//            }
+            item.view.removeFromSuperview()
         }
         listMap.removeAll()
-        headerH = dataSource.heightForHeader(in: self)
-        
-        headerContainerViewH = headerH
         let size = bounds.size
         
         let n = dataSource.numberOfLists(in: self)
@@ -154,21 +168,24 @@ extension PagingView {
         headerContainerView.subviews.forEach {
             $0.removeFromSuperview()
         }
+        
         dataSource.viewForHeader(in: self).do {
+            headerH = dataSource.heightForHeader(in: self) ?? $0.fittingSize(withRequiredWidth: size.width).height.pixCeil
             $0.frame = CGRect(x: 0, y: 0, width: size.width, height: headerH)
             headerContainerView.addSubview($0)
         }
+        headerContainerViewH = headerH
         if n == 0 {
             pinHeaderH = 0
         } else {
-            pinHeaderH = dataSource.heightForPinHeader(in: self)
             dataSource.viewForPinHeader(in: self).do {
+                pinHeaderH = dataSource.heightForPinHeader(in: self) ?? $0.fittingSize(withRequiredWidth: size.width).height.pixCeil
                 $0.frame = CGRect(x: 0, y: headerH, width: size.width, height: pinHeaderH)
                 headerContainerView.addSubview($0)
+            }
         }
         headerContainerViewH += pinHeaderH
         headerContainerView.frame = CGRect(x: 0, y: 0, width: size.width, height: headerContainerViewH)
-        }
         
         collectionView.contentOffset = CGPoint(x: size.width * CGFloat(selectedIndex), y: 0)
         collectionView.reloadData()
@@ -255,9 +272,9 @@ extension PagingView: UICollectionViewDataSource {
         let row = indexPath.item
         let item = listMap[indexPath.item] ?? {
             let convertable = dataSource.pagingView(self, initListAtIndex: row)
-            let hostView = convertable.hostView
-            hostView.setNeedsLayout()
-            hostView.layoutIfNeeded()
+//            let hostView = convertable.hostView
+//            hostView.setNeedsLayout()
+//            hostView.layoutIfNeeded()
             
             let listView = convertable.scrollView
             listView.scrollsToTop = row == selectedIndex
