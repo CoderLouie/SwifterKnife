@@ -8,8 +8,7 @@
 
 import UIKit
 import SwifterKnife
-import SnapKit
-import Pods_SwifterKnife_Example
+import SnapKit 
 
 enum Step: Int, CaseIterable {
     case step1 = 1
@@ -124,6 +123,7 @@ class ViewController: UIViewController {
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.navigationController?.pushViewController(PagingViewController(), animated: true)
 //        let key = Key<Int>("hahahha")
 //        Defaults.set(99, for: key)
 //        let val = Defaults.get(for: key)

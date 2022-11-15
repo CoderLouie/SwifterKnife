@@ -15,6 +15,8 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		B632F00929224F880002398E /* PagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B632F00829224F880002398E /* PagingViewController.swift */; };
+		B632F00B292250B70002398E /* lufei.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B632F00A292250B70002398E /* lufei.jpg */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
@@ -66,6 +68,8 @@
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		B632F00829224F880002398E /* PagingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingViewController.swift; sourceTree = "<group>"; };
+		B632F00A292250B70002398E /* lufei.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lufei.jpg; sourceTree = "<group>"; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		B67F61E128A34A44008AD997 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B67F61E328A34A56008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -154,10 +158,12 @@
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				B632F00829224F880002398E /* PagingViewController.swift */,
 				B6ED867F2726A1E3003103F6 /* KKView.h */,
 				B6ED86802726A1E3003103F6 /* KKView.m */,
 				B6B038F3290B71830091B31D /* Watchdog.swift */,
 				B650CC9F282374E8003170BB /* Permission.swift */,
+				B632F00A292250B70002398E /* lufei.jpg */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -342,6 +348,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B67F61E028A34A44008AD997 /* Localizable.strings in Resources */,
+				B632F00B292250B70002398E /* lufei.jpg in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
@@ -367,11 +374,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/JXSegmentedView/JXSegmentedView.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SwifterKnife/SwifterKnife.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JXSegmentedView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwifterKnife.framework",
 			);
@@ -445,6 +454,7 @@
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,
+				B632F00929224F880002398E /* PagingViewController.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B650CCA0282374E8003170BB /* Permission.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,
