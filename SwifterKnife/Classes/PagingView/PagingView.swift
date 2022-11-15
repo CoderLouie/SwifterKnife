@@ -121,10 +121,12 @@ open class PagingView: UIView {
         -headerContainerViewH + min(-headerContainerViewY, headerH)
     }
     private var listMap: [Int: PagingList] = [:]
-    private var canSeenHeader = false
+    private var needAdjusted = false
     private var headerContainerView: UIView!
     private unowned var collectionView: MainCollectionView!
-    private var currentListView: UIScrollView?
+    private var selectedListView: UIScrollView? {
+        listMap[selectedIndex]?.listView
+    }
     public var listCollectionView: UICollectionView {
         collectionView
     }
@@ -136,8 +138,6 @@ open class PagingView: UIView {
 
 extension PagingView {
     public func reloadData() {
-        currentListView = nil
-        canSeenHeader = false
         headerContainerViewY = 0
         removeObserver()
         listMap.forEach {
@@ -184,20 +184,17 @@ private extension PagingView {
         }
     }
     func collectionViewDidEndScroll(at index: Int) {
-        changeSelectedIndex(to: index)
+        if index != selectedIndex {
+            selectedListView?.scrollsToTop = false
+            selectedIndex = index
+            selectedListView?.scrollsToTop = true
+        }
         guard let item = listMap[index] else { return }
-        selectedIndex = index
-        if item.listView .contentOffset.y <= -pinHeaderH {
+        let listView = item.listView
+        if listView.contentOffset.y <= -pinHeaderH {
             headerContainerView.frame.origin.y = 0
             item.headerView.addSubview(headerContainerView)
         }
-    }
-    func changeSelectedIndex(to index: Int) {
-        guard index != selectedIndex else { return }
-        guard let item = listMap[index],
-            let oldItem = listMap[selectedIndex] else { return }
-        oldItem.listView.scrollsToTop = false
-        item.listView.scrollsToTop = true
     }
     func index(of listView: UIScrollView) -> Int? {
         listMap.first { $0.value.listView === listView }?.key
@@ -214,7 +211,7 @@ extension PagingView {
             let contentSize = scrollView.contentSize
             if contentSize.height < minContentSizeH {
                 scrollView.contentSize = CGSize(width: contentSize.width, height: minContentSizeH)
-                if let current = currentListView,
+                if let current = selectedListView,
                     scrollView !== current {
                     scrollView.contentOffset = CGPoint(x: 0, y: initialListViewOffsetY)
                 }
@@ -226,17 +223,12 @@ extension PagingView {
             collectionView.isDecelerating { return }
         guard let index = index(of: listView),
         index == selectedIndex else { return }
+        needAdjusted = true
         
-        currentListView = listView
         let offset = listView.contentOffset
-        let scrollY = offset.y + headerContainerViewH
+        let scrollY = offset.y + listView.contentInset.top
         if scrollY < headerH {
-            canSeenHeader = true
             headerContainerViewY = -scrollY
-            for (index, item) in listMap {
-                if index == selectedIndex { continue }
-                item.listView.contentOffset = offset
-            }
             guard let headerView = listMap[index]?.headerView else {
                 return
             }
@@ -249,14 +241,7 @@ extension PagingView {
                 headerContainerView.frame.origin.y = -headerH
                 addSubview(headerContainerView)
             }
-            if canSeenHeader {
-                canSeenHeader = false
-                headerContainerViewY = -headerH
-                for (index, item) in listMap {
-                    if index == selectedIndex { continue }
-                    item.listView.contentOffset = CGPoint(x: 0, y: -pinHeaderH)
-                }
-            }
+            headerContainerViewY = -headerH
         }
     }
 }
@@ -308,22 +293,37 @@ extension PagingView: UICollectionViewDataSource {
 }
 extension PagingView: UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if needAdjusted, let current = selectedListView {
+            if -headerContainerViewY < headerH {
+                let offset = current.contentOffset
+                for (index, item) in listMap {
+                    if index == selectedIndex { continue }
+                    item.listView.contentOffset = offset
+                }
+            } else {
+                for (index, item) in listMap {
+                    if index == selectedIndex { continue }
+                    let listView = item.listView
+                    if listView.contentOffset.y >= -pinHeaderH { continue }
+                    item.listView.contentOffset = CGPoint(x: 0, y: -pinHeaderH)
+                }
+            }
+            needAdjusted = false
+        }
         delegate?.pagingViewDidScroll(scrollView)
-        let percent = scrollView.contentOffset.x/scrollView.bounds.size.width
+        let percent = scrollView.contentOffset.x / scrollView.bounds.size.width
         let index = Int(percent)
 
         if index != selectedIndex,
            percent - CGFloat(index) == 0,
            !scrollView.isDragging,
-           !scrollView.isDecelerating,
-           listMap[index]?.listView.contentOffset.y ?? 0 < -pinHeaderH {
+           !scrollView.isDecelerating {
             collectionViewDidEndScroll(at: index)
         } else {
             if headerContainerView.superview != self {
                 headerContainerView.frame.origin.y = headerContainerViewY
                 addSubview(headerContainerView)
             }
-            changeSelectedIndex(to: index)
         }
     }
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -332,7 +332,10 @@ extension PagingView: UIScrollViewDelegate {
             collectionViewDidEndScroll(at: index)
         }
     }
-
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
+        collectionViewDidEndScroll(at: index)
+    }
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
         collectionViewDidEndScroll(at: index)
