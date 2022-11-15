@@ -116,18 +116,15 @@ open class PagingView: UIView {
     
     public private(set) lazy var selectedIndex = defaultSelectedIndex
     public private(set) unowned var dataSource: PagingViewDataSource
-    
-    private var selectedListView: UIScrollView? {
-        listMap[selectedIndex]?.listView
-    }
+     
     private var initialListViewOffsetY: CGFloat {
-//        selectedListView?.contentOffset.y ?? -headerContainerViewH
         -headerContainerViewH + min(-headerContainerViewY, headerH)
     }
     private var listMap: [Int: PagingList] = [:]
     private var canSeenHeader = false
     private var headerContainerView: UIView!
     private unowned var collectionView: MainCollectionView!
+    private var currentListView: UIScrollView?
     public var listCollectionView: UICollectionView {
         collectionView
     }
@@ -139,6 +136,7 @@ open class PagingView: UIView {
 
 extension PagingView {
     public func reloadData() {
+        currentListView = nil
         canSeenHeader = false
         headerContainerViewY = 0
         removeObserver()
@@ -147,19 +145,29 @@ extension PagingView {
         }
         listMap.removeAll()
         headerH = dataSource.heightForHeader(in: self)
-        pinHeaderH = dataSource.heightForPinHeader(in: self)
         
-        headerContainerViewH = headerH + pinHeaderH
+        headerContainerViewH = headerH
         let size = bounds.size
-        headerContainerView.frame = CGRect(x: 0, y: 0, width: size.width, height: headerContainerViewH)
         
+        let n = dataSource.numberOfLists(in: self)
+        selectedIndex = min(selectedIndex, n - 1)
+        headerContainerView.subviews.forEach {
+            $0.removeFromSuperview()
+        }
         dataSource.viewForHeader(in: self).do {
             $0.frame = CGRect(x: 0, y: 0, width: size.width, height: headerH)
             headerContainerView.addSubview($0)
         }
-        dataSource.viewForPinHeader(in: self).do {
-            $0.frame = CGRect(x: 0, y: headerH, width: size.width, height: pinHeaderH)
-            headerContainerView.addSubview($0)
+        if n == 0 {
+            pinHeaderH = 0
+        } else {
+            pinHeaderH = dataSource.heightForPinHeader(in: self)
+            dataSource.viewForPinHeader(in: self).do {
+                $0.frame = CGRect(x: 0, y: headerH, width: size.width, height: pinHeaderH)
+                headerContainerView.addSubview($0)
+        }
+        headerContainerViewH += pinHeaderH
+        headerContainerView.frame = CGRect(x: 0, y: 0, width: size.width, height: headerContainerViewH)
         }
         
         collectionView.contentOffset = CGPoint(x: size.width * CGFloat(selectedIndex), y: 0)
@@ -176,17 +184,20 @@ private extension PagingView {
         }
     }
     func collectionViewDidEndScroll(at index: Int) {
-        guard index != selectedIndex else { return }
-        guard let item = listMap[index],
-            let oldItem = listMap[selectedIndex] else { return }
+        changeSelectedIndex(to: index)
+        guard let item = listMap[index] else { return }
         selectedIndex = index
-        oldItem.listView.scrollsToTop = false
-        let listView = item.listView
-        listView.scrollsToTop = true
-        if listView.contentOffset.y <= -pinHeaderH {
+        if item.listView .contentOffset.y <= -pinHeaderH {
             headerContainerView.frame.origin.y = 0
             item.headerView.addSubview(headerContainerView)
         }
+    }
+    func changeSelectedIndex(to index: Int) {
+        guard index != selectedIndex else { return }
+        guard let item = listMap[index],
+            let oldItem = listMap[selectedIndex] else { return }
+        oldItem.listView.scrollsToTop = false
+        item.listView.scrollsToTop = true
     }
     func index(of listView: UIScrollView) -> Int? {
         listMap.first { $0.value.listView === listView }?.key
@@ -203,7 +214,8 @@ extension PagingView {
             let contentSize = scrollView.contentSize
             if contentSize.height < minContentSizeH {
                 scrollView.contentSize = CGSize(width: contentSize.width, height: minContentSizeH)
-                if let selectedListView = selectedListView, scrollView !== selectedListView {
+                if let current = currentListView,
+                    scrollView !== current {
                     scrollView.contentOffset = CGPoint(x: 0, y: initialListViewOffsetY)
                 }
             }
@@ -215,8 +227,9 @@ extension PagingView {
         guard let index = index(of: listView),
         index == selectedIndex else { return }
         
+        currentListView = listView
         let offset = listView.contentOffset
-        let scrollY = offset.y + listView.contentInset.top
+        let scrollY = offset.y + headerContainerViewH
         if scrollY < headerH {
             canSeenHeader = true
             headerContainerViewY = -scrollY
@@ -241,7 +254,7 @@ extension PagingView {
                 headerContainerViewY = -headerH
                 for (index, item) in listMap {
                     if index == selectedIndex { continue }
-                    item.listView.contentOffset = CGPoint(x: 0, y: headerContainerViewY)
+                    item.listView.contentOffset = CGPoint(x: 0, y: -pinHeaderH)
                 }
             }
         }
@@ -310,11 +323,7 @@ extension PagingView: UIScrollViewDelegate {
                 headerContainerView.frame.origin.y = headerContainerViewY
                 addSubview(headerContainerView)
             }
-            if index != selectedIndex {
-                selectedListView?.scrollsToTop = false
-                selectedIndex = index
-                selectedListView?.scrollsToTop = true
-            }
+            changeSelectedIndex(to: index)
         }
     }
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

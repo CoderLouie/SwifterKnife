@@ -96,18 +96,28 @@ extension PagingViewController: PagingViewDataSource {
 
     func numberOfLists(in pagingView: PagingView) -> Int {
         return dataSource.titles.count
+//        return 0
     }
 
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingListViewConvertible {
         let vc = SmoothListViewController()
         vc.title = dataSource.titles[index]
-        NSLog("initListAtIndex at\(index) \(vc.tableView)")
+//        NSLog("initListAtIndex at\(index) \(vc.tableView)")
         return vc
     }
 }
  
 
 
+class TestTableView: UITableView {
+    override var contentOffset: CGPoint {
+        didSet {
+            if contentOffset.y == -300 {
+                print("")
+            }
+        }
+    }
+}
 
 class SmoothListViewController: UIViewController, PagingListViewConvertible, UITableViewDataSource, UITableViewDelegate {
     func hostViewDidAppear() {
@@ -122,7 +132,7 @@ class SmoothListViewController: UIViewController, PagingListViewConvertible, UIT
         print("SmoothListViewController deinit")
     }
     lazy var tableView: UITableView = {
-        return UITableView(frame: CGRect.zero, style: .plain)
+        return TestTableView(frame: CGRect.zero, style: .plain)
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
