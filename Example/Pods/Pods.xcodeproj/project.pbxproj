@@ -156,7 +156,7 @@
 		BFBD7459C892DE469739556A7C9F3992 /* JXSegmentedTitleDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3259F70EBC5BDA42A33FB0577E246382 /* JXSegmentedTitleDataSource.swift */; };
 		C0D738490088F88E03C39D0F0FD26D4F /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111E78DB178F454BCEFA9A0204D0ECFD /* TextField.swift */; };
 		C0F5AEA1FED8DF3A47F9D7F5ACD743ED /* BinaryFloatingPoint+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166BC3C94B9141EA4F63342BE3DB461F /* BinaryFloatingPoint+Add.swift */; };
-		C2AFD5A372844BB31B1BEBCAC78351E9 /* PagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D5DAC2440AAE06FF71F7C33A0DB33 /* PagingView.swift */; };
+		C2AFD5A372844BB31B1BEBCAC78351E9 /* PagingSmoothView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D5DAC2440AAE06FF71F7C33A0DB33 /* PagingSmoothView.swift */; };
 		C58A80BA111A37D0E483DFC4C8ADEA61 /* Int+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC0B31AF7903BAEE69F3490E0F3A7A1 /* Int+Add.swift */; };
 		C68C26883CD662DDDBFBE2297311729A /* JXSegmentedTitleAttributeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E57CA10AE6E80BEEC30BBDF7DBD8752 /* JXSegmentedTitleAttributeDataSource.swift */; };
 		C91EF990D694B369D10662385AF27F0A /* UIEdgeInset+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA3E8DD643BAE4066E49F4FC775370 /* UIEdgeInset+Add.swift */; };
@@ -271,7 +271,7 @@
 		30A7CF434102FCDF77455E1F9CDDD72D /* MutableCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MutableCollection+Add.swift"; sourceTree = "<group>"; };
 		310D4399C9DC2AB0CCE88BED82693EDE /* Dictionary+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Dictionary+Add.swift"; sourceTree = "<group>"; };
 		31A47755F2F663273CB11DBF3AD4E76C /* JXSegmentedRTLLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedRTLLayout.swift; path = Sources/Common/JXSegmentedRTLLayout.swift; sourceTree = "<group>"; };
-		31FC4712C1DBE13B4D97B853FC08370C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		31FC4712C1DBE13B4D97B853FC08370C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3259F70EBC5BDA42A33FB0577E246382 /* JXSegmentedTitleDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedTitleDataSource.swift; path = Sources/Title/JXSegmentedTitleDataSource.swift; sourceTree = "<group>"; };
 		3314385B24C953BDA3A1E7BFE47F8D5A /* CGPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Add.swift"; sourceTree = "<group>"; };
 		33B90A191D753DC552334AC91585A778 /* JXSegmentedDotItemModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedDotItemModel.swift; path = Sources/Dot/JXSegmentedDotItemModel.swift; sourceTree = "<group>"; };
@@ -359,20 +359,20 @@
 		98FA735F06046D1C95FC316EE1442491 /* UINavigationController+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Add.swift"; sourceTree = "<group>"; };
 		9AC02089AAB15B7355F7E6E59608180A /* Collection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Collection+Add.swift"; sourceTree = "<group>"; };
 		9C9CC7A29782EC6B4B5998232A253435 /* CGAffineTransform+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGAffineTransform+Add.swift"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9DF89359A93D8335984A3055CD7DB8C0 /* PagingSegmentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PagingSegmentView.swift; sourceTree = "<group>"; };
 		A25C90FB4128330A57A9A5CF1281CDFA /* ConstraintDescription.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDescription.swift; path = Sources/ConstraintDescription.swift; sourceTree = "<group>"; };
 		A34D0BC00556E66450E7D2663E0A79B2 /* ConstraintConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintConfig.swift; path = Sources/ConstraintConfig.swift; sourceTree = "<group>"; };
 		A5077C4A8817E74EED1B266E8BA0EAF9 /* Pods-SwifterKnife_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwifterKnife_Example-frameworks.sh"; sourceTree = "<group>"; };
 		A78AC91E67AE4159C3EFAD85FBDA6404 /* Deque.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Deque.swift; sourceTree = "<group>"; };
 		A99FE3F653F973A206160572C24EE497 /* JXSegmentedTitleImageItemModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedTitleImageItemModel.swift; path = Sources/TitleImage/JXSegmentedTitleImageItemModel.swift; sourceTree = "<group>"; };
-		A9DFB3B027E7FB1212BA11BBB71EE386 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		A9DFB3B027E7FB1212BA11BBB71EE386 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		AB469EA7E1AE1B283282D2CCEB9AB3EC /* SwifterKnife.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwifterKnife.release.xcconfig; sourceTree = "<group>"; };
 		AD0DC486060E6F89B0E47B077843E1E0 /* Screen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		ADBC5A3FA21AAC8FF5AF129935DB4037 /* BidirectionalCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "BidirectionalCollection+Add.swift"; sourceTree = "<group>"; };
 		AED84E841709B4078DDA8E1E951621EC /* JXSegmentedBaseDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedBaseDataSource.swift; path = Sources/Core/JXSegmentedBaseDataSource.swift; sourceTree = "<group>"; };
 		AF5C1A72F7EECB51A9908A020AD26DCB /* LinearFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LinearFlowView.swift; sourceTree = "<group>"; };
-		AF7D5DAC2440AAE06FF71F7C33A0DB33 /* PagingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PagingView.swift; sourceTree = "<group>"; };
+		AF7D5DAC2440AAE06FF71F7C33A0DB33 /* PagingSmoothView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PagingSmoothView.swift; sourceTree = "<group>"; };
 		B1142E672FB0D0A12E3A49E8C6A037A4 /* KeyPath+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "KeyPath+Add.swift"; sourceTree = "<group>"; };
 		B2071043E6395CD9232A2194F71ACC6A /* PaddingLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		B2BDA637B2F208EACF928BC813E89EE7 /* SwifterKnife-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-prefix.pch"; sourceTree = "<group>"; };
@@ -387,7 +387,7 @@
 		C18320585AB66565D4C1C28AE9724326 /* UIView+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIView+Private.h"; sourceTree = "<group>"; };
 		C193BB4B5F61AD569D9E19D2BF2B2D65 /* Date+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Date+Add.swift"; sourceTree = "<group>"; };
 		C318BAC3F855F42AD953EEDE344B8024 /* Pods-SwifterKnife_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Example.release.xcconfig"; sourceTree = "<group>"; };
-		C3C9615A3691BBD7E44789EE98C7B638 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		C3C9615A3691BBD7E44789EE98C7B638 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		C478AFEBC8191F9F6EB83AC80311D640 /* JXSegmentedTitleGradientDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedTitleGradientDataSource.swift; path = Sources/TitleGradient/JXSegmentedTitleGradientDataSource.swift; sourceTree = "<group>"; };
 		C4B9BBF0BE27CB56C56628272D3898CE /* JXSegmentedBaseCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedBaseCell.swift; path = Sources/Core/JXSegmentedBaseCell.swift; sourceTree = "<group>"; };
 		C4D1999BED367284B4DFC81E85374D94 /* JXSegmentedIndicatorRainbowLineView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JXSegmentedIndicatorRainbowLineView.swift; path = Sources/Indicator/JXSegmentedIndicatorRainbowLineView.swift; sourceTree = "<group>"; };
@@ -568,7 +568,6 @@
 				E7E103B3596E50BA9708FDF28751433E /* UILayoutSupport+Extensions.swift */,
 				23AFC570CC5AE4EF42FE34CA327667FF /* Support Files */,
 			);
-			name = SnapKit;
 			path = SnapKit;
 			sourceTree = "<group>";
 		};
@@ -620,7 +619,6 @@
 				4FCCA1533BCF85BDCEB40D275D6B10D6 /* JXSegmentedViewTool.swift */,
 				20C3BFA90192932F4A59CC124D8319B9 /* Support Files */,
 			);
-			name = JXSegmentedView;
 			path = JXSegmentedView;
 			sourceTree = "<group>";
 		};
@@ -660,7 +658,6 @@
 				33DE2D54829FD68C1E6231C526B614CE /* Promise.swift */,
 				E53B8B450AE5ECAD233375BE63B9AF75 /* Promise+Extras.swift */,
 			);
-			name = Promise;
 			path = Promise;
 			sourceTree = "<group>";
 		};
@@ -670,7 +667,6 @@
 				4F79D6176F10A77589EEA175EBBD1518 /* DataCodable.swift */,
 				537EB67A928ECA040793A15BF3D5C706 /* ExCodable.swift */,
 			);
-			name = Protocol;
 			path = Protocol;
 			sourceTree = "<group>";
 		};
@@ -715,7 +711,6 @@
 				F7BA969E167F2894F4F556649629274B /* Language.swift */,
 				070F637657EC2AAD505FCF131BE529A3 /* LocalizedKeyRepresentable.swift */,
 			);
-			name = Localize;
 			path = Localize;
 			sourceTree = "<group>";
 		};
@@ -724,7 +719,6 @@
 			children = (
 				30A7433FCA8D0A27770B5E5167AA23CF /* ConstraintArrayDSL.swift */,
 			);
-			name = SnapKit;
 			path = SnapKit;
 			sourceTree = "<group>";
 		};
@@ -747,7 +741,6 @@
 				F4528FB0871E67B74DA9D7EF0947334C /* UICollectionView+Reusable.swift */,
 				F3C047908181A1A99E771E5890DFAE5C /* UITableView+Reusable.swift */,
 			);
-			name = Reusable;
 			path = Reusable;
 			sourceTree = "<group>";
 		};
@@ -769,7 +762,6 @@
 				4B1E4B3EAC8D803011EC7E58306A8CCB /* Stack.swift */,
 				510ED390F85158C01C3FE877BF8331FA /* WeakTable.swift */,
 			);
-			name = Builtlns;
 			path = Builtlns;
 			sourceTree = "<group>";
 		};
@@ -777,7 +769,7 @@
 			isa = PBXGroup;
 			children = (
 				9DF89359A93D8335984A3055CD7DB8C0 /* PagingSegmentView.swift */,
-				AF7D5DAC2440AAE06FF71F7C33A0DB33 /* PagingView.swift */,
+				AF7D5DAC2440AAE06FF71F7C33A0DB33 /* PagingSmoothView.swift */,
 			);
 			name = PagingView;
 			path = SwifterKnife/Classes/PagingView;
@@ -821,7 +813,6 @@
 			children = (
 				F34E4060ECF8C77DED1A1CA73C9EC406 /* DispatchQueue+Add.swift */,
 			);
-			name = Dispatch;
 			path = Dispatch;
 			sourceTree = "<group>";
 		};
@@ -835,7 +826,6 @@
 				CEFD269EFC9D8537B9CA821E4593DFBC /* URL+Add.swift */,
 				1B7180195F05E1A9B5055ED00EC9093C /* UserDefaults+Add.swift */,
 			);
-			name = Foundation;
 			path = Foundation;
 			sourceTree = "<group>";
 		};
@@ -874,7 +864,6 @@
 				496BA5DC6DB9304E1FC40D94160A109A /* UIViewController+Add.swift */,
 				55FCA8C97C0A932F507C97D5479D1118 /* Reusable */,
 			);
-			name = UIKit;
 			path = UIKit;
 			sourceTree = "<group>";
 		};
@@ -931,7 +920,6 @@
 				B344E77C9FC39D15AA579D889E395F85 /* CGRect+Add.swift */,
 				243A39370BA063C911469D0D75577285 /* CGSize+Add.swift */,
 			);
-			name = QuartzCore;
 			path = QuartzCore;
 			sourceTree = "<group>";
 		};
@@ -957,7 +945,6 @@
 				70B05E610AB8744E10ED81AC4124BA17 /* SignedInteger+Add.swift */,
 				B34D556D72C6CDB7C90031B9F4798D89 /* String+Add.swift */,
 			);
-			name = SwiftStdlib;
 			path = SwiftStdlib;
 			sourceTree = "<group>";
 		};
@@ -1355,7 +1342,7 @@
 				2F0848830502988FD8F1566B1690BD85 /* PaddingButton.swift in Sources */,
 				F3117CDD255628054B1C82716CAF45F4 /* PaddingLabel.swift in Sources */,
 				AF9741F1776D778ADF8BB43D49A9FD9F /* PagingSegmentView.swift in Sources */,
-				C2AFD5A372844BB31B1BEBCAC78351E9 /* PagingView.swift in Sources */,
+				C2AFD5A372844BB31B1BEBCAC78351E9 /* PagingSmoothView.swift in Sources */,
 				DF540897BABCF45AC815796E6B17F596 /* Position.swift in Sources */,
 				1A208299D27CF9C1EC901C5006123004 /* PriorityQueue.swift in Sources */,
 				97C81D1E9F60447C1BF5BD295972DD11 /* Promise.swift in Sources */,
@@ -1668,8 +1655,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
