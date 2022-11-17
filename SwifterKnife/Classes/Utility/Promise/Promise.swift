@@ -397,46 +397,6 @@ extension Promise {
         }
     }
     
-    private static func _generate<Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        _ reduce: @escaping (_ closure: @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        let res = Promise<Value>()
-        queue.async {
-            reduce { result in
-                switch result {
-                case .success(let v):
-                    res.fulfill(v)
-                case .failure(let e):
-                    res.reject(e)
-                }
-            }
-        }
-        return res
-    }
-    public static func generate<Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        _generate(queue: queue) { closure in
-            fn(closure)
-        }
-    }
-    public static func generate<P, Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        param: P,
-        _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        _generate(queue: queue) { closure in
-            fn(param, closure)
-        }
-    }
-    public static func generate<P1, P2, Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        param1: P1,
-        param2: P2,
-        _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        _generate(queue: queue) { closure in
-            fn(param1, param2, closure)
-        }
-    }
 }
 
 public typealias AnyPromise = Promise<Any>

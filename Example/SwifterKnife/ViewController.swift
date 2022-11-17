@@ -9,7 +9,6 @@
 import UIKit
 import SwifterKnife
 import SnapKit
-import Pods_SwifterKnife_Example
 
 enum Step: Int, CaseIterable {
     case step1 = 1
@@ -196,13 +195,13 @@ private func int2work(num1: Int, num2: Int, completion: @escaping (Result<String
 }
 func promise_test_entry() {
     let c1 = voidwork(completion:)
-    Promise<String>.generate(c1).trace("1")
+    Promises.generate(c1).trace("1")
     
     let c2 = intwork(num:completion:)
-    Promise<String>.generate(param: 10, c2).trace("2")
+    Promises.generate(param: 10, c2).trace("2")
     
     let c3 = int2work(num1:num2:completion:)
-    Promise<String>.generate(param1: 10, param2: 20, c3).trace("3")
+    Promises.generate(param1: 10, param2: 20, c3).trace("3")
 }
 fileprivate extension Promise {
     func trace(_ tag: String) {
@@ -273,32 +272,6 @@ private extension ViewController {
     func tagViewTest() {
         let imag = UIImage(named: "")
         imag?.withAlignmentRectInsets(.zero)
-    }
-    func async1() {
-        enum TestError: TimeoutError {
-            case timeout
-        }
-        [30, 40, 50].asyncReduce(into: [Int](),
-                                 errorType: TestError.self,
-                                 timeoutInterval: 5) { context, item, control in
-            print("开始请求 \(item)")
-            DispatchQueue.main.after(TimeInterval((1...3).randomElement()!)) {
-                print("\(item) 请求结束")
-                if item == 40, context.retryCount < 2 {
-                    control(.retry)
-                } else {
-                    context.result.append(item + 10)
-                    control(.next)
-                }
-            }
-        } onDone: { context, result in
-            result.unwrap { value in
-                print(value)
-            } onFailure: { err in
-                print(err)
-            }
-            print("")
-        }
     }
 }
 
@@ -578,7 +551,7 @@ extension ViewController {
 //        let str = NSStringFromSelector(sel)
 //        print(str)
 //        let res = imageView.perform(sel, with: NSNumber(2))
-//        print(res) 
+//        print(res)
         
 //        sender.isEnabled = !sender.isEnabled
 //        if !sender.isEnabled {

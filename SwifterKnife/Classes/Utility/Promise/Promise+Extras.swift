@@ -160,6 +160,89 @@ public enum Promises {
     }
 }
 
+extension Promises {
+    
+    private static func _generate<Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        _ reduce: @escaping (_ closure: @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        let res = Promise<Value>()
+        queue.async {
+            reduce { result in
+                switch result {
+                case .success(let v):
+                    res.fulfill(v)
+                case .failure(let e):
+                    res.reject(e)
+                }
+            }
+        }
+        return res
+    }
+    public static func generate<Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        _generate(queue: queue) { closure in
+            fn(closure)
+        }
+    }
+    public static func generate<P, Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        param: P,
+        _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        _generate(queue: queue) { closure in
+            fn(param, closure)
+        }
+    }
+    public static func generate<P1, P2, Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        param1: P1,
+        param2: P2,
+        _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        _generate(queue: queue) { closure in
+            fn(param1, param2, closure)
+        }
+    }
+}
+
+extension Promises {
+    public static func asyncMap
+    <Element, Value, Failure: Swift.Error>(
+        of array: [Element],
+        on queue: DispatchQueue = .global(qos: .userInitiated),
+        using closure: @escaping (_ element: Element,
+                         _ index: Int,
+                         _ completion: @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<[Value]> {
+        let promise = Promise<[Value]>()
+        var iterator = array.enumerated().makeIterator()
+        guard let first = iterator.next() else {
+            promise.fulfill([])
+            return promise
+        }
+        var res: [Value] = []
+        func work(pair: (offset: Int, element: Element)?) {
+            guard let pair = pair else {
+                promise.fulfill(res)
+                return
+            }
+            closure(pair.element, pair.offset) { result in
+                switch result {
+                case .success(let val):
+                    queue.async {
+                        res.append(val)
+                        work(pair: iterator.next())
+                    }
+                case .failure(let err):
+                    queue.async {
+                        promise.reject(StepError(step: pair.offset, error: err))
+                    }
+                }
+            }
+        }
+        queue.async { work(pair: first) }
+        return promise
+    }
+}
+
 extension Promise {
     public func addTimeout(_ timeout: TimeInterval) -> Promise<Value> {
         return Promises.race([self, Promises.timeout(timeout)])
