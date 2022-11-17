@@ -416,7 +416,7 @@ extension Promise {
     public static func generate<Value, Failure: Swift.Error>(
         queue: DispatchQueue = .global(qos: .userInitiated),
         _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        _generate { closure in
+        _generate(queue: queue) { closure in
             fn(closure)
         }
     }
@@ -424,7 +424,7 @@ extension Promise {
         queue: DispatchQueue = .global(qos: .userInitiated),
         param: P,
         _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        _generate { closure in
+        _generate(queue: queue) { closure in
             fn(param, closure)
         }
     }
@@ -433,7 +433,7 @@ extension Promise {
         param1: P1,
         param2: P2,
         _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        _generate { closure in
+        _generate(queue: queue) { closure in
             fn(param1, param2, closure)
         }
     }
