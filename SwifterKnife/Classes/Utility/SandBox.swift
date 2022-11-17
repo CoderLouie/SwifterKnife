@@ -43,7 +43,7 @@ public enum SandBox {
         try manager.removeItem(atPath: path)
     }
     
-    public static func fileExists(atPath path: String) -> (exists: Bool, isDirector: Bool) {
+    public static func fileExists(atPath path: String) -> (exists: Bool, isDirectory: Bool) {
         var isDirectory: ObjCBool = false
         let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
         return (exists, isDirectory.boolValue)

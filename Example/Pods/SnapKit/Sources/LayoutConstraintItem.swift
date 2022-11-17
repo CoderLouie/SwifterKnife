@@ -47,6 +47,18 @@ extension LayoutConstraintItem {
         }
     }
     
+    internal var _snp: ConstraintBasicAttributesDSL? {
+        if let view = self as? ConstraintView {
+            return view.snp
+        }
+        
+        if #available(iOS 9.0, OSX 10.11, *), let guide = self as? ConstraintLayoutGuide {
+            return guide.snp
+        }
+        
+        return nil
+    }
+    
     internal var superview: ConstraintView? {
         if let view = self as? ConstraintView {
             return view.superview

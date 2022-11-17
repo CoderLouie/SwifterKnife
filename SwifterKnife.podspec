@@ -53,9 +53,7 @@ Pod::Spec.new do |s|
   s.subspec 'Views' do |sp|
     sp.source_files =
     'SwifterKnife/Classes/Base/*.swift',
-    'SwifterKnife/Classes/Views/**/*.{swift,h,m}'
-    sp.exclude_files = 'SwifterKnife/Classes/Views/**/*.{h,m}'
-    sp.private_header_files = 'SwifterKnife/Classes/Views/**/*.{h}'
+    'SwifterKnife/Classes/Views/**/*.swift' 
     
     sp.dependency 'SnapKit'
   end

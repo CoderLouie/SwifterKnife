@@ -10,7 +10,6 @@
 #endif
 #endif
 
-#import "UIView+Private.h"
 
 FOUNDATION_EXPORT double SwifterKnifeVersionNumber;
 FOUNDATION_EXPORT const unsigned char SwifterKnifeVersionString[];

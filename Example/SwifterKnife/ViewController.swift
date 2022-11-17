@@ -107,10 +107,10 @@ class ViewController: UIViewController {
     }
     private func testPromise1() {
         let size1 = CGSize.zero
-        let new1 = size1.wx.fit
+        let new1 = size1.fit
         
         let font = UIFont.semibold(12)
-        let font1 = font.wx.fit
+        let font1 = font.fit
         
         let nums = [1, 2, 3]
         
@@ -124,6 +124,7 @@ class ViewController: UIViewController {
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        promise_test_entry()
 //        let key = Key<Int>("hahahha")
 //        Defaults.set(99, for: key)
 //        let val = Defaults.get(for: key)
@@ -177,6 +178,43 @@ class ViewController: UIViewController {
     private var index = 0
 }
 
+private func voidwork(completion: @escaping (Result<String, PromiseError>) -> Void) {
+    DispatchQueue.global().after(2) {
+        completion(.success("voidwork"))
+    }
+}
+private func intwork(num: Int, completion: @escaping (Result<String, PromiseError>) -> Void) {
+    DispatchQueue.global().after(2) {
+        completion(.success("\(num)"))
+    }
+}
+private func int2work(num1: Int, num2: Int, completion: @escaping (Result<String, PromiseError>) -> Void) {
+    DispatchQueue.global().after(2) {
+//        completion(.success("\(num1 + num2)"))
+        completion(.failure(.missed))
+    }
+}
+func promise_test_entry() {
+    let c1 = voidwork(completion:)
+    Promise<String>.generate(c1).trace("1")
+    
+    let c2 = intwork(num:completion:)
+    Promise<String>.generate(param: 10, c2).trace("2")
+    
+    let c3 = int2work(num1:num2:completion:)
+    Promise<String>.generate(param1: 10, param2: 20, c3).trace("3")
+}
+fileprivate extension Promise {
+    func trace(_ tag: String) {
+        then { val in
+            print(tag, "reolve", val)
+        } onRejected: { err in
+            print(tag, "reject", err)
+        }.catchs { err in
+            print(tag, "catch", err)
+        }
+    }
+}
 
 // MARK: - Async
 private extension ViewController {
@@ -421,95 +459,12 @@ extension ViewController {
 //            label.text = "\($0.grade)"
 //        }
     }
-    
-    @objc private func buttonDidClick(_ sender: Button) {
-        sender.isSelected = !sender.isSelected
-//        sender.configLabel(forState: .normal) {
-//            $0.textAlignment = .center
-//            $0.text = "selected"
-//        }
-    }
     private func setupButton1() {
         
         let e1: Either<Int, String>? = .left(3)
         let right = e1.selectRight()
         
         let color1: UIColor = .createBy(10,20,30)
-        
-        Button().do {
-            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 30)
-//            $0.labelFlexible = false
-//            $0.titleLayout = .left
-            $0.titleAndImageSpace = 5
-            $0.imageAndSpinnerSpace = 10
-//            $0.roundedDirection = .vertical
-            $0.config(forState: .normal) {
-//                $0.adjustsImageWhenHighlighted = false
-//                $0.adjustsImageWhenDisabled = false
-                $0.titleLayout = .right
-//                $0.frame.size = CGSize(width: 200, height: 80)
-                $0.layer.masksToBounds = true
-                $0.layer.cornerRadius = 10
-            }
-            $0.config(forState: .disabled) {
-                $0.titleLayout = .left
-            }
-            
-            $0.configGradientLayer(forState: .normal) {
-                $0.colors = [UIColor(hexString: "#FFCA70"),
-                             UIColor(hexString: "#FFAF28")].map { $0.cgColor }
-                $0.locations = [0, 1]
-                $0.startPoint = CGPoint(x: 0, y: 0.5)
-                $0.endPoint = CGPoint(x: 1, y: 0.5)
-            }
-            $0.configGradientLayer(forState: .disabled) {
-                $0.colors = [UIColor.lightGray,
-                             UIColor.darkGray].map { $0.cgColor }
-            }
-//            $0.config(forState: .loading) {
-//                $0.backgroundColor = .darkGray
-//            }
-            $0.configLabel(forState: .normal) {
-                $0.numberOfLines = 0
-//                $0.textAlignment = .center
-//                $0.preferredMaxLayoutWidth = 150
-//                $0.adjustsFontSizeToFitWidth = true
-                $0.textAlignment = .left
-                $0.text = "backgroundColorbackgroundColorbackgroundColorbackgroundColor"
-            }
-            $0.configLabel(forState: .highlighted) {
-                $0.text = "highlighted"
-            }
-            $0.configLabel(forState: .disabled) {
-                $0.text = "disabled"
-            }
-            $0.configLabel(forState: .selected) {
-//                $0.frame.size = CGSize(width: 100, height: 25)
-                $0.textAlignment = .center
-                $0.text = "selected"
-            }
-            $0.configImageView(forState: .normal) {
-                $0.image = UIImage(named: "ic_edit_contrast")
-            }
-//            $0.configImageView(forState: .loading) {
-//                $0.image = UIImage(named: "ic_edit_filter")
-////                $0.image = nil
-//            }
-            $0.configLabel(forState: .loading) {
-                $0.text = "Loading,Disabled"
-            }
-            $0.configSpinnerView(forState: .loading) {
-                $0.color = .red
-            }
-            $0.addTarget(self, action: #selector(buttonDidClick), for: .touchUpInside)
-            view.addSubview($0)
-//            $0.frame = CGRect(x: 100, y: 100, width: 120, height: 40)
-            $0.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalTo(200)
-//                make.height.equalTo(56)
-            }
-        }
     }
 }
 
@@ -623,8 +578,7 @@ extension ViewController {
 //        let str = NSStringFromSelector(sel)
 //        print(str)
 //        let res = imageView.perform(sel, with: NSNumber(2))
-//        print(res)
-        imageView.grayLevel = .dark
+//        print(res) 
         
 //        sender.isEnabled = !sender.isEnabled
 //        if !sender.isEnabled {

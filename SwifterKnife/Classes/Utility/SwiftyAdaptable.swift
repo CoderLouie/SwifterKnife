@@ -195,10 +195,29 @@ public struct iPhoneXDesign<T: SwiftyAdaptable>: UIDesignable {
         .uibodyHeight(reference: 734)
     }
 }
+public struct iPhone12Design<T: SwiftyAdaptable>: UIDesignable {
+    public let adaptable: T
+    public init(adaptable: T) {
+        self.adaptable = adaptable
+    }
+    public static var width: ScreenAdaptor {
+        .uiwidth(reference: 390)
+    }
+    
+    public static var height: ScreenAdaptor {
+        .uiheight(reference: 844)
+    }
+    public static var withoutHeaderHeight: ScreenAdaptor {
+        .uiwithoutHeaderHeight(reference: 797)
+    }
+    public static var bodyHeight: ScreenAdaptor {
+        .uibodyHeight(reference: 763)
+    }
+}
 
 extension SwiftyAdaptable {
-    public var ui: iPhoneXDesign<Self> {
-        iPhoneXDesign(adaptable: self)
+    public var ui: iPhone12Design<Self> {
+        iPhone12Design(adaptable: self)
     }
     
     public var fit: TargetType {

@@ -12,20 +12,25 @@ PODS:
     - SnapKit
 
 DEPENDENCIES:
+  - SnapKit (from `https://github.com/CoderLouie/SnapKit.git`, branch `my_source`)
   - SwifterKnife (from `../`)
 
-SPEC REPOS:
-  trunk:
-    - SnapKit
-
 EXTERNAL SOURCES:
+  SnapKit:
+    :branch: my_source
+    :git: https://github.com/CoderLouie/SnapKit.git
   SwifterKnife:
     :path: "../"
 
+CHECKOUT OPTIONS:
+  SnapKit:
+    :commit: e5806e8a120115f2b0fdb803cafc5b5e8f789fc3
+    :git: https://github.com/CoderLouie/SnapKit.git
+
 SPEC CHECKSUMS:
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
-  SwifterKnife: f6eda0c9695bbb4bd80b41ee6bcc90610d1212d0
+  SwifterKnife: 9d70b8a06b4380d457d71ccd64a878f6634a419a
 
-PODFILE CHECKSUM: c752aef62df9f94ad8ecea3d3f4cf1ca8bdf6468
+PODFILE CHECKSUM: ea6383921a6f61e19c1504618469a9894ea6116a
 
 COCOAPODS: 1.11.2

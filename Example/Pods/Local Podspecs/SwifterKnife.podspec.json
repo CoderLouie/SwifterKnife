@@ -41,10 +41,8 @@
       "name": "Views",
       "source_files": [
         "SwifterKnife/Classes/Base/*.swift",
-        "SwifterKnife/Classes/Views/**/*.{swift,h,m}"
+        "SwifterKnife/Classes/Views/**/*.swift"
       ],
-      "exclude_files": "SwifterKnife/Classes/Views/**/*.{h,m}",
-      "private_header_files": "SwifterKnife/Classes/Views/**/*.{h}",
       "dependencies": {
         "SnapKit": [
 

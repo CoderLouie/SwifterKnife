@@ -39,10 +39,10 @@ public protocol ConstraintDSL {
 extension ConstraintDSL {
     
     public func setLabel(_ value: String?) {
-        objc_setAssociatedObject(self.target as Any, &labelKey, value, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        objc_setAssociatedObject(target as Any, &labelKey, value, .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     public func label() -> String? {
-        return objc_getAssociatedObject(self.target as Any, &labelKey) as? String
+        return objc_getAssociatedObject(target as Any, &labelKey) as? String
     }
     
 }
@@ -56,75 +56,75 @@ extension ConstraintBasicAttributesDSL {
     // MARK: Basics
     
     public var left: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.left)
+        return ConstraintItem(target: target, attributes: .left)
     }
     
     public var top: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.top)
+        return ConstraintItem(target: target, attributes: .top)
     }
     
     public var right: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.right)
+        return ConstraintItem(target: target, attributes: .right)
     }
     
     public var bottom: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.bottom)
+        return ConstraintItem(target: target, attributes: .bottom)
     }
     
     public var leading: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.leading)
+        return ConstraintItem(target: target, attributes: .leading)
     }
     
     public var trailing: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.trailing)
+        return ConstraintItem(target: target, attributes: .trailing)
     }
     
     public var width: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.width)
+        return ConstraintItem(target: target, attributes: .width)
     }
     
     public var height: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.height)
+        return ConstraintItem(target: target, attributes: .height)
     }
     
     public var centerX: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.centerX)
+        return ConstraintItem(target: target, attributes: .centerX)
     }
     
     public var centerY: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.centerY)
+        return ConstraintItem(target: target, attributes: .centerY)
     }
     
     public var edges: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.edges)
+        return ConstraintItem(target: target, attributes: .edges)
     }
     
     public var directionalEdges: ConstraintItem {
-      return ConstraintItem(target: self.target, attributes: ConstraintAttributes.directionalEdges)
+      return ConstraintItem(target: target, attributes: .directionalEdges)
     }
 
     public var horizontalEdges: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.horizontalEdges)
+        return ConstraintItem(target: target, attributes: .horizontalEdges)
     }
 
     public var verticalEdges: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.verticalEdges)
+        return ConstraintItem(target: target, attributes: .verticalEdges)
     }
 
     public var directionalHorizontalEdges: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.directionalHorizontalEdges)
+        return ConstraintItem(target: target, attributes: .directionalHorizontalEdges)
     }
 
     public var directionalVerticalEdges: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.directionalVerticalEdges)
+        return ConstraintItem(target: target, attributes: .directionalVerticalEdges)
     }
 
     public var size: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.size)
+        return ConstraintItem(target: target, attributes: .size)
     }
     
     public var center: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.center)
+        return ConstraintItem(target: target, attributes: .center)
     }
     
 }
@@ -133,77 +133,73 @@ public protocol ConstraintAttributesDSL : ConstraintBasicAttributesDSL {
 }
 extension ConstraintAttributesDSL {
     
-    // MARK: Baselines
-    @available(*, deprecated, renamed:"lastBaseline")
-    public var baseline: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.lastBaseline)
-    }
+    // MARK: Baselines 
     
     @available(iOS 8.0, OSX 10.11, *)
     public var lastBaseline: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.lastBaseline)
+        return ConstraintItem(target: target, attributes: .lastBaseline)
     }
     
     @available(iOS 8.0, OSX 10.11, *)
     public var firstBaseline: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.firstBaseline)
+        return ConstraintItem(target: target, attributes: .firstBaseline)
     }
     
     // MARK: Margins
     
     @available(iOS 8.0, *)
     public var leftMargin: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.leftMargin)
+        return ConstraintItem(target: target, attributes: .leftMargin)
     }
     
     @available(iOS 8.0, *)
     public var topMargin: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.topMargin)
+        return ConstraintItem(target: target, attributes: .topMargin)
     }
     
     @available(iOS 8.0, *)
     public var rightMargin: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.rightMargin)
+        return ConstraintItem(target: target, attributes: .rightMargin)
     }
     
     @available(iOS 8.0, *)
     public var bottomMargin: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.bottomMargin)
+        return ConstraintItem(target: target, attributes: .bottomMargin)
     }
     
     @available(iOS 8.0, *)
     public var leadingMargin: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.leadingMargin)
+        return ConstraintItem(target: target, attributes: .leadingMargin)
     }
     
     @available(iOS 8.0, *)
     public var trailingMargin: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.trailingMargin)
+        return ConstraintItem(target: target, attributes: .trailingMargin)
     }
     
     @available(iOS 8.0, *)
     public var centerXWithinMargins: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.centerXWithinMargins)
+        return ConstraintItem(target: target, attributes: .centerXWithinMargins)
     }
     
     @available(iOS 8.0, *)
     public var centerYWithinMargins: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.centerYWithinMargins)
+        return ConstraintItem(target: target, attributes: .centerYWithinMargins)
     }
     
     @available(iOS 8.0, *)
     public var margins: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.margins)
+        return ConstraintItem(target: target, attributes: .margins)
     }
     
     @available(iOS 8.0, *)
     public var directionalMargins: ConstraintItem {
-      return ConstraintItem(target: self.target, attributes: ConstraintAttributes.directionalMargins)
+      return ConstraintItem(target: target, attributes: .directionalMargins)
     }
 
     @available(iOS 8.0, *)
     public var centerWithinMargins: ConstraintItem {
-        return ConstraintItem(target: self.target, attributes: ConstraintAttributes.centerWithinMargins)
+        return ConstraintItem(target: target, attributes: .centerWithinMargins)
     }
     
 }

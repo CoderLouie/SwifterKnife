@@ -382,8 +382,8 @@ public final class Promise<Value> {
 
 extension Promise {
     public func chain<T1>(
-            on queue: ExecutionContext = DispatchQueue.main,
-            transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
         return Promise<(Value, T1)> { fulfill, reject in
             self.addCallbacks(on: queue, onFulfilled: { value in
                 do {
@@ -394,6 +394,47 @@ extension Promise {
                     reject(error)
                 }
             }, onRejected: reject)
+        }
+    }
+    
+    private static func _generate<Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        _ reduce: @escaping (_ closure: @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        let res = Promise<Value>()
+        queue.async {
+            reduce { result in
+                switch result {
+                case .success(let v):
+                    res.fulfill(v)
+                case .failure(let e):
+                    res.reject(e)
+                }
+            }
+        }
+        return res
+    }
+    public static func generate<Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        _generate { closure in
+            fn(closure)
+        }
+    }
+    public static func generate<P, Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        param: P,
+        _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        _generate { closure in
+            fn(param, closure)
+        }
+    }
+    public static func generate<P1, P2, Value, Failure: Swift.Error>(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        param1: P1,
+        param2: P2,
+        _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+        _generate { closure in
+            fn(param1, param2, closure)
         }
     }
 }
