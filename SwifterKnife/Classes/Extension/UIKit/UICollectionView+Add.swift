@@ -57,11 +57,10 @@ open class CollectionHeaderView: UIView {
 
 
 public extension UICollectionView {
-    convenience init(layout: (UICollectionViewFlowLayout) -> Void, config: (UICollectionView) -> Void) {
+    convenience init(layout: (UICollectionViewFlowLayout) -> Void) {
         let flowLayout = UICollectionViewFlowLayout()
         layout(flowLayout)
         self.init(frame: .zero, collectionViewLayout: flowLayout)
-        config(self)
     }
     
     var headerView: CollectionHeaderView? {

@@ -204,6 +204,15 @@ extension Promises {
     }
 }
 
+public struct IndexError: Swift.Error {
+    public let index: Int
+    public let error: Swift.Error
+    
+    public init(index: Int, error: Swift.Error) {
+        self.index = index
+        self.error = error
+    }
+}
 extension Promises {
     public static func asyncMap
     <Element, Value, Failure: Swift.Error>(
@@ -233,7 +242,7 @@ extension Promises {
                     }
                 case .failure(let err):
                     queue.async {
-                        promise.reject(StepError(step: pair.offset, error: err))
+                        promise.reject(IndexError(index: pair.offset, error: err))
                     }
                 }
             }

@@ -235,7 +235,6 @@ private extension ViewController {
 //                cond(index < 3)
 //            }
 //        }
-
         
     }
     func otherTest2() {
@@ -437,7 +436,7 @@ extension ViewController {
         let e1: Either<Int, String>? = .left(3)
         let right = e1.selectRight()
         
-        let color1: UIColor = .createBy(10,20,30)
+        let color1: UIColor = .create(10,20,30)
     }
 }
 

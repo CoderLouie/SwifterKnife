@@ -102,41 +102,29 @@ extension UIEdgeInsets: SwiftyAdaptable {
 //}
 extension UIFont {
     @objc public var fit: UIFont {
-        let adaptor = iPhoneXDesign<Int>.width 
+        let adaptor = UIDesignReference.stander.uiwidth
         return withSize(round(adaptor.map(pointSize)))
     }
 }
 
-
-
 // MARK: - Designable
 public struct ScreenAdaptor {
-    /// 设计稿参考尺寸 比如设计稿按iPhoneX出，就是375
+    
+    public static var pixAligment: PixelAligment = .round
+    
+    /// 设计稿参考尺寸
     public let reference: CGFloat
-    /// 实际尺寸 比如屏幕宽度
+    /// 实际尺寸
     public let standard: CGFloat
     
     public func map(_ val: CGFloat) -> CGFloat {
         (standard / reference * val)
     }
     public func mapPix(_ val: CGFloat) -> CGFloat {
-        map(val).pix
+        map(val).pixel(Self.pixAligment)
     }
 }
-public extension ScreenAdaptor {
-    static func uiwidth(reference: CGFloat) -> ScreenAdaptor {
-        .init(reference: reference, standard: Screen.width)
-    }
-    static func uiheight(reference: CGFloat) -> ScreenAdaptor {
-        .init(reference: reference, standard: Screen.height)
-    }
-    static func uiwithoutHeaderHeight(reference: CGFloat) -> ScreenAdaptor {
-        .init(reference: reference, standard: Screen.withoutHeaderH)
-    }
-    static func uibodyHeight(reference: CGFloat) -> ScreenAdaptor {
-        .init(reference: reference, standard: Screen.bodyH)
-    }
-}
+
 public protocol BaseDesignable {
     associatedtype Adaptable: SwiftyAdaptable
     var adaptable: Adaptable { get }
@@ -176,48 +164,77 @@ extension UIDesignable {
         }
     }
 }
-public struct iPhoneXDesign<T: SwiftyAdaptable>: UIDesignable {
-    public let adaptable: T
-    public init(adaptable: T) {
-        self.adaptable = adaptable
-    }
-    public static var width: ScreenAdaptor {
-        .uiwidth(reference: 375)
+public struct UIDesignReference {
+    public let width: CGFloat
+    public let height: CGFloat
+    public let withoutHeaderHeight: CGFloat
+    public let bodyHeight: CGFloat
+    
+    public init(width: CGFloat,
+                height: CGFloat,
+                withoutHeaderHeight: CGFloat,
+                bodyHeight: CGFloat) {
+        self.width = width
+        self.height = height
+        self.withoutHeaderHeight = height
+        self.bodyHeight = bodyHeight
     }
     
-    public static var height: ScreenAdaptor {
-        .uiheight(reference: 812)
+    public static var stander: UIDesignReference = .iPhone12
+}
+public extension UIDesignReference {
+    static var iPhoneX: UIDesignReference {
+        .init(width: 375,
+              height: 812,
+              withoutHeaderHeight: 768,
+              bodyHeight: 734)
     }
-    public static var withoutHeaderHeight: ScreenAdaptor {
-        .uiwithoutHeaderHeight(reference: 768)
-    }
-    public static var bodyHeight: ScreenAdaptor {
-        .uibodyHeight(reference: 734)
+    static var iPhone12: UIDesignReference {
+        .init(width: 390,
+              height: 844,
+              withoutHeaderHeight: 797,
+              bodyHeight: 763)
     }
 }
-public struct iPhone12Design<T: SwiftyAdaptable>: UIDesignable {
-    public let adaptable: T
-    public init(adaptable: T) {
-        self.adaptable = adaptable
+public extension UIDesignReference {
+    var uiwidth: ScreenAdaptor {
+        .init(reference: width, standard: Screen.width)
     }
+    var uiheight: ScreenAdaptor {
+        .init(reference: height, standard: Screen.height)
+    }
+    var uiwithoutHeaderHeight: ScreenAdaptor {
+        .init(reference: withoutHeaderHeight, standard: Screen.withoutHeaderH)
+    }
+    var uibodyHeight: ScreenAdaptor {
+        .init(reference: bodyHeight, standard: Screen.bodyH)
+    }
+}
+extension UIDesignable {
     public static var width: ScreenAdaptor {
-        .uiwidth(reference: 390)
+        UIDesignReference.stander.uiwidth
     }
     
     public static var height: ScreenAdaptor {
-        .uiheight(reference: 844)
+        UIDesignReference.stander.uiheight
     }
     public static var withoutHeaderHeight: ScreenAdaptor {
-        .uiwithoutHeaderHeight(reference: 797)
+        UIDesignReference.stander.uiwithoutHeaderHeight
     }
     public static var bodyHeight: ScreenAdaptor {
-        .uibodyHeight(reference: 763)
+        UIDesignReference.stander.uibodyHeight
+    }
+}
+public struct UIDesigner<T: SwiftyAdaptable>: UIDesignable {
+    public let adaptable: T
+    public init(adaptable: T) {
+        self.adaptable = adaptable
     }
 }
 
 extension SwiftyAdaptable {
-    public var ui: iPhone12Design<Self> {
-        iPhone12Design(adaptable: self)
+    public var ui: UIDesigner<Self> {
+        UIDesigner(adaptable: self)
     }
     
     public var fit: TargetType {
@@ -236,3 +253,41 @@ extension SwiftyAdaptable {
         ui.fitS
     }
 }
+
+
+
+/*
+ extension UIDesignReference {
+     public func adaptor(_ keyPath: KeyPath<UIDesignReference, CGFloat>) -> ScreenAdaptor {
+         let stander: CGFloat
+         switch keyPath {
+         case \UIDesignReference.width:
+             stander = Screen.width
+         case \UIDesignReference.height:
+             stander = Screen.height
+         case \UIDesignReference.withoutHeaderHeight:
+             stander = Screen.withoutHeaderH
+         case \UIDesignReference.bodyHeight:
+             stander = Screen.bodyH
+         default:
+             stander = Screen.width
+         }
+         return .init(reference: self[keyPath: keyPath], standard: stander)
+     }
+ }
+ extension UIDesignable {
+     public static var width: ScreenAdaptor {
+         UIDesignReference.stander.adaptor(\.width)
+     }
+     
+     public static var height: ScreenAdaptor {
+         UIDesignReference.stander.adaptor(\.height)
+     }
+     public static var withoutHeaderHeight: ScreenAdaptor {
+         UIDesignReference.stander.adaptor(\.withoutHeaderHeight)
+     }
+     public static var bodyHeight: ScreenAdaptor {
+         UIDesignReference.stander.adaptor(\.bodyHeight)
+     }
+ }
+ */

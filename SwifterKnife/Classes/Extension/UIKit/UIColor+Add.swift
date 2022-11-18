@@ -107,12 +107,12 @@ public extension UIColor {
 
 // MARK: - Initializers
 public extension UIColor {
-    static func createBy(_ rgba: CGFloat...) -> UIColor {
+    static func create(_ rgba: CGFloat...) -> UIColor {
         guard rgba.count > 2 else { fatalError() }
         let alpha = rgba.count > 3 ? rgba[3] : 1.0
         return UIColor(r: rgba[0], g: rgba[1], b: rgba[2], a: alpha)
     }
-    static func createBy(_ hexString: String, alpha: CGFloat = 1.0) -> UIColor {
+    static func create(_ hexString: String, alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(hexString: hexString, alpha: alpha)
     }
     /// Create Color from RGB values with optional transparency.
