@@ -27,20 +27,17 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
 fileprivate enum TestCase: String, CaseIterable {
     case promise1 = "Promise1"
     case promise2 = "Promise2"
-    case lazy1 = "Lazy1"
     case lazy2 = "Lazy2"
+    case throttle = "throttle"
     func perform(from vc: DebugViewController) {
         switch self {
+        case .throttle:
+            vc.mapPresentAd()
         case .lazy2:
-            print(vc.res1.nullable ??? "nil")
-            print(vc.res1.isBuilt)
-            print(vc.res1.nonull.age)
-            print(vc.res1.isBuilt)
-        case .lazy1:
-            print(vc.res.nullable() ??? "nil")
-            print(vc.res.isBuilt())
-            print(vc.res.nonull().age)
-            print(vc.res.isBuilt())
+            print(vc.res.nullable ??? "nil")
+            print(vc.res.isBuilt)
+            print(vc.res.nonull.age)
+            print(vc.res.isBuilt)
         case .promise1:
             vc.promise.then { val in
                 print("reolve", val)
@@ -86,20 +83,30 @@ class Resource: CustomStringConvertible {
         print("res with \(age) deinit")
     }
 }
+extension Resource: Then {}
 
 class DebugViewController: BaseViewController {
+    lazy var mapPresentAd = Knife.throttle(presentAd(_:))
+    func presentAd(_ completion: @escaping () -> Void) {
+        print("enter presentAd")
+        DispatchQueue.main.after(2) {
+            completion()
+            print("exit presentAd")
+        }
+    }
+    
     override func setupViews() {
         super.setupViews()
         title = "Debug"
         setupBody()
     }
-    var res1 = Lazy { () -> Resource in
-//        print("execute laze closure1", self.n)
-        return Resource(age:  110)
-    }
-    lazy var res = Knife.lazy { () -> Resource in
-        print("execute laze closure", self.n)
-        return Resource(age: 10)
+//    lazy var res = Lazy(Resource(age:  110).then { _ in
+//        print("execute lazy", self.n)
+//    })
+    lazy var res = Lazy {
+        Resource(age:  110).then { _ in
+            print("execute lazy", self.n)
+        }
     }
     // 不会循环引用，但是会等promise完成后，self才会释放
     private let n = 100
