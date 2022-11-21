@@ -167,6 +167,11 @@ open class GradientControl: UIControl {
         case vertical
     }
     
+    public enum RoundedWay {
+        case fixed(CGFloat)
+        case dynamic(RoundedDirection)
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         layer.masksToBounds = true
@@ -190,9 +195,8 @@ open class GradientControl: UIControl {
             setNeedsLayout()
         }
     }
-    public var roundedDirection: RoundedDirection? = nil {
+    public var roundedWay: RoundedWay? = nil {
         didSet {
-            guard roundedDirection != oldValue else { return }
             setNeedsLayout()
         }
     }
@@ -213,12 +217,16 @@ open class GradientControl: UIControl {
         let bounds = bounds
         gradientLayer.frame = bounds
         
-        if let dir = roundedDirection {
-            let radius = dir == .horizontal ? bounds.width * 0.5 : bounds.height * 0.5
-            layer.cornerRadius = radius
-        } else {
-            layer.cornerRadius = 0
-        }
+        var radius: CGFloat
+        if let way = roundedWay {
+            switch way {
+            case .fixed(let rad):
+                radius = rad
+            case .dynamic(let dir):
+                radius = dir == .horizontal ? bounds.width * 0.5 : bounds.height * 0.5
+            }
+        } else { radius = 0 }
+        layer.cornerRadius = radius
         
         switch gradientComponent {
         case .background:
@@ -226,14 +234,17 @@ open class GradientControl: UIControl {
         case .border(let w):
             let maskLayer = CAShapeLayer()
             maskLayer.lineWidth = w
-            if let dir = roundedDirection {
-                let w2 = w * 0.5
-                let pathBounds = bounds.inset(by: UIEdgeInsets(top: w2, left: w2, bottom: w2, right: w2))
-                let radius = dir == .horizontal ? pathBounds.width * 0.5 : pathBounds.height * 0.5
-                maskLayer.path = UIBezierPath(roundedRect: pathBounds, cornerRadius: radius).cgPath
-            } else {
-                maskLayer.path = UIBezierPath(rect: bounds).cgPath
-            }
+            let w2 = w * 0.5
+            let pathBounds = bounds.inset(by: UIEdgeInsets(top: w2, left: w2, bottom: w2, right: w2))
+            if let way = roundedWay {
+                switch way {
+                case .fixed(let rad):
+                    radius = rad
+                case .dynamic(let dir):
+                    radius = dir == .horizontal ? pathBounds.width * 0.5 : pathBounds.height * 0.5
+                }
+            } else { radius = 0 }
+            maskLayer.path = UIBezierPath(roundedRect: pathBounds, cornerRadius: radius).cgPath
             maskLayer.fillColor = UIColor.clear.cgColor
             maskLayer.strokeColor = UIColor.black.cgColor
             

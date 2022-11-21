@@ -34,6 +34,8 @@
 		B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */; };
 		B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
+		B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05DF292A73D00057E659 /* DebugViewController.swift */; };
+		B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05E1292A751F0057E659 /* HomeViewController.swift */; };
 		B6FEE108283CB5EC00D8BCB2 /* h2000.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +92,8 @@
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		B6ED86802726A1E3003103F6 /* KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKView.m; sourceTree = "<group>"; };
+		B6FC05DF292A73D00057E659 /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		B6FC05E1292A751F0057E659 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = h2000.jpg; sourceTree = "<group>"; };
 		FDF23D8F2334AA5654A348C1 /* Pods-SwifterKnife_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Example.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,7 +157,9 @@
 				B6B5FAF2272BE558001BBBE1 /* IAP */,
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
+				B6FC05E1292A751F0057E659 /* HomeViewController.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				B6FC05DF292A73D00057E659 /* DebugViewController.swift */,
 				B6ED867F2726A1E3003103F6 /* KKView.h */,
 				B6ED86802726A1E3003103F6 /* KKView.m */,
 				B6B038F3290B71830091B31D /* Watchdog.swift */,
@@ -436,6 +442,7 @@
 				B6B2871D276361EA00486E61 /* ColumnKey.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
+				B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */,
 				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
 				B6B2871C276361EA00486E61 /* DBStorable.swift in Sources */,
@@ -445,6 +452,7 @@
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,
+				B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B650CCA0282374E8003170BB /* Permission.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,

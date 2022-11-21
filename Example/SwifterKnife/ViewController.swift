@@ -57,7 +57,6 @@ class ViewController: UIViewController {
 //        setupRatingView()
 //        setupImageView()
         setupGradientControl()
-        
 //        let stus: [Student] = []
 //        let newStus = stus.sorted(by: +[+\.age, +\.score, +\.name])
         
@@ -72,7 +71,7 @@ class ViewController: UIViewController {
             $0.backgroundColor = .lightGray
             $0.gradientColors = [UIColor(hexString: "#FFCA70"),
                                  UIColor(hexString: "#FFAF28")]
-            $0.roundedDirection = .vertical
+            $0.roundedWay = .dynamic(.horizontal)
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
