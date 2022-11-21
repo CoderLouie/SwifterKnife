@@ -32,12 +32,14 @@ fileprivate enum TestCase: String, CaseIterable {
     func perform(from vc: DebugViewController) {
         switch self {
         case .throttle:
-            vc.mapPresentAd()
+//            vc.mapPresentAd()
+            break
         case .lazy2:
-            print(vc.res.nullable ??? "nil")
-            print(vc.res.isBuilt)
-            print(vc.res.nonull.age)
-            print(vc.res.isBuilt)
+            break
+//            print(vc.res.nullable ??? "nil")
+//            print(vc.res.isBuilt)
+//            print(vc.res.nonull.age)
+//            print(vc.res.isBuilt)
         case .promise1:
             vc.promise.then { val in
                 print("reolve", val)
@@ -86,7 +88,7 @@ class Resource: CustomStringConvertible {
 extension Resource: Then {}
 
 class DebugViewController: BaseViewController {
-    lazy var mapPresentAd = Knife.throttle(presentAd(_:))
+//    lazy var mapPresentAd = Knife.throttle(presentAd(_:))
     func presentAd(_ completion: @escaping () -> Void) {
         print("enter presentAd")
         DispatchQueue.main.after(2) {
@@ -103,11 +105,11 @@ class DebugViewController: BaseViewController {
 //    lazy var res = Lazy(Resource(age:  110).then { _ in
 //        print("execute lazy", self.n)
 //    })
-    lazy var res = Lazy {
-        Resource(age:  110).then { _ in
-            print("execute lazy", self.n)
-        }
-    }
+//    lazy var res = Lazy {
+//        Resource(age:  110).then { _ in
+//            print("execute lazy", self.n)
+//        }
+//    }
     // 不会循环引用，但是会等promise完成后，self才会释放
     private let n = 100
     lazy var promise = Promise<Int>.create { fulfill, reject in

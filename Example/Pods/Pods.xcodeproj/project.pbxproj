@@ -100,7 +100,6 @@
 		B40E81984871F3DEC37DE17659138198 /* Pods-SwifterKnife_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 619A57EFE0D912DFEBD4DE168DB50242 /* Pods-SwifterKnife_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B43017FEC99D227D4CDD81DD2C27D9D9 /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A527ED8F0A719FF610D743A87DAD3 /* ConstraintMakerPrioritizable.swift */; };
 		B43F79A30C830ACE85690A0A47D0137F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC1437E9EF07EC7CD717D1087E54DB9 /* Position.swift */; };
-		B6FC05E4292A767B0057E659 /* Knife.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05E3292A767B0057E659 /* Knife.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		B7709BB22E50E367CE3F3D6F14ACD4D7 /* AspectImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7739E99C26EA684C7BA693823AA9B544 /* AspectImageView.swift */; };
 		B8611CAB4B43409AD7D8183F0D8558E0 /* SwiftyAdaptable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3191FDF8AF85701D18BBF11E5B6D28 /* SwiftyAdaptable.swift */; };
@@ -290,7 +289,6 @@
 		B16658D4E576BD8855D201AAD78F674C /* LocalizedKeyRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalizedKeyRepresentable.swift; sourceTree = "<group>"; };
 		B4B4442E98A1C35234EC1C16B7ADD637 /* LayoutGuide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LayoutGuide.swift; sourceTree = "<group>"; };
 		B57B4B15AAC3AB24B43306829FAA77A0 /* ConstraintPriority.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriority.swift; path = Sources/ConstraintPriority.swift; sourceTree = "<group>"; };
-		B6FC05E3292A767B0057E659 /* Knife.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Knife.swift; sourceTree = "<group>"; };
 		B7E52A6B9EB889CB7D2802C04B814F7B /* ScrollViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
 		BB67CFA01D2A73C89E6ED092B3195D53 /* SwifterKnife-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-umbrella.h"; sourceTree = "<group>"; };
@@ -598,7 +596,6 @@
 				51958847F73D0B6EEA5BC24A92929449 /* Console.swift */,
 				BF7E2E25E7C1C44338FA6B1976DD507B /* Either.swift */,
 				B0F9670A66012AD161E5D3AE193479D6 /* Haptic.swift */,
-				B6FC05E3292A767B0057E659 /* Knife.swift */,
 				166329313C7DCFC9D8A9648ED44B1ABF /* SandBox.swift */,
 				C0D472343E987010E12430943DAB72D5 /* Screen.swift */,
 				AE3191FDF8AF85701D18BBF11E5B6D28 /* SwiftyAdaptable.swift */,
@@ -969,7 +966,6 @@
 				91BF25D1ECA363BBE8870D7FFA0CBF2A /* ConstraintArrayDSL.swift in Sources */,
 				78DA4850AB5A5AE4E58008BE2AD3CE65 /* CustomTextView.swift in Sources */,
 				BB1C797259EA093559B54246A217DF63 /* Data+Add.swift in Sources */,
-				B6FC05E4292A767B0057E659 /* Knife.swift in Sources */,
 				1ABF32E73798DD73FD621C3BDCFA3EA2 /* DataCodable.swift in Sources */,
 				2EE4517DAAE5F2B1386D69FC037BCD5C /* Date+Add.swift in Sources */,
 				4675BE49531CDFB95ADAB9AC114D4BFC /* Deque.swift in Sources */,
