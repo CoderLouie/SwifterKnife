@@ -226,7 +226,8 @@ open class SequenceView: LayoutView {
     
     public func addArrangedViews(_ views: [UIView]) {
         items.append(contentsOf: views.map {
-            SequenceItem(view: $0, alignment: alignment)
+            addSubview($0)
+            return SequenceItem(view: $0, alignment: alignment)
         })
     }
     public func addArrangedViews(_ views: UIView...) {

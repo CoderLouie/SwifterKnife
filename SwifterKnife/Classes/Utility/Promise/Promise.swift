@@ -296,7 +296,8 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
         return mapError(on: queue) { error in
             if let stepErr = error as? StepError {
-                return StepError(step: s, error: rawError(stepErr))
+//                return StepError(step: s, error: rawError(stepErr))
+                return stepErr
             }
             return StepError(step: s, error: rawError(error))
         }

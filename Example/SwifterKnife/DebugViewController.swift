@@ -53,7 +53,7 @@ fileprivate enum TestCase: String, CaseIterable {
                 DispatchQueue.main.after(1) {
 //                    fulfill(100)
 //                    reject(PromiseError.missed)
-                    reject(StepError(step: 3, error: StepError(step: 2, error: PromiseError.missed)))
+                    reject(StepError(step: 10, error: StepError(step: 9, error: PromiseError.missed)))
                 }
             }.step(1).flatMap { val in
                 return Promise<String>.create { fulfill, reject in
@@ -62,7 +62,7 @@ fileprivate enum TestCase: String, CaseIterable {
 //                        reject(PromiseError.missed)
                     }
                 }.step(2)
-            }.then { val in
+            }.step(5).then { val in
                 print("reolve", val)
             } onRejected: { err in
                 print("reject", err)
