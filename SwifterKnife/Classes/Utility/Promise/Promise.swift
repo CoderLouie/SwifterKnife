@@ -209,32 +209,7 @@ public final class Promise<Value> {
             work(promise)
         }
         return promise
-    }
-//    public static func wrap<Success, Failure: Swift.Error>(
-//            queue: DispatchQueue = .global(qos: .userInitiated),
-//            mapSuccess: @escaping (Success) throws -> Value?,
-//            work: @escaping (_ completion: @escaping (Result<Success, Failure>) -> Void) -> Void) -> Promise<Value> {
-//        let promise = Promise<Value>()
-//        queue.async {
-//            work { result in
-//                switch result {
-//                case .success(let success):
-//                    do {
-//                        if let val = try mapSuccess(success) {
-//                            promise.fulfill(val)
-//                        } else {
-//                            promise.reject(PromiseError.missed)
-//                        }
-//                    } catch {
-//                        promise.reject(error)
-//                    }
-//                case .failure(let e):
-//                    promise.reject(e)
-//                }
-//            }
-//        }
-//        return promise
-//    }
+    } 
     
     public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?) -> (Result<Success, Failure>) -> Void  {
         return { result in
