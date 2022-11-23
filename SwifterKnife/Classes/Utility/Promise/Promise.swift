@@ -201,6 +201,75 @@ public final class Promise<Value> {
             _ reject: @escaping (Error) -> Void) throws -> Void) -> Promise<Value> {
         return .init(queue: queue, work: work)
     }
+    public static func create(
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        work: @escaping (Promise<Value>) -> Void) -> Promise<Value> {
+        let promise = Promise<Value>()
+        queue.async {
+            work(promise)
+        }
+        return promise
+    }
+//    public static func wrap<Success, Failure: Swift.Error>(
+//            queue: DispatchQueue = .global(qos: .userInitiated),
+//            mapSuccess: @escaping (Success) throws -> Value?,
+//            work: @escaping (_ completion: @escaping (Result<Success, Failure>) -> Void) -> Void) -> Promise<Value> {
+//        let promise = Promise<Value>()
+//        queue.async {
+//            work { result in
+//                switch result {
+//                case .success(let success):
+//                    do {
+//                        if let val = try mapSuccess(success) {
+//                            promise.fulfill(val)
+//                        } else {
+//                            promise.reject(PromiseError.missed)
+//                        }
+//                    } catch {
+//                        promise.reject(error)
+//                    }
+//                case .failure(let e):
+//                    promise.reject(e)
+//                }
+//            }
+//        }
+//        return promise
+//    }
+    
+    public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?) -> (Result<Success, Failure>) -> Void  {
+        return { result in
+            self.consume(result, mapSuccess: mapSuccess)
+        }
+    }
+    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, mapSuccess: (Success) throws -> Value?) {
+        switch result {
+        case .success(let success):
+            do {
+                if let val = try mapSuccess(success) {
+                    fulfill(val)
+                } else {
+                    reject(PromiseError.missed)
+                }
+            } catch {
+                reject(error)
+            }
+        case .failure(let e):
+            reject(e)
+        }
+    }
+    public func produce<Failure: Swift.Error>() -> (Result<Value, Failure>) -> Void  {
+        return { result in
+            self.consume(result)
+        }
+    }
+    public func consume<Failure: Swift.Error>(_ result: Result<Value, Failure>) {
+        switch result {
+        case .success(let success):
+            fulfill(success)
+        case .failure(let e):
+            reject(e)
+        }
+    }
 
     public func flatMap<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,

@@ -194,13 +194,13 @@ private func int2work(num1: Int, num2: Int, completion: @escaping (Result<String
 }
 func promise_test_entry() {
     let c1 = voidwork(completion:)
-    Promises.generate(c1).trace("1")
+    Promises.wrap(c1).trace("1")
     
     let c2 = intwork(num:completion:)
-    Promises.generate(param: 10, c2).trace("2")
+    Promises.wrap(param: 10, c2).trace("2")
     
     let c3 = int2work(num1:num2:completion:)
-    Promises.generate(param1: 10, param2: 20, c3).trace("3")
+    Promises.wrap(param1: 10, param2: 20, c3).trace("3")
 }
 fileprivate extension Promise {
     func trace(_ tag: String) {
