@@ -43,21 +43,18 @@ fileprivate enum TestCase: String, CaseIterable {
 //            print(vc.res.isBuilt)
         case .promise3:
             Console.trace("bengin retry")
-            Promises.retry(attempts: 4, delay: 2) { n, error in
-                Console.trace("第 \(n) 次重试 \(error)")
-//                if n > 2 { return false }
-                return true
-            } generate: { n -> Promise<Int> in
-                Console.trace("第 \(n) 次生成 promise")
+            Promises.retry(delay: 2) { n, error -> Promise<Int>? in
+                if n > 4 { return nil }
+                Console.trace("第 \(n) 次生成 promise, \(error) \(Thread.current)")
                 return Promise<Int>.create { fulfill, reject in
                     DispatchQueue.main.after(1) {
                         reject(StepError(step: n))
                     }
                 }
             }.then { val in
-                print("reolve", val)
+                Console.trace("reolve", val)
             } onRejected: { err in
-                print("reject", err)
+                Console.trace("reject", err)
             }
 
         case .promise1:

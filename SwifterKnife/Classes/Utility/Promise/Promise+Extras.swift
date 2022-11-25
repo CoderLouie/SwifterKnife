@@ -17,28 +17,24 @@ public enum PromiseError: Swift.Error {
 fileprivate func PromiseRetry<T>(
     _ promise: Promise<T>,
     onQueue queue: DispatchQueue,
-    maxRetryCount: Int,
     retryCount: Int,
     delay interval: TimeInterval,
-    condition predicate: ((Int, Swift.Error) -> Bool)? = nil,
-    generate: @escaping (Int) -> Promise<T>) {
-    queue.async {
-        generate(retryCount).then(on: queue) {
+    dueError error: Swift.Error,
+    generate: @escaping (Int, Swift.Error) throws -> Promise<T>?) {
+    do {
+        guard let innerPromise = try generate(retryCount, error) else {
+            promise.reject(error)
+            return
+        }
+        innerPromise.then(on: queue) {
             promise.fulfill($0)
         } onRejected: { error in
-            if retryCount == maxRetryCount {
-                promise.reject(error)
-                return
-            }
-            let retryCount = retryCount + 1
-            if let predicate = predicate, !predicate(retryCount, error) {
-                promise.reject(error)
-                return
-            }
             queue.after(interval) {
-                PromiseRetry(promise, onQueue: queue, maxRetryCount: maxRetryCount, retryCount: retryCount, delay: interval, condition: predicate, generate: generate)
+                PromiseRetry(promise, onQueue: queue,  retryCount: retryCount + 1, delay: interval, dueError: error, generate: generate)
             }
         }
+    } catch {
+        promise.reject(error)
     }
 }
 
@@ -94,13 +90,12 @@ public enum Promises {
  
     public static func retry<T>(
         onQueue queue: DispatchQueue = .global(qos: .userInitiated),
-        attempts count: Int,
         delay interval: TimeInterval,
-        condition predicate: ((Int, Swift.Error) -> Bool)? = nil,
-        generate: @escaping (Int) -> Promise<T>) -> Promise<T> {
+        generate: @escaping (Int, Swift.Error) throws -> Promise<T>?) -> Promise<T> {
         let promise = Promise<T>()
-        PromiseRetry(promise, onQueue: queue, maxRetryCount: count, retryCount: 0, delay: interval, condition: predicate, generate: generate)
-        
+        queue.async {
+            PromiseRetry(promise, onQueue: queue, retryCount: 0, delay: interval, dueError: PromiseError.empty, generate: generate)
+        }
         return promise
     }
 
