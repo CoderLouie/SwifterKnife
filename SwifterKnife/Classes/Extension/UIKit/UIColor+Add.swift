@@ -24,7 +24,7 @@ public extension UIColor {
     ///     NSColor.green.rgbComponents.green -> 255
     ///     UIColor.blue.rgbComponents.blue -> 255
     ///
-    var rgbComponents: (red: Int, green: Int, blue: Int) {
+    var rgbComponents: (red: Int, green: Int, blue: Int, alpha: CGFloat) {
         let components: [CGFloat] = {
             let comps: [CGFloat] = cgColor.components!
             guard comps.count != 4 else { return comps }
@@ -33,7 +33,8 @@ public extension UIColor {
         let red = components[0]
         let green = components[1]
         let blue = components[2]
-        return (red: Int(red * 255.0), green: Int(green * 255.0), blue: Int(blue * 255.0))
+        let alpha = components[3]
+        return (red: Int(red * 255.0), green: Int(green * 255.0), blue: Int(blue * 255.0), alpha: alpha)
     }
  
     /// RGB components for a Color represented as CGFloat numbers (between 0 and 1).
@@ -42,7 +43,7 @@ public extension UIColor {
     ///     NSColor.green.rgbComponents.green -> 1.0
     ///     UIColor.blue.rgbComponents.blue -> 1.0
     ///
-    var cgFloatComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
+    var cgFloatComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         let components: [CGFloat] = {
             let comps: [CGFloat] = cgColor.components!
             guard comps.count != 4 else { return comps }
@@ -51,7 +52,8 @@ public extension UIColor {
         let red = components[0]
         let green = components[1]
         let blue = components[2]
-        return (red: red, green: green, blue: blue)
+        let alpha = components[3]
+        return (red: red, green: green, blue: blue, alpha: alpha)
     }
  
     /// Get components of hue, saturation, and brightness, and alpha (read-only).

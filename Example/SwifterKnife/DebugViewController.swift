@@ -27,6 +27,7 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
 fileprivate enum TestCase: String, CaseIterable {
     case promise1 = "Promise1"
     case promise2 = "Promise2"
+    case promise3 = "Promise Retry"
     case lazy2 = "Lazy2"
     case throttle = "throttle"
     func perform(from vc: DebugViewController) {
@@ -40,6 +41,25 @@ fileprivate enum TestCase: String, CaseIterable {
 //            print(vc.res.isBuilt)
 //            print(vc.res.nonull.age)
 //            print(vc.res.isBuilt)
+        case .promise3:
+            Console.trace("bengin retry")
+            Promises.retry(attempts: 4, delay: 2) { n, error in
+                Console.trace("第 \(n) 次重试 \(error)")
+//                if n > 2 { return false }
+                return true
+            } generate: { n -> Promise<Int> in
+                Console.trace("第 \(n) 次生成 promise")
+                return Promise<Int>.create { fulfill, reject in
+                    DispatchQueue.main.after(1) {
+                        reject(StepError(step: n))
+                    }
+                }
+            }.then { val in
+                print("reolve", val)
+            } onRejected: { err in
+                print("reject", err)
+            }
+
         case .promise1:
             vc.promise.then { val in
                 print("reolve", val)

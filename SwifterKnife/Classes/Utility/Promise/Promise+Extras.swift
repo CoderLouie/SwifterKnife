@@ -14,6 +14,34 @@ public enum PromiseError: Swift.Error {
     case empty
 }
 
+fileprivate func PromiseRetry<T>(
+    _ promise: Promise<T>,
+    onQueue queue: DispatchQueue,
+    maxRetryCount: Int,
+    retryCount: Int,
+    delay interval: TimeInterval,
+    condition predicate: ((Int, Swift.Error) -> Bool)? = nil,
+    generate: @escaping (Int) -> Promise<T>) {
+    queue.async {
+        generate(retryCount).then(on: queue) {
+            promise.fulfill($0)
+        } onRejected: { error in
+            if retryCount == maxRetryCount {
+                promise.reject(error)
+                return
+            }
+            let retryCount = retryCount + 1
+            if let predicate = predicate, !predicate(retryCount, error) {
+                promise.reject(error)
+                return
+            }
+            queue.after(interval) {
+                PromiseRetry(promise, onQueue: queue, maxRetryCount: maxRetryCount, retryCount: retryCount, delay: interval, condition: predicate, generate: generate)
+            }
+        }
+    }
+}
+
 public enum Promises {
     /// Wait for all the promises you give it to fulfill, and once they have, fulfill itself
     /// with the array of all fulfilled values.
@@ -64,20 +92,31 @@ public enum Promises {
         }
     }
 
+//    public static func retry<T>(
+//        count: Int,
+//        delay: TimeInterval,
+//        generate: @escaping (Int) -> Promise<T>) -> Promise<T> {
+//        if count <= 0 {
+//            return generate(count)
+//        }
+//        return Promise<T> { fulfill, reject in
+//            generate(count).recover { error in
+//                return self.delay(delay).flatMap {
+//                    return retry(count: count-1, delay: delay, generate: generate)
+//                }
+//            }.then(onFulfilled: fulfill, onRejected: reject)
+//        }
+//    }
     public static func retry<T>(
-        count: Int,
-        delay: TimeInterval,
+        onQueue queue: DispatchQueue = .global(qos: .userInitiated),
+        attempts count: Int,
+        delay interval: TimeInterval,
+        condition predicate: ((Int, Swift.Error) -> Bool)? = nil,
         generate: @escaping (Int) -> Promise<T>) -> Promise<T> {
-        if count <= 0 {
-            return generate(count)
-        }
-        return Promise<T> { fulfill, reject in
-            generate(count).recover { error in
-                return self.delay(delay).flatMap {
-                    return retry(count: count-1, delay: delay, generate: generate)
-                }
-            }.then(onFulfilled: fulfill, onRejected: reject)
-        }
+        let promise = Promise<T>()
+        PromiseRetry(promise, onQueue: queue, maxRetryCount: count, retryCount: 0, delay: interval, condition: predicate, generate: generate)
+        
+        return promise
     }
 
     public static func kickoff<T>(
@@ -160,42 +199,42 @@ public enum Promises {
     }
 }
 
-extension Promises {
-    
-    public static func wrap<Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        let res = Promise<Value>()
-        queue.async {
-            fn { result in
-                switch result {
-                case .success(let v):
-                    res.fulfill(v)
-                case .failure(let e):
-                    res.reject(e)
-                }
-            }
-        }
-        return res
-    }
-    public static func wrap<P, Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        param: P,
-        _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        wrap(queue: queue) { closure in
-            fn(param, closure)
-        }
-    }
-    public static func wrap<P1, P2, Value, Failure: Swift.Error>(
-        queue: DispatchQueue = .global(qos: .userInitiated),
-        param1: P1,
-        param2: P2,
-        _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-        wrap(queue: queue) { closure in
-            fn(param1, param2, closure)
-        }
-    }
-}
+//extension Promises {
+//    
+//    public static func wrap<Value, Failure: Swift.Error>(
+//        queue: DispatchQueue = .global(qos: .userInitiated),
+//        _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+//        let res = Promise<Value>()
+//        queue.async {
+//            fn { result in
+//                switch result {
+//                case .success(let v):
+//                    res.fulfill(v)
+//                case .failure(let e):
+//                    res.reject(e)
+//                }
+//            }
+//        }
+//        return res
+//    }
+//    public static func wrap<P, Value, Failure: Swift.Error>(
+//        queue: DispatchQueue = .global(qos: .userInitiated),
+//        param: P,
+//        _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+//        wrap(queue: queue) { closure in
+//            fn(param, closure)
+//        }
+//    }
+//    public static func wrap<P1, P2, Value, Failure: Swift.Error>(
+//        queue: DispatchQueue = .global(qos: .userInitiated),
+//        param1: P1,
+//        param2: P2,
+//        _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
+//        wrap(queue: queue) { closure in
+//            fn(param1, param2, closure)
+//        }
+//    }
+//}
 
 public struct IndexError: Swift.Error {
     public let index: Int
@@ -267,6 +306,35 @@ extension Promise {
             self.then(onFulfilled: fulfill) { error in
                 do {
                     try recovery(error).then(onFulfilled: fulfill, onRejected: reject)
+                } catch {
+                    reject(error)
+                }
+            }
+        }
+    }
+    public func replace(replacerOnFulfilled: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
+        if replacerOnReject == nil,
+            replacerOnFulfilled == nil {
+            return self
+        }
+        return Promise { fulfill, reject in
+            self.then { val in
+                guard let tranform = replacerOnFulfilled else {
+                    fulfill(val)
+                    return
+                }
+                do {
+                    fulfill(try tranform(val))
+                } catch {
+                    reject(error)
+                }
+            } onRejected: { error in
+                guard let tranform = replacerOnReject else {
+                    reject(error)
+                    return
+                }
+                do {
+                    fulfill(try tranform(error))
                 } catch {
                     reject(error)
                 }

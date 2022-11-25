@@ -192,15 +192,15 @@ private func int2work(num1: Int, num2: Int, completion: @escaping (Result<String
         completion(.failure(.missed))
     }
 }
-func promise_test_entry() {
-    let c1 = voidwork(completion:)
-    Promises.wrap(c1).trace("1")
-    
-    let c2 = intwork(num:completion:)
-    Promises.wrap(param: 10, c2).trace("2")
-    
-    let c3 = int2work(num1:num2:completion:)
-    Promises.wrap(param1: 10, param2: 20, c3).trace("3")
+func promise_test_entry() { 
+//    let c1 = voidwork(completion:)
+//    Promises.wrap(c1).trace("1")
+//    
+//    let c2 = intwork(num:completion:)
+//    Promises.wrap(param: 10, c2).trace("2")
+//    
+//    let c3 = int2work(num1:num2:completion:)
+//    Promises.wrap(param1: 10, param2: 20, c3).trace("3")
 }
 fileprivate extension Promise {
     func trace(_ tag: String) {

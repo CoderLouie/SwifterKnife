@@ -144,6 +144,10 @@ public struct StepError: Swift.Error {
         self.step = step
         self.error = PromiseError.empty
     }
+    
+    public var rawError: Swift.Error {
+        return SwifterKnife.rawError(self)
+    }
 }
 
 private func rawError(_ error: Swift.Error) -> Swift.Error {
@@ -151,6 +155,10 @@ private func rawError(_ error: Swift.Error) -> Swift.Error {
         return rawError(err.error)
     }
     return error
+}
+
+fileprivate extension DispatchQueue {
+    static let promiseAwait =  DispatchQueue(label:"com.swifterknife.promise.await", attributes: .concurrent)
 }
 
 public final class Promise<Value> {
@@ -246,6 +254,26 @@ public final class Promise<Value> {
         }
     }
 
+    /**
+     调用这个方法的线程和将来调用fulfill或者reject方法不能是同一个线程，否则会死锁
+     */
+    public func awaitCompleted() throws -> Value {
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: Result<Value, Swift.Error> = .failure(PromiseError.timeout)
+        then(on: DispatchQueue.promiseAwait) { value in
+            result = .success(value)
+            semaphore.signal()
+        } onRejected: { error in
+            result = .failure(error)
+            semaphore.signal()
+        }
+        semaphore.wait()
+        return try result.get()
+    }
+    public func awaitFulfilled() -> Value {
+        try! awaitCompleted()
+    }
+    
     public func flatMap<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
