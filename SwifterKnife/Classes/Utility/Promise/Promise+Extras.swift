@@ -91,22 +91,7 @@ public enum Promises {
             }
         }
     }
-
-//    public static func retry<T>(
-//        count: Int,
-//        delay: TimeInterval,
-//        generate: @escaping (Int) -> Promise<T>) -> Promise<T> {
-//        if count <= 0 {
-//            return generate(count)
-//        }
-//        return Promise<T> { fulfill, reject in
-//            generate(count).recover { error in
-//                return self.delay(delay).flatMap {
-//                    return retry(count: count-1, delay: delay, generate: generate)
-//                }
-//            }.then(onFulfilled: fulfill, onRejected: reject)
-//        }
-//    }
+ 
     public static func retry<T>(
         onQueue queue: DispatchQueue = .global(qos: .userInitiated),
         attempts count: Int,
@@ -198,43 +183,6 @@ public enum Promises {
         }
     }
 }
-
-//extension Promises {
-//    
-//    public static func wrap<Value, Failure: Swift.Error>(
-//        queue: DispatchQueue = .global(qos: .userInitiated),
-//        _ fn: @escaping (@escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-//        let res = Promise<Value>()
-//        queue.async {
-//            fn { result in
-//                switch result {
-//                case .success(let v):
-//                    res.fulfill(v)
-//                case .failure(let e):
-//                    res.reject(e)
-//                }
-//            }
-//        }
-//        return res
-//    }
-//    public static func wrap<P, Value, Failure: Swift.Error>(
-//        queue: DispatchQueue = .global(qos: .userInitiated),
-//        param: P,
-//        _ fn: @escaping (P, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-//        wrap(queue: queue) { closure in
-//            fn(param, closure)
-//        }
-//    }
-//    public static func wrap<P1, P2, Value, Failure: Swift.Error>(
-//        queue: DispatchQueue = .global(qos: .userInitiated),
-//        param1: P1,
-//        param2: P2,
-//        _ fn: @escaping (P1, P2, @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<Value> {
-//        wrap(queue: queue) { closure in
-//            fn(param1, param2, closure)
-//        }
-//    }
-//}
 
 public struct IndexError: Swift.Error {
     public let index: Int
