@@ -100,17 +100,27 @@ public enum Promises {
     }
 
     public static func kickoff<T>(
-        _ block: @escaping () throws -> Promise<T>)
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        block: @escaping () throws -> Promise<T>)
     -> Promise<T> {
-        return Promise(value: ()).flatMap(transform: block)
+        return Promise.create(queue: queue) { fulfill, reject in
+            do {
+                try block().then(on: queue, onFulfilled: fulfill, onRejected: reject)
+            } catch {
+                reject(error)
+            }
+        }
     }
 
     public static func kickoff<T>(
-        _ block: @escaping () throws -> T) -> Promise<T> {
-        do {
-            return try Promise(value: block())
-        } catch {
-            return Promise(error: error)
+        queue: DispatchQueue = .global(qos: .userInitiated),
+        block: @escaping () throws -> T) -> Promise<T> { 
+        return Promise.create(queue: queue) { fulfill, reject in
+            do {
+                fulfill(try block())
+            } catch {
+                reject(error)
+            }
         }
     }
 
