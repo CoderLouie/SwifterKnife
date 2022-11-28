@@ -229,7 +229,16 @@ extension Promises {
 
 extension Promise {
     public func addTimeout(_ timeout: TimeInterval) -> Promise<Value> {
-        return Promises.race([self, Promises.timeout(timeout)])
+        let promise = Promise<Value>()
+        then {
+            promise.fulfill($0)
+        } onRejected: {
+            promise.reject($0)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {[weak promise] in
+            promise?.reject(PromiseError.timeout)
+        }
+        return promise
     }
 
     @discardableResult

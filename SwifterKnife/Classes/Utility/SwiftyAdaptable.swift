@@ -123,6 +123,9 @@ public struct ScreenAdaptor {
     public func mapPix(_ val: CGFloat) -> CGFloat {
         map(val).pixel(Self.pixAligment)
     }
+    public func mapPix(_ val: CGFloat, alignment: PixelAligment?) -> CGFloat {
+        map(val).pixel(alignment ?? Self.pixAligment)
+    }
 }
 
 public protocol BaseDesignable {
@@ -139,6 +142,23 @@ extension BaseDesignable {
     }
     public var fitH: Adaptable.TargetType {
         adaptable.adaptive(tramsform: Self.height.mapPix(_:))
+    }
+    // Key path cannot refer to static member
+//    public func fit(using keyPath: KeyPath<Self.Type, ScreenAdaptor>, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
+//        adaptable.adaptive { val in
+//            Self.self[keyPath: keyPath].mapPix(val, alignment: alignment)
+//        }
+//    } 
+    public func fit(using closure: (Self.Type) -> ScreenAdaptor, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
+        adaptable.adaptive { val in
+            closure(Self.self).mapPix(val, alignment: alignment)
+        }
+    }
+    
+    public func fit(alignment: PixelAligment) -> Adaptable.TargetType {
+        adaptable.adaptive { val in
+            Self.width.mapPix(val, alignment: alignment)
+        }
     }
 }
 
@@ -237,6 +257,9 @@ extension SwiftyAdaptable {
         UIDesigner(adaptable: self)
     }
     
+    public func fit(alignment: PixelAligment) -> TargetType {
+        ui.fit(alignment: alignment)
+    }
     public var fit: TargetType {
         ui.fit
     }
