@@ -219,12 +219,12 @@ public final class Promise<Value> {
         return promise
     } 
     
-    public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?) -> (Result<Success, Failure>) -> Void  {
+    public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Success, Failure>) -> Void  {
         return { result in
-            self.consume(result, mapSuccess: mapSuccess)
+            self.consume(result, mapSuccess, mapError)
         }
     }
-    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, mapSuccess: (Success) throws -> Value?) {
+    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, _ mapSuccess: (Success) throws -> Value?,  _ mapError: ((Failure) -> Swift.Error)? = nil) {
         switch result {
         case .success(let success):
             do {
@@ -237,20 +237,20 @@ public final class Promise<Value> {
                 reject(error)
             }
         case .failure(let e):
-            reject(e)
+            reject(mapError?(e) ?? e)
         }
     }
-    public func produce<Failure: Swift.Error>() -> (Result<Value, Failure>) -> Void  {
+    public func produce<Failure: Swift.Error>(_ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Value, Failure>) -> Void  {
         return { result in
-            self.consume(result)
+            self.consume(result, mapError)
         }
     }
-    public func consume<Failure: Swift.Error>(_ result: Result<Value, Failure>) {
+    public func consume<Failure: Swift.Error>(_ result: Result<Value, Failure>, _ mapError: ((Failure) -> Swift.Error)? = nil) {
         switch result {
         case .success(let success):
             fulfill(success)
         case .failure(let e):
-            reject(e)
+            reject(mapError?(e) ?? e)
         }
     }
 

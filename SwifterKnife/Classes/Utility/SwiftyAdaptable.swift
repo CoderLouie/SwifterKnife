@@ -149,11 +149,6 @@ extension BaseDesignable {
             self[keyPath: keyPath].mapPix(val, alignment: alignment)
         }
     }
-//    public func fit(using closure: (Self) -> ScreenAdaptor, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
-//        adaptable.adaptive { val in
-//            closure(self).mapPix(val, alignment: alignment)
-//        }
-//    }
     
     public func fit(alignment: PixelAligment) -> Adaptable.TargetType {
         adaptable.adaptive { val in
