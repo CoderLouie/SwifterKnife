@@ -193,9 +193,9 @@ private func int2work(num1: Int, num2: Int, completion: @escaping (Result<String
     }
 }
 func promise_test_entry() {
-//    10.ui.fit(using: \.width, alignment: .floor)
+    10.ui.fit(using: \.width, alignment: .floor)
     
-    10.ui.fit(using: { $0.width }, alignment: .floor)
+//    10.ui.fit(using: { $0.width }, alignment: .floor)
 //    let c1 = voidwork(completion:)
 //    Promises.wrap(c1).trace("1")
 //    

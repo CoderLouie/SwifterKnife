@@ -132,32 +132,32 @@ public protocol BaseDesignable {
     associatedtype Adaptable: SwiftyAdaptable
     var adaptable: Adaptable { get }
     /// 按宽度适配
-    static var width: ScreenAdaptor { get }
+    var width: ScreenAdaptor { get }
     /// 按高度适配
-    static var height: ScreenAdaptor { get }
+    var height: ScreenAdaptor { get }
 }
 extension BaseDesignable {
     public var fit: Adaptable.TargetType {
-        adaptable.adaptive(tramsform: Self.width.mapPix(_:))
+        adaptable.adaptive(tramsform: width.mapPix(_:))
     }
     public var fitH: Adaptable.TargetType {
-        adaptable.adaptive(tramsform: Self.height.mapPix(_:))
+        adaptable.adaptive(tramsform: height.mapPix(_:))
     }
     // Key path cannot refer to static member
-//    public func fit(using keyPath: KeyPath<Self.Type, ScreenAdaptor>, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
-//        adaptable.adaptive { val in
-//            Self.self[keyPath: keyPath].mapPix(val, alignment: alignment)
-//        }
-//    } 
-    public func fit(using closure: (Self.Type) -> ScreenAdaptor, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
+    public func fit(using keyPath: KeyPath<Self, ScreenAdaptor>, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
         adaptable.adaptive { val in
-            closure(Self.self).mapPix(val, alignment: alignment)
+            self[keyPath: keyPath].mapPix(val, alignment: alignment)
         }
     }
+//    public func fit(using closure: (Self) -> ScreenAdaptor, alignment: PixelAligment? = nil) -> Adaptable.TargetType {
+//        adaptable.adaptive { val in
+//            closure(self).mapPix(val, alignment: alignment)
+//        }
+//    }
     
     public func fit(alignment: PixelAligment) -> Adaptable.TargetType {
         adaptable.adaptive { val in
-            Self.width.mapPix(val, alignment: alignment)
+            width.mapPix(val, alignment: alignment)
         }
     }
 }
@@ -166,21 +166,21 @@ extension BaseDesignable {
 /// UIKit 独有
 public protocol UIDesignable: BaseDesignable {
     /// 去除 status bar高度后，按高度适配
-    static var withoutHeaderHeight: ScreenAdaptor { get }
+    var withoutHeaderHeight: ScreenAdaptor { get }
     /// 去除 status bar 和 home indicator高度后，按高度适配
-    static var bodyHeight: ScreenAdaptor { get }
+    var bodyHeight: ScreenAdaptor { get }
 }
 extension UIDesignable {
     public var fitT: Adaptable.TargetType {
-        adaptable.adaptive(tramsform: Self.withoutHeaderHeight.mapPix(_:))
+        adaptable.adaptive(tramsform: withoutHeaderHeight.mapPix(_:))
     }
     public var fitC: Adaptable.TargetType {
-        adaptable.adaptive(tramsform: Self.bodyHeight.mapPix(_:))
+        adaptable.adaptive(tramsform: bodyHeight.mapPix(_:))
     }
     public var fitS: Adaptable.TargetType {
         adaptable.adaptive {
             if Screen.height > 570 { return $0.pix }
-            return Self.height.mapPix($0)
+            return height.mapPix($0)
         }
     }
 }
@@ -231,30 +231,53 @@ public extension UIDesignReference {
     }
 }
 extension UIDesignable {
-    public static var width: ScreenAdaptor {
+    public var width: ScreenAdaptor {
         UIDesignReference.stander.uiwidth
     }
     
-    public static var height: ScreenAdaptor {
+    public var height: ScreenAdaptor {
         UIDesignReference.stander.uiheight
     }
-    public static var withoutHeaderHeight: ScreenAdaptor {
+    public var withoutHeaderHeight: ScreenAdaptor {
         UIDesignReference.stander.uiwithoutHeaderHeight
     }
-    public static var bodyHeight: ScreenAdaptor {
+    public var bodyHeight: ScreenAdaptor {
         UIDesignReference.stander.uibodyHeight
     }
 }
 public struct UIDesigner<T: SwiftyAdaptable>: UIDesignable {
     public let adaptable: T
+    public let reference: UIDesignReference
     public init(adaptable: T) {
         self.adaptable = adaptable
+        reference = .stander
+    }
+    public init(adaptable: T, reference: UIDesignReference) {
+        self.adaptable = adaptable
+        self.reference = reference
+    }
+    
+    public var width: ScreenAdaptor {
+        reference.uiwidth
+    }
+    
+    public var height: ScreenAdaptor {
+        reference.uiheight
+    }
+    public var withoutHeaderHeight: ScreenAdaptor {
+        reference.uiwithoutHeaderHeight
+    }
+    public var bodyHeight: ScreenAdaptor {
+        reference.uibodyHeight
     }
 }
 
 extension SwiftyAdaptable {
     public var ui: UIDesigner<Self> {
         UIDesigner(adaptable: self)
+    }
+    public func ui(ref: UIDesignReference) -> UIDesigner<Self> {
+        UIDesigner(adaptable: self, reference: ref)
     }
     
     public func fit(alignment: PixelAligment) -> TargetType {

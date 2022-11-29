@@ -6,7 +6,7 @@
 //
 //
 
-import Foundation 
+import Foundation
 
 public enum PromiseError: Swift.Error {
     case timeout
@@ -139,7 +139,7 @@ public enum Promises {
         }
     }
 
-    // The following zip functions have been created with the 
+    // The following zip functions have been created with the
     // "Zip Functions Generator" playground page. If you need variants with
     // more parameters, use it to generate them.
 
