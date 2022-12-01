@@ -8,23 +8,21 @@
 import Foundation
 import UIKit
 
-
-@IBDesignable
 open class PlaceholderTextView: UITextView {
     override open var text: String! {
         didSet { setNeedsDisplay() }
     }
-    var onDidEndEditing: ((PlaceholderTextView) -> Void)?
+    public var onDidEndEditing: ((PlaceholderTextView) -> Void)?
     // Maximum length of text. 0 means no limit.
-    @IBInspectable open var maxLength: Int = 0
+    open var maxLength: Int = 0
     
     // Trim white space and newline characters when end editing. Default is true
-    @IBInspectable open var trimWhiteSpaceWhenEndEditing: Bool = true
+    open var trimWhiteSpaceWhenEndEditing: Bool = true
      
-    @IBInspectable open var placeholder: String? {
+    open var placeholder: String? {
         didSet { setNeedsDisplay() }
     }
-    @IBInspectable open var placeholderColor: UIColor = UIColor(white: 0.8, alpha: 1.0) {
+    open var placeholderColor: UIColor = UIColor(white: 0.8, alpha: 1.0) {
         didSet { setNeedsDisplay() }
     }
     open var attributedPlaceholder: NSAttributedString? {
@@ -121,13 +119,11 @@ open class PlaceholderTextView: UITextView {
 }
 
 
-
-
 @objc public protocol GrowingTextViewDelegate: UITextViewDelegate {
     @objc optional func textViewDidChangeHeight(_ textView: GrowingTextView, height: CGFloat)
 }
 
-@IBDesignable
+
 open class GrowingTextView: UITextView {
     override open var text: String! {
         didSet { setNeedsDisplay() }
@@ -135,22 +131,22 @@ open class GrowingTextView: UITextView {
     private var heightConstraint: NSLayoutConstraint?
     
     // Maximum length of text. 0 means no limit.
-    @IBInspectable open var maxLength: Int = 0
+    open var maxLength: Int = 0
     
     // Trim white space and newline characters when end editing. Default is true
-    @IBInspectable open var trimWhiteSpaceWhenEndEditing: Bool = true
+    open var trimWhiteSpaceWhenEndEditing: Bool = true
     
     // Customization
-    @IBInspectable open var minHeight: CGFloat = 0 {
+    open var minHeight: CGFloat = 0 {
         didSet { forceLayoutSubviews() }
     }
-    @IBInspectable open var maxHeight: CGFloat = 0 {
+    open var maxHeight: CGFloat = 0 {
         didSet { forceLayoutSubviews() }
     }
-    @IBInspectable open var placeholder: String? {
+    open var placeholder: String? {
         didSet { setNeedsDisplay() }
     }
-    @IBInspectable open var placeholderColor: UIColor = UIColor(white: 0.8, alpha: 1.0) {
+    open var placeholderColor: UIColor = UIColor(white: 0.8, alpha: 1.0) {
         didSet { setNeedsDisplay() }
     }
     open var attributedPlaceholder: NSAttributedString? {

@@ -34,134 +34,6 @@ open class VirtualView: UIView {
     open func setup() {}
 }
 
-/**
- 九宫格布局
- 
- 对该试图做好宽高度约束，根据warpCount，对其管理的子视图  固定宽高可以做等行列间距布局 / 固定行列间距可以做等宽高布局
- */
-final public class SudokuView: VirtualView {
-    public enum FixedBehaviour {
-        case itemLength(_ width: CGFloat, _ height: CGFloat)
-        case spacing(_ lineSpacing: CGFloat, _ InteritemSpacing: CGFloat)
-    }
-    public var contentInsets: UIEdgeInsets = .zero
-    public var behaviour: FixedBehaviour = .spacing(10.fit, 10.fit)
-    public var warpCount: Int = 3
-    
-    private var arrangedViews: [UIView] = []
-    public var arrangedViewsCount: Int { return arrangedViews.count }
-    
-    public func addArrangedView(_ view: UIView) {
-        insertArrangedView(view, at: arrangedViewsCount)
-    }
-    public func removeArrangedView(_ view: UIView) {
-        arrangedViews.removeAll { $0 === view }
-    }
-    public func removeArrangedViewAt(_ index: Int) {
-        arrangedViews.remove(at: index)
-    }
-    
-    public func insertArrangedView(_ view: UIView, at index: Int) {
-        insertSubview(view, at: index)
-        arrangedViews.insert(view, at: index)
-    }
-    
-    public func replaceArrangedViews() {
-        arrangedViews.forEach { $0.snp.removeConstraints() }
-        placeArrangedViews()
-    }
-    public func placeArrangedViews() {
-        let views = arrangedViews
-        let n = views.count
-        guard n > 1, warpCount >= 0 else {
-            return
-        }
-        
-        let inset = contentInsets
-        
-        let remainder = n % warpCount
-        let quotient = n / warpCount
-        let rowCount = (remainder == 0) ? quotient : (quotient + 1)
-        let columnCount = rowCount == 1 ? n : warpCount
-        
-        switch behaviour {
-        case let .itemLength(width, height):
-            for (i, v) in views.enumerated() {
-                
-                let currentRow = i / warpCount
-                let currentColumn = i % warpCount
-                
-                v.snp.makeConstraints { make in
-                    make.width.equalTo(width)
-                    make.height.equalTo(height)
-                    if currentRow == 0 {//fisrt row
-                        make.top.equalTo(inset.top)
-                    }
-                    if currentRow == rowCount - 1 {//last row
-                        make.bottom.equalTo(-inset.bottom)
-                    }
-                    
-                    if currentRow != 0,
-                       currentRow != rowCount - 1 {//other row
-                        let offset = (CGFloat(1) - CGFloat(currentRow) / CGFloat(rowCount - 1)) *
-                            (height + inset.top) -
-                            CGFloat(currentRow) * inset.bottom / CGFloat(rowCount - 1)
-                        make.bottom.equalTo(self).multipliedBy(CGFloat(currentRow) / CGFloat(rowCount - 1)).offset(offset)
-                    }
-                    
-                    if currentColumn == 0 {//first col
-                        make.leading.equalTo(inset.left)
-                    }
-                    if currentColumn == columnCount - 1 {//last col
-                        make.trailing.equalTo(-inset.right)
-                    }
-                    
-                    if currentColumn != 0,
-                       currentColumn != columnCount - 1 {//other col
-                        let offset = (CGFloat(1) - CGFloat(currentColumn) / CGFloat(columnCount - 1)) *
-                            (width + inset.left) -
-                            CGFloat(currentColumn) * inset.right / CGFloat(columnCount - 1)
-                        make.trailing.equalTo(self).multipliedBy(CGFloat(currentColumn) / CGFloat(columnCount - 1)).offset(offset)
-                    }
-                }
-            }
-        case let .spacing(line, interitem):
-            
-            var prev: UIView!
-            
-            for (i, v) in views.enumerated() {
-                
-                let currentRow = i / warpCount
-                let currentColumn = i % warpCount
-                
-                v.snp.makeConstraints { make in
-                    if i > 0 { make.width.height.equalTo(views[0]) }
-                    
-                    if currentRow == 0 {
-                        make.top.equalTo(inset.top)
-                    } else {
-                        make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
-                    }
-                    if currentRow == rowCount - 1 {
-                        make.bottom.equalTo(-inset.bottom)
-                    }
-                    
-                    if currentColumn == 0 {
-                        make.leading.equalTo(inset.left)
-                    } else {
-                        make.leading.equalTo(prev.snp.trailing).offset(interitem)
-                    }
-                    if currentColumn == columnCount - 1 {
-                        make.trailing.equalTo(-inset.right)
-                    }
-                }
-                prev = v
-            }
-        }
-    }
-}
- 
-
 open class LayoutView: VirtualView {
     public enum Alignment {
         /// 左/上
@@ -204,6 +76,103 @@ open class LayoutView: VirtualView {
         }
     }
 }
+
+open class QueueView: LayoutView { }
+
+/// 垂直方向会自动根据对齐方式布局
+final public class QueueVView: QueueView {
+    var vAutoSize: Bool = true
+    
+    public func makeHorizontalSizeToFit() {
+        let inset = contentInsets
+        if let view = arrangedViews.first {
+            view.snp.makeConstraints { make in
+                make.leading.equalTo(inset.left)
+            }
+        }
+        if let view = arrangedViews.last {
+            view.snp.makeConstraints { make in
+                make.trailing.equalTo(-inset.right)
+            }
+        }
+    }
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
+        insertSubview(view, at: index)
+        let inset = contentInsets
+        let align = alignment ?? self.alignment
+        
+        view.snp.makeConstraints { make in
+            switch align {
+            case .start:
+                make.top.equalTo(inset.top)
+            case .center:
+                make.centerY.equalToSuperview()
+            case .end:
+                make.bottom.equalTo(-inset.bottom)
+            }
+        }
+        guard vAutoSize else { return }
+        view.snp.makeConstraints { make in
+            switch align {
+            case .start:
+                make.bottom.lessThanOrEqualTo(-inset.bottom)
+            case .center:
+                make.top.greaterThanOrEqualTo(inset.top)
+                make.bottom.lessThanOrEqualTo(-inset.bottom)
+            case .end:
+                make.top.greaterThanOrEqualTo(inset.top)
+            }
+        }
+    }
+}
+
+/// 水平方向会自动根据对齐方式布局
+final public class QueueHView: QueueView {
+    var hAutoSize: Bool = true
+    public func makeVerticalSizeToFit() {
+        let inset = contentInsets
+        if let view = arrangedViews.first {
+            view.snp.makeConstraints { make in
+                make.top.equalTo(inset.top)
+            }
+        }
+        if let view = arrangedViews.last {
+            view.snp.makeConstraints { make in
+                make.bottom.equalTo(-inset.bottom)
+            }
+        }
+    }
+    
+    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
+        insertSubview(view, at: index)
+        let inset = contentInsets
+        let align = alignment ?? self.alignment
+        
+        view.snp.makeConstraints { make in
+            switch align {
+            case .start:
+                make.leading.equalTo(inset.left)
+            case .center:
+                make.centerX.equalToSuperview()
+            case .end:
+                make.trailing.equalTo(-inset.right)
+            }
+        }
+        guard hAutoSize else { return }
+        view.snp.makeConstraints { make in
+            switch align {
+            case .start:
+                make.trailing.lessThanOrEqualTo(-inset.right)
+            case .center:
+                make.leading.greaterThanOrEqualTo(inset.left)
+                make.trailing.lessThanOrEqualTo(-inset.right)
+            case .end:
+                make.leading.greaterThanOrEqualTo(inset.left)
+            }
+        }
+    }
+}
+
 
 open class SequenceView: LayoutView {
     public enum FixedBehaviour {
@@ -393,161 +362,134 @@ final public class SequenceVView: SequenceView {
 }
 
 
-open class QueueView: LayoutView {
-    public func makeHorizontalSizeToFit() { }
-    public func makeVerticalSizeToFit() { }
-    public func makeSizeToFit() {
-        makeHorizontalSizeToFit()
-        makeVerticalSizeToFit()
+/**
+ 九宫格布局
+ 
+ 对该试图做好宽高度约束，根据warpCount，对其管理的子视图  固定宽高可以做等行列间距布局 / 固定行列间距可以做等宽高布局
+ */
+final public class SudokuView: VirtualView {
+    public enum FixedBehaviour {
+        case itemLength(_ width: CGFloat, _ height: CGFloat)
+        case spacing(_ lineSpacing: CGFloat, _ InteritemSpacing: CGFloat)
     }
-}
-
-/// 垂直方向会自动根据对齐方式布局
-final public class QueueVView: QueueView {
-    public override func makeHorizontalSizeToFit() {
-        let inset = contentInsets
-        if let view = arrangedViews.first {
-            view.snp.makeConstraints { make in
-                make.leading.equalTo(inset.left)
-            }
-        }
-        if let view = arrangedViews.last {
-            view.snp.makeConstraints { make in
-                make.trailing.equalTo(-inset.right)
-            }
-        }
+    public var contentInsets: UIEdgeInsets = .zero
+    public var behaviour: FixedBehaviour = .spacing(10.fit, 10.fit)
+    public var warpCount: Int = 3
+    
+    private var arrangedViews: [UIView] = []
+    public var arrangedViewsCount: Int { return arrangedViews.count }
+    
+    public func addArrangedView(_ view: UIView) {
+        insertArrangedView(view, at: arrangedViewsCount)
     }
-    public override func makeVerticalSizeToFit() {
-        let inset = contentInsets
-        var height: CGFloat = 0
-        for view in arrangedViews {
-            let h = view.intrinsicContentSize.height
-            if h > height { height = h }
-        }
-        guard height > 0 else { return }
-        height += inset.top + inset.bottom
-        self.snp.updateConstraints { make in
-            make.height.equalTo(ceil(height))
-        }
+    public func removeArrangedView(_ view: UIView) {
+        arrangedViews.removeAll { $0 === view }
     }
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
-        insertSubview(view, at: index)
-        let inset = contentInsets
-        let align = alignment ?? self.alignment
-        
-        view.snp.makeConstraints { make in
-            switch align {
-            case .start:
-                make.top.equalTo(inset.top)
-            case .center:
-                make.centerY.equalToSuperview()
-            case .end:
-                make.bottom.equalTo(-inset.bottom)
-            }
-        }
-    }
-}
-
-/// 水平方向会自动根据对齐方式布局
-final public class QueueHView: QueueView {
-    public override func makeHorizontalSizeToFit() {
-        let inset = contentInsets
-        var width: CGFloat = 0
-        for view in arrangedViews {
-            let w = view.intrinsicContentSize.width
-            if w > width { width = w }
-        }
-        guard width > 0 else { return }
-        width += inset.left + inset.right
-        self.snp.updateConstraints { make in
-            make.width.equalTo(ceil(width))
-        }
-    }
-    public override func makeVerticalSizeToFit() {
-        let inset = contentInsets
-        if let view = arrangedViews.first {
-            view.snp.makeConstraints { make in
-                make.top.equalTo(inset.top)
-            }
-        }
-        if let view = arrangedViews.last {
-            view.snp.makeConstraints { make in
-                make.bottom.equalTo(-inset.bottom)
-            }
-        }
+    public func removeArrangedViewAt(_ index: Int) {
+        arrangedViews.remove(at: index)
     }
     
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
+    public func insertArrangedView(_ view: UIView, at index: Int) {
         insertSubview(view, at: index)
-        let inset = contentInsets
-        let align = alignment ?? self.alignment
-        
-        view.snp.makeConstraints { make in
-            switch align {
-                
-            case .start:
-                make.leading.equalTo(inset.left)
-            case .center:
-                make.centerX.equalToSuperview()
-            case .end:
-                make.trailing.equalTo(-inset.right)
-            }
-        }
+        arrangedViews.insert(view, at: index)
     }
-}
-
-
-open class FlexView: LayoutView { }
-
-/// 垂直方向会自动根据内容大小布局，开发者只需做好水平方向上的布局
-final public class FlexVView: FlexView {
     
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
-        insertSubview(view, at: index)
-        let inset = contentInsets
-        let align = alignment ?? self.alignment
+    public func replaceArrangedViews() {
+        arrangedViews.forEach { $0.snp.removeConstraints() }
+        placeArrangedViews()
+    }
+    public func placeArrangedViews() {
+        let views = arrangedViews
+        let n = views.count
+        guard n > 1, warpCount >= 0 else {
+            return
+        }
         
-        view.snp.makeConstraints { make in
-            switch align {
+        let inset = contentInsets
+        
+        let remainder = n % warpCount
+        let quotient = n / warpCount
+        let rowCount = (remainder == 0) ? quotient : (quotient + 1)
+        let columnCount = rowCount == 1 ? n : warpCount
+        
+        switch behaviour {
+        case let .itemLength(width, height):
+            for (i, v) in views.enumerated() {
                 
-            case .start:
-                make.top.equalTo(inset.top)
-                make.bottom.lessThanOrEqualTo(-inset.bottom)
-            case .center:
-                make.top.greaterThanOrEqualTo(inset.top)
-                make.bottom.lessThanOrEqualTo(-inset.bottom)
-                make.centerY.equalToSuperview()
-            case .end:
-                make.top.greaterThanOrEqualTo(inset.top)
-                make.bottom.equalTo(-inset.bottom)
+                let currentRow = i / warpCount
+                let currentColumn = i % warpCount
+                
+                v.snp.makeConstraints { make in
+                    make.width.equalTo(width)
+                    make.height.equalTo(height)
+                    if currentRow == 0 {//fisrt row
+                        make.top.equalTo(inset.top)
+                    }
+                    if currentRow == rowCount - 1 {//last row
+                        make.bottom.equalTo(-inset.bottom)
+                    }
+                    
+                    if currentRow != 0,
+                       currentRow != rowCount - 1 {//other row
+                        let offset = (CGFloat(1) - CGFloat(currentRow) / CGFloat(rowCount - 1)) *
+                            (height + inset.top) -
+                            CGFloat(currentRow) * inset.bottom / CGFloat(rowCount - 1)
+                        make.bottom.equalTo(self).multipliedBy(CGFloat(currentRow) / CGFloat(rowCount - 1)).offset(offset)
+                    }
+                    
+                    if currentColumn == 0 {//first col
+                        make.leading.equalTo(inset.left)
+                    }
+                    if currentColumn == columnCount - 1 {//last col
+                        make.trailing.equalTo(-inset.right)
+                    }
+                    
+                    if currentColumn != 0,
+                       currentColumn != columnCount - 1 {//other col
+                        let offset = (CGFloat(1) - CGFloat(currentColumn) / CGFloat(columnCount - 1)) *
+                            (width + inset.left) -
+                            CGFloat(currentColumn) * inset.right / CGFloat(columnCount - 1)
+                        make.trailing.equalTo(self).multipliedBy(CGFloat(currentColumn) / CGFloat(columnCount - 1)).offset(offset)
+                    }
+                }
+            }
+        case let .spacing(line, interitem):
+            
+            var prev: UIView!
+            
+            for (i, v) in views.enumerated() {
+                
+                let currentRow = i / warpCount
+                let currentColumn = i % warpCount
+                
+                v.snp.makeConstraints { make in
+                    if i > 0 { make.width.height.equalTo(views[0]) }
+                    
+                    if currentRow == 0 {
+                        make.top.equalTo(inset.top)
+                    } else {
+                        make.top.equalTo(views[i-columnCount].snp.bottom).offset(line)
+                    }
+                    if currentRow == rowCount - 1 {
+                        make.bottom.equalTo(-inset.bottom)
+                    }
+                    
+                    if currentColumn == 0 {
+                        make.leading.equalTo(inset.left)
+                    } else {
+                        make.leading.equalTo(prev.snp.trailing).offset(interitem)
+                    }
+                    if currentColumn == columnCount - 1 {
+                        make.trailing.equalTo(-inset.right)
+                    }
+                }
+                prev = v
             }
         }
     }
 }
+ 
 
-/// 水平方向会自动根据内容大小布局，开发者只需做好垂直方向上的布局
-final public class FlexHView: FlexView {
-    public override func insertArrangedView(_ view: UIView, at index: Int, alignment: LayoutView.Alignment? = nil) {
-        insertSubview(view, at: index)
-        let inset = contentInsets
-        let align = alignment ?? self.alignment
-        
-        view.snp.makeConstraints { make in
-            switch align {
-                
-            case .start:
-                make.leading.equalTo(inset.left)
-                make.trailing.lessThanOrEqualTo(-inset.right)
-            case .center:
-                make.leading.greaterThanOrEqualTo(inset.left)
-                make.trailing.lessThanOrEqualTo(-inset.right)
-                make.centerX.equalToSuperview()
-            case .end:
-                make.leading.greaterThanOrEqualTo(inset.left)
-                make.trailing.equalTo(-inset.right)
-            }
-        }
-    }
-}
+ 
 
  
