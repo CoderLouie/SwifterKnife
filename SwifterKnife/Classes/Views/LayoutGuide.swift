@@ -8,7 +8,6 @@ import UIKit
 import SnapKit
 
 public class LayoutGuide: UILayoutGuide {
-    fileprivate let DefaultPriority = 100
     public enum Alignment {
         /// 左/上
         case start
@@ -31,7 +30,7 @@ public class LayoutGuide: UILayoutGuide {
         super.init()
         view.addLayoutGuide(self)
         self.snp.makeConstraints { make in
-            make.width.height.equalTo(1).priority(DefaultPriority)
+            make.width.height.equalTo(1).priority(2)
         }
     }
     
@@ -51,10 +50,6 @@ public class LayoutGuide: UILayoutGuide {
         makeVerticalSizeToFit()
     }
     fileprivate func makeConstraints(for subview: UIView) { }
-    
-    deinit {
-        print("\(type(of: self)) deinit")
-    }
 }
 
 public final class HLayoutGuide: LayoutGuide {
@@ -83,15 +78,19 @@ public final class HLayoutGuide: LayoutGuide {
         }
     }
     public override func makeVerticalSizeToFit() {
-        var height: CGFloat = 0
         for view in arrangedViews {
-            let h = view.intrinsicContentSize.height
-            if h > height { height = h }
+            view.snp.makeConstraints { make in
+                switch aligment {
+                case .start:
+                    make.bottom.lessThanOrEqualTo(self)
+                case .center:
+                    make.top.greaterThanOrEqualTo(self)
+                    make.bottom.lessThanOrEqualTo(self)
+                case .end:
+                    make.top.greaterThanOrEqualTo(self)
+                }
+            }
         }
-        guard height > 0 else { return }
-        self.snp.updateConstraints { make in
-            make.height.equalTo(ceil(height)).priority(DefaultPriority)
-        } 
     }
 }
 
@@ -110,14 +109,18 @@ public final class VLayoutGuide: LayoutGuide {
     }
     
     public override func makeHorizontalSizeToFit() {
-        var width: CGFloat = 0
         for view in arrangedViews {
-            let w = view.intrinsicContentSize.width
-            if w > width { width = w }
-        }
-        guard width > 0 else { return }
-        self.snp.updateConstraints { make in
-            make.width.equalTo(ceil(width)).priority(DefaultPriority)
+            view.snp.makeConstraints { make in
+                switch aligment {
+                case .start:
+                    make.trailing.lessThanOrEqualTo(self)
+                case .center:
+                    make.leading.greaterThanOrEqualTo(self)
+                    make.trailing.lessThanOrEqualTo(self)
+                case .end:
+                    make.leading.greaterThanOrEqualTo(self)
+                }
+            }
         }
     }
     public override func makeVerticalSizeToFit() {
