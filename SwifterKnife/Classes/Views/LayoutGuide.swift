@@ -8,6 +8,7 @@ import UIKit
 import SnapKit
 
 public class LayoutGuide: UILayoutGuide {
+    fileprivate let DefaultPriority = 100
     public enum Alignment {
         /// 左/上
         case start
@@ -30,7 +31,7 @@ public class LayoutGuide: UILayoutGuide {
         super.init()
         view.addLayoutGuide(self)
         self.snp.makeConstraints { make in
-            make.width.height.equalTo(1).priority(2)
+            make.width.height.equalTo(1).priority(DefaultPriority)
         }
     }
     
@@ -50,6 +51,10 @@ public class LayoutGuide: UILayoutGuide {
         makeVerticalSizeToFit()
     }
     fileprivate func makeConstraints(for subview: UIView) { }
+    
+    deinit {
+        print("\(type(of: self)) deinit")
+    }
 }
 
 public final class HLayoutGuide: LayoutGuide {
@@ -85,7 +90,7 @@ public final class HLayoutGuide: LayoutGuide {
         }
         guard height > 0 else { return }
         self.snp.updateConstraints { make in
-            make.height.equalTo(ceil(height))
+            make.height.equalTo(ceil(height)).priority(DefaultPriority)
         } 
     }
 }
@@ -112,7 +117,7 @@ public final class VLayoutGuide: LayoutGuide {
         }
         guard width > 0 else { return }
         self.snp.updateConstraints { make in
-            make.width.equalTo(ceil(width))
+            make.width.equalTo(ceil(width)).priority(DefaultPriority)
         }
     }
     public override func makeVerticalSizeToFit() {

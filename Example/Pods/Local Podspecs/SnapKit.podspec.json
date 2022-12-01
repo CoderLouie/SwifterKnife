@@ -18,6 +18,10 @@
     "tvos": "10.0"
   },
   "source_files": "Sources/*.swift",
+  "libraries": "swiftCoreGraphics",
+  "xcconfig": {
+    "LIBRARY_SEARCH_PATHS": "$(SDKROOT)/usr/lib/swift"
+  },
   "swift_versions": [
     "5.0"
   ],

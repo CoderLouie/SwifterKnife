@@ -10,6 +10,8 @@ import UIKit
 
 extension NSMutableAttributedString {
     public enum AttributedComponent {
+        case link(URL?)
+        
         case font(UIFont?)
         case kern(Double?)
         case color(UIColor?)
@@ -31,6 +33,7 @@ extension NSMutableAttributedString {
         
         var key: NSMutableAttributedString.Key {
             switch self {
+            case .link: return .link
             case .font: return .font
             case .kern: return .kern
             case .color: return .foregroundColor
@@ -50,6 +53,7 @@ extension NSMutableAttributedString {
         }
         var value: Any? {
             switch self {
+            case .link(let url): return url
             case .font(let font): return font
             case .kern(let v): return v.map { NSNumber(floatLiteral: $0) }
             case .color(let color): return color

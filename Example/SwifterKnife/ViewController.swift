@@ -52,11 +52,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-//        setupBody9()
+        setupBody5()
 //        setupButton1()
 //        setupRatingView()
 //        setupImageView()
-        setupGradientControl()
+//        setupGradientControl()
 //        let stus: [Student] = []
 //        let newStus = stus.sorted(by: +[+\.age, +\.score, +\.name])
         
