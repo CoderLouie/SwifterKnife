@@ -77,10 +77,10 @@ open class LayoutView: VirtualView {
     }
 }
 
-open class QueueView: LayoutView { }
+open class FlexView: LayoutView { }
 
 /// 垂直方向会自动根据对齐方式布局
-final public class QueueVView: QueueView {
+final public class FlexVView: FlexView {
     var vAutoSize: Bool = true
     
     public func makeHorizontalSizeToFit() {
@@ -127,7 +127,7 @@ final public class QueueVView: QueueView {
 }
 
 /// 水平方向会自动根据对齐方式布局
-final public class QueueHView: QueueView {
+final public class FlexHView: FlexView {
     var hAutoSize: Bool = true
     public func makeVerticalSizeToFit() {
         let inset = contentInsets
