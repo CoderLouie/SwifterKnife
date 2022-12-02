@@ -128,6 +128,21 @@ infix operator !!
 infix operator !?
 
 
+public func zip<A, B>(_ lhs: A?,
+                      _ rhs: @autoclosure () -> B?) -> (A, B)? {
+    if let x = lhs, let y = rhs() {
+        return (x, y)
+    }
+    return nil
+}
+public func zip<A, B, C>(_ a: A?,
+                         _ b: @autoclosure () -> B?,
+                         _ c: @autoclosure () -> C?) -> (A, B, C)? {
+    if let x = a, let y = b(), let z = c() {
+        return (x, y, z)
+    }
+    return nil
+}
 
 //public func lift<A>(_ compare: @escaping (A) -> (A) -> ComparisonResult) -> (A?) -> (A?) -> ComparisonResult {
 //    return { lhs in
