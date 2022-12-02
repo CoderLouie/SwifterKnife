@@ -114,6 +114,37 @@ public extension Optional {
         if let value = self { work(value) }
         return self
     }
+    
+    func map<U>(_ transform: (Wrapped) throws -> U, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
+        switch self {
+        case .some(let x): return try transform(x)
+        case .none: return try defaultValue()
+        }
+    }
+    func flatMap<U>(_ transform: (Wrapped) throws -> U?, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
+        switch self {
+        case .some(let x): return try transform(x) ?? defaultValue()
+        case .none: return try defaultValue()
+        }
+    }
+}
+
+
+// MARK: - Methods (Collection)
+
+public extension Optional where Wrapped: Collection {
+    /// Check if optional is nil or empty collection.
+    var isNilOrEmpty: Bool {
+        guard let collection = self else { return true }
+        return collection.isEmpty
+    }
+
+    /// Returns the collection only if it is not nil and not empty.
+    var nonEmpty: Wrapped? {
+        guard let collection = self else { return nil }
+        guard !collection.isEmpty else { return nil }
+        return collection
+    }
 }
 
 // MARK: - Operators
@@ -135,6 +166,7 @@ public func zip<A, B>(_ lhs: A?,
     }
     return nil
 }
+
 public func zip<A, B, C>(_ a: A?,
                          _ b: @autoclosure () -> B?,
                          _ c: @autoclosure () -> C?) -> (A, B, C)? {

@@ -161,7 +161,7 @@ public extension UIView {
         completion: ((Bool) -> Void)? = nil) {
             let angleWithType = (type == .degrees) ? .pi * angle / 180.0 : angle
             let aDuration = animated ? duration : 0
-            UIView.animate(withDuration: aDuration, delay: 0, options: .curveLinear, animations: { () -> Void in
+            UIView.animate(withDuration: aDuration, delay: 0, options: .curveLinear, animations: {
                 self.transform = self.transform.rotated(by: angleWithType)
             }, completion: completion)
         }
@@ -181,9 +181,10 @@ public extension UIView {
         duration: TimeInterval = 1,
         completion: ((Bool) -> Void)? = nil) {
             let angleWithType = (type == .degrees) ? .pi * angle / 180.0 : angle
+            let currentAngle = atan2(transform.b, transform.a)
             let aDuration = animated ? duration : 0
             UIView.animate(withDuration: aDuration, animations: {
-                self.transform = self.transform.concatenating(CGAffineTransform(rotationAngle: angleWithType))
+                self.transform = self.transform.rotated(by: angleWithType - currentAngle)
             }, completion: completion)
         }
     
@@ -200,7 +201,7 @@ public extension UIView {
         duration: TimeInterval = 1,
         completion: ((Bool) -> Void)? = nil) {
             if animated {
-                UIView.animate(withDuration: duration, delay: 0, options: .curveLinear, animations: { () -> Void in
+                UIView.animate(withDuration: duration, delay: 0, options: .curveLinear, animations: {
                     self.transform = self.transform.scaledBy(x: offset.x, y: offset.y)
                 }, completion: completion)
             } else {

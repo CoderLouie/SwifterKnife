@@ -13,7 +13,7 @@ public extension URL {
     /// Dictionary of the URL's query parameters.
     var queryParameters: [String: String]? {
         guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
-            let queryItems = components.queryItems else { return nil }
+              let queryItems = components.queryItems else { return nil }
 
         var items: [String: String] = [:]
 
@@ -75,6 +75,8 @@ public extension URL {
     ///
     /// - Returns: URL with all path components removed.
     func deletingAllPathComponents() -> URL {
+        guard !pathComponents.isEmpty else { return self }
+        
         var url: URL = self
         for _ in 0..<pathComponents.count - 1 {
             url.deleteLastPathComponent()
@@ -88,6 +90,8 @@ public extension URL {
     ///        url.deleteAllPathComponents()
     ///        print(url) // prints "https://domain.com/"
     mutating func deleteAllPathComponents() {
+        guard !pathComponents.isEmpty else { return }
+        
         for _ in 0..<pathComponents.count - 1 {
             deleteLastPathComponent()
         }

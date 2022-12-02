@@ -52,9 +52,7 @@ public extension Date {
 public extension Date {
 
     /// User’s current calendar.
-    var calendar: Calendar {
-        return Calendar(identifier: Calendar.current.identifier) // Workaround to segfault on corelibs foundation https://bugs.swift.org/browse/SR-10147
-    }
+    var calendar: Calendar { .current }
 
     /// Era.
     ///
@@ -344,7 +342,7 @@ public extension Date {
     var nearestTenMinutes: Date {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .nanosecond], from: self)
         let min = components.minute!
-        components.minute? = min % 10 < 6 ? min - min % 10 : min + 10 - (min % 10)
+        components.minute? = min % 10 < 5 ? min - min % 10 : min + 10 - (min % 10)
         components.second = 0
         components.nanosecond = 0
         return calendar.date(from: components)!

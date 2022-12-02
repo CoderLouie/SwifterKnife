@@ -36,6 +36,10 @@ fileprivate enum TestCase: String, CaseIterable {
 //            vc.mapPresentAd()
             break
         case .lazy2:
+            let nums: [Int]? = [1, 2]
+            if !nums.map(\.isEmpty, or: true) {
+                
+            }
             break
 //            print(vc.res.nullable ??? "nil")
 //            print(vc.res.isBuilt)

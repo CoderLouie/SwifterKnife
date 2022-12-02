@@ -117,7 +117,7 @@ public extension Sequence {
         return try filter { set.insert(try transform($0)).inserted }
     }
 
-    ///  SwifterSwift: Separates all items into 2 lists based on a given predicate. The first list contains all items for which the specified condition evaluates to true. The second list contains those that don't.
+    ///  Separates all items into 2 lists based on a given predicate. The first list contains all items for which the specified condition evaluates to true. The second list contains those that don't.
     ///
     ///     let (even, odd) = [0, 1, 2, 3, 4, 5].divided { $0 % 2 == 0 }
     ///     let (minors, adults) = people.divided { $0.age < 18 }
@@ -194,12 +194,7 @@ public extension Sequence where Element: Hashable {
     /// - Returns: true if the receiver contains duplicates.
     func containsDuplicates() -> Bool {
         var set = Set<Element>()
-        for element in self {
-            if !set.insert(element).inserted {
-                return true
-            }
-        }
-        return false
+        return contains { !set.insert($0).inserted }
     }
 
     /// Getting the duplicated elements in a sequence.
