@@ -98,9 +98,9 @@ open class LinearFlowView: UIView {
         rowViews = []
     }
     
-    open override func layoutSubviews() {
-        defer { replaceArrangedViews() }
+    open override func layoutSubviews() { 
         super.layoutSubviews()
+        replaceArrangedViews()
     }
     
     open override var intrinsicContentSize: CGSize {
@@ -114,6 +114,9 @@ open class LinearFlowView: UIView {
 }
 
 public extension LinearFlowView {
+    func setNeedsReplace() {
+        hasLayout = false
+    }
     /// 如有必要，重新摆放其管理的子视图
     func replaceArrangedViewsIfNeeded() {
         guard hasLayout else { return }

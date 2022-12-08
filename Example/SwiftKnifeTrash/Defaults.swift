@@ -7,26 +7,43 @@
 
 import Foundation
 
-public class DefaultsKey {}
+public struct DefaultsKeys {
+    fileprivate init() {}
+}
+
+public protocol OptionalType {
+    associatedtype Wrapped
+    
+    static var __swifty_empty: Self { get }
+    
+    init(_ some: Wrapped)
+}
+
+extension Optional: OptionalType {
+    public static var __swifty_empty: Optional {
+        return nil
+    }
+}
 
 /// Represents a `Key` with an associated generic value type conforming to the
 /// `Codable` protocol.
 ///
 ///     static let someKey = Key<ValueType>("someKey")
-public class Key<ValueType: Codable>: DefaultsKey {
+public struct DefaultsKey<ValueType: Codable> {
     fileprivate let _key: String
-    public init(_ key: String) {
-        _key = key
-    }
-}
-public final class DefaultKey<ValueType: Codable>: Key<ValueType> {
-    fileprivate let _defaultValue: ValueType
-    public init(_ key: String, defaultValue value: ValueType) {
-        _defaultValue = value
-        super.init(key)
-    }
-}
+    fileprivate let _defaultValue: ValueType?
 
+    public init(_ key: String, defaultValue value: ValueType) {
+        _key = key
+        _defaultValue = value 
+    }
+}
+public extension DefaultsKey where ValueType: OptionalType, ValueType.Wrapped: Codable {
+    init(_ key: String) {
+        _key = key
+        _defaultValue = nil
+    }
+}
 
 public let Defaults = DefaultsAdapter()
 
@@ -36,7 +53,7 @@ public let Defaults = DefaultsAdapter()
 /// These should not be used to store sensitive information that could compromise
 /// the application or the user's security and privacy.
 public final class DefaultsAdapter {
-    
+    private let keyStore = DefaultsKeys()
     private let userDefaults: UserDefaults
     
     /// Shared instance of `Defaults`, used for ad-hoc access to the user's
@@ -52,7 +69,7 @@ public final class DefaultsAdapter {
     /// Deletes the value associated with the specified key, if any.
     ///
     /// - Parameter key: The key.
-    public func clear<ValueType>(_ key: Key<ValueType>) {
+    public func clear<ValueType>(_ key: DefaultsKey<ValueType>) {
         userDefaults.removeObject(forKey: key._key)
     }
     public func clear(_ key: String) {
@@ -63,7 +80,7 @@ public final class DefaultsAdapter {
     ///
     /// - Parameter key: The key to look for.
     /// - Returns: A boolean value indicating if a value exists for the specified key.
-    public func has<ValueType>(_ key: Key<ValueType>) -> Bool {
+    public func has<ValueType>(_ key: DefaultsKey<ValueType>) -> Bool {
         return userDefaults.value(forKey: key._key) != nil
     }
     public func has(_ key: String) -> Bool {
@@ -96,14 +113,17 @@ public final class DefaultsAdapter {
 
         return nil
     }
-    public func get<ValueType: Decodable>(for key: String, default value: ValueType) -> ValueType {
-        return get(for: key) ?? value
+    public func get<ValueType: Decodable>(for key: String, default value: @autoclosure () -> ValueType) -> ValueType {
+        return get(for: key) ?? value()
     }
-    public func get<ValueType>(for key: Key<ValueType>) -> ValueType? {
-        return get(for: key._key)
+    public func get<ValueType>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType: OptionalType, ValueType.Wrapped: Codable {
+        if let val: ValueType.Wrapped = get(for: key._key) {
+            return ValueType(val)
+        }
+        return ValueType.__swifty_empty
     }
-    public func get<ValueType>(for key: DefaultKey<ValueType>) -> ValueType {
-        return get(for: key._key) ?? key._defaultValue
+    public func get<ValueType>(for key: DefaultsKey<ValueType>) -> ValueType {
+        return get(for: key._key) ?? key._defaultValue!
     }
     
     /// Sets a value associated with the specified key.
@@ -133,7 +153,7 @@ public final class DefaultsAdapter {
             #endif
         }
     }
-    public func set<ValueType>(_ value: ValueType?, for key: Key<ValueType>) {
+    public func set<ValueType>(_ value: ValueType?, for key: DefaultsKey<ValueType>) {
         set(value, for: key._key)
     }
     
@@ -185,14 +205,17 @@ extension DefaultsAdapter {
     ///
     /// - Parameter key: The key.
     /// - Returns: A `ValueType` or nil if the key was not found.
-    public func get<ValueType: RawRepresentable>(for key: Key<ValueType>) -> ValueType? where ValueType.RawValue: Codable {
+    public func get<ValueType: RawRepresentable>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType: OptionalType, ValueType.RawValue: Decodable {
         if let raw: ValueType.RawValue = get(for: key._key) {
-            return ValueType(rawValue: raw)
+            return ValueType(rawValue: raw) ?? ValueType.__swifty_empty
         }
-        return nil
+        return ValueType.__swifty_empty
     }
-    public func get<ValueType: RawRepresentable>(for key: DefaultKey<ValueType>) -> ValueType where ValueType.RawValue: Codable {
-        return get(for: key) ?? key._defaultValue
+    public func get<ValueType: RawRepresentable>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Decodable {
+        if let raw: ValueType.RawValue = get(for: key._key) {
+            return ValueType(rawValue: raw) ?? key._defaultValue!
+        }
+        return key._defaultValue!
     }
     
     public func set<ValueType: RawRepresentable>(_ value: ValueType?, for key: String) where ValueType.RawValue: Encodable {
@@ -203,29 +226,46 @@ extension DefaultsAdapter {
     /// - Parameters:
     ///   - some: The value to set.
     ///   - key: The associated `Key<ValueType>`.
-    public func set<ValueType: RawRepresentable>(_ value: ValueType?, for key: Key<ValueType>) where ValueType.RawValue: Codable {
-        let convertedKey = Key<ValueType.RawValue>(key._key)
-        set(value?.rawValue, for: convertedKey)
+    public func set<ValueType: RawRepresentable>(_ value: ValueType?, for key: DefaultsKey<ValueType>) where ValueType.RawValue: Encodable {
+        set(value?.rawValue, for: key._key)
     }
 }
 
 
 public extension DefaultsAdapter {
-    subscript<ValueType>(key: Key<ValueType>) -> ValueType? {
+    subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType? where ValueType: OptionalType, ValueType.Wrapped: Codable {
         get { get(for: key) }
         set { set(newValue, for: key) }
     }
-    subscript<ValueType>(key: DefaultKey<ValueType>) -> ValueType {
+    subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType {
         get { get(for: key) }
         set { set(newValue, for: key) }
     }
-    subscript<ValueType: RawRepresentable>(for key: Key<ValueType>) -> ValueType? where ValueType.RawValue: Codable {
+    subscript<ValueType: RawRepresentable>(key: DefaultsKey<ValueType>) -> ValueType where ValueType: OptionalType, ValueType.RawValue: Codable {
         get { get(for: key) }
         set { set(newValue, for: key) }
     }
-    subscript<ValueType: RawRepresentable>(for key: DefaultKey<ValueType>) -> ValueType where ValueType.RawValue: Codable {
+    subscript<ValueType: RawRepresentable>(key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Codable {
         get { get(for: key) }
         set { set(newValue, for: key) }
+    }
+}
+public extension DefaultsAdapter {
+    subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType: OptionalType, ValueType.Wrapped: Codable {
+        get { self[keyStore[keyPath: keyPath]] }
+        set { self[keyStore[keyPath: keyPath]] = newValue }
+    }
+    subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType {
+        get { self[keyStore[keyPath: keyPath]] }
+        set { self[keyStore[keyPath: keyPath]] = newValue }
+    }
+    subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType: OptionalType, ValueType.RawValue: Codable {
+        get { self[keyStore[keyPath: keyPath]] }
+        set { self[keyStore[keyPath: keyPath]] = newValue }
+    }
+    subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType.RawValue: Codable {
+        get { self[keyStore[keyPath: keyPath]] }
+        set { self[keyStore[keyPath: keyPath]] = newValue }
     }
 }
 

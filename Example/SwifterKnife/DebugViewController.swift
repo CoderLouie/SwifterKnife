@@ -23,6 +23,35 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
     }
 }
 
+enum Gender: String, Codable {
+    case man, woman
+}
+struct Tag: RawRepresentable, Codable {
+    init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    let rawValue: Int
+}
+fileprivate extension DefaultsKeys {
+    var reviewCount: DefaultsKey<Int> {
+        .init("reviewCount", defaultValue: 100)
+    }
+    var gender: DefaultsKey<Gender?> {
+        .init("gender")
+    }
+    var tag: DefaultsKey<Tag> {
+        .init("tag", defaultValue: Tag(10))
+    }
+    var genders: DefaultsKey<[Gender]> {
+        .init("genders", defaultValue: [])
+    }
+    var nilgenders: DefaultsKey<[Gender]?> {
+        .init("nilgenders")
+    }
+}
 
 fileprivate enum TestCase: String, CaseIterable {
     case promise1 = "Promise1"
@@ -30,8 +59,28 @@ fileprivate enum TestCase: String, CaseIterable {
     case promise3 = "Promise Retry"
     case lazy2 = "Lazy2"
     case throttle = "throttle"
+    case defaults = "UserDefaults"
+    
+    private func peekus() {
+        let n1 = Defaults[\.reviewCount]
+        let g = Defaults[\.gender]
+        let t = Defaults[\.tag]
+        let gs = Defaults[\.genders]
+        let nilgs = Defaults[\.nilgenders]
+        print(n1, g, t, gs, nilgs)
+    }
     func perform(from vc: DebugViewController) {
         switch self {
+        case .defaults:
+            peekus()
+            
+            Defaults[\.reviewCount] = 5
+            Defaults[\.gender] = .man
+            Defaults[\.tag] = Tag(20)
+            Defaults[\.genders] = [.woman, .man]
+            
+            peekus()
+            break
         case .throttle:
 //            vc.mapPresentAd()
             break
