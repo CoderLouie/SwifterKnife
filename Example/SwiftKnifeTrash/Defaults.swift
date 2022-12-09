@@ -194,6 +194,7 @@ public final class DefaultsAdapter {
     }
 }
 
+/*
 // MARK: ValueType with RawRepresentable conformance
 extension DefaultsAdapter {
     public func get<ValueType: RawRepresentable>(for key: String) -> ValueType? where ValueType.RawValue: Decodable {
@@ -221,7 +222,7 @@ extension DefaultsAdapter {
         set(value?.rawValue, for: key._key)
     }
 }
-
+*/
 
 public extension DefaultsAdapter {
     subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Codable {
@@ -232,10 +233,10 @@ public extension DefaultsAdapter {
         get { get(for: key) }
         set { set(newValue, for: key) }
     }
-    subscript<ValueType: RawRepresentable>(key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Codable {
-        get { get(for: key) }
-        set { set(newValue, for: key) }
-    }
+//    subscript<ValueType: RawRepresentable>(key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Codable {
+//        get { get(for: key) }
+//        set { set(newValue, for: key) }
+//    }
 }
 public extension DefaultsAdapter {
     subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Codable {
@@ -246,9 +247,9 @@ public extension DefaultsAdapter {
         get { self[keyStore[keyPath: keyPath]] }
         set { self[keyStore[keyPath: keyPath]] = newValue }
     } 
-    subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType.RawValue: Codable {
-        get { self[keyStore[keyPath: keyPath]] }
-        set { self[keyStore[keyPath: keyPath]] = newValue }
-    }
+//    subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType.RawValue: Codable {
+//        get { self[keyStore[keyPath: keyPath]] }
+//        set { self[keyStore[keyPath: keyPath]] = newValue }
+//    }
 }
 
