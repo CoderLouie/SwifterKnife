@@ -17,16 +17,9 @@ public struct DefaultsKeys {
 
 public protocol OptionalType {
     associatedtype Wrapped
-    
-    static var __swifty_empty: Self { get }
-    
-    init(_ some: Wrapped)
 }
 
-extension Optional: OptionalType {
-    public static var __swifty_empty: Optional {
-        return nil
-    }
+extension Optional: OptionalType { 
 }
 
 /// Represents a `Key` with an associated generic value type conforming to the
@@ -193,36 +186,7 @@ public final class DefaultsAdapter {
         }
     }
 }
-
-/*
-// MARK: ValueType with RawRepresentable conformance
-extension DefaultsAdapter {
-    public func get<ValueType: RawRepresentable>(for key: String) -> ValueType? where ValueType.RawValue: Decodable {
-        if let raw: ValueType.RawValue = get(for: key) {
-            return ValueType(rawValue: raw)
-        }
-        return nil
-    }
-    public func get<ValueType: RawRepresentable>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Decodable {
-        if let raw: ValueType.RawValue = get(for: key._key) {
-            return ValueType(rawValue: raw) ?? key._defaultValue!
-        }
-        return key._defaultValue!
-    }
-    
-    public func set<ValueType: RawRepresentable>(_ value: ValueType?, for key: String) where ValueType.RawValue: Encodable {
-        set(value?.rawValue, for: key)
-    }
-    /// Sets a value associated with the specified key.
-    ///
-    /// - Parameters:
-    ///   - some: The value to set.
-    ///   - key: The associated `Key<ValueType>`.
-    public func set<ValueType: RawRepresentable>(_ value: ValueType?, for key: DefaultsKey<ValueType>) where ValueType.RawValue: Encodable {
-        set(value?.rawValue, for: key._key)
-    }
-}
-*/
+ 
 
 public extension DefaultsAdapter {
     subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Codable {
@@ -233,10 +197,6 @@ public extension DefaultsAdapter {
         get { get(for: key) }
         set { set(newValue, for: key) }
     }
-//    subscript<ValueType: RawRepresentable>(key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Codable {
-//        get { get(for: key) }
-//        set { set(newValue, for: key) }
-//    }
 }
 public extension DefaultsAdapter {
     subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Codable {
@@ -246,10 +206,6 @@ public extension DefaultsAdapter {
     subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType {
         get { self[keyStore[keyPath: keyPath]] }
         set { self[keyStore[keyPath: keyPath]] = newValue }
-    } 
-//    subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType.RawValue: Codable {
-//        get { self[keyStore[keyPath: keyPath]] }
-//        set { self[keyStore[keyPath: keyPath]] = newValue }
-//    }
+    }
 }
 
