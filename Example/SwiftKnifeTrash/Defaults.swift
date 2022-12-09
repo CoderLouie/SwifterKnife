@@ -5,6 +5,10 @@
 //  Created by 李阳 on 2022/10/27.
 //
 
+/*
+ https://github.com/nmdias/DefaultsKit
+ */
+
 import Foundation
 
 public struct DefaultsKeys {
@@ -116,11 +120,8 @@ public final class DefaultsAdapter {
     public func get<ValueType: Decodable>(for key: String, default value: @autoclosure () -> ValueType) -> ValueType {
         return get(for: key) ?? value()
     }
-    public func get<ValueType>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType: OptionalType, ValueType.Wrapped: Codable {
-        if let val: ValueType.Wrapped = get(for: key._key) {
-            return ValueType(val)
-        }
-        return ValueType.__swifty_empty
+    public func get<ValueType>(for key: DefaultsKey<ValueType>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Decodable {
+        return get(for: key._key)
     }
     public func get<ValueType>(for key: DefaultsKey<ValueType>) -> ValueType {
         return get(for: key._key) ?? key._defaultValue!
@@ -201,16 +202,6 @@ extension DefaultsAdapter {
         }
         return nil
     }
-    /// Returns the value associated with the specified key.
-    ///
-    /// - Parameter key: The key.
-    /// - Returns: A `ValueType` or nil if the key was not found.
-    public func get<ValueType: RawRepresentable>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType: OptionalType, ValueType.RawValue: Decodable {
-        if let raw: ValueType.RawValue = get(for: key._key) {
-            return ValueType(rawValue: raw) ?? ValueType.__swifty_empty
-        }
-        return ValueType.__swifty_empty
-    }
     public func get<ValueType: RawRepresentable>(for key: DefaultsKey<ValueType>) -> ValueType where ValueType.RawValue: Decodable {
         if let raw: ValueType.RawValue = get(for: key._key) {
             return ValueType(rawValue: raw) ?? key._defaultValue!
@@ -233,15 +224,11 @@ extension DefaultsAdapter {
 
 
 public extension DefaultsAdapter {
-    subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType? where ValueType: OptionalType, ValueType.Wrapped: Codable {
+    subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Codable {
         get { get(for: key) }
-        set { set(newValue, for: key) }
+        set { set(newValue, for: key._key) }
     }
     subscript<ValueType>(key: DefaultsKey<ValueType>) -> ValueType {
-        get { get(for: key) }
-        set { set(newValue, for: key) }
-    }
-    subscript<ValueType: RawRepresentable>(key: DefaultsKey<ValueType>) -> ValueType where ValueType: OptionalType, ValueType.RawValue: Codable {
         get { get(for: key) }
         set { set(newValue, for: key) }
     }
@@ -251,18 +238,14 @@ public extension DefaultsAdapter {
     }
 }
 public extension DefaultsAdapter {
-    subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType: OptionalType, ValueType.Wrapped: Codable {
+    subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType.Wrapped? where ValueType: OptionalType, ValueType.Wrapped: Codable {
         get { self[keyStore[keyPath: keyPath]] }
         set { self[keyStore[keyPath: keyPath]] = newValue }
     }
     subscript<ValueType>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType {
         get { self[keyStore[keyPath: keyPath]] }
         set { self[keyStore[keyPath: keyPath]] = newValue }
-    }
-    subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType: OptionalType, ValueType.RawValue: Codable {
-        get { self[keyStore[keyPath: keyPath]] }
-        set { self[keyStore[keyPath: keyPath]] = newValue }
-    }
+    } 
     subscript<ValueType: RawRepresentable>(keyPath: KeyPath<DefaultsKeys, DefaultsKey<ValueType>>) -> ValueType where ValueType.RawValue: Codable {
         get { self[keyStore[keyPath: keyPath]] }
         set { self[keyStore[keyPath: keyPath]] = newValue }

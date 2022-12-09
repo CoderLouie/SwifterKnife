@@ -36,11 +36,17 @@ struct Tag: RawRepresentable, Codable {
     let rawValue: Int
 }
 fileprivate extension DefaultsKeys {
+    var pCount: DefaultsKey<Int?> {
+        .init("pCount")
+    }
     var reviewCount: DefaultsKey<Int> {
         .init("reviewCount", defaultValue: 100)
     }
     var gender: DefaultsKey<Gender?> {
         .init("gender")
+    }
+    var niltag: DefaultsKey<Tag?> {
+        .init("niltag")
     }
     var tag: DefaultsKey<Tag> {
         .init("tag", defaultValue: Tag(10))
@@ -63,8 +69,10 @@ fileprivate enum TestCase: String, CaseIterable {
     
     private func peekus() {
         let n1 = Defaults[\.reviewCount]
+//        let g = Defaults[\.pCount]
         let g = Defaults[\.gender]
         let t = Defaults[\.tag]
+        let nilt = Defaults[\.niltag]
         let gs = Defaults[\.genders]
         let nilgs = Defaults[\.nilgenders]
         print(n1, g, t, gs, nilgs)
@@ -72,10 +80,11 @@ fileprivate enum TestCase: String, CaseIterable {
     func perform(from vc: DebugViewController) {
         switch self {
         case .defaults:
+            Defaults[\.niltag] = Tag(8)
             peekus()
             
             Defaults[\.reviewCount] = 5
-            Defaults[\.gender] = .man
+//            Defaults[\.gender] = .man
             Defaults[\.tag] = Tag(20)
             Defaults[\.genders] = [.woman, .man]
             
