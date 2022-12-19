@@ -10,9 +10,15 @@ import UIKit
 
 open class PlaceholderTextView: UITextView {
     override open var text: String! {
-        didSet { setNeedsDisplay() }
+        didSet {
+            if oldValue != text {
+                setNeedsDisplay()
+                onTextDidChange?(self)
+            }
+        }
     }
     public var onDidEndEditing: ((PlaceholderTextView) -> Void)?
+    public var onTextDidChange: ((PlaceholderTextView) -> Void)?
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0
     
@@ -114,6 +120,7 @@ open class PlaceholderTextView: UITextView {
                 undoManager?.removeAllActions()
             }
             setNeedsDisplay()
+            onTextDidChange?(self)
         }
     }
 }

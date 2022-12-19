@@ -81,7 +81,7 @@ open class FlexView: LayoutView { }
 
 /// 垂直方向会自动根据对齐方式布局
 final public class FlexVView: FlexView {
-    var vAutoSize: Bool = true
+    public var vAutoSize: Bool = true
     
     public func makeHorizontalSizeToFit() {
         let inset = contentInsets
@@ -128,7 +128,7 @@ final public class FlexVView: FlexView {
 
 /// 水平方向会自动根据对齐方式布局
 final public class FlexHView: FlexView {
-    var hAutoSize: Bool = true
+    public var hAutoSize: Bool = true
     public func makeVerticalSizeToFit() {
         let inset = contentInsets
         if let view = arrangedViews.first {

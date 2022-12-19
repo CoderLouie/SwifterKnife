@@ -70,6 +70,11 @@ public enum JSON {
     case null
     case error(JSONError)
     
+    public init(filePath: String) throws {
+        let url = URL(fileURLWithPath: filePath)
+        let data = try Data(contentsOf: url)
+        try self.init(data: data, options: [])
+    }
     /**
      Creates a JSON using the data.
      

@@ -16,37 +16,13 @@ open class LinearFlowView: UIView {
         case trailing
     }
     
-    public var contentInset: UIEdgeInsets = .zero {
-        didSet {
-            guard oldValue != contentInset else { return }
-            replaceArrangedViewsIfNeeded()
-        }
-    }
-    
-    public var isMultipleLines: Bool = true {
-        didSet {
-            guard oldValue != isMultipleLines else { return }
-            replaceArrangedViewsIfNeeded()
-        }
-    }
-    public var alignment: Alignment = .leading {
-        didSet {
-            guard oldValue != alignment else { return }
-            replaceArrangedViewsIfNeeded()
-        }
-    }
-    public var marginY: CGFloat = 5 {
-        didSet {
-            guard oldValue != marginY else { return }
-            replaceArrangedViewsIfNeeded()
-        }
-    }
-    public var marginX: CGFloat = 5 {
-        didSet {
-            guard oldValue != marginX else { return }
-            replaceArrangedViewsIfNeeded()
-        }
-    }
+    public var contentInset: UIEdgeInsets = .zero
+    public var numberOfLines: Int = 0
+     
+    public var alignment: Alignment = .leading
+    public var marginY: CGFloat = 5
+    public var marginX: CGFloat = 5
+    public var minPlaceWidth: CGFloat = 0
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -98,7 +74,7 @@ open class LinearFlowView: UIView {
         rowViews = []
     }
     
-    open override func layoutSubviews() { 
+    open override func layoutSubviews() {
         super.layoutSubviews()
         replaceArrangedViews()
     }
@@ -119,28 +95,88 @@ public extension LinearFlowView {
     }
     /// 如有必要，重新摆放其管理的子视图
     func replaceArrangedViewsIfNeeded() {
-        guard hasLayout else { return }
-        hasLayout = false
+        if hasLayout { return }
         replaceArrangedViews()
     }
 }
 
+/*
+ https://leetcode.cn/problems/split-array-largest-sum/solution/er-fen-cha-zhao-by-liweiwei1419-4/
+ */
 private extension LinearFlowView {
+    func splitArray(_ nums: [CGFloat], _ m: Int) -> (CGFloat, Int) {
+        let len = nums.count
+        var preSum: [CGFloat] = .init(repeating: 0, count: len + 1)
+        preSum[0] = 0
+        for i in 0..<len {
+            preSum[i + 1] = preSum[i] + nums[i]
+        }
+        var dp: [[CGFloat]] = .init(repeating: .init(repeating: .greatestFiniteMagnitude, count: m + 1), count: len)
+        for i in 0..<len {
+            dp[i][1] = preSum[i + 1]
+        }
+        if m < 2 {
+            return (dp[len - 1][m], len)
+        }
+        for k in 2...m {// 2...5
+            for i in k-1..<len {//1..<5
+                for j in k-2..<i {//0..<1
+                    dp[i][k] = Swift.min(
+                        dp[i][k],
+                        Swift.max(dp[j][k - 1], preSum[i + 1] - preSum[j + 1]))
+                }
+            }
+        }
+        let res = dp[len - 1][m]
+        var n = 0
+        var sum: CGFloat = 0
+        for (i, num) in nums.enumerated() {
+            sum = num
+            n = 1
+            for num1 in nums[(i+1)...] {
+                sum += num1
+                n += 1
+                if abs(sum - res) < 0.01 { return (res, n) }
+                else if sum > res { break }
+            }
+        }
+        return (dp[len - 1][m], len)
+    }
     /// 重新摆放其管理的子视图
     func replaceArrangedViews() {
         guard !hasLayout else { return }
         
-        let frameWidth = frame.width
-        if isMultipleLines, frameWidth <= 0 { return }
-        if isMultipleLines { totalWidth = frameWidth }
+        let boundsW = frame.width
         
         let views = arrangedViews as [UIView] + rowViews
         guard !views.isEmpty else { return }
         
-        hasLayout = true
-        
         views.forEach { $0.removeFromSuperview() }
         rowViews.removeAll(keepingCapacity: true)
+        
+        var tagViewSizes: [CGSize] = []
+        for tagView in arrangedViews {
+            tagViewSizes.append(tagView.intrinsicContentSize)
+        }
+        let isMultipleLines = numberOfLines != 1
+        let frameWidth: CGFloat
+        if numberOfLines < 2 {
+            frameWidth = boundsW
+            if boundsW <= 0 { return }
+        } else {
+            let widths = tagViewSizes.map(\.width)
+            let sumw = widths.reduce(into: 0, +=) + CGFloat(widths.count - 1) * marginX
+            let estimedW = sumw / CGFloat(numberOfLines)
+            if estimedW <= boundsW {
+                frameWidth = boundsW
+            } else {
+                let pair = splitArray(widths, numberOfLines)
+                let tmpWidth = pair.0 + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
+                let targetW = Swift.max(minPlaceWidth, boundsW)
+                frameWidth = tmpWidth < targetW ? targetW : tmpWidth
+            }
+        }
+        hasLayout = true
 
         let isRtl: Bool = effectiveUserInterfaceLayoutDirection == .rightToLeft
         let directionTransform = isRtl
@@ -164,8 +200,8 @@ private extension LinearFlowView {
         let inset = contentInset
         let placeWidth = frameWidth - inset.horizontal
         
-        for tagView in arrangedViews {
-            let tagViewSize = tagView.intrinsicContentSize
+        for (i, tagView) in arrangedViews.enumerated() {
+            let tagViewSize = tagViewSizes[i]
             currentTagH = tagViewSize.height
             currentTagW = min(tagViewSize.width, placeWidth)
             
@@ -193,10 +229,8 @@ private extension LinearFlowView {
         }
         if currentRowTagCount > 0 { currentRowW -= marginX }
         rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
-        
-        if !isMultipleLines {
-            totalWidth = currentRowW + inset.horizontal
-        }
+         
+        totalWidth = frameWidth
         
         var alignment = self.alignment
         
