@@ -195,9 +195,14 @@ class DebugViewController: BaseViewController {
 //            print("execute lazy", self.n)
 //        }
 //    }
-    lazy var res = Lazy(Resource(age: 10)).then { [unowned self] r in
-        print("execute lazy", self.n, r.age)
+    lazy var res = Lazy { [unowned self] in
+        Resource(age:  110).then { _ in
+            print("execute lazy", self.n)
+        }
     }
+//    lazy var res = Lazy(Resource(age: 10)).then { [unowned self] r in
+//        print("execute lazy", self.n, r.age)
+//    }
     // 不会循环引用，但是会等promise完成后，self才会释放
     private let n = 100
     lazy var promise = Promise<Int>.create { fulfill, reject in
