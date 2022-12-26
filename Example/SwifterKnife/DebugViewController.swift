@@ -98,13 +98,13 @@ fileprivate enum TestCase: String, CaseIterable {
 //            vc.mapPresentAd()
             break
         case .lazy2:
-            let nums: [Int]? = [1, 2]
-            if !nums.map(\.isEmpty, or: true) {
-                
-            }
-            break
-//            print(vc.res.nullable ??? "nil")
-//            print(vc.res.isBuilt)
+//            let nums: [Int]? = [1, 2]
+//            if !nums.map(\.isEmpty, or: true) {
+//
+//            }
+//            break
+            print(vc.res.nullable ??? "nil")
+            print(vc.res.isBuilt)
 //            print(vc.res.nonull.age)
 //            print(vc.res.isBuilt)
         case .promise3:
@@ -159,6 +159,7 @@ fileprivate enum TestCase: String, CaseIterable {
 class Resource: CustomStringConvertible {
     let age: Int
     init(age: Int) {
+        print("create res with \(age)")
         self.age = age
     }
     var description: String {
@@ -185,14 +186,18 @@ class DebugViewController: BaseViewController {
         title = "Debug"
         setupBody()
     }
-//    lazy var res = Lazy(Resource(age:  110).then { _ in
+//    lazy var res = Lazy(Resource(age:  110).then { [unowned self] _ in
 //        print("execute lazy", self.n)
+////        print("execute lazy")
 //    })
 //    lazy var res = Lazy {
 //        Resource(age:  110).then { _ in
 //            print("execute lazy", self.n)
 //        }
 //    }
+    lazy var res = Lazy(Resource(age: 10)).then { [unowned self] r in
+        print("execute lazy", self.n, r.age)
+    }
     // 不会循环引用，但是会等promise完成后，self才会释放
     private let n = 100
     lazy var promise = Promise<Int>.create { fulfill, reject in
