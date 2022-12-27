@@ -53,6 +53,7 @@ public extension Optional {
         case .none: return nilDescribing()
         }
     }
+    
     static func ??<(lhs: inout Optional, rhs: @autoclosure () -> Wrapped) -> Wrapped {
         switch lhs {
         case let .some(value): return value
@@ -62,9 +63,7 @@ public extension Optional {
             return value
         }
     }
-    /*
-     
-     */
+    
 //    static func !!(optional: Optional, failureText: @autoclosure () -> String) -> Wrapped {
 //        if let x = optional { return x }
 //        // "Expecting integer, bug got \"\(s)\""
@@ -187,19 +186,6 @@ public func zip<A, B, C>(_ a: A?,
     }
     return nil
 }
-
-//public func lift<A>(_ compare: @escaping (A) -> (A) -> ComparisonResult) -> (A?) -> (A?) -> ComparisonResult {
-//    return { lhs in
-//        { rhs in
-//            switch (lhs, rhs) {
-//            case (nil, nil): return .orderedSame
-//            case (nil, _): return .orderedAscending
-//            case (_, nil): return .orderedDescending
-//            case let (l?, r?): return compare(l)(r)
-//            }
-//        }
-//    }
-//}
  
 
 // MARK: - Methods (RawRepresentable, RawValue: Equatable)
