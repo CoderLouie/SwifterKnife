@@ -15,19 +15,26 @@ import Foundation
  */
 //@propertyWrapper
 public final class Lazy<T> {
-    private var builder: (() -> T)!
-    public init(_ builder: @escaping () -> T) {
-        self.builder = builder
-    }
+    public init() {}
     public private(set) var nullable: T?
     
     public var nonull: T {
+        nullable!
+    }
+    
+    public func buildIfNeeded(_ defaultValue: @autoclosure () -> T) {
+        if let _ = nullable { return }
+        nullable = defaultValue()
+    }
+    
+    @discardableResult
+    public func nonull(or defaultValue: @autoclosure () -> T) -> T {
         if let v = nullable { return v }
-        let v = builder()
-        builder = nil 
+        let v = defaultValue()
         nullable = v
         return v
     }
+    
     public var isBuilt: Bool {
         return nullable != nil
     }

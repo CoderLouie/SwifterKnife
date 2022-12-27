@@ -245,8 +245,8 @@ private extension ViewController {
         age ??= val
         print("age is \(age)")
         
-        var step: Step? = nil
-        step?.speak() !? "step is nil"
+//        var step: Step? = nil
+//        step?.speak() !? "step is nil"
     }
     func otherTest1() {
         

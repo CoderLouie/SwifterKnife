@@ -49,16 +49,27 @@ public extension Optional {
     
     static func ???(optional: Optional, nilDescribing: @autoclosure () -> String) -> String {
         switch optional {
-        case let value?: return String(describing: value)
-        case nil: return nilDescribing()
+        case let .some(value): return String(describing: value)
+        case .none: return nilDescribing()
         }
     }
-    
-    static func !!(optional: Optional, failureText: @autoclosure () -> String) -> Wrapped {
-        if let x = optional { return x }
-        // "Expecting integer, bug got \"\(s)\""
-        fatalError(failureText())
+    static func ??<(lhs: inout Optional, rhs: @autoclosure () -> Wrapped) -> Wrapped {
+        switch lhs {
+        case let .some(value): return value
+        case .none:
+            let value = rhs()
+            lhs = .some(value)
+            return value
+        }
     }
+    /*
+     
+     */
+//    static func !!(optional: Optional, failureText: @autoclosure () -> String) -> Wrapped {
+//        if let x = optional { return x }
+//        // "Expecting integer, bug got \"\(s)\""
+//        fatalError(failureText())
+//    }
     
     /*
      断言
@@ -70,22 +81,22 @@ public extension Optional {
      fatalError 将接受一条信息，并且无条件地停止操作。
      assertionFailure，将接受一条信息，Debug环境下停止操作。
      */
-    static func !?(optional: Optional, nilDefault: @autoclosure () -> (value: Wrapped, message: String)) -> Wrapped {
-        if let x = optional { return x }
-        let info = nilDefault()
-        /// Debug模式下生效，Release模式下不会生效
-        assert(false, info.message)
-        return info.value
-    }
+//    static func !?(optional: Optional, nilDefault: @autoclosure () -> (value: Wrapped, message: String)) -> Wrapped {
+//        if let x = optional { return x }
+//        let info = nilDefault()
+//        /// Debug模式下生效，Release模式下不会生效
+//        assert(false, info.message)
+//        return info.value
+//    }
     /**
      因为对于返回 Void 的函数，使用可选链进行调用时将返回 Void?，所以利用这一点，你也可以 写一个非泛型的版本来检测一个可选链调用碰到 nil，且无操作的情况
      
      var output: String? = nil
      output?.write("something") !? "Wasn't expecting chained nil here"
      */
-    static func !?(optional: Optional, failureText: @autoclosure () -> String) where Wrapped == Void {
-        assert(optional != nil, failureText())
-    }
+//    static func !?(optional: Optional, failureText: @autoclosure () -> String) where Wrapped == Void {
+//        assert(optional != nil, failureText())
+//    }
     
     func or(throws error: Error) throws -> Wrapped {
         switch self {
@@ -153,10 +164,11 @@ infix operator ??=: AssignmentPrecedence
 infix operator ?=: AssignmentPrecedence
 
 infix operator ???: NilCoalescingPrecedence
+infix operator ??<: NilCoalescingPrecedence
 
-infix operator !!
-
-infix operator !?
+//infix operator !!
+//
+//infix operator !?
 
 
 public func zip<A, B>(_ lhs: A?,

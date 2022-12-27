@@ -103,8 +103,14 @@ fileprivate enum TestCase: String, CaseIterable {
 //
 //            }
 //            break
-            print(vc.res.nullable ??? "nil")
-            print(vc.res.isBuilt)
+            print(vc._res?.age)
+            print(vc.res.age)
+            print(vc._res?.age)
+            print(vc.res.age)
+            
+//            print(vc.res.nullable ??? "nil")
+//            print(vc.res.isBuilt)
+//            vc.res.nonull(or: Resource(age:  110))
 //            print(vc.res.nonull.age)
 //            print(vc.res.isBuilt)
         case .promise3:
@@ -195,11 +201,20 @@ class DebugViewController: BaseViewController {
 //            print("execute lazy", self.n)
 //        }
 //    }
-    lazy var res = Lazy { [unowned self] in
-        Resource(age:  110).then { _ in
-            print("execute lazy", self.n)
+//    lazy var res = Lazy { [unowned self] in
+//        Resource(age:  110).then { _ in
+//            print("execute lazy", self.n)
+//        }
+//    }
+//    lazy var res = Lazy<Resource>()
+    
+    var _res: Resource?
+    var res: Resource {
+        _res ??< Resource(age: 10).then {
+            print("execute lazy", self.n, $0.age)
         }
     }
+    
 //    lazy var res = Lazy(Resource(age: 10)).then { [unowned self] r in
 //        print("execute lazy", self.n, r.age)
 //    }
