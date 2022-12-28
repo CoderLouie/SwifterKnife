@@ -9,6 +9,9 @@
 // https://github.com/FlineDev/HandySwift
 import Foundation
 
+public typealias RegexOptions = NSRegularExpression.Options
+public typealias RegexMatchingOptions = NSRegularExpression.MatchingOptions
+
 /// `Regex` is a swifty regex engine built on top of the NSRegularExpression api.
 public struct Regex {
     // MARK: - Properties
@@ -26,22 +29,29 @@ public struct Regex {
     ///       For details, see `Regex.Options`.
     ///
     /// - throws: A value of `ErrorType` describing the invalid regular expression.
-    public init(_ pattern: String, options: Options = []) throws {
+    public init(_ pattern: String, options: RegexOptions = []) throws {
         regularExpression = try NSRegularExpression(
             pattern: pattern,
-            options: options.toNSRegularExpressionOptions
+            options: options
         )
     }
     
+    private func nsrange(of string: String) -> NSRange {
+//        NSRange(location: 0, length: string.utf16.count)
+        NSRange(string.startIndex..<string.endIndex, in: string)
+    }
     // MARK: - Methods: Matching
     /// Returns `true` if the regex matches `string`, otherwise returns `false`.
     ///
     /// - parameter string: The string to test.
     ///
     /// - returns: `true` if the regular expression matches, otherwise `false`.
-    @inlinable
-    public func matches(_ string: String) -> Bool {
-        firstMatch(in: string) != nil
+    public func matches(_ string: String,
+                        options: RegexMatchingOptions = []) -> Bool {
+//        firstMatch(in: string) != nil
+//        string.range(of: regularExpression.pattern, options: .regularExpression, range: nil, locale: nil) != nil
+        regularExpression
+            .firstMatch(in: string, options: options, range: nsrange(of: string)) != nil
     }
     
     /// If the regex matches `string`, returns a `Match` describing the
@@ -51,10 +61,10 @@ public struct Regex {
     /// - parameter string: The string to match against.
     ///
     /// - returns: An optional `Match` describing the first match, or `nil`.
-    @inlinable
-    public func firstMatch(in string: String) -> Match? {
+    public func firstMatch(in string: String,
+                           options: RegexMatchingOptions = []) -> Match? {
         regularExpression
-            .firstMatch(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
+            .firstMatch(in: string, options: options, range: nsrange(of: string))
             .map { Match(result: $0, in: string) }
     }
     
@@ -65,10 +75,10 @@ public struct Regex {
     /// - parameter string: The string to match against.
     ///
     /// - returns: An array of `Match` describing every match in `string`.
-    @inlinable
-    public func matches(in string: String) -> [Match] {
+    public func matches(in string: String,
+                        options: RegexMatchingOptions = []) -> [Match] {
         regularExpression
-            .matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
+            .matches(in: string, options: options, range: nsrange(of: string))
             .map { Match(result: $0, in: string) }
     }
     
@@ -89,10 +99,12 @@ public struct Regex {
     ///     - count: The maximum count of matches to replace, beginning with the first match.
     ///
     /// - returns: A string with all matches of `regex` replaced by `template`.
-    @inlinable
-    public func replacingMatches(in input: String, with template: String, count: Int? = nil) -> String {
+    public func replacingMatches(in input: String,
+                                 with template: String,
+                                 count: Int? = nil,
+                                 options: RegexMatchingOptions = []) -> String {
         var output = input
-        let matches = self.matches(in: input)
+        let matches = self.matches(in: input, options: options)
         let rangedMatches = Array(matches[0 ..< min(matches.count, count ?? .max)])
         for match in rangedMatches.reversed() {
             let replacement = match.string(applyingTemplate: template)
@@ -129,27 +141,35 @@ extension Regex: Hashable {
         hasher.combine(regularExpression)
     }
 }
-
+/*
 // MARK: - Options
 extension Regex {
     /// `Options` defines alternate behaviours of regular expressions when matching.
     public struct Options: OptionSet {
         // MARK: - Properties
         /// Ignores the case of letters when matching.
-        public static let caseInsensitive = Options(from: .caseInsensitive)
+        public static var caseInsensitive: Options {
+            .init(from: .caseInsensitive)
+        }
         
         /// Ignore any metacharacters in the pattern, treating every character as
         /// a literal.
-        public static let ignoreMetacharacters = Options(from: .ignoreMetacharacters)
+        public static var ignoreMetacharacters: Options {
+            .init(from: .ignoreMetacharacters)
+        }
         
         /// By default, "^" matches the beginning of the string and "$" matches the
         /// end of the string, ignoring any newlines. With this option, "^" will
         /// the beginning of each line, and "$" will match the end of each line.
-        public static let anchorsMatchLines = Options(from: .anchorsMatchLines)
+        public static var anchorsMatchLines: Options {
+            .init(from: .anchorsMatchLines)
+        }
         
         /// Usually, "." matches all characters except newlines (\n). Using this,
         /// options will allow "." to match newLines
-        public static let dotMatchesLineSeparators = Options(from: .dotMatchesLineSeparators)
+        public static var dotMatchesLineSeparators: Options {
+            .init(from: .dotMatchesLineSeparators)
+        }
         
         /// The raw value of the `OptionSet`
         public let rawValue: UInt
@@ -177,6 +197,54 @@ extension Regex {
         }
     }
 }
+
+extension Regex {
+    public struct MatchingOptions: OptionSet {
+        
+        public static var reportProgress: MatchingOptions {
+            .init(from: .reportProgress)
+        }
+
+        public static var reportCompletion: MatchingOptions {
+            .init(from: .reportCompletion)
+        }
+
+        public static var anchored: MatchingOptions {
+            .init(from: .anchored)
+        }
+
+        public static var withTransparentBounds: MatchingOptions {
+            .init(from: .withTransparentBounds)
+        }
+
+        public static var withoutAnchoringBounds: MatchingOptions {
+            .init(from: .withoutAnchoringBounds)
+        }
+        
+        /// The raw value of the `MatchingOptionSet`
+        public let rawValue: UInt
+        
+        
+        // MARK: - Initializers
+        /// The raw value init for the `MatchingOptionSet`
+        public init(rawValue: UInt) {
+            self.rawValue = rawValue
+        }
+        private init(from option: NSRegularExpression.MatchingOptions) {
+            self.rawValue = option.rawValue
+        }
+        var toNSRegularExpressionMatchingOptions: NSRegularExpression.MatchingOptions {
+            var options = NSRegularExpression.MatchingOptions()
+            if contains(.reportProgress) { options.insert(.reportProgress) }
+            if contains(.reportCompletion) { options.insert(.reportCompletion) }
+            if contains(.anchored) { options.insert(.anchored) }
+            if contains(.withTransparentBounds) { options.insert(.withTransparentBounds) }
+            if contains(.withoutAnchoringBounds) { options.insert(.withoutAnchoringBounds) }
+            return options
+        }
+    }
+}
+ */
 
 // MARK: - Match
 extension Regex {
@@ -206,7 +274,7 @@ extension Regex {
         ///     regex.matches(in: "ab")first?.captures // [Optional("a"), Optional("b")]
         ///     regex.matches(in: "b").first?.captures // [nil, Optional("b")]
         public lazy var captures: [String?] = {
-            let captureRanges = stride(from: 0, to: result.numberOfRanges, by: 1)
+            let captureRanges = (0..<result.numberOfRanges)
                 .map(result.range)
                 .dropFirst()
                 .map { [unowned self] in
