@@ -210,7 +210,7 @@ class DebugViewController: BaseViewController {
     
     var _res: Resource?
     var res: Resource {
-        _res ??< Resource(age: 10).then {
+        _res ?<< Resource(age: 10).then {
             print("execute lazy", self.n, $0.age)
         }
     }

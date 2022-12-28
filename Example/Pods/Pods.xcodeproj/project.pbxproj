@@ -108,6 +108,8 @@
 		B43017FEC99D227D4CDD81DD2C27D9D9 /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A527ED8F0A719FF610D743A87DAD3 /* ConstraintMakerPrioritizable.swift */; };
 		B5188013AA415D5731FB1E95DE730E68 /* UIFont+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46BE364E5AAABDD806DF721CD7476A7 /* UIFont+Add.swift */; };
 		B66F09AB2938939B002E2D62 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F09AA2938939B002E2D62 /* Position.swift */; };
+		B66F75CA295BE81C006E5E4E /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75C9295BE81C006E5E4E /* Regex.swift */; };
+		B66F75CC295C2805006E5E4E /* ViewAddition+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */; };
 		B68F02D609684505FC0BC4F090852E92 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D010CFFCFC328AC5BBD87196D177F1F /* CGRect+Add.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		BB14675EF9F29D99BCC1DA8E7840649E /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBAB078EC334FF57922452331F71BC4 /* UICollectionView+Add.swift */; };
@@ -281,6 +283,8 @@
 		B4B4442E98A1C35234EC1C16B7ADD637 /* LayoutGuide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LayoutGuide.swift; sourceTree = "<group>"; };
 		B57B4B15AAC3AB24B43306829FAA77A0 /* ConstraintPriority.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriority.swift; path = Sources/ConstraintPriority.swift; sourceTree = "<group>"; };
 		B66F09AA2938939B002E2D62 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		B66F75C9295BE81C006E5E4E /* Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
+		B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewAddition+Add.swift"; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
 		BB67CFA01D2A73C89E6ED092B3195D53 /* SwifterKnife-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-umbrella.h"; sourceTree = "<group>"; };
 		BC8DFD8FEE78807F86F0544749C80450 /* ConstraintDirectionalInsets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDirectionalInsets.swift; path = Sources/ConstraintDirectionalInsets.swift; sourceTree = "<group>"; };
@@ -523,6 +527,7 @@
 				B66F09AA2938939B002E2D62 /* Position.swift */,
 				72B150006CD3EA034636C60ECA383D7D /* RatingView.swift */,
 				4A35376A3A8172AB5720E4FEAE19ED46 /* TextField.swift */,
+				B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -561,6 +566,7 @@
 				BF4376E1C4FD50B2E5AEE80A3AECACC3 /* Localize */,
 				7DC5B4A061B4E7B609A8FAFCD8125400 /* Promise */,
 				7D0934E50A7D7D44CF9A95C723CB6E78 /* Protocol */,
+				B66F75C9295BE81C006E5E4E /* Regex.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1027,6 +1033,7 @@
 				EF26D16CF5F1A47C1331389DBCF86C98 /* Promise.swift in Sources */,
 				D16211537F90417C2B0FE82DD533CF35 /* Promise+Extras.swift in Sources */,
 				C2DBA0A31BEB7A2AC9AD973C8A7FDDAA /* Queue.swift in Sources */,
+				B66F75CC295C2805006E5E4E /* ViewAddition+Add.swift in Sources */,
 				472E3B71B65F5A09A810EDC32B17B36A /* Range+Add.swift in Sources */,
 				00C9348C0191DA6EAD08826D70968605 /* RangeReplaceableCollection+Add.swift in Sources */,
 				89006B8657DA25FD358443E4AD03AD6E /* RatingView.swift in Sources */,
@@ -1051,6 +1058,7 @@
 				E29C99F64801EEA4881C7FD8835A575D /* UIColor+Add.swift in Sources */,
 				D189177BF14EDFCA74E734F7AA20AFD5 /* UIEdgeInset+Add.swift in Sources */,
 				B5188013AA415D5731FB1E95DE730E68 /* UIFont+Add.swift in Sources */,
+				B66F75CA295BE81C006E5E4E /* Regex.swift in Sources */,
 				AF9E3D23343FFA882BED9CBCBF1D065A /* UIImage+Add.swift in Sources */,
 				05E4DAD40D03376A6A025DDED557CEC8 /* UINavigationBar+Add.swift in Sources */,
 				A96ABFA2B2E2300561FEFCBEBE43A788 /* UINavigationController+Add.swift in Sources */,

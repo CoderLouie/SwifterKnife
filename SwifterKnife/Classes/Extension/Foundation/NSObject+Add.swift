@@ -84,3 +84,11 @@ public extension Associable where Self: AnyObject {
 }
 
 extension NSObject: Associable {}
+
+@discardableResult
+public func synchronizd<T>(_ lock: AnyObject, closure: () -> T) -> T {
+    objc_sync_enter(lock)
+    let result = closure()
+    objc_sync_exit(lock)
+    return result
+}

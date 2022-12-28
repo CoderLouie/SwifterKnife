@@ -54,3 +54,18 @@ infix operator <>=: AssignmentPrecedence
     if x > y { return (x, true) }
     return (y, false)
 }
+
+
+public extension Comparable {
+    
+    /// Compares the reciever with another and returns their order.
+    func sk_compare(_ other: Self) -> ComparisonResult {
+        if self < other {
+            return .orderedAscending
+        }
+        if self > other {
+            return .orderedDescending
+        }
+        return .orderedSame
+    }
+}

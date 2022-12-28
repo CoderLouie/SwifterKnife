@@ -47,14 +47,7 @@ public extension Optional {
         }
     }
     
-    static func ???(optional: Optional, nilDescribing: @autoclosure () -> String) -> String {
-        switch optional {
-        case let .some(value): return String(describing: value)
-        case .none: return nilDescribing()
-        }
-    }
-    
-    static func ??<(lhs: inout Optional, rhs: @autoclosure () -> Wrapped) -> Wrapped {
+    static func ?<<(lhs: inout Optional, rhs: @autoclosure () -> Wrapped) -> Wrapped {
         switch lhs {
         case let .some(value): return value
         case .none:
@@ -63,6 +56,14 @@ public extension Optional {
             return value
         }
     }
+    
+    static func ???(optional: Optional, nilDescribing: @autoclosure () -> String) -> String {
+        switch optional {
+        case let .some(value): return String(describing: value)
+        case .none: return nilDescribing()
+        }
+    }
+    
     
 //    static func !!(optional: Optional, failureText: @autoclosure () -> String) -> Wrapped {
 //        if let x = optional { return x }
@@ -97,10 +98,10 @@ public extension Optional {
 //        assert(optional != nil, failureText())
 //    }
     
-    func or(throws error: Error) throws -> Wrapped {
+    func or(throws error: @autoclosure () -> Error) throws -> Wrapped {
         switch self {
         case .some(let x): return x
-        case .none: throw error
+        case .none: throw error()
         }
     }
     
@@ -108,6 +109,12 @@ public extension Optional {
         switch self {
         case .some: return false
         case .none: return true
+        }
+    }
+    var isSome: Bool {
+        switch self {
+        case .some: return true
+        case .none: return false
         }
     }
     
@@ -163,7 +170,7 @@ infix operator ??=: AssignmentPrecedence
 infix operator ?=: AssignmentPrecedence
 
 infix operator ???: NilCoalescingPrecedence
-infix operator ??<: NilCoalescingPrecedence
+infix operator ?<<: NilCoalescingPrecedence
 
 //infix operator !!
 //

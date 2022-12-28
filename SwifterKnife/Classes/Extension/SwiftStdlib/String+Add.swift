@@ -300,7 +300,17 @@ public extension String {
     func copyToPasteboard() {
         UIPasteboard.general.string = self
     }
- 
+    
+    /// First character of string uppercased(if applicable) while keeping the original string.
+    ///
+    ///        "hello world".firstCharacterUppercased() -> "Hello world"
+    ///        "".firstCharacterUppercased() -> ""
+    ///
+    mutating func firstCharacterUppercased() {
+        guard let first = first else { return }
+        self = String(first).uppercased() + dropFirst()
+    }
+    
     /// Check if string contains one or more instance of substring.
     ///
     ///        "Hello World!".contain("O") -> false

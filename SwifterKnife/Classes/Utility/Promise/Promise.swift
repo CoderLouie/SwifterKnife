@@ -117,6 +117,16 @@ enum State<Value>: CustomStringConvertible {
         }
         return nil
     }
+    var result: Result<Value, Swift.Error>? {
+        switch self {
+        case let .fulfilled(value):
+            return .success(value)
+        case let .rejected(error):
+            return .failure(error)
+        case .pending:
+            return nil
+        }
+    }
 
     var description: String {
         switch self {
@@ -398,6 +408,12 @@ public final class Promise<Value> {
     public var error: Error? {
         lockQueue.sync {
             return self.state.error
+        }
+    }
+    
+    public var result: Result<Value, Swift.Error>? {
+        lockQueue.sync {
+            return self.state.result
         }
     }
     

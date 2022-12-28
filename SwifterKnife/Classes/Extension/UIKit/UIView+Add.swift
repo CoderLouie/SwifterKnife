@@ -330,16 +330,28 @@ public extension UIView {
     func searchSubview<T: UIView>(
         reversed: Bool = true,
         where cond: (T) -> Bool) -> T? {
-            var views = [self]
-            var index = 0
-            repeat {
-                let view = views[index]
-                if let type = view as? T, cond(type) { return type }
-                index += 1
-                views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
-            } while index < views.count
-            return nil
-        }
+        var views = [self]
+        var index = 0
+        repeat {
+            let view = views[index]
+            if let type = view as? T, cond(type) { return type }
+            index += 1
+            views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
+        } while index < views.count
+        return nil
+    }
+    func firstSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
+        subviews.first {
+            guard let v = $0 as? T else { return false }
+            return cond?(v) ?? true
+        } as? T
+    }
+    func lastSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
+        subviews.last {
+            guard let v = $0 as? T else { return false }
+            return cond?(v) ?? true
+        } as? T
+    }
     
     @available(iOS 11.0, *)
     func roundingCorners(_ radius: CGFloat,
