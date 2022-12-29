@@ -42,13 +42,13 @@ public struct Regex {
     public typealias MatchingOptions = NSRegularExpression.MatchingOptions
     
     // MARK: - Properties
-    private let regularExpression: NSRegularExpression
+    private let nsRegex: NSRegularExpression
     
     public var pattern: String {
-        regularExpression.pattern
+        nsRegex.pattern
     }
     public var options: Options {
-        regularExpression.options
+        nsRegex.options
     }
     // MARK: - Initializers
     /// Create a `Regex` based on a pattern string.
@@ -63,7 +63,7 @@ public struct Regex {
     ///
     /// - throws: A value of `ErrorType` describing the invalid regular expression.
     public init(_ pattern: String, options: Options = []) throws {
-        regularExpression = try NSRegularExpression(
+        nsRegex = try NSRegularExpression(
             pattern: pattern,
             options: options
         )
@@ -77,7 +77,7 @@ public struct Regex {
     /// - returns: `true` if the regular expression matches, otherwise `false`.
     public func matches(_ string: String,
                         options: MatchingOptions = []) -> Bool {
-        regularExpression
+        nsRegex
             .firstMatch(in: string, options: options, range: string.nsrange) != nil
     }
     
@@ -90,7 +90,7 @@ public struct Regex {
     /// - returns: An optional `Match` describing the first match, or `nil`.
     public func firstMatch(in string: String,
                            options: MatchingOptions = []) -> Match? {
-        regularExpression
+        nsRegex
             .firstMatch(in: string, options: options, range: string.nsrange)
             .map { Match(result: $0, in: string) }
     }
@@ -104,7 +104,7 @@ public struct Regex {
     /// - returns: An array of `Match` describing every match in `string`.
     public func matches(in string: String,
                         options: MatchingOptions = []) -> [Match] {
-        regularExpression
+        nsRegex
             .matches(in: string, options: options, range: string.nsrange)
             .map { Match(result: $0, in: string) }
     }
@@ -112,7 +112,7 @@ public struct Regex {
     public func split(_ string: String,
                       options: MatchingOptions = []) -> [Split] {
         var loc = 0
-        let splits = regularExpression
+        let splits = nsRegex
             .matches(in: string, options: options, range: string.nsrange)
             .compactMap { (result) -> Split? in
                 let r1 = result.range
@@ -130,6 +130,14 @@ public struct Regex {
     
     
     // MARK: Replacing
+    /*
+     let regex: Regex = #"\d+"#
+     let str = "ab12c3d456efg7h89i1011jk12lmn"
+     let res = regex.replacingMatches(in: str, count: .max) {
+         String(repeating: "*", count: $0.intRange.count)
+     }
+     res is "ab**c*d***efg*h**i****jk**lmn"
+     */
     /// Returns a new string where each substring matched by `regex` is replaced
     /// with `template`.
     ///
@@ -141,20 +149,22 @@ public struct Regex {
     /// you must escape the "$": `\$1`.
     ///
     /// - parameters:
-    ///     - regex: A regular expression to match against `self`.
-    ///     - template: A template string used to replace matches.
+    ///     - input: A regular expression to match against `self`.
     ///     - count: The maximum count of matches to replace, beginning with the first match.
+    ///     - template: A template string used to replace matches.     
     ///
     /// - returns: A string with all matches of `regex` replaced by `template`.
     public func replacingMatches(in input: String,
-                                 with template: String,
-                                 count: Int? = nil,
+                                 count: Int,
+                                 with template: (Match) -> String,
                                  options: MatchingOptions = []) -> String {
-        var output = input
+        if count < 1 { return input }
         let matches = self.matches(in: input, options: options)
-        let rangedMatches = Array(matches[0 ..< min(matches.count, count ?? .max)])
+        let rangedMatches = Array(matches[0..<min(matches.count, count)])
+        if rangedMatches.isEmpty { return input }
+        var output = input
         for match in rangedMatches.reversed() {
-            let replacement = match.string(applyingTemplate: template)
+            let replacement = match.string(applyingTemplate: template(match))
             output.replaceSubrange(match.range, with: replacement)
         }
 
@@ -164,7 +174,19 @@ public struct Regex {
     public func replacingAllMatches(in input: String,
                                     with template: String,
                                     options: MatchingOptions = []) -> String {
-        return regularExpression.stringByReplacingMatches(in: input, options: options, range: input.nsrange, withTemplate: template)
+        return nsRegex.stringByReplacingMatches(in: input, options: options, range: input.nsrange, withTemplate: template)
+    }
+    public func replacingFirstMatch(in input: String,
+                                    with template: String,
+                                    options: MatchingOptions = []) -> String {
+        guard let result = nsRegex
+                .firstMatch(in: input, options: options, range: input.nsrange) else {
+            return input
+        }
+        var output = input
+        let replacement = nsRegex.replacementString(for: result, in: input, offset: 0, template: template)
+        output.replaceSubrange(input.rangeBetter(from: result.range), with: replacement)
+        return output
     }
 }
 
@@ -184,7 +206,7 @@ extension Regex: ExpressibleByStringLiteral {
 extension Regex: CustomStringConvertible {
     /// Returns a string describing the regex using its pattern string.
     public var description: String {
-        "Regex<\"\(regularExpression.pattern)\">"
+        "Regex<\"\(nsRegex.pattern)\">"
     }
 }
 
@@ -194,8 +216,8 @@ extension Regex: Equatable {
     /// Two `Regex` are considered equal, if both the pattern string and the options
     /// passed on initialization are equal.
     public static func == (lhs: Regex, rhs: Regex) -> Bool {
-        lhs.regularExpression.pattern == rhs.regularExpression.pattern &&
-        lhs.regularExpression.options == rhs.regularExpression.options
+        lhs.nsRegex.pattern == rhs.nsRegex.pattern &&
+        lhs.nsRegex.options == rhs.nsRegex.options
     }
 }
 
@@ -203,7 +225,7 @@ extension Regex: Equatable {
 extension Regex: Hashable {
     /// Manages hashing of the `Regex` instance.
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(regularExpression)
+        hasher.combine(nsRegex)
     }
 }
 

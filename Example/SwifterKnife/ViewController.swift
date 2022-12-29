@@ -279,12 +279,20 @@ private extension ViewController {
 // MARK: - Regex
 private extension ViewController {
     func regexTestEntry() {
-        regex3()
+        regex4()
     }
+    /// 提取重叠的字母数字
     func regex1() {
         let regex: Regex = #"([a-z])\1(\d)\2"#
         let str = "aa11+bb23-mj33*dd44/5566%ff77"
-//        print(str.range(of: "aa11")!, str.range(of: "dd44")!)
+        let result = regex.matches(in: str)
+        for (i, r) in result.enumerated() {
+            print(i, r, r.groupValues)
+        }
+    }
+    func regex11() {
+        let regex: Regex = #"[a-z]{2}\d(\d)"#
+        let str = "aa12+bb34-mj56*dd78/9900"
         let result = regex.matches(in: str)
         for (i, r) in result.enumerated() {
             print(i, r, r.groupValues)
@@ -295,6 +303,7 @@ private extension ViewController {
         let pattern = #"\d{3}"#
 //        print((try? str.matchesAll(pattern: pattern)) ?? "error")
     }
+    /// 正则分割字符串
     func regex3() {
         let regex: Regex = #"\d+"#
 //        let regex: Regex = "\\d+"
@@ -303,6 +312,31 @@ private extension ViewController {
         for (i, r) in result.enumerated() {
             print(i, r.value)
         }
+    }
+    /// 替换字符串中的数字
+    func regex4() {
+        let regex: Regex = #"\d+"#
+        let str = "ab12c3d456efg7h89i1011jk12lmn"
+//      let st1 = "ab**c*d***efg*h**i****jk**lmn"
+        let result1 = regex.replacingMatches(in: str, count: .max) {
+            String(repeating: "*", count: $0.intRange.count)
+        }
+        let result2 = regex.replacingAllMatches(in: str, with: "**")
+        print(result1)
+        print(result2)
+        print(result1 == result2)
+    }
+    func regex41() {
+        let regex: Regex = #"(Phil|John), ([\d]{4})"#
+        let str = "Phil, 1991 and John, 1985"
+        let with = "$1 was born in $2"
+        let result1 = regex.replacingMatches(in: str, count: 1) { _ in with }
+        let result2 = regex.replacingAllMatches(in: str, with: with)
+        let result3 = regex.replacingFirstMatch(in: str, with: with)
+        print(result1)
+        print(result2)
+        print(result3)
+        print(result1 == result2, result1 == result3)
     }
 }
 
