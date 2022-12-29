@@ -26,3 +26,9 @@ public extension ClosedRange where Bound: BinaryFloatingPoint {
        CGFloat(value - lowerBound) / CGFloat(upperBound - lowerBound)
    }
 }
+
+extension NSRange {
+    public var isNotFound: Bool {
+        location == NSNotFound
+    }
+}

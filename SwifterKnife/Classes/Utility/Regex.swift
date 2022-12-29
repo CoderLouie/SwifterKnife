@@ -7,16 +7,49 @@
 //
 
 // https://github.com/FlineDev/HandySwift
+// https://github.com/sindresorhus/Regex
 import Foundation
 
-public typealias RegexOptions = NSRegularExpression.Options
-public typealias RegexMatchingOptions = NSRegularExpression.MatchingOptions
+fileprivate extension NSRange {
+    var swifty: Range<Int> {
+        location..<location + length
+    }
+}
+
+fileprivate extension String {
+    
+    /**
+     Get a string range from a `NSRange`.
+     This works better than the built-in `Range(nsRange, in: string)`, which doesn't correctly handle some Unicode compositions.
+     */
+    func rangeBetter(from nsRange: NSRange) -> Range<Index> {
+//        return Range(nsRange, in: self)
+        let startIndex = utf16.index(utf16.startIndex, offsetBy: nsRange.lowerBound)
+        let endIndex = utf16.index(startIndex, offsetBy: nsRange.length)
+        return rangeOfComposedCharacterSequences(for: startIndex..<endIndex)
+    }
+    
+    var nsrange: NSRange {
+//        NSRange(location: 0, length: string.utf16.count)
+        NSRange(startIndex..<endIndex, in: self)
+    }
+}
 
 /// `Regex` is a swifty regex engine built on top of the NSRegularExpression api.
 public struct Regex {
-    // MARK: - Properties
-    @usableFromInline internal let regularExpression: NSRegularExpression
     
+    public typealias Options = NSRegularExpression.Options
+    public typealias MatchingOptions = NSRegularExpression.MatchingOptions
+    
+    // MARK: - Properties
+    private let regularExpression: NSRegularExpression
+    
+    public var pattern: String {
+        regularExpression.pattern
+    }
+    public var options: Options {
+        regularExpression.options
+    }
     // MARK: - Initializers
     /// Create a `Regex` based on a pattern string.
     ///
@@ -29,17 +62,13 @@ public struct Regex {
     ///       For details, see `Regex.Options`.
     ///
     /// - throws: A value of `ErrorType` describing the invalid regular expression.
-    public init(_ pattern: String, options: RegexOptions = []) throws {
+    public init(_ pattern: String, options: Options = []) throws {
         regularExpression = try NSRegularExpression(
             pattern: pattern,
             options: options
         )
     }
     
-    private func nsrange(of string: String) -> NSRange {
-//        NSRange(location: 0, length: string.utf16.count)
-        NSRange(string.startIndex..<string.endIndex, in: string)
-    }
     // MARK: - Methods: Matching
     /// Returns `true` if the regex matches `string`, otherwise returns `false`.
     ///
@@ -47,11 +76,9 @@ public struct Regex {
     ///
     /// - returns: `true` if the regular expression matches, otherwise `false`.
     public func matches(_ string: String,
-                        options: RegexMatchingOptions = []) -> Bool {
-//        firstMatch(in: string) != nil
-//        string.range(of: regularExpression.pattern, options: .regularExpression, range: nil, locale: nil) != nil
+                        options: MatchingOptions = []) -> Bool {
         regularExpression
-            .firstMatch(in: string, options: options, range: nsrange(of: string)) != nil
+            .firstMatch(in: string, options: options, range: string.nsrange) != nil
     }
     
     /// If the regex matches `string`, returns a `Match` describing the
@@ -62,9 +89,9 @@ public struct Regex {
     ///
     /// - returns: An optional `Match` describing the first match, or `nil`.
     public func firstMatch(in string: String,
-                           options: RegexMatchingOptions = []) -> Match? {
+                           options: MatchingOptions = []) -> Match? {
         regularExpression
-            .firstMatch(in: string, options: options, range: nsrange(of: string))
+            .firstMatch(in: string, options: options, range: string.nsrange)
             .map { Match(result: $0, in: string) }
     }
     
@@ -76,9 +103,9 @@ public struct Regex {
     ///
     /// - returns: An array of `Match` describing every match in `string`.
     public func matches(in string: String,
-                        options: RegexMatchingOptions = []) -> [Match] {
+                        options: MatchingOptions = []) -> [Match] {
         regularExpression
-            .matches(in: string, options: options, range: nsrange(of: string))
+            .matches(in: string, options: options, range: string.nsrange)
             .map { Match(result: $0, in: string) }
     }
     
@@ -102,7 +129,7 @@ public struct Regex {
     public func replacingMatches(in input: String,
                                  with template: String,
                                  count: Int? = nil,
-                                 options: RegexMatchingOptions = []) -> String {
+                                 options: MatchingOptions = []) -> String {
         var output = input
         let matches = self.matches(in: input, options: options)
         let rangedMatches = Array(matches[0 ..< min(matches.count, count ?? .max)])
@@ -110,8 +137,21 @@ public struct Regex {
             let replacement = match.string(applyingTemplate: template)
             output.replaceSubrange(match.range, with: replacement)
         }
-        
+
         return output
+    }
+    
+    public func replacingAllMatches(in input: String,
+                                    with template: String,
+                                    options: MatchingOptions = []) -> String {
+        return regularExpression.stringByReplacingMatches(in: input, options: options, range: input.nsrange, withTemplate: template)
+    }
+}
+
+extension Regex {
+    /// Returns a string by adding backslash escapes as necessary to protect any characters that would match as pattern metacharacters.
+    public static func escapingPattern(for string: String) -> String {
+        NSRegularExpression.escapedPattern(for: string)
     }
 }
 
@@ -141,110 +181,6 @@ extension Regex: Hashable {
         hasher.combine(regularExpression)
     }
 }
-/*
-// MARK: - Options
-extension Regex {
-    /// `Options` defines alternate behaviours of regular expressions when matching.
-    public struct Options: OptionSet {
-        // MARK: - Properties
-        /// Ignores the case of letters when matching.
-        public static var caseInsensitive: Options {
-            .init(from: .caseInsensitive)
-        }
-        
-        /// Ignore any metacharacters in the pattern, treating every character as
-        /// a literal.
-        public static var ignoreMetacharacters: Options {
-            .init(from: .ignoreMetacharacters)
-        }
-        
-        /// By default, "^" matches the beginning of the string and "$" matches the
-        /// end of the string, ignoring any newlines. With this option, "^" will
-        /// the beginning of each line, and "$" will match the end of each line.
-        public static var anchorsMatchLines: Options {
-            .init(from: .anchorsMatchLines)
-        }
-        
-        /// Usually, "." matches all characters except newlines (\n). Using this,
-        /// options will allow "." to match newLines
-        public static var dotMatchesLineSeparators: Options {
-            .init(from: .dotMatchesLineSeparators)
-        }
-        
-        /// The raw value of the `OptionSet`
-        public let rawValue: UInt
-        
-        
-        // MARK: - Initializers
-        /// The raw value init for the `OptionSet`
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-        private init(from option: NSRegularExpression.Options) {
-            self.rawValue = option.rawValue
-        }
-        
-        /// Transform an instance of `Regex.Options` into the equivalent `NSRegularExpression.Options`.
-        ///
-        /// - returns: The equivalent `NSRegularExpression.Options`.
-        var toNSRegularExpressionOptions: NSRegularExpression.Options {
-            var options = NSRegularExpression.Options()
-            if contains(.caseInsensitive) { options.insert(.caseInsensitive) }
-            if contains(.ignoreMetacharacters) { options.insert(.ignoreMetacharacters) }
-            if contains(.anchorsMatchLines) { options.insert(.anchorsMatchLines) }
-            if contains(.dotMatchesLineSeparators) { options.insert(.dotMatchesLineSeparators) }
-            return options
-        }
-    }
-}
-
-extension Regex {
-    public struct MatchingOptions: OptionSet {
-        
-        public static var reportProgress: MatchingOptions {
-            .init(from: .reportProgress)
-        }
-
-        public static var reportCompletion: MatchingOptions {
-            .init(from: .reportCompletion)
-        }
-
-        public static var anchored: MatchingOptions {
-            .init(from: .anchored)
-        }
-
-        public static var withTransparentBounds: MatchingOptions {
-            .init(from: .withTransparentBounds)
-        }
-
-        public static var withoutAnchoringBounds: MatchingOptions {
-            .init(from: .withoutAnchoringBounds)
-        }
-        
-        /// The raw value of the `MatchingOptionSet`
-        public let rawValue: UInt
-        
-        
-        // MARK: - Initializers
-        /// The raw value init for the `MatchingOptionSet`
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-        private init(from option: NSRegularExpression.MatchingOptions) {
-            self.rawValue = option.rawValue
-        }
-        var toNSRegularExpressionMatchingOptions: NSRegularExpression.MatchingOptions {
-            var options = NSRegularExpression.MatchingOptions()
-            if contains(.reportProgress) { options.insert(.reportProgress) }
-            if contains(.reportCompletion) { options.insert(.reportCompletion) }
-            if contains(.anchored) { options.insert(.anchored) }
-            if contains(.withTransparentBounds) { options.insert(.withTransparentBounds) }
-            if contains(.withoutAnchoringBounds) { options.insert(.withoutAnchoringBounds) }
-            return options
-        }
-    }
-}
- */
 
 // MARK: - Match
 extension Regex {
@@ -252,13 +188,41 @@ extension Regex {
     /// providing access to the matched string, as well as any capture groups within
     /// that string.
     public final class Match: CustomStringConvertible {
+        
+        
         // MARK: Properties
         /// The entire matched string.
-        public lazy var string = String(describing: baseString[range])
+        public private(set) lazy var string = String(baseString[range])
         
         /// The range of the matched string.
-        public lazy var range = Range(result.range, in: baseString)!
+        public private(set) lazy var range = baseString.rangeBetter(from: result.range)
         
+        public var intRange: Range<Int> {
+            result.range.swifty
+        }
+        
+        /// A regex match capture group.
+        public struct Group: CustomStringConvertible {
+            
+            /// The  capture group string.
+            public let value: String
+            
+            // The range of the capture group string in the original string.
+            public let range: Range<String.Index>
+            
+            public let intRange: Range<Int>
+            
+            fileprivate init?(baseString: String, range: NSRange) {
+                if range.location == NSNotFound { return nil }
+                self.range = baseString.rangeBetter(from: range)
+                self.value = String(baseString[self.range])
+                self.intRange = range.swifty
+            }
+            
+            public var description: String {
+                "Group<\"\(value)\" \(intRange)>"
+            }
+        }
         /// The matching string for each capture group in the regular expression
         /// (if any).
         ///
@@ -271,21 +235,16 @@ extension Regex {
         ///
         ///     let regex = Regex("(a)?(b)")
         ///
-        ///     regex.matches(in: "ab")first?.captures // [Optional("a"), Optional("b")]
-        ///     regex.matches(in: "b").first?.captures // [nil, Optional("b")]
-        public lazy var captures: [String?] = {
-            let captureRanges = (0..<result.numberOfRanges)
+        ///     regex.matches(in: "ab")first?.groups // [Optional("a"), Optional("b")]
+        ///     regex.matches(in: "b").first?.groups // [nil, Optional("b")]
+        public private(set) lazy var groups: [Group?] = {
+            return (1..<result.numberOfRanges)
                 .map(result.range)
-                .dropFirst()
-                .map { [unowned self] in
-                    Range($0, in: self.baseString)
-                }
-            
-            return captureRanges.map { [unowned self] captureRange in
-                guard let captureRange = captureRange else { return nil }
-                return String(describing: self.baseString[captureRange])
-            }
+                .map { Group(baseString: baseString, range: $0) }
         }()
+        public var groupValues: [Group] {
+            groups.compactMap { $0 }
+        }
         
         private let result: NSTextCheckingResult
         
@@ -324,7 +283,7 @@ extension Regex {
         // MARK: - CustomStringConvertible
         /// Returns a string describing the match.
         public var description: String {
-            "Match<\"\(string)\">"
+            "Match<\"\(string)\" \(intRange)>"
         }
     }
 }

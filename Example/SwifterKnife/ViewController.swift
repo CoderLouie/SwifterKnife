@@ -122,7 +122,7 @@ class ViewController: UIViewController {
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        promise_test_entry()
+//        promise_test_entry()
 //        let key = Key<Int>("hahahha")
 //        Defaults.set(99, for: key)
 //        let val = Defaults.get(for: key)
@@ -147,7 +147,8 @@ class ViewController: UIViewController {
 //            print("------2", $0.dictionaryRepresentation() as NSDictionary)
 //        }
         
-//        regex2()
+        regex2()
+        regex3()
 //        otherTest4()
 //        progressLayer.strokeEnd += 0.1
     }
@@ -282,6 +283,19 @@ private extension ViewController {
         let str = "aa11+bb23-mj33*dd44/5566%ff77"
         let pattern = #"([a-z])\1(\d)\2"#
         print((try? str.matchesAll(pattern: pattern)) ?? "error")
+    }
+    func regex3() {
+        print("--------regex3")
+    
+        guard let regex = try? Regex(#"([a-z])\1(\d)\2"#) else {
+            return
+        }
+        let str = "aa11+bb23-mj33*dd44/5566%ff77"
+//        print(str.range(of: "aa11")!, str.range(of: "dd44")!)
+        let result = regex.matches(in: str)
+        for (i, r) in result.enumerated() {
+            print(i, r, r.groupValues)
+        }
     }
     func regex1() {
         let str = "_123_456_789"

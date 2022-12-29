@@ -292,6 +292,12 @@ public extension String {
 
         return String(self[lowerIndex..<upperIndex])
     }
+    subscript(nsRange: NSRange) -> String? {
+        guard let range = Range(nsRange, in: self) else {
+            return nil
+        }
+        return String(self[range])
+    }
  
     /// Copy string to global pasteboard.
     ///
@@ -503,9 +509,11 @@ public extension String {
         let regex = try NSRegularExpression(pattern: pattern, options: [])
         let matches = regex.matches(in: self, options: options, range: NSRange(startIndex..<endIndex, in: self))
         return matches.map { result in
-//            let r1 = result.range(at: 1)
-//            let r2 = result.range(at: 2)
+            let r1 = result.range(at: 1)
+            let r2 = result.range(at: 2)
 //            print(r1, r2)
+//            print(r1, self[r1.location..<r1.location + r1.length])
+//            print(self[Range(r1, in: self)!], self[Range(r2, in: self)!])
             let r = result.range
             return (String(self[Range(r, in: self)!]), r.location..<r.location + r.length)
         }
