@@ -504,30 +504,6 @@ public extension String {
     func matches(pattern: String) -> Bool {
         return range(of: pattern, options: .regularExpression, range: nil, locale: nil) != nil
     }
- 
-    func matchesAll(pattern: String, options: NSRegularExpression.MatchingOptions = []) throws -> [(subString: String, range: Range<Int>)] {
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let matches = regex.matches(in: self, options: options, range: NSRange(startIndex..<endIndex, in: self))
-        return matches.map { result in
-            let r1 = result.range(at: 1)
-            let r2 = result.range(at: 2)
-//            print(r1, r2)
-//            print(r1, self[r1.location..<r1.location + r1.length])
-//            print(self[Range(r1, in: self)!], self[Range(r2, in: self)!])
-            let r = result.range
-            return (String(self[Range(r, in: self)!]), r.location..<r.location + r.length)
-        }
-    }
-    /// Verify if string matches the regex.
-    ///
-    /// - Parameters:
-    ///   - regex: Regex to verify.
-    ///   - options: The matching options to use.
-    /// - Returns: `true` if string matches the regex.
-    func matches(regex: NSRegularExpression, options: NSRegularExpression.MatchingOptions = []) -> Bool {
-        let range = NSRange(startIndex..<endIndex, in: self)
-        return regex.firstMatch(in: self, options: options, range: range) != nil
-    }
 
     /// Removes given prefix from the string.
     ///

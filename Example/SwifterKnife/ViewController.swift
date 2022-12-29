@@ -146,9 +146,8 @@ class ViewController: UIViewController {
 //            $0.set("launched", forKey: "app_is_first_start")
 //            print("------2", $0.dictionaryRepresentation() as NSDictionary)
 //        }
-        
-        regex2()
-        regex3()
+         
+        regexTestEntry()
 //        otherTest4()
 //        progressLayer.strokeEnd += 0.1
     }
@@ -279,17 +278,11 @@ private extension ViewController {
 
 // MARK: - Regex
 private extension ViewController {
-    func regex2() {
-        let str = "aa11+bb23-mj33*dd44/5566%ff77"
-        let pattern = #"([a-z])\1(\d)\2"#
-        print((try? str.matchesAll(pattern: pattern)) ?? "error")
+    func regexTestEntry() {
+        regex3()
     }
-    func regex3() {
-        print("--------regex3")
-    
-        guard let regex = try? Regex(#"([a-z])\1(\d)\2"#) else {
-            return
-        }
+    func regex1() {
+        let regex: Regex = #"([a-z])\1(\d)\2"#
         let str = "aa11+bb23-mj33*dd44/5566%ff77"
 //        print(str.range(of: "aa11")!, str.range(of: "dd44")!)
         let result = regex.matches(in: str)
@@ -297,10 +290,19 @@ private extension ViewController {
             print(i, r, r.groupValues)
         }
     }
-    func regex1() {
+    func regex2() {
         let str = "_123_456_789"
         let pattern = #"\d{3}"#
-        print((try? str.matchesAll(pattern: pattern)) ?? "error")
+//        print((try? str.matchesAll(pattern: pattern)) ?? "error")
+    }
+    func regex3() {
+        let regex: Regex = #"\d+"#
+//        let regex: Regex = "\\d+"
+        let str = "ab12c3d456efg7h89i1011jk12lmn"
+        let result = regex.split(str)
+        for (i, r) in result.enumerated() {
+            print(i, r.value)
+        }
     }
 }
 

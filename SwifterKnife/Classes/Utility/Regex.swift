@@ -109,6 +109,26 @@ public struct Regex {
             .map { Match(result: $0, in: string) }
     }
     
+    public func split(_ string: String,
+                      options: MatchingOptions = []) -> [Split] {
+        var loc = 0
+        let splits = regularExpression
+            .matches(in: string, options: options, range: string.nsrange)
+            .compactMap { (result) -> Split? in
+                let r1 = result.range
+                if r1.location == NSNotFound ||
+                    r1.location == loc ||
+                    r1.length == 0 { return nil }
+                let r2 = NSRange(location: loc, length: r1.location - loc)
+                loc = r1.location + r1.length
+                return Split(baseString: string, range: r2)
+            }
+        let length = (string as NSString).length
+        if loc == length { return splits }
+        return splits + [Split(baseString: string, range: NSRange(location: loc, length: length - loc))]
+    }
+    
+    
     // MARK: Replacing
     /// Returns a new string where each substring matched by `regex` is replaced
     /// with `template`.
@@ -154,6 +174,11 @@ extension Regex {
         NSRegularExpression.escapedPattern(for: string)
     }
 }
+extension Regex: ExpressibleByStringLiteral {
+    public init(stringLiteral: String) {
+        try! self.init(stringLiteral, options: [])
+    }
+}
 
 // MARK: - CustomStringConvertible
 extension Regex: CustomStringConvertible {
@@ -179,6 +204,25 @@ extension Regex: Hashable {
     /// Manages hashing of the `Regex` instance.
     public func hash(into hasher: inout Hasher) {
         hasher.combine(regularExpression)
+    }
+}
+
+// MARK: - Split
+extension Regex {
+    public struct Split: CustomStringConvertible {
+        public let value: String
+         
+        public let range: Range<String.Index>
+        
+        public let intRange: Range<Int>
+        fileprivate init(baseString: String, range: NSRange) {
+            self.range = baseString.rangeBetter(from: range)
+            self.value = String(baseString[self.range])
+            self.intRange = range.swifty
+        }
+        public var description: String {
+            "Split<\"\(value)\" \(intRange)>"
+        }
     }
 }
 
@@ -213,7 +257,8 @@ extension Regex {
             public let intRange: Range<Int>
             
             fileprivate init?(baseString: String, range: NSRange) {
-                if range.location == NSNotFound { return nil }
+                if range.location == NSNotFound,
+                   range.length > 0 { return nil }
                 self.range = baseString.rangeBetter(from: range)
                 self.value = String(baseString[self.range])
                 self.intRange = range.swifty
@@ -244,6 +289,12 @@ extension Regex {
         }()
         public var groupValues: [Group] {
             groups.compactMap { $0 }
+        }
+        
+        @available(iOS 11.0, *)
+        public func group(named name: String) -> Group? {
+            let range = result.range(withName: name)
+            return Group(baseString: baseString, range: range)
         }
         
         private let result: NSTextCheckingResult
