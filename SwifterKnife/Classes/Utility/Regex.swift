@@ -151,7 +151,7 @@ public struct Regex {
     /// - parameters:
     ///     - input: A regular expression to match against `self`.
     ///     - count: The maximum count of matches to replace, beginning with the first match.
-    ///     - template: A template string used to replace matches.     
+    ///     - template: A template string used to replace matches.
     ///
     /// - returns: A string with all matches of `regex` replaced by `template`.
     public func replacingMatches(in input: String,
@@ -258,7 +258,7 @@ extension Regex {
         
         // MARK: Properties
         /// The entire matched string.
-        public private(set) lazy var string = String(baseString[range])
+        public private(set) lazy var value = String(baseString[range])
         
         /// The range of the matched string.
         public private(set) lazy var range = baseString.rangeBetter(from: result.range)
@@ -356,7 +356,7 @@ extension Regex {
         // MARK: - CustomStringConvertible
         /// Returns a string describing the match.
         public var description: String {
-            "Match<\"\(string)\" \(intRange)>"
+            "Match<\"\(value)\" \(intRange)>"
         }
     }
 }

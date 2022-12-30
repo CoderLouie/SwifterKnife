@@ -278,8 +278,13 @@ private extension ViewController {
 
 // MARK: - Regex
 private extension ViewController {
+    func regexa1() {
+        let regex: Regex = #".(at)g"#
+        let str = "The fat cat sat on the mat."
+        print(regex.firstMatch(in: str)?.value ?? "nil")
+    }
     func regexTestEntry() {
-        regex4()
+        regexa1()
     }
     /// 提取重叠的字母数字
     func regex1() {
