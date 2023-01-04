@@ -60,6 +60,7 @@ public extension SignedInteger {
 
 public extension SignedInteger {
     /// Greatest common divisor of integer value and n.
+    /// 最大公约数
     ///
     /// - Parameter number: integer value to find gcd with.
     /// - Returns: greatest common divisor of self and n.
@@ -68,6 +69,7 @@ public extension SignedInteger {
     }
 
     /// Least common multiple of integer and n.
+    /// 最小公倍数
     ///
     /// - Parameter number: integer value to find lcm with.
     /// - Returns: least common multiple of self and n.

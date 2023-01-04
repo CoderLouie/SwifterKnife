@@ -9,6 +9,17 @@ import UIKit
  
 public enum App {
     
+    public var isIdleTimerEnable: Bool {
+        get { !UIApplication.shared.isIdleTimerDisabled }
+        set {
+            UIApplication.shared.isIdleTimerDisabled = !newValue
+        }
+    }
+    
+    public static func suspend() {
+        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+    }
+    
     public static func delegate<T: UIApplicationDelegate>(as type: T.Type = T.self) -> T {
         guard let delegate = UIApplication.shared.delegate as? T else {
             fatalError("Cann't convert UIApplication.shared.delegate to \(type.self)")
@@ -50,32 +61,45 @@ public enum App {
         schemes.first
     }
     
-    public static var namespace: String {
+    public static var namespace: String? {
         string(for: "CFBundleExecutable")
     }
     
-    public static var version: String {
+    public static var version: String? {
         string(for: "CFBundleShortVersionString")
     }
     
-    public static var build: String {
+    public static var build: String? {
         string(for: "CFBundleVersion")
     }
-    public static var bundleId: String {
+    public static var bundleId: String? {
         string(for: "CFBundleIdentifier")
     }
     
-    public static var displayName: String {
+    public static var displayName: String? {
         string(for: "CFBundleDisplayName")
     }
-    public static var appName: String {
+    public static var appName: String? {
         string(for: kCFBundleNameKey as String)
     }
     
-    private static func string(for key: String) -> String {
-        guard let infoDictionary = Bundle.main.infoDictionary,
-            let value = infoDictionary[key] as? String else {
-                return ""
+    /// 桌面上的应用名称，多语言
+    public static var desktopName: String? {
+        if let name = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String {
+            return name
+        }
+        if let name = string(for: "CFBundleDisplayName") {
+            return name
+        }
+        if let name = string(for: "CFBundleName") {
+            return name
+        }
+        return nil
+    }
+    
+    private static func string(for key: String) -> String? {
+        guard let value = Bundle.main.infoDictionary?[key] as? String else {
+                return nil
         }
         return value
     }
@@ -95,4 +119,15 @@ public enum App {
         }
     }
      
+//    public static var appID: String = ""
+//    //评价应用
+//    public static func writeReview(completion: ((Bool) -> Void)? = nil) {
+//        guard !appID.isEmpty else {
+//            completion?(false)
+//            return
+//        }
+//
+//        let url = "itms-apps://itunes.apple.com/app/id\(appID)?action=write-review"
+//        App.openURL(URL(string: url), completion: completion)
+//    }
 }

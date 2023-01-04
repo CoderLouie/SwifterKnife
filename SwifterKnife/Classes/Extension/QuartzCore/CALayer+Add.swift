@@ -34,3 +34,17 @@ public extension CALayer {
         beginTime = convertTime(CACurrentMediaTime(), from: nil) - pauseTime
     }
 }
+
+public extension CAGradientLayer {
+    var uicolors: [UIColor]? {
+        set {
+            colors = newValue.map { $0.map(\.cgColor) }
+        }
+        get {
+            guard let colors = colors as? [CGColor] else {
+                return nil
+            }
+            return colors.map(UIColor.init(cgColor:))
+        }
+    } 
+}

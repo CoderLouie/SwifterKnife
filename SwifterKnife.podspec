@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SwifterKnife'
-  s.version          = '0.1.4'
+  s.version          = '0.1.5'
   s.summary          = 'A handy collection of Swift method and Tools to build project faster and more efficient.'
 
   s.description      = <<-DESC
@@ -33,9 +33,7 @@ Pod::Spec.new do |s|
 #  'SwifterKnife/Classes/Utility/**/*',
 #  'SwifterKnife/Classes/Views/**/*'
   s.source_files = 'SwifterKnife/Classes/**/*'
-
-  s.public_header_files = 'SwifterKnife/Classes/**/*.h'
-  
+ 
   s.subspec 'Base' do |sp|
     sp.source_files = 'SwifterKnife/Classes/Base/*.swift'
   end
@@ -49,14 +47,13 @@ Pod::Spec.new do |s|
   # Utility Extensions
   s.subspec 'Utility' do |sp|
     sp.source_files = 'SwifterKnife/Classes/Utility/**/*'
-    s.public_header_files = 'SwifterKnife/Classes/Utility/**/*.h'
   end
   
   # Layout Extensions
   s.subspec 'Views' do |sp|
     sp.source_files =
     'SwifterKnife/Classes/Base/*.swift',
-    'SwifterKnife/Classes/Views/**/*.swift'
+    'SwifterKnife/Classes/Views/**/*.swift' 
     
     sp.dependency 'SnapKit'
   end

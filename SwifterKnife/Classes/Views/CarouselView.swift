@@ -10,7 +10,8 @@ import Foundation
 // MARK: - CarouselViewDelegate
 @objc public protocol CarouselViewDelegate {
     @objc optional func carouselView(_ carouselView: CarouselView, didSelect cell: CarouselViewCell, at index: Int)
-    @objc optional func carouselView(_ carouselView: CarouselView, didDeselect cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, didAppear cell: CarouselViewCell, at index: Int)
+    @objc optional func carouselView(_ carouselView: CarouselView, didDisappear cell: CarouselViewCell, at index: Int)
     @objc optional func carouselView(_ carouselView: CarouselView, willAppear cell: CarouselViewCell, at index: Int)
     @objc optional func carouselView(_ carouselView: CarouselView, willDisappear cell: CarouselViewCell, at index: Int)
 }
@@ -20,6 +21,7 @@ import Foundation
 // MARK: - CarouselViewCell
 
 open class CarouselViewCell: UIView {
+    fileprivate unowned var carouselView: CarouselView!
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -28,6 +30,9 @@ open class CarouselViewCell: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     open func setup() { }
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        carouselView.didTouchCell(self)
+    }
 }
 
 
@@ -74,29 +79,52 @@ open class CarouselView: UIView {
     private var isHorizontal: Bool {
         scrollDirection == .horizontal
     }
-//    public var isInfinitely = true
     
     /// 当前索引, 用于currentCell
     public private(set) var currentIndex = 0
-    private unowned var currentCell: CarouselViewCell!
+    public private(set) unowned var currentCell: CarouselViewCell!
     /// next索引, 用于nextCell
     private var nextIndex = -1
     private unowned var nextCell: CarouselViewCell!
     /// 数据源数量
     open var itemsCount: Int = 0 {
         willSet {
-            guard itemsCount == 0 else {
-                fatalError("this property only can modify once")
-            }
             guard newValue > 1 else {
                 fatalError("the items count should be at least 2")
             }
+        }
+        didSet {
+            if itemsCount == oldValue { return }
+            if isFirstLayout { return }
+            
+            targetIndex = nil
+            currentIndex = 0
+            nextIndex = 1
+            
+            if isHorizontal {
+                scrollView.contentOffset = CGPoint(x: side, y: 0)
+                // cells
+                currentCell.frame.origin = CGPoint(x: side, y: 0)
+                nextCell.frame.origin = CGPoint(x: side * 2, y: 0)
+            } else {
+                scrollView.contentOffset = CGPoint(x: 0, y: side)
+                
+                // cells
+                currentCell.frame.origin = CGPoint(x: 0, y: side)
+                nextCell.frame.origin = CGPoint(x: 0, y: side * 2)
+            }
+            
+            delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
+            delegate?.carouselView?(self, didAppear: currentCell, at: currentIndex)
         }
     }
     
     private var side: CGFloat = 0
     private var targetIndex: Int?
     
+    fileprivate func didTouchCell(_ cell: CarouselViewCell) {
+        delegate?.carouselView?(self, didSelect: cell, at: currentIndex)
+    }
     private enum PanDirection {
         case none
         case forward
@@ -112,7 +140,6 @@ open class CarouselView: UIView {
             case .forward:
                 nextIndex = targetIndex ?? (currentIndex + 1)
                 if nextIndex >= itemsCount {
-//                    guard isInfinitely else { return }
                     nextIndex = 0
                 }
                 nextCell.frame = nextCell.frame.with {
@@ -126,8 +153,7 @@ open class CarouselView: UIView {
                 reset()
             case .backward:
                 nextIndex = targetIndex ?? (currentIndex - 1)
-                if nextIndex < 0 { 
-//                    guard isInfinitely else { return }
+                if nextIndex < 0 {
                     nextIndex = itemsCount - 1
                 }
                 nextCell.frame = nextCell.frame.with {
@@ -181,7 +207,7 @@ open class CarouselView: UIView {
         }
         
         delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
-        delegate?.carouselView?(self, didSelect: currentCell, at: currentIndex)
+        delegate?.carouselView?(self, didAppear: currentCell, at: currentIndex)
     }
 }
 
@@ -190,6 +216,14 @@ extension CarouselView {
     public var isTracking: Bool { scrollView.isTracking }
     public var isDragging: Bool { scrollView.isDragging }
     public var isDecelerating: Bool { scrollView.isDecelerating }
+    
+    public var isSilent: Bool {
+        if scrollView.isTracking ||
+            scrollView.isDragging ||
+            scrollView.isDecelerating ||
+            scrollView.isZooming { return false }
+        return true
+    }
     
     public var isScrollEnabled: Bool {
         get { scrollView.isScrollEnabled }
@@ -222,11 +256,16 @@ extension CarouselView {
     
     /// 注册cell
     open func register<T: CarouselViewCell>(_ cellClass: T.Type) {
+        if !isFirstLayout {
+            fatalError("this method can only be called onece!!!")
+        }
         currentCell = T().then {
+            $0.carouselView = self
             $0.clipsToBounds = true
             scrollView.addSubview($0)
         }
         nextCell = T().then {
+            $0.carouselView = self
             $0.clipsToBounds = true
             scrollView.addSubview($0)
         }
@@ -246,8 +285,8 @@ extension CarouselView: UIScrollViewDelegate {
         let index = offset / side
         if index == 1 { return }
         
-        delegate?.carouselView?(self, didDeselect: currentCell, at: currentIndex)
-        delegate?.carouselView?(self, didSelect: nextCell, at: nextIndex)
+        delegate?.carouselView?(self, didDisappear: currentCell, at: currentIndex)
+        delegate?.carouselView?(self, didAppear: nextCell, at: nextIndex)
         
         reset()
     }

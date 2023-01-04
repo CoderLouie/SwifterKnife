@@ -32,11 +32,14 @@ public extension UIScrollView {
 
     /// The currently visible region of the scroll view.
     var currentVisibleRect: CGRect {
-        let contentWidth = contentSize.width - contentOffset.x
-        let contentHeight = contentSize.height - contentOffset.y
-        return CGRect(origin: contentOffset,
-                      size: CGSize(width: min(min(bounds.size.width, contentSize.width), contentWidth),
-                                   height: min(min(bounds.size.height, contentSize.height), contentHeight)))
+        let contentS = contentSize
+        let offset = contentOffset
+        let bounds = bounds
+        let w = min(bounds.width, contentS.width)
+        let width = min(w, contentS.width - offset.x)
+        let h = min(bounds.height, contentS.height)
+        let height = min(h, contentS.height - offset.y)
+        return CGRect(origin: offset, size: CGSize(width: width, height: height))
     }
 }
 
@@ -129,19 +132,19 @@ public extension UIScrollView {
 
 
 public extension UIScrollView {
-    var insertT: CGFloat {
+    var insetT: CGFloat {
         get { contentInset.top }
         set { contentInset.top = newValue }
     }
-    var insertB: CGFloat {
+    var insetB: CGFloat {
         get { contentInset.bottom }
         set { contentInset.bottom = newValue }
     }
-    var insertL: CGFloat {
+    var insetL: CGFloat {
         get { contentInset.left }
         set { contentInset.left = newValue }
     }
-    var insertR: CGFloat {
+    var insetR: CGFloat {
         get { contentInset.right }
         set { contentInset.right = newValue }
     }
@@ -152,16 +155,16 @@ public extension UIScrollView {
         set { contentOffset.y = newValue }
     }
     var offsetB: CGFloat {
-        get { contentOffset.y + frame.size.height }
-        set { contentOffset.y = newValue - frame.size.height }
+        get { contentOffset.y + bounds.size.height }
+        set { contentOffset.y = newValue - bounds.size.height }
     }
     var offsetL: CGFloat {
         get { contentOffset.x }
         set { contentOffset.x = newValue }
     }
     var offsetR: CGFloat {
-        get { contentOffset.x + frame.size.width }
-        set { contentOffset.x = newValue - frame.size.width }
+        get { contentOffset.x + bounds.size.width }
+        set { contentOffset.x = newValue - bounds.size.width }
     }
     
     
@@ -174,49 +177,57 @@ public extension UIScrollView {
         set { contentSize.height = newValue }
     }
     
-    var visibleW: CGFloat {
+    var scrollableW: CGFloat {
         contentInset.left + contentSize.width + contentInset.right
     }
-    var visibleH: CGFloat {
+    var scrollableH: CGFloat {
         contentInset.top + contentSize.height + contentInset.bottom
     }
     
-    var offsetMinT: CGFloat {
+    // bingo
+    var offsetTMin: CGFloat {
         -contentInset.top
     }
-    var offsetMaxT: CGFloat {
-        offsetMaxB - frame.size.height
+    // bingo
+    var offsetTMax: CGFloat {
+        max(0, contentSize.height - bounds.height) + contentInset.bottom
     }
-    var offsetMinB: CGFloat {
-        offsetMinT + frame.size.height
+    // bingo
+    var offsetBMin: CGFloat {
+        offsetTMin + bounds.size.height
     }
-    var offsetMaxB: CGFloat {
-        contentSize.height + contentInset.bottom
+    // bingo
+    var offsetBMax: CGFloat {
+        offsetTMax + bounds.height
     }
-    var offsetMinL: CGFloat {
+    // bingo
+    var offsetLMin: CGFloat {
         -contentInset.left
     }
-    var offsetMaxL: CGFloat {
-        offsetMinR - frame.size.width
+    // bingo
+    var offsetLMax: CGFloat {
+        max(0, contentSize.width - bounds.width) + contentInset.right
     }
+    // bingo
     var offsetMinR: CGFloat {
-        offsetMinL + frame.size.width
+        offsetLMin + bounds.size.width
     }
+    // bingo
     var offsetMaxR: CGFloat {
-        contentSize.width + contentInset.right
+        offsetLMax + bounds.size.width
     }
     
     var atTopPosition: Bool {
-        offsetT == offsetMinT
+        offsetT == offsetTMin
     }
     var atBottomPosition: Bool {
-        offsetT == offsetMaxT
+        offsetT == offsetTMax
     }
     var atLeftPosition: Bool {
-        offsetL == offsetMinL
+        offsetL == offsetLMin
     }
     var atRightPosition: Bool {
-        offsetL == offsetMaxL
+        offsetL == offsetLMax
     }
 }
 
@@ -229,10 +240,10 @@ public extension UIScrollView {
     func pageIndex(at direction: ScrollDirection = .horizontal) -> Int {
         switch direction {
         case .horizontal:
-            let width = frame.size.width
+            let width = bounds.size.width
             return Int((contentOffset.x + width * 0.5) / width)
         case .vertical:
-            let height = frame.size.height
+            let height = bounds.size.height
             return Int((contentOffset.y + height * 0.5) / height)
         }
     }
@@ -248,7 +259,7 @@ public extension UIScrollView {
         setContentOffset(offset, animated: animated)
     }
     func roll(toPageIndex index: Int, at direction: ScrollDirection = .horizontal, animated: Bool = true) {
-        let size = frame.size
+        let size = bounds.size
         var offset: CGPoint = .zero
         switch direction {
         case .horizontal:

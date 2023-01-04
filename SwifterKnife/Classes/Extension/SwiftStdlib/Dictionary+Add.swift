@@ -10,14 +10,6 @@ import Foundation
 // MARK: - Methods
 
 public extension Dictionary {
-    /// Creates a Dictionary from a given sequence grouped by a given key path.
-    ///
-    /// - Parameters:
-    ///   - sequence: Sequence being grouped.
-    ///   - keypath: The key path to group by.
-    init<S: Sequence>(grouping sequence: S, by keyPath: KeyPath<S.Element, Key>) where Value == [S.Element] {
-        self.init(grouping: sequence, by: { $0[keyPath: keyPath] })
-    }
 
     /// Check if key exists in dictionary.
     ///
@@ -33,7 +25,7 @@ public extension Dictionary {
 
     /// Remove all keys contained in the keys parameter from the dictionary.
     ///
-    ///        var dict : [String: String] = ["key1" : "value1", "key2" : "value2", "key3" : "value3"]
+    ///        var dict: [String: String] = ["key1": "value1", "key2": "value2", "key3": "value3"]
     ///        dict.removeAll(keys: ["key1", "key2"])
     ///        dict.keys.contains("key3") -> true
     ///        dict.keys.contains("key1") -> false
@@ -42,13 +34,17 @@ public extension Dictionary {
     /// - Parameter keys: keys to be removed.
     mutating func removeAll<S: Sequence>(keys: S) where S.Element == Key {
         keys.forEach { removeValue(forKey: $0) }
+//        keys.reduce(into: [:]) {
+//            $0[$1] = removeValue(forKey: $1)
+//        }
     }
 
     /// Remove a value for a random key from the dictionary.
     @discardableResult
-    mutating func removeValueForRandomKey() -> Value? {
-        guard let randomKey = keys.randomElement() else { return nil }
-        return removeValue(forKey: randomKey)
+    mutating func removeRandom() -> (Key, Value)? {
+        guard let key = keys.randomElement(),
+              let value = removeValue(forKey: key) else { return nil }
+        return (key, value)
     }
 
     /// JSON Data from dictionary.
@@ -283,10 +279,9 @@ public extension Dictionary {
 
 public extension Dictionary {
     func pick(keys: Key...) -> [Key: Value] {
-        var result: [Key: Value] = [:]
-        keys.forEach { result[$0] = self[$0] }
-        return result
+        pick(keys: keys)
     }
+    
     func replaceKeys(using map: [Key: Key]) -> [Key: Value] {
         var result: [Key: Value] = [:]
         for item in self {
@@ -296,3 +291,9 @@ public extension Dictionary {
         return result
     }
 }
+/*
+ 哈希不变原则
+ 两个同样的实例(由你实现的 == 定义相同)，必须拥有同样的哈希值。
+ 不过反过来不必为真：两个相同哈希值的实例不一定需要相等
+ 
+ */

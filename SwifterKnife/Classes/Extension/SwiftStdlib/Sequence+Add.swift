@@ -14,6 +14,7 @@ public extension Sequence {
     /// - Parameter condition: condition to evaluate each element against.
     /// - Returns: true when all elements in the array match the specified condition.
     func all(matching condition: (Element) throws -> Bool) rethrows -> Bool {
+        // 如果没有元素不满足它的话，那意味着所有元素都满足它
         return try !contains { try !condition($0) }
     }
 
@@ -25,28 +26,8 @@ public extension Sequence {
     /// - Parameter condition: condition to evaluate each element against.
     /// - Returns: true when no elements in the array match the specified condition.
     func none(matching condition: (Element) throws -> Bool) rethrows -> Bool {
+        // 如果没有元素满足它的话，那意味着所有元素都不满足它
         return try !contains { try condition($0) }
-    }
-
-    /// Check if any element in collection match a condition.
-    ///
-    ///        [2, 2, 4].any(matching: {$0 % 2 == 0}) -> false
-    ///        [1, 3, 5, 7].any(matching: {$0 % 2 == 0}) -> true
-    ///
-    /// - Parameter condition: condition to evaluate each element against.
-    /// - Returns: true when no elements in the array match the specified condition.
-    func any(matching condition: (Element) throws -> Bool) rethrows -> Bool {
-        return try contains { try condition($0) }
-    }
-
-    /// Filter elements based on a rejection condition.
-    ///
-    ///        [2, 2, 4, 7].reject(where: {$0 % 2 == 0}) -> [7]
-    ///
-    /// - Parameter condition: to evaluate the exclusion of an element from the array.
-    /// - Returns: the array with rejected values filtered from it.
-    func reject(where condition: (Element) throws -> Bool) rethrows -> [Element] {
-        return try filter { return try !condition($0) }
     }
 
     /// Get element count based on condition.
@@ -61,15 +42,6 @@ public extension Sequence {
             count += 1
         }
         return count
-    }
-
-    /// Iterate over a collection in reverse order. (right to left)
-    ///
-    ///        [0, 2, 4, 7].forEachReversed({ print($0)}) -> // Order of print: 7,4,2,0
-    ///
-    /// - Parameter body: a closure that takes an element of the array as a parameter.
-    func forEachReversed(_ body: (Element) throws -> Void) rethrows {
-        try reversed().forEach(body)
     }
 
     /// Calls the given closure with each element where condition is true.
@@ -145,7 +117,7 @@ public extension Sequence {
         return try filter { set.insert(try transform($0)).inserted }
     }
 
-    ///  SwifterSwift: Separates all items into 2 lists based on a given predicate. The first list contains all items for which the specified condition evaluates to true. The second list contains those that don't.
+    ///  Separates all items into 2 lists based on a given predicate. The first list contains all items for which the specified condition evaluates to true. The second list contains those that don't.
     ///
     ///     let (even, odd) = [0, 1, 2, 3, 4, 5].divided { $0 % 2 == 0 }
     ///     let (minors, adults) = people.divided { $0.age < 18 }
@@ -171,49 +143,7 @@ public extension Sequence {
     func sorted<T>(by keyPath: KeyPath<Element, T>, with compare: (T, T) -> Bool) -> [Element] {
         return sorted { compare($0[keyPath: keyPath], $1[keyPath: keyPath]) }
     }
-
-    /// Return a sorted array based on a key path.
-    ///
-    /// - Parameter keyPath: Key path to sort by. The key path type must be Comparable.
-    /// - Returns: The sorted array.
-    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {
-        return sorted { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
-    }
-
-    /// Returns a sorted sequence based on two key paths. The second one will be used in case the values of the first one match.
-    ///
-    /// - Parameters:
-    ///     - keyPath1: Key path to sort by. Must be Comparable.
-    ///     - keyPath2: Key path to sort by in case the values of `keyPath1` match. Must be Comparable.
-    func sorted<T: Comparable, U: Comparable>(by keyPath1: KeyPath<Element, T>,
-                                              and keyPath2: KeyPath<Element, U>) -> [Element] {
-        return sorted {
-            if $0[keyPath: keyPath1] != $1[keyPath: keyPath1] {
-                return $0[keyPath: keyPath1] < $1[keyPath: keyPath1]
-            }
-            return $0[keyPath: keyPath2] < $1[keyPath: keyPath2]
-        }
-    }
-
-    /// Returns a sorted sequence based on three key paths. Whenever the values of one key path match, the next one will be used.
-    ///
-    /// - Parameters:
-    ///     - keyPath1: Key path to sort by. Must be Comparable.
-    ///     - keyPath2: Key path to sort by in case the values of `keyPath1` match. Must be Comparable.
-    ///     - keyPath3: Key path to sort by in case the values of `keyPath1` and `keyPath2` match. Must be Comparable.
-    func sorted<T: Comparable, U: Comparable, V: Comparable>(by keyPath1: KeyPath<Element, T>,
-                                                             and keyPath2: KeyPath<Element, U>,
-                                                             and keyPath3: KeyPath<Element, V>) -> [Element] {
-        return sorted {
-            if $0[keyPath: keyPath1] != $1[keyPath: keyPath1] {
-                return $0[keyPath: keyPath1] < $1[keyPath: keyPath1]
-            }
-            if $0[keyPath: keyPath2] != $1[keyPath: keyPath2] {
-                return $0[keyPath: keyPath2] < $1[keyPath: keyPath2]
-            }
-            return $0[keyPath: keyPath3] < $1[keyPath: keyPath3]
-        }
-    }
+ 
 
     /// Sum of a `AdditiveArithmetic` property of each `Element` in a `Sequence`.
     ///
@@ -221,20 +151,11 @@ public extension Sequence {
     ///
     /// - Parameter keyPath: Key path of the `AdditiveArithmetic` property.
     /// - Returns: The sum of the `AdditiveArithmetic` properties at `keyPath`.
-    func sum<T: AdditiveArithmetic>(for keyPath: KeyPath<Element, T>) -> T {
+    func sum<T: AdditiveArithmetic>(
+        for keyPath: KeyPath<Element, T>) -> T {
         // Inspired by: https://swiftbysundell.com/articles/reducers-in-swift/
         return reduce(.zero) { $0 + $1[keyPath: keyPath] }
-    }
-
-    /// Returns the first element of the sequence with having property by given key path equals to given `value`.
-    ///
-    /// - Parameters:
-    ///   - keyPath: The `KeyPath` of property for `Element` to compare.
-    ///   - value: The value to compare with `Element` property.
-    /// - Returns: The first element of the collection that has property by given key path equals to given `value` or `nil` if there is no such element.
-    func first<T: Equatable>(where keyPath: KeyPath<Element, T>, equals value: T) -> Element? {
-        return first { $0[keyPath: keyPath] == value }
-    }
+    } 
 }
 
 public extension Sequence where Element: Equatable {
@@ -273,12 +194,7 @@ public extension Sequence where Element: Hashable {
     /// - Returns: true if the receiver contains duplicates.
     func containsDuplicates() -> Bool {
         var set = Set<Element>()
-        for element in self {
-            if !set.insert(element).inserted {
-                return true
-            }
-        }
-        return false
+        return contains { !set.insert($0).inserted }
     }
 
     /// Getting the duplicated elements in a sequence.
@@ -300,6 +216,13 @@ public extension Sequence where Element: Hashable {
     }
 }
 
+public extension Sequence where Element: Hashable {
+    var frequencies: [Element:Int] {
+        let frequencyPairs = self.map { ($0, 1) }
+        return Dictionary(frequencyPairs, uniquingKeysWith: +)
+    }
+}
+
 // MARK: - Methods (AdditiveArithmetic)
 
 public extension Sequence where Element: AdditiveArithmetic {
@@ -311,4 +234,12 @@ public extension Sequence where Element: AdditiveArithmetic {
     func sum() -> Element {
         return reduce(.zero, +)
     }
+}
+
+@inlinable public func indexSequence<T>(first: T, next: @escaping (Int, T) -> T?) -> [T] {
+    var index = 0
+    return sequence(first: first) {
+        index += 1
+        return next(index, $0)
+    }.compactMap { $0 }
 }

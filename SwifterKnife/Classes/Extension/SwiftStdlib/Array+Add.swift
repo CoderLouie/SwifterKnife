@@ -6,16 +6,28 @@
 //
 
 
+// MARK: - Initializers
+
 public extension Array {
-    /// Insert an element at the beginning of array.
-    ///
-    ///        [2, 3, 4, 5].prepend(1) -> [1, 2, 3, 4, 5]
-    ///        ["e", "l", "l", "o"].prepend("h") -> ["h", "e", "l", "l", "o"]
-    ///
-    /// - Parameter newElement: element to insert.
-    mutating func prepend(_ newElement: Element) {
-        insert(newElement, at: 0)
+    /// Creates an array with specified number of elements, for each element it calls specified closure.
+    /// - Parameters:
+    ///   - count: The number of elements in the new array.
+    ///   - element: A closure that initializes each element.
+    ///     - Parameter *index*: An index of initialized element in the array.
+    ///     - Returns: element of the array.
+    init(count: Int, element: (Int) throws -> Element) rethrows {
+        try self.init(unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            for index in 0..<count {
+                try buffer.baseAddress?.advanced(by: index).initialize(to: element(index))
+            }
+            initializedCount = count
+        }
     }
+}
+
+// MARK: - Methods
+
+public extension Array {
 
     /// Safely swap values at given index positions.
     ///

@@ -4,7 +4,8 @@ platform :ios, '11.0'
 
 target 'SwifterKnife_Example' do
   pod 'SwifterKnife', :path => '../'
-
+  pod 'SnapKit', :git => 'https://github.com/CoderLouie/SnapKit.git', :branch => 'my_source'
+#  pod 'SnapKit'
   
   target 'SwifterKnife_Tests' do
     inherit! :search_paths

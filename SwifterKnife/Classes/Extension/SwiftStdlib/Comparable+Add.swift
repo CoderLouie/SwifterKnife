@@ -34,4 +34,38 @@ public extension Comparable {
     func clamped(to range: ClosedRange<Self>) -> Self {
         return max(range.lowerBound, min(self, range.upperBound))
     }
+    /**
+     var num = 3
+     num <>= 5...7
+     print(num) 5
+     */
+    static func <>= (lhs: inout Self, rhs: ClosedRange<Self>) {
+        lhs = max(rhs.lowerBound, min(lhs, rhs.upperBound))
+    }
+}
+infix operator <>=: AssignmentPrecedence
+
+
+@inlinable public func sk_min<T>(_ x: T, _ y: T) -> (T, Bool) where T : Comparable {
+    if x < y { return (x, true) }
+    return (y, false)
+}
+@inlinable public func sk_max<T>(_ x: T, _ y: T) -> (T, Bool) where T : Comparable {
+    if x > y { return (x, true) }
+    return (y, false)
+}
+
+
+public extension Comparable {
+    
+    /// Compares the reciever with another and returns their order.
+    func sk_compare(_ other: Self) -> ComparisonResult {
+        if self < other {
+            return .orderedAscending
+        }
+        if self > other {
+            return .orderedDescending
+        }
+        return .orderedSame
+    }
 }

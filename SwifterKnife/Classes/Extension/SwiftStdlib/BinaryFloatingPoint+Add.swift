@@ -33,18 +33,4 @@ public extension BinaryFloatingPoint {
         return Darwin.round(self * factor) / factor
     }
     
-    /// Int.
-    var int: Int {
-        return Int(self)
-    }
-    
-    /// Float.
-    var float: Float {
-        return Float(self)
-    }
- 
-    /// CGFloat.
-    var cgFloat: CGFloat {
-        return CGFloat(self)
-    }
 }

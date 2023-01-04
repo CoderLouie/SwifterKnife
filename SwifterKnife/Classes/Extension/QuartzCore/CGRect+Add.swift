@@ -136,4 +136,9 @@ public extension CGRect {
         
         return rect
     }
+    
+    
+    static func * (lhs: CGRect, scalar: CGFloat) -> CGRect {
+        return CGRect(origin: lhs.origin * scalar, size: lhs.size * scalar)
+    }
 }

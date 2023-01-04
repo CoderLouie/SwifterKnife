@@ -314,25 +314,11 @@ public extension UIImage {
         guard let data = Data(base64Encoded: base64String) else { return nil }
         self.init(data: data, scale: scale)
     }
-
-    /// Create a new image from a URL
-    ///
-    /// - Important:
-    ///   Use this method to convert data:// URLs to UIImage objects.
-    ///   Don't use this synchronous initializer to request network-based URLs. For network-based URLs, this method can block the current thread for tens of seconds on a slow network, resulting in a poor user experience, and in iOS, may cause your app to be terminated.
-    ///   Instead, for non-file URLs, consider using this in an asynchronous way, using `dataTask(with:completionHandler:)` method of the URLSession class or a library such as `AlamofireImage`, `Kingfisher`, `SDWebImage`, or others to perform asynchronous network image loading.
-    /// - Parameters:
-    ///   - url: a `URL`, representing the image location
-    ///   - scale: The scale factor to assume when interpreting the image data created from the URL. Applying a scale factor of 1.0 results in an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor changes the size of the image as reported by the `size` property.
-    convenience init?(url: URL, scale: CGFloat = 1.0) throws {
-        let data = try Data(contentsOf: url)
-        self.init(data: data, scale: scale)
-    }
 }
 
 
 public extension Bundle {
-    static var preferredScales: [Int] = {
+    static let preferredScales: [Int] = {
         let screenScale = UIScreen.main.scale
         if screenScale <= 1 { return [1, 2, 3] }
         if screenScale <= 2 { return [2, 3, 1] }
@@ -341,9 +327,9 @@ public extension Bundle {
 }
 
 public extension UIImage {
-    func stretchableImage(anchor point: CGPoint = CGPoint(x: 0.5, y: 0.5)) -> UIImage? {
-        let tmp = size;
-        return stretchableImage(withLeftCapWidth: Int(tmp.width * point.x), topCapHeight: Int(tmp.height * point.y))
+    func stretchableImage(anchorX x: CGFloat = 0.5, y: CGFloat = 0.5) -> UIImage? {
+        let tmp = size
+        return stretchableImage(withLeftCapWidth: Int(tmp.width * x), topCapHeight: Int(tmp.height * y))
     }
     
     convenience init?(fileNamed name: String,
@@ -356,8 +342,10 @@ public extension UIImage {
         let ext = nspath.pathExtension
         let exts = ext.isEmpty ? ["", "png", "jpeg", "jpg", "gif", "webp", "apng"] : [ext]
         
-        for s in Bundle.preferredScales {
-            let scaledName = res + "@\(s)x"
+        let scales = Bundle.preferredScales + [nil]
+        for scale in scales {
+            let s = scale ?? 1
+            let scaledName = scale.map { res + "@\($0)x" } ?? res
             for e in exts {
                 if let path = bundle.path(forResource: scaledName, ofType: e),
                    let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {

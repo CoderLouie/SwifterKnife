@@ -1,9 +1,8 @@
 //
-//  LocalizedStringConvertible.swift
-//  VideoCutter
+//  LocalizedKeyRepresentable.swift
+//  SwifterKnife
 //
-//  Created by liyang on 07/20/2021.
-//  Copyright (c) 2021 gomo. All rights reserved.
+//  Created by liyang on 2021/07/20.
 //
 
 import Foundation
@@ -30,30 +29,25 @@ public extension LocalizedKeyRepresentable {
         String(format: localized, arguments: args)
     }
     
-    var slocalized: String {
-        slocalized(using: .current)
+    var i18n: String {
+        i18n(using: .current)
     }
-    func slocalized(using language: Language) -> String {
+    func i18n(using language: Language) -> String {
         let key = localizeKey
-        func query(in code: Language) -> String? {
-            if let path = Self.bundle.path(forResource: code.rawValue, ofType: "lproj"),
-                  let bundle = Bundle(path: path)  {
-                return bundle.localizedString(forKey: key, value: nil, table: table)
-            }
-            return nil
+        if let path = Self.bundle.path(forResource: language.rawValue, ofType: "lproj"),
+              let bundle = Bundle(path: path)  {
+            return bundle.localizedString(forKey: key, value: nil, table: table)
         }
-        return query(in: language) ?? query(in: .base) ?? key
+        return key
     }
-    func slocalizedFormat(with args: CVarArg..., using lan: Language? = nil) -> String {
-        return String(format: slocalized(using: lan ?? .current), arguments: args)
+    func i18nFormat(with args: CVarArg..., using lan: Language = .current) -> String {
+        return String(format: i18n(using: lan), arguments: args)
     }
 }
 
 
 extension LocalizedKeyRepresentable where Self: RawRepresentable, Self.RawValue == String {
-    public var localizeKey: String {
-        return rawValue
-    }
+    public var localizeKey: String { rawValue }
 }
 
 extension String: LocalizedKeyRepresentable {

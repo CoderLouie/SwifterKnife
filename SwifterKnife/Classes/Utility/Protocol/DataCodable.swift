@@ -1,5 +1,5 @@
 //
-//  DataConvertible.swift
+//  DataCodable.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2021/10/19.
@@ -34,6 +34,11 @@ public extension DataEncodable {
         }
         return string
     }
+    
+    func save(toFile path: String) throws {
+        let data = try encode()
+        try data.write(to: URL(fileURLWithPath: path), options: .atomic)
+    }
 }
 
 public extension DataEncodable where Self: Encodable {
@@ -41,9 +46,17 @@ public extension DataEncodable where Self: Encodable {
         try JSONEncoder().encode(self)
     }
 }
+/*
+ 当Element遵守 Encodable 协议时，Array自动遵守 Encodable
+ 所以可以自动扩展 Array 遵守 DataEncodable
+ */
+extension Array: DataEncodable where Element: Encodable {}
+
 public extension DataEncodable where Self: NSCoding {
     func encode() throws -> Data {
-        NSKeyedArchiver.archivedData(withRootObject: self)
+        let key = String(describing: type(of: self))
+        NSKeyedArchiver.setClassName(key, for: type(of: self))
+        return NSKeyedArchiver.archivedData(withRootObject: self)
     }
 }
 
@@ -63,6 +76,11 @@ public extension DataDecodable {
         let data = Data(string.utf8)
         return try decode(with: data)
     }
+    
+    static func load(fromFile path: String) throws -> Self {
+        let data = try Data(contentsOf: URL(fileURLWithPath: path))
+        return try decode(with: data)
+    }
 }
 
 
@@ -71,11 +89,18 @@ public extension DataDecodable where Self: Decodable {
         try JSONDecoder().decode(Self.self, from: data)
     }
 }
+/*
+ 当Element遵守 Decodable 协议时，Array自动遵守 Decodable
+ 所以可以自动扩展 Array 遵守 DataDecodable
+ */
+extension Array: DataDecodable where Element: Decodable {}
 
 public extension DataDecodable where Self: NSCoding {
     static func decode(with data: Data) throws -> Self {
+        let key = String(describing: Self.self)
+        NSKeyedUnarchiver.setClass(Self.self, forClassName: key)
         guard let model = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
-            fatalError()
+            throw NSError(domain: "com.data.decodable", code: -1, userInfo: ["message": "can't unarchive data to \(Self.self)"])
         }
         return model
     }

@@ -13,7 +13,7 @@ public extension URL {
     /// Dictionary of the URL's query parameters.
     var queryParameters: [String: String]? {
         guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
-            let queryItems = components.queryItems else { return nil }
+              let queryItems = components.queryItems else { return nil }
 
         var items: [String: String] = [:]
 
@@ -23,28 +23,7 @@ public extension URL {
 
         return items
     }
-}
-
-// MARK: - Initializers
-
-public extension URL {
-    /// Initializes an `URL` object with a base URL and a relative string. If `string` was malformed, returns `nil`.
-    /// - Parameters:
-    ///   - string: The URL string with which to initialize the `URL` object. Must conform to RFC 2396. `string` is interpreted relative to `url`.
-    ///   - url: The base URL for the `URL` object.
-    init?(string: String?, relativeTo url: URL? = nil) {
-        guard let string = string else { return nil }
-        self.init(string: string, relativeTo: url)
-    }
-    
-    /**
-    Initializes a forced unwrapped `URL` from string. Can potentially crash if string is invalid.
-     - Parameter unsafeString: The URL string used to initialize the `URL`object.
-     */
-    init(unsafeString: String) {
-        self.init(string: unsafeString)!
-    }
-}
+} 
 
 // MARK: - Methods
 
@@ -96,6 +75,8 @@ public extension URL {
     ///
     /// - Returns: URL with all path components removed.
     func deletingAllPathComponents() -> URL {
+        guard !pathComponents.isEmpty else { return self }
+        
         var url: URL = self
         for _ in 0..<pathComponents.count - 1 {
             url.deleteLastPathComponent()
@@ -109,6 +90,8 @@ public extension URL {
     ///        url.deleteAllPathComponents()
     ///        print(url) // prints "https://domain.com/"
     mutating func deleteAllPathComponents() {
+        guard !pathComponents.isEmpty else { return }
+        
         for _ in 0..<pathComponents.count - 1 {
             deleteLastPathComponent()
         }

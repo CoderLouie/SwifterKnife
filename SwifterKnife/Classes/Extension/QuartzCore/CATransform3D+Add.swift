@@ -33,64 +33,7 @@ public extension CATransform3D {
     @inlinable
     static var identity: CATransform3D { CATransform3DIdentity }
 
-}
-
-// MARK: - Codable
-extension CATransform3D: Codable {
-
-    /// Creates a new instance by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or if the data read is corrupted or otherwise invalid.
-    /// - Parameter decoder: The decoder to read data from.
-    @inlinable
-    public init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        self.init(m11: try container.decode(CGFloat.self),
-                  m12: try container.decode(CGFloat.self),
-                  m13: try container.decode(CGFloat.self),
-                  m14: try container.decode(CGFloat.self),
-                  m21: try container.decode(CGFloat.self),
-                  m22: try container.decode(CGFloat.self),
-                  m23: try container.decode(CGFloat.self),
-                  m24: try container.decode(CGFloat.self),
-                  m31: try container.decode(CGFloat.self),
-                  m32: try container.decode(CGFloat.self),
-                  m33: try container.decode(CGFloat.self),
-                  m34: try container.decode(CGFloat.self),
-                  m41: try container.decode(CGFloat.self),
-                  m42: try container.decode(CGFloat.self),
-                  m43: try container.decode(CGFloat.self),
-                  m44: try container.decode(CGFloat.self))
-    }
-
-    /// Encodes this value into the given encoder.
-    ///
-    /// If the value fails to encode anything, encoder will encode an empty keyed container in its place.
-    ///
-    /// This function throws an error if any values are invalid for the given encoder’s format.
-    /// - Parameter encoder: The encoder to write data to.
-    @inlinable
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.unkeyedContainer()
-        try container.encode(m11)
-        try container.encode(m12)
-        try container.encode(m13)
-        try container.encode(m14)
-        try container.encode(m21)
-        try container.encode(m22)
-        try container.encode(m23)
-        try container.encode(m24)
-        try container.encode(m31)
-        try container.encode(m32)
-        try container.encode(m33)
-        try container.encode(m34)
-        try container.encode(m41)
-        try container.encode(m42)
-        try container.encode(m43)
-        try container.encode(m44)
-    }
-
-}
+} 
 
 // MARK: - Initializers
 public extension CATransform3D {

@@ -7,19 +7,31 @@
 //
 
 #import "KKView.h"
-
-
-@interface NSObject (KKAdd)
-- (instancetype)then:(void (^)(id this))block;
-@end
-@implementation NSObject (KKAdd)
-- (instancetype)then:(void (^)(id))block {
-    block(self);
-    return self;
-}
-@end
-//#import <SwifterKnife/SwifterKnife-Swift.h>
+#import <objc/runtime.h>
+  
 @import SwifterKnife;
+
+
+@implementation NSObject (Add)
+
++ (void)printAllMethods {
+    Class cls = self;
+    unsigned int methodCount = 0;
+    Method *methods = class_copyMethodList(cls, &methodCount);
+    if (methods) {
+        NSMutableArray *names = [NSMutableArray array];
+        for (unsigned int i = 0; i < methodCount; i++) {
+            const char *name = sel_getName(method_getName(methods[i]));
+            if (name) {
+                [names addObject:[NSString stringWithUTF8String:name]];
+            };
+        }
+        NSLog(@"all method of %@ is\n%@", self, names);
+        free(methods);
+    }
+}
+
+@end
 
 @implementation KKView
 
@@ -32,12 +44,6 @@
 //    CGFloat val = [SwiftyFitsize sf_float:15];
 //    CGFloat val = [Screen safeInsetB];
     NSLog(@"%f", Screen.safeAreaT);
-    
-    NSNumber *num = @1;
-    [num then:^(NSNumber *this) {
-        
-    }];
-    
     CGFloat val = [Screen fit:3];
 //    [SwiftyFitsize shared].referenceH;
     return self;
@@ -49,3 +55,49 @@
 
 @end
  
+
+@interface UIButton (Private)
+- (void)_updateTitleView;
+
+@end
+@implementation ATButton
+//
+//- (void)_updateTitleView {
+//    [super _updateTitleView];
+//    
+//    NSLog(@"");
+//}
+//
+//- (CGSize)intrinsicContentSize {
+//    CGSize size = super.intrinsicContentSize;
+//    NSLog(@"");
+//    return size;
+//}
+//
+//- (void)updateConstraints {
+//    [super updateConstraints];
+//}
+//
+//- (void)setLoading:(BOOL)loading {
+//    _loading = loading;
+//    [self invalidateIntrinsicContentSize];
+//}
+//- (CGSize)sizeThatFits:(CGSize)size {
+//    NSLog(@"%@", NSStringFromCGSize(size));
+//    size = [super sizeThatFits:size];
+//    NSLog(@"%@", NSStringFromCGSize(size));
+//    return size;
+//}
+//- (void)setNeedsLayout {
+//    [super setNeedsLayout];
+//}
+//- (void)layoutSubviews {
+//    CGRect rect = self.frame;
+//    NSLog(@"%@", NSStringFromCGRect(rect));
+//    [super layoutSubviews];
+//    rect = self.frame;
+//    NSLog(@"%@", NSStringFromCGRect(rect));
+//    NSLog(@"");
+//}
+
+@end

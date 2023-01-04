@@ -105,6 +105,10 @@ public extension Collection where Element: Equatable {
     func indices(of item: Element) -> [Index] {
         return indices.filter { self[$0] == item }
     }
+    
+    func split<S: Sequence>(separators: S) -> [SubSequence] where S.Element == Element {
+        split { separators.contains($0) }
+    }
 }
 
 // MARK: - Methods (BinaryInteger)

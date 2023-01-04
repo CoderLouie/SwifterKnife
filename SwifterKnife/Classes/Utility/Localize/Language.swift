@@ -17,67 +17,61 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         .init("LanguageDidChangeNotification")
     }
     
-    public static func available(excludeBase: Bool = false) -> [Language] {
-        var availableLanguages = Bundle.main.localizations
-        // If excludeBase = true, don't include "Base" in available languages
-        if excludeBase == true,
-           let indexOfBase = availableLanguages.firstIndex(of: "Base") {
-            availableLanguages.remove(at: indexOfBase)
-        }
-        return availableLanguages.map(Language.init(rawValue:))
+    public static func available(for bundle: Bundle = .main) -> [Language] {
+        let languages = bundle.localizations
+        return languages.map(Language.init(rawValue:))
     }
     
-    public static var loadDefault: ((_ code: String) -> Language)? = { code in
-        if code.hasPrefix("zh-") {
-            // // zh-Hant\zh-HK\zh-TW
-            return code.contains("Hans") ? .zhHans : .zhHant
+    public static var customized: ((_ code: String) -> Language)?
+    = { code in
+        let availables = Set(Bundle.main.localizations)
+        guard availables.contains(code) else {
+            return .default
         }
+//        if code.hasPrefix("zh-") {
+//            // zh-Hant\zh-HK\zh-TW
+//            return code.contains("Hans") ? .zhHans : .zhHant
+//        }
         return Language(rawValue: code)
     }
-    public static var `default`: Language {
-//        guard let first = Bundle.main.preferredLocalizations.first else {
-//            return .en
-//        }
-        guard let code = Locale.preferredLanguages.first else { return .en }
-        if let config = loadDefault {
-            return config(code)
-        }
-        
-        let preferedLan = Language(rawValue: code)
-        return preferedLan
-//        if (available().contains(preferedLan)) {
-//            return preferedLan
-//        }
-//        return .en
-    }
+    public static var `default`: Language = .en
     
     public static func reset() {
         current = `default`
     }
     
-    private static var _current: Language?
+    private static let CurrentLanguageCodeKey = "CurrentLanguageCodeKey"
     
-    private static let CurrentLanguageKey = "CurrentLanguageKey"
+    private static func loadCurrent() -> Language? {
+        if let code = UserDefaults.standard.object(forKey: CurrentLanguageCodeKey) as? String {
+            if let transform = customized {
+                return transform(code)
+            }
+            return Language(rawValue: code)
+        }
+        guard let code = Locale.preferredLanguages.first else { return nil }
+        if let transform = customized {
+            return transform(code)
+        }
+        
+        let preferedLan = Language(rawValue: code)
+        return preferedLan
+    }
+    private static var _current: Language?
     public static var current: Language {
         get {
             if let tmp = _current { return tmp }
-            if let current = UserDefaults.standard.object(forKey: CurrentLanguageKey) as? String {
-                let lan = Language(rawValue: current)
-                _current = lan
-                return lan
-            }
-            _current = `default`
+            _current = loadCurrent() ?? `default`
             return _current!
         }
         set {
             if newValue == current { return }
-//            guard available().contains(newValue) else {
-//                return
-//            }
             _current = newValue
-            UserDefaults.standard.set(newValue, forKey: CurrentLanguageKey)
+            UserDefaults.standard.set(newValue.rawValue, forKey: CurrentLanguageCodeKey)
             UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
+            }
         }
     }
     
@@ -94,18 +88,16 @@ public struct Language: RawRepresentable, Equatable, Hashable {
 
 public extension Language {
     
-    static var base: Language { .init(rawValue: "Base") }
+    // static var base: Language { .init(rawValue: "Base") }
+    
     /// 英语 English
     static var en: Language { .init(rawValue: "en") }
     /// 简体中文 Chinese, Simplified
-    static var zhHans: Language { .init(rawValue: "zh-Hans") }
-    
-    
-    // 请在你的项目中自行扩展添加支持的多语言
-
+    static var zhHans: Language { .init(rawValue: "zh-Hans") } 
     /// 繁体中文 Chinese, Traditional
     static var zhHant: Language { .init(rawValue: "zh-Hant") }
     
+    // 请在你的项目中自行扩展添加支持的多语言
     /*
     /// 繁体中文(香港) Chinese, Hong Kong
     static var zhHK: Language { .init(rawValue: "zh-HK") }

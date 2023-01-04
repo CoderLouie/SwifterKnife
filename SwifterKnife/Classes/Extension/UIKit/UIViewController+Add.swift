@@ -21,24 +21,27 @@ public extension UIViewController {
 
 public extension UIViewController {
     
-    /// Helper method to add a UIViewController as a childViewController.
+    /// Helper method to embed a UIViewController as a childViewController.
     ///
     /// - Parameters:
     ///   - child: the view controller to add as a child.
     ///   - containerView: the containerView for the child viewController's root view.
-    func addChildViewController(_ child: UIViewController, toContainerView containerView: UIView) {
+    func embedViewController(_ child: UIViewController, into containerView: UIView) {
         addChild(child)
         containerView.addSubview(child.view)
+        child.view.translatesAutoresizingMaskIntoConstraints = false
         child.didMove(toParent: self)
     }
 
     /// Helper method to remove a UIViewController from its parent.
-    func removeFromSuper() {
+    func unembed() {
         guard parent != nil else { return }
 
         willMove(toParent: nil)
+        if isViewLoaded {
+            view.removeFromSuperview()
+        }
         removeFromParent()
-        view.removeFromSuperview()
     }
     
     /// Helper method to present a UIViewController as a popover.
@@ -76,15 +79,28 @@ public extension UIViewController {
 public extension UIViewController {
     /// Check if the view controller has been presented or not.
     /// - Returns: true if the controller is presented, otherwise false.
-    public var isModal: Bool {
+    @objc var isModal: Bool {
         presentingViewController?.presentedViewController == self ||
             navigationController?.presentingViewController?.presentedViewController == navigationController ||
             tabBarController?.presentingViewController is UITabBarController
     }
 }
 
-// MARK: - Alert
-public extension UIViewController {
+// MARK: - Present
+public extension UIViewController { 
+    
+    func share(items: [Any],
+               excludedTypes: [UIActivity.ActivityType]? = nil,
+               completion: UIActivityViewController.CompletionWithItemsHandler? = nil) {
+        let vc = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        vc.excludedActivityTypes = excludedTypes
+        vc.completionWithItemsHandler = { [unowned vc] type, completed, returnedItems, error in
+            vc.dismiss(animated: true) {
+                completion?(type, completed, returnedItems, error)
+            }
+        }
+        present(vc, animated: true, completion: nil)
+    }
     
     @discardableResult
     func present(style: UIAlertController.Style = .alert,

@@ -23,6 +23,8 @@ public final class Deque<Element> {
     private var size = 0
     fileprivate let root = Node()
     
+    public init() {}
+    
     /// 头部入队
     public func offerFirst(_ element: Element) {
         let node = Node(element, next: root.next)
@@ -73,9 +75,7 @@ public final class Deque<Element> {
     public var count: Int { return size }
     public var isEmpty: Bool { return size == 0 }
 }
-
-public extension Deque {
-}
+ 
 
 public struct DequeIterator<Item>: IteratorProtocol {
     private var node: Deque<Item>.Node?

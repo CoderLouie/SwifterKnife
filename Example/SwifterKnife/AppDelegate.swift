@@ -14,8 +14,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.main.bounds).then {
+            $0.rootViewController = ViewController()
+//            $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
+            $0.makeKeyAndVisible()
+        }
+        
+//        asyncWhile { i, exit, cost in
+//            print("asyncWhile cond", i, exit)
+//            if i > 3 {
+//                exit = true
+//                print(cost())
+//            }
+//            return self.window!.rootViewController!.view.frame.height > 0
+//        } execute: { i, cost in
+//            print("asyncWhile result", i, cost(), self.window!.rootViewController!.view.frame)
+//        }
         return true
     }
 

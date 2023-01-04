@@ -84,7 +84,6 @@ final class PurchaseControl {
         guard let paymentIndex = payments.firstIndex(where: {
             $0.product.productIdentifier == transactionId
         }) else {
-
             return false
         }
         let payment = payments[paymentIndex]

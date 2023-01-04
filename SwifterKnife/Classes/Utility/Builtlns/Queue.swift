@@ -21,6 +21,7 @@ public final class Queue<Element> {
     fileprivate var head: Node? = nil
     private var tail: Node? = nil
     
+    public init() {}
     /// 尾部入队
     public func offerLast(_ element: Element) {
         let node = Node(element)

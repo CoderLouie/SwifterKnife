@@ -20,18 +20,10 @@ public final class IAP {
         return shared.queryControl.queryProducts(productIds, completion: completion)
     }
     
-    @discardableResult
-    public static func buyProduction() -> Bool {
-        guard SKPaymentQueue.canMakePayments() else {
-            return false
-        }
-        return true
-    }
-    
     
     public static
     func purchase(product: SKProduct,
-                  atomically: Bool,
+                  atomically: Bool = true,
                   applicationUsername: String = "",
                   simulatesAskToBuyInSandbox sandbox: Bool = false,
                   completion: @escaping IAPPurchaseCompletion) {
@@ -64,7 +56,6 @@ public final class IAP {
     
     private let queryControl = QueryControl()
     private let paymentQueue = PaymentQueueControl()
-    
 }
  
  
