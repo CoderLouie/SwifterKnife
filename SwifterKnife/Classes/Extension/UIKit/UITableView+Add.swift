@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 public extension UITableView {
     func cellIsVisibleAt(_ indexPath: IndexPath) -> Bool {

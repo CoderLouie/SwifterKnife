@@ -472,15 +472,12 @@ public extension ViewAddition where Self: UIView {
         onDidLayout(closure, n: 0)
     }
     private func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int) {
-        if n == 0 { Console.trace("onDidLayout begin") }
         // 防止试图本身没有设置约束及frame
         if n > 4 {
-            Console.trace("onDidLayout too deep")
             closure(self)
             return
         }
-        if !bounds.isEmpty {
-            Console.trace("onDidLayout end \(n)")
+        if !bounds.isEmpty { 
             closure(self)
         } else {
             DispatchQueue.main.async { [weak self] in

@@ -229,7 +229,7 @@ public class RatingView: UIView {
                 right = right.nearestMultiple(a)
             }
             _progress = left + right
-            let width = (starSize.width + margin) * left + right * starSize.width
+            let width = (starSize.width + margin) * CGFloat(left) + CGFloat(right) * starSize.width
             frontView.frame.size.width = width
         }
     }
@@ -243,7 +243,7 @@ public class RatingView: UIView {
     private func widthForProgress(_ progress: Double) -> CGFloat {
         var left: Double = 0
         let right = modf(progress, &left)
-        return (starSize.width + margin) * left + right * starSize.width
+        return (starSize.width + margin) * CGFloat(left) + CGFloat(right) * starSize.width
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -282,7 +282,7 @@ public class RatingView: UIView {
         if left > starSize.width {
             int += 1
         } else {
-            right = left / starSize.width
+            right = Double(left / starSize.width)
             if let a = accuracy {
                 right = right.nearestMultiple(a)
             }
