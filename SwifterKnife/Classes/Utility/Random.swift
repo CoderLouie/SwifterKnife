@@ -16,11 +16,16 @@ import UIKit
 
 public protocol Randomizable: Comparable {
     static func random(in range: Range<Self>) -> Self
+    static func random(in range: ClosedRange<Self>) -> Self
 }
 public extension Randomizable {
     /// [from, to)
     static func random(from: Self, to: Self) -> Self {
         .random(in: from..<to)
+    }
+    /// [from, through)
+    static func random(from: Self, through: Self) -> Self {
+        .random(in: from...through)
     }
 }
 
@@ -97,11 +102,10 @@ public extension UIColor {
     
     /// Random color.
     static func random(_ randomAlpha: Bool = false) -> UIColor {
-        let red = CGFloat.random(in: 0...1)
-        let green = CGFloat.random(in: 0...1)
-        let blue = CGFloat.random(in: 0...1)
-        let alpha = randomAlpha ? CGFloat.random(in: 0...1) : 1.0
-        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        UIColor(red: .random(in: 0...1),
+                green: .random(in: 0...1),
+                blue: .random(in: 0...1),
+                alpha: randomAlpha ? CGFloat.random(in: 0...1) : 1.0)
     }
 }
 
