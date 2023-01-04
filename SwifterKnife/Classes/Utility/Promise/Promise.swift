@@ -234,7 +234,7 @@ public final class Promise<Value> {
             self.consume(result, mapSuccess, mapError)
         }
     }
-    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, _ mapSuccess: (Success) throws -> Value?,  _ mapError: ((Failure) -> Swift.Error)? = nil) {
+    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, _ mapSuccess: (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error)? = nil) {
         switch result {
         case .success(let success):
             do {

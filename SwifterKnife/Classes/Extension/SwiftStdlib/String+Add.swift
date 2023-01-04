@@ -365,22 +365,6 @@ public extension String {
         return hasSuffix(suffix)
     }
 
-    /// Random string of given length.
-    ///
-    ///        String.random(ofLength: 18) -> "u7MMZYvGo9obcOcPj8"
-    ///
-    /// - Parameter length: number of characters in string.
-    /// - Returns: random string of given length.
-    static func random(ofLength length: Int) -> String {
-        guard length > 0 else { return "" }
-        let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        var randomString = ""
-        for _ in 1...length {
-            randomString.append(base.randomElement()!)
-        }
-        return randomString
-    }
-
     /// Reverse string.
     @discardableResult
     mutating func reverse() -> String {

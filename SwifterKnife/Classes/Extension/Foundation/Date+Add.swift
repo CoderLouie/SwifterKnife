@@ -755,25 +755,7 @@ public extension Date {
         let components = calendar.dateComponents([component], from: self, to: date)
         let componentValue = components.value(for: component)!
         return abs(componentValue) <= value
-    }
-
-    /// Returns a random date within the specified range.
-    ///
-    /// - Parameter range: The range in which to create a random date. `range` must not be empty.
-    /// - Returns: A random date within the bounds of `range`.
-    static func random(in range: Range<Date>) -> Date {
-        return Date(timeIntervalSinceReferenceDate:
-            TimeInterval.random(in: range.lowerBound.timeIntervalSinceReferenceDate..<range.upperBound.timeIntervalSinceReferenceDate))
-    }
-
-    /// Returns a random date within the specified range.
-    ///
-    /// - Parameter range: The range in which to create a random date.
-    /// - Returns: A random date within the bounds of `range`.
-    static func random(in range: ClosedRange<Date>) -> Date {
-        return Date(timeIntervalSinceReferenceDate:
-            TimeInterval.random(in: range.lowerBound.timeIntervalSinceReferenceDate...range.upperBound.timeIntervalSinceReferenceDate))
-    }
+    } 
 }
 
 // MARK: - Initializers

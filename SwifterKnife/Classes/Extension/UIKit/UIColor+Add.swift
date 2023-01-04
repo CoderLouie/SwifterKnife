@@ -10,13 +10,6 @@ import UIKit
 // MARK: - Properties
 
 public extension UIColor {
-    /// Random color.
-    static var random: UIColor {
-        let red = Int.random(in: 0...255)
-        let green = Int.random(in: 0...255)
-        let blue = Int.random(in: 0...255)
-        return UIColor(r: CGFloat(red), g: CGFloat(green), b: CGFloat(blue))
-    }
  
     /// RGB components for a Color (between 0 and 255).
     ///
