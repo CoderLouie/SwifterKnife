@@ -29,7 +29,7 @@ fileprivate func PromiseRetry<T>(
         innerPromise.then(on: queue) {
             promise.fulfill($0)
         } onRejected: { error in
-            queue.after(interval) {
+            queue.asyncAfter(deadline: .now() + interval) { 
                 PromiseRetry(promise, onQueue: queue,  retryCount: retryCount + 1, delay: interval, dueError: error, generate: generate)
             }
         }
