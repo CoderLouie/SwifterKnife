@@ -9,11 +9,11 @@ import Foundation
 
 // https://mp.weixin.qq.com/s/Y4Ta8xPmZunIHxNHl6rGGw
 
-public protocol IState: Hashable {}
+public protocol StateType: Hashable {}
 
-public protocol IEvent: Hashable {}
+public protocol EventType: Hashable {}
 
-public final class StateMachine<S: IState, E: IEvent> {
+public final class StateMachine<S: StateType, E: EventType> {
     public private(set) var currentState: S
     
     public init(_ initialState: S) {
