@@ -279,6 +279,12 @@ private extension ViewController {
 // MARK: - Regex
 private extension ViewController {
     func regexa1() {
+        let limiter = DebouncedLimiter(limit: 3) { _ in
+            print("")
+        }
+        UIButton().do {
+            $0.addTarget(limiter, action: #selector(DebouncedLimiter.execute(param:)), for: .touchUpInside)
+        }
         let regex: Regex = #".(at)g"#
         let str = "The fat cat sat on the mat."
         print(regex.firstMatch(in: str)?.value ?? "nil")

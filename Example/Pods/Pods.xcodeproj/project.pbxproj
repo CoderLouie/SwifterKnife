@@ -113,6 +113,7 @@
 		B68F02D609684505FC0BC4F090852E92 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D010CFFCFC328AC5BBD87196D177F1F /* CGRect+Add.swift */; };
 		B6CB888129656C8A00E8110A /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888029656C8A00E8110A /* Random.swift */; };
 		B6CB8885296677B600E8110A /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB8884296677B600E8110A /* StateMachine.swift */; };
+		B6CB88872966AA0300E8110A /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB88862966AA0300E8110A /* Limiter.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		BB14675EF9F29D99BCC1DA8E7840649E /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBAB078EC334FF57922452331F71BC4 /* UICollectionView+Add.swift */; };
 		BD47CB74CD9B2B4D2D942C9B65748DFB /* SnapKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 143498449916D71708A8AF2F96E7320A /* SnapKit-dummy.m */; };
@@ -289,6 +290,7 @@
 		B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewAddition+Add.swift"; sourceTree = "<group>"; };
 		B6CB888029656C8A00E8110A /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B6CB8884296677B600E8110A /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
+		B6CB88862966AA0300E8110A /* Limiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
 		BB67CFA01D2A73C89E6ED092B3195D53 /* SwifterKnife-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-umbrella.h"; sourceTree = "<group>"; };
 		BC8DFD8FEE78807F86F0544749C80450 /* ConstraintDirectionalInsets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDirectionalInsets.swift; path = Sources/ConstraintDirectionalInsets.swift; sourceTree = "<group>"; };
@@ -573,6 +575,7 @@
 				B66F75C9295BE81C006E5E4E /* Regex.swift */,
 				B6CB888029656C8A00E8110A /* Random.swift */,
 				B6CB8884296677B600E8110A /* StateMachine.swift */,
+				B6CB88862966AA0300E8110A /* Limiter.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1024,6 +1027,7 @@
 				24C4B29BCBD2ABE68CF51A6542D599A6 /* FloatingPoint+Add.swift in Sources */,
 				5D204DFE2A085DADFC81423020F51A9C /* GradientView.swift in Sources */,
 				0857A44F2402D3645DD9E2E6F0BEF497 /* Haptic.swift in Sources */,
+				B6CB88872966AA0300E8110A /* Limiter.swift in Sources */,
 				7A25B160E19255C64538EDBCE51264E5 /* Int+Add.swift in Sources */,
 				D78B5C8F8A809F6D2BECF0F327DD4430 /* KeyPath+Add.swift in Sources */,
 				2B4DEFB040A7635F798B505F8CA254EF /* Language.swift in Sources */,
