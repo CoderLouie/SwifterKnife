@@ -5,13 +5,6 @@
 //  Created by liyang on 2023/1/4.
 //
 
-//
-//  SwiftRandom.swift
-//
-//  Created by Furkan Yilmaz on 7/10/15.
-//  Copyright (c) 2015 Furkan Yilmaz. All rights reserved.
-//
-
 import UIKit
 
 public protocol Randomizable: Comparable {
@@ -101,11 +94,14 @@ public extension String {
 public extension UIColor {
     
     /// Random color.
-    static func random(_ randomAlpha: Bool = false) -> UIColor {
+    static func random(_ randomAlpha: Bool) -> UIColor {
         UIColor(red: .random(in: 0...1),
                 green: .random(in: 0...1),
                 blue: .random(in: 0...1),
                 alpha: randomAlpha ? CGFloat.random(in: 0...1) : 1.0)
+    }
+    static var random: UIColor {
+        random(false)
     }
 }
 
@@ -146,7 +142,7 @@ public extension Random {
     }
     
     static var color: UIColor {
-        UIColor.random()
+        UIColor.random(false)
     }
     static var alphaColor: UIColor {
         UIColor.random(true)
