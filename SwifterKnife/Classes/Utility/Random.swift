@@ -29,13 +29,13 @@ extension CGFloat: Randomizable {}
 
 extension Date: Randomizable {
     
-    static func randomWithinDaysBeforeToday(_ days: Int) -> Date {
+    public static func randomWithinDaysBeforeToday(_ days: Int) -> Date {
         let today = Date()
         let earliest = today.addingTimeInterval(TimeInterval(-days*24*60*60))
         return Date.random(in: earliest...today)
     }
 
-    static func random() -> Date {
+    public static var random: Date {
         let randomTime = TimeInterval(arc4random_uniform(UInt32.max))
         return Date(timeIntervalSince1970: randomTime)
     }
@@ -149,7 +149,7 @@ public extension Random {
     }
     
     static var date: Date {
-        Date.random()
+        Date.random
     }
     
     static func date(from past: TimeInterval, to future: TimeInterval) -> Date {

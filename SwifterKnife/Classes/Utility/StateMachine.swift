@@ -7,6 +7,7 @@
 
 import Foundation
 
+// https://mp.weixin.qq.com/s/Y4Ta8xPmZunIHxNHl6rGGw
 
 public protocol IState: Hashable {}
 
