@@ -2,7 +2,7 @@
 //  SwiftyAdaptable.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/11/3.
+//  Created by liyang on 2022/11/3.
 //
 
 import UIKit

@@ -112,6 +112,7 @@
 		B66F75CC295C2805006E5E4E /* ViewAddition+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */; };
 		B68F02D609684505FC0BC4F090852E92 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D010CFFCFC328AC5BBD87196D177F1F /* CGRect+Add.swift */; };
 		B6CB888129656C8A00E8110A /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888029656C8A00E8110A /* Random.swift */; };
+		B6CB8885296677B600E8110A /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB8884296677B600E8110A /* StateMachine.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		BB14675EF9F29D99BCC1DA8E7840649E /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBAB078EC334FF57922452331F71BC4 /* UICollectionView+Add.swift */; };
 		BD47CB74CD9B2B4D2D942C9B65748DFB /* SnapKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 143498449916D71708A8AF2F96E7320A /* SnapKit-dummy.m */; };
@@ -287,6 +288,7 @@
 		B66F75C9295BE81C006E5E4E /* Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
 		B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewAddition+Add.swift"; sourceTree = "<group>"; };
 		B6CB888029656C8A00E8110A /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
+		B6CB8884296677B600E8110A /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
 		BB67CFA01D2A73C89E6ED092B3195D53 /* SwifterKnife-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-umbrella.h"; sourceTree = "<group>"; };
 		BC8DFD8FEE78807F86F0544749C80450 /* ConstraintDirectionalInsets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDirectionalInsets.swift; path = Sources/ConstraintDirectionalInsets.swift; sourceTree = "<group>"; };
@@ -570,6 +572,7 @@
 				7D0934E50A7D7D44CF9A95C723CB6E78 /* Protocol */,
 				B66F75C9295BE81C006E5E4E /* Regex.swift */,
 				B6CB888029656C8A00E8110A /* Random.swift */,
+				B6CB8884296677B600E8110A /* StateMachine.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1011,6 +1014,7 @@
 				5FE6B7152EDA0449FBED7467BC18213B /* CustomTextView.swift in Sources */,
 				277DB422A023B6443AB8AD9B02011438 /* Data+Add.swift in Sources */,
 				857AA41207E909C2FBCDB48BE2E8C77C /* DataCodable.swift in Sources */,
+				B6CB8885296677B600E8110A /* StateMachine.swift in Sources */,
 				CDB9A2699F5521ABD18C80AE1292142C /* Date+Add.swift in Sources */,
 				8691A8BB5D0F152B30955A44CE147DD4 /* Deque.swift in Sources */,
 				35C995092F75BB31C1F83D1AAE1FEA7D /* Dictionary+Add.swift in Sources */,

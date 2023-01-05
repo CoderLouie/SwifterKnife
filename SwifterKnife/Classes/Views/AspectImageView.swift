@@ -2,7 +2,7 @@
 //  AspectImageView.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/8/23.
+//  Created by liyang on 2022/8/23.
 //
 
 import UIKit
