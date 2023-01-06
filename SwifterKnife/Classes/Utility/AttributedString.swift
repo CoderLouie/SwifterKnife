@@ -15,6 +15,7 @@ public struct Attributed<Base> {
         self.base = base
     }
 }
+
 public protocol AttributedCompatible {
     associatedtype CompatibleType
 
@@ -26,6 +27,7 @@ public extension AttributedCompatible {
         return Attributed(self)
     }
 }
+
 extension String: AttributedCompatible { }
 extension NSString: AttributedCompatible { }
 
@@ -66,9 +68,19 @@ public extension NSAttributedString {
     }
 }
 
+public func + (lhs: NSAttributedString, rhs: NSAttributedString) -> NSAttributedString {
+    let result = NSMutableAttributedString()
+    result.append(lhs)
+    result.append(rhs)
+    return NSAttributedString(attributedString: result)
+}
+
 public final class Attributes {
     public private(set) var dictionary: [NSAttributedString.Key: Any]
     
+    internal init(dictionary: [NSAttributedString.Key: Any]) {
+        self.dictionary = dictionary
+    }
     public init() {
         dictionary = [:]
     }
