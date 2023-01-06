@@ -282,6 +282,10 @@ private extension ViewController {
         let limiter = DebouncedLimiter(limit: 3) { _ in
             print("")
         }
+        let attr = "nihaoya hello world".at.build {
+            $0.foreground(color: .red)
+        }.modified(with: .one.foreground(color: .red), for: "hello")
+        
         UIButton().do {
             $0.addTarget(limiter, action: #selector(DebouncedLimiter.execute(param:)), for: .touchUpInside)
         }

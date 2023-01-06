@@ -71,7 +71,6 @@
 		6051685E4C524D8DCE1604C7D84A1AFE /* Sequence+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772BFED3205765E82C30B5D5DB56D659 /* Sequence+Add.swift */; };
 		605620C2E6E40D7BA4DFE57D686CB22B /* AspectImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7739E99C26EA684C7BA693823AA9B544 /* AspectImageView.swift */; };
 		611CEF7FF1EF9EA1BCEF6C73EEE3ACCF /* ConstraintLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55D2A11C17BBCE3C9F7F0BA9555B5AE /* ConstraintLayoutGuide.swift */; };
-		65182F0D539EA0E21DA7CE88ED51A09D /* NSAttributedString+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9560F2998FA0BFD9C307486A85C1DE /* NSAttributedString+Add.swift */; };
 		65516D66374E23D0A1FEFC5B3DD1F804 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DC86B16E054E44E7461C57D6FF3C59 /* SwiftyJSON.swift */; };
 		66919546F557DBA2DD58CF6A1FA4C5E3 /* UITableView+Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D9C67CCF5CCBCF5ECD5974EF2F4977 /* UITableView+Reusable.swift */; };
 		69DE75BA185BBAB5FDAA28321F3C849F /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BB7E9F99F41E937A7E2CCEF178BE /* ConstraintItem.swift */; };
@@ -114,6 +113,7 @@
 		B6CB888129656C8A00E8110A /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888029656C8A00E8110A /* Random.swift */; };
 		B6CB8885296677B600E8110A /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB8884296677B600E8110A /* StateMachine.swift */; };
 		B6CB88872966AA0300E8110A /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB88862966AA0300E8110A /* Limiter.swift */; };
+		B6CB888F2967B92800E8110A /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888E2967B92800E8110A /* AttributedString.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		BB14675EF9F29D99BCC1DA8E7840649E /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBAB078EC334FF57922452331F71BC4 /* UICollectionView+Add.swift */; };
 		BD47CB74CD9B2B4D2D942C9B65748DFB /* SnapKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 143498449916D71708A8AF2F96E7320A /* SnapKit-dummy.m */; };
@@ -199,7 +199,6 @@
 		26E5BB7E9F99F41E937A7E2CCEF178BE /* ConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintItem.swift; path = Sources/ConstraintItem.swift; sourceTree = "<group>"; };
 		276C0CC4CF84926A15118C4C02413788 /* BidirectionalCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "BidirectionalCollection+Add.swift"; sourceTree = "<group>"; };
 		2AC5C215B859CBA3BBEC8006A25A846D /* BinaryFloatingPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "BinaryFloatingPoint+Add.swift"; sourceTree = "<group>"; };
-		2B9560F2998FA0BFD9C307486A85C1DE /* NSAttributedString+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Add.swift"; sourceTree = "<group>"; };
 		2D5E06212626ED1C85A7C332E5BB7D2F /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwifterKnife; path = SwifterKnife.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FCB2DB0E01D4C9FA6F7FF6D3012D7E5 /* Comparable+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Comparable+Add.swift"; sourceTree = "<group>"; };
@@ -291,6 +290,7 @@
 		B6CB888029656C8A00E8110A /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B6CB8884296677B600E8110A /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		B6CB88862966AA0300E8110A /* Limiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
+		B6CB888E2967B92800E8110A /* AttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
 		BB67CFA01D2A73C89E6ED092B3195D53 /* SwifterKnife-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-umbrella.h"; sourceTree = "<group>"; };
 		BC8DFD8FEE78807F86F0544749C80450 /* ConstraintDirectionalInsets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDirectionalInsets.swift; path = Sources/ConstraintDirectionalInsets.swift; sourceTree = "<group>"; };
@@ -451,7 +451,6 @@
 			children = (
 				CF1023DB13CFA35441AD0C846B85DA03 /* Data+Add.swift */,
 				50073E8E7BA3727276134655A2FFA369 /* Date+Add.swift */,
-				2B9560F2998FA0BFD9C307486A85C1DE /* NSAttributedString+Add.swift */,
 				6A63BEC43142BB0DCAD661599423E482 /* NSObject+Add.swift */,
 				FF98AFDE6306C4DFEE2507382B794830 /* URL+Add.swift */,
 				4AA97E712FBAAC20318C4EEEA91FB747 /* UserDefaults+Add.swift */,
@@ -576,6 +575,7 @@
 				B6CB888029656C8A00E8110A /* Random.swift */,
 				B6CB8884296677B600E8110A /* StateMachine.swift */,
 				B6CB88862966AA0300E8110A /* Limiter.swift */,
+				B6CB888E2967B92800E8110A /* AttributedString.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1035,8 +1035,8 @@
 				121AA0BAF67448F87F2E47F504B10D7F /* LayoutView.swift in Sources */,
 				544A44C0830CDF61BD66A006A8298CDC /* LinearFlowView.swift in Sources */,
 				1D0784988546B856D12469BE45D4C52B /* LocalizedKeyRepresentable.swift in Sources */,
+				B6CB888F2967B92800E8110A /* AttributedString.swift in Sources */,
 				E6B30D3648B25A6EEDD3FB744FC1F73A /* MutableCollection+Add.swift in Sources */,
-				65182F0D539EA0E21DA7CE88ED51A09D /* NSAttributedString+Add.swift in Sources */,
 				B3074D1609A7FDE38DA9E7B8B7AFEE08 /* NSObject+Add.swift in Sources */,
 				D24FEF0FA915A8340565D26F4D6ADB30 /* Optional+Add.swift in Sources */,
 				2524F4B269AA0BB3926A6481359CF73B /* PaddingButton.swift in Sources */,
