@@ -7,6 +7,7 @@
 
 import Foundation
 
+// https://github.com/Nirma/Attributed.git
 
 public struct Attributed<Base> {
     let base: Base
