@@ -77,16 +77,17 @@ public func + (lhs: NSAttributedString, rhs: NSAttributedString) -> NSAttributed
 
 public final class Attributes {
     public private(set) var dictionary: [NSAttributedString.Key: Any]
-    
-    internal init(dictionary: [NSAttributedString.Key: Any]) {
-        self.dictionary = dictionary
-    }
+     
     public init() {
         dictionary = [:]
     }
     
     public static var one: Attributes {
         return Attributes()
+    }
+    
+    public func apply(in string: String) -> NSAttributedString {
+        NSAttributedString(string: string, attributes: dictionary)
     }
 }
 
