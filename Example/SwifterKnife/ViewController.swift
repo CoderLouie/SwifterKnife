@@ -295,8 +295,16 @@ private extension ViewController {
         
 //        let random: Double = Random.one(3, 10)
     }
+    func regrxaaaa() {
+        let rect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        let size = CGSize(width: 60, height: 80)
+        print(rect.resizing(to: size, model: .scaleAspectFit))
+        print(rect.resizing(to: size, model: .scaleAspectFill))
+        print(rect.resizing(to: size, model: .scaleToFill))
+    }
     func regexTestEntry() {
-        regexa1()
+//        regexa1()
+        regrxaaaa()
     }
     /// 提取重叠的字母数字
     func regex1() {
@@ -731,7 +739,7 @@ extension ViewController {
             }
         }
 //        guide.makeSizeToFit()
-        guide.makeHorizontalSizeToFit()
+//        guide.makeHorizontalSizeToFit()
         guide.snp.makeConstraints { make in
             make.height.equalToSelfWidth().multipliedBy(2)
 //            make.height.equalTo(guide.snp.width).multipliedBy(2)
@@ -775,7 +783,7 @@ extension ViewController {
             }
         }
 //        guide.makeSizeToFit()
-        guide.makeHorizontalSizeToFit()
+//        guide.makeHorizontalSizeToFit()
         DispatchQueue.main.after(1) {
             print(guide.layoutFrame)
             print("")

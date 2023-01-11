@@ -74,6 +74,11 @@ public func + (lhs: NSAttributedString, rhs: NSAttributedString) -> NSAttributed
     result.append(rhs)
     return NSAttributedString(attributedString: result)
 }
+public func + (lhs: NSAttributedString, rhs: String) -> NSAttributedString {
+    let result = NSMutableAttributedString(attributedString: lhs)
+    result.append(.init(string: rhs))
+    return NSAttributedString(attributedString: result)
+}
 
 public final class Attributes {
     public private(set) var dictionary: [NSAttributedString.Key: Any]
@@ -86,7 +91,7 @@ public final class Attributes {
         return Attributes()
     }
     
-    public func apply(in string: String) -> NSAttributedString {
+    public func apply(_ string: String) -> NSAttributedString {
         NSAttributedString(string: string, attributes: dictionary)
     }
 }

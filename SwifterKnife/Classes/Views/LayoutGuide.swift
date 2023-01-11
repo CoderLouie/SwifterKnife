@@ -17,8 +17,7 @@ public class LayoutGuide: UILayoutGuide {
         case end
     }
     
-    public let aligment: Alignment
-    fileprivate var arrangedViews: [UIView] = []
+    public let aligment: Alignment 
     
     private override init() {
         fatalError("please use init(owningView:aligment:) initialize method")
@@ -40,19 +39,13 @@ public class LayoutGuide: UILayoutGuide {
     
     public func addSubview(_ view: UIView) {
         owningView!.addSubview(view)
-        arrangedViews.append(view)
         makeConstraints(for: view)
-    }
-    public func makeHorizontalSizeToFit() { }
-    public func makeVerticalSizeToFit() { }
-    public func makeSizeToFit() {
-        makeHorizontalSizeToFit()
-        makeVerticalSizeToFit()
     }
     fileprivate func makeConstraints(for subview: UIView) { }
 }
 
 public final class HLayoutGuide: LayoutGuide {
+    public var vAutoSize = true
     fileprivate override func makeConstraints(for subview: UIView) {
         subview.snp.makeConstraints { make in
             switch aligment {
@@ -64,37 +57,23 @@ public final class HLayoutGuide: LayoutGuide {
                 make.bottom.equalTo(self)
             }
         }
-    }
-    public override func makeHorizontalSizeToFit() {
-        if let view = arrangedViews.first {
-            view.snp.makeConstraints { make in
-                make.leading.equalTo(self)
-            }
-        }
-        if let view = arrangedViews.last {
-            view.snp.makeConstraints { make in
-                make.trailing.equalTo(self)
-            }
-        }
-    }
-    public override func makeVerticalSizeToFit() {
-        for view in arrangedViews {
-            view.snp.makeConstraints { make in
-                switch aligment {
-                case .start:
-                    make.bottom.lessThanOrEqualTo(self)
-                case .center:
-                    make.top.greaterThanOrEqualTo(self)
-                    make.bottom.lessThanOrEqualTo(self)
-                case .end:
-                    make.top.greaterThanOrEqualTo(self)
-                }
+        guard vAutoSize else { return }
+        subview.snp.makeConstraints { make in
+            switch aligment {
+            case .start:
+                make.bottom.lessThanOrEqualTo(self)
+            case .center:
+                make.top.greaterThanOrEqualTo(self)
+                make.bottom.lessThanOrEqualTo(self)
+            case .end:
+                make.top.greaterThanOrEqualTo(self)
             }
         }
     }
 }
 
 public final class VLayoutGuide: LayoutGuide {
+    public var hAutoSize = true
     fileprivate override func makeConstraints(for subview: UIView) {
         subview.snp.makeConstraints { make in
             switch aligment {
@@ -106,32 +85,16 @@ public final class VLayoutGuide: LayoutGuide {
                 make.trailing.equalTo(self)
             }
         }
-    }
-    
-    public override func makeHorizontalSizeToFit() {
-        for view in arrangedViews {
-            view.snp.makeConstraints { make in
-                switch aligment {
-                case .start:
-                    make.trailing.lessThanOrEqualTo(self)
-                case .center:
-                    make.leading.greaterThanOrEqualTo(self)
-                    make.trailing.lessThanOrEqualTo(self)
-                case .end:
-                    make.leading.greaterThanOrEqualTo(self)
-                }
-            }
-        }
-    }
-    public override func makeVerticalSizeToFit() {
-        if let view = arrangedViews.first {
-            view.snp.makeConstraints { make in
-                make.top.equalTo(self)
-            }
-        }
-        if let view = arrangedViews.last {
-            view.snp.makeConstraints { make in
-                make.bottom.equalTo(self)
+        guard hAutoSize else { return }
+        subview.snp.makeConstraints { make in
+            switch aligment {
+            case .start:
+                make.trailing.lessThanOrEqualTo(self)
+            case .center:
+                make.leading.greaterThanOrEqualTo(self)
+                make.trailing.lessThanOrEqualTo(self)
+            case .end:
+                make.leading.greaterThanOrEqualTo(self)
             }
         }
     }
