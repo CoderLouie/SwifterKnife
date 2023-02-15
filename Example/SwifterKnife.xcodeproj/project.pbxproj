@@ -17,6 +17,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		B648D68029418287004FFDCE /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648D67F29418287004FFDCE /* Defaults.swift */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
+		B66414742988C7970071C0FA /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66414732988C7970071C0FA /* TimerViewController.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
 		B6B038F4290B71840091B31D /* Watchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B038F3290B71830091B31D /* Watchdog.swift */; };
@@ -71,6 +72,7 @@
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwiftKnifeTrash/Defaults.swift; sourceTree = SOURCE_ROOT; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
+		B66414732988C7970071C0FA /* TimerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
 		B67F61E128A34A44008AD997 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B67F61E328A34A56008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		B67F61E428A34A57008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				B6FC05E1292A751F0057E659 /* HomeViewController.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				B6FC05DF292A73D00057E659 /* DebugViewController.swift */,
+				B66414732988C7970071C0FA /* TimerViewController.swift */,
 				B6ED867F2726A1E3003103F6 /* KKView.h */,
 				B6ED86802726A1E3003103F6 /* KKView.m */,
 				B648D67F29418287004FFDCE /* Defaults.swift */,
@@ -454,6 +457,7 @@
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6B28721276361EA00486E61 /* DBCompatible.swift in Sources */,
+				B66414742988C7970071C0FA /* TimerViewController.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,
 				B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,

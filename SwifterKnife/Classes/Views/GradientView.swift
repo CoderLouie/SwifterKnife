@@ -145,7 +145,7 @@ open class GradientControl: UIControl {
     public enum GradientComponent: Equatable {
         /// 背景渐变
         case background
-        /// 文字渐变
+        /// 边框渐变
         case border(_ width: CGFloat)
         
         public var isBorder: Bool {

@@ -95,6 +95,9 @@ class ViewController: UIViewController {
                 fulfill(100)
             }
         }
+        promise.filter { completion in
+            completion(PromiseError.missed)
+        }
         promise.then { val in
             print("reolve", val)
         } onRejected: { err in

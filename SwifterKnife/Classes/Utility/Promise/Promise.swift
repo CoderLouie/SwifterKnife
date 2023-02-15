@@ -313,6 +313,22 @@ public final class Promise<Value> {
         }
     }
     
+    public func filter(
+        on queue: ExecutionContext = DispatchQueue.main,
+        test: @escaping (_ completion: (Swift.Error?) -> Void) -> Void) -> Promise<Value> {
+        return Promise<Value> { fulfill, reject in
+            self.addCallbacks(on: queue, onFulfilled: { value in
+                test { error in
+                    if let err = error {
+                        reject(err)
+                    } else {
+                        fulfill(value)
+                    }
+                }
+            }, onRejected: reject)
+        }
+    }
+    
     public func mapError(
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {

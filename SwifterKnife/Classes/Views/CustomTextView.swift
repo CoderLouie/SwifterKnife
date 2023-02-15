@@ -113,15 +113,17 @@ open class PlaceholderTextView: UITextView {
     
     // Limit the length of text
     @objc func textDidChange(notification: Notification) {
-        if let sender = notification.object as? PlaceholderTextView, sender == self {
-            if maxLength > 0 && text.count > maxLength {
-                let endIndex = text.index(text.startIndex, offsetBy: maxLength)
-                text = String(text[..<endIndex])
-                undoManager?.removeAllActions()
-            }
-            setNeedsDisplay()
-            onTextDidChange?(self)
+        guard let sender = notification.object as? PlaceholderTextView, sender === self else { return }
+        if maxLength > 0,
+              let text = text,
+              markedTextRange == nil,
+              text.count > maxLength {
+            let endIndex = text.index(text.startIndex, offsetBy: maxLength)
+            self.text = String(text[..<endIndex])
+            undoManager?.removeAllActions()
         }
+        setNeedsDisplay()
+        onTextDidChange?(self)
     }
 }
 
@@ -295,8 +297,10 @@ open class GrowingTextView: UITextView {
     
     // Limit the length of text
     @objc func textDidChange(notification: Notification) {
-        if let sender = notification.object as? GrowingTextView, sender == self {
-            if maxLength > 0 && text.count > maxLength {
+        if let sender = notification.object as? GrowingTextView, sender === self {
+            if maxLength > 0,
+               markedTextRange == nil,
+               text.count > maxLength {
                 let endIndex = text.index(text.startIndex, offsetBy: maxLength)
                 text = String(text[..<endIndex])
                 undoManager?.removeAllActions()

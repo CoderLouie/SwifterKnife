@@ -28,6 +28,8 @@ class HomeViewController: BaseViewController {
         title = "Home"
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        navigationController?.pushViewController(DebugViewController(), animated: true)
+//        let vc = DebugViewController()
+        let vc = TimerViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
