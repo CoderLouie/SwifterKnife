@@ -95,8 +95,14 @@ class ViewController: UIViewController {
                 fulfill(100)
             }
         }
-        promise.filter { completion in
-            completion(PromiseError.missed)
+//        promise.handle(promise.produce())
+//        promise.verify1 { value, completion in
+//            promise.eraser(completion)
+//        }
+        promise.verify2 { _ in
+            return StringPromise.resolve("3")
+        }.then { val in
+            
         }
         promise.then { val in
             print("reolve", val)

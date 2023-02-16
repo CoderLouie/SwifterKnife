@@ -313,17 +313,32 @@ public final class Promise<Value> {
         }
     }
     
-    public func filter(
+    public func verify1(
         on queue: ExecutionContext = DispatchQueue.main,
-        test: @escaping (_ completion: (Swift.Error?) -> Void) -> Void) -> Promise<Value> {
+        test: @escaping (_ value: Value, _ completion: @escaping (Swift.Error?) -> Void) -> Void) -> Promise<Value> {
         return Promise<Value> { fulfill, reject in
             self.addCallbacks(on: queue, onFulfilled: { value in
-                test { error in
+                test(value) { error in
                     if let err = error {
                         reject(err)
                     } else {
                         fulfill(value)
                     }
+                }
+            }, onRejected: reject)
+        }
+    }
+    public func verify2<Placholder>(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Value) throws -> Promise<Placholder>) -> Promise<Value> {
+        return Promise<Value> { fulfill, reject in
+            self.addCallbacks(on: queue, onFulfilled: { value in
+                do {
+                    try transform(value).then(on: queue, onFulfilled: { _ in
+                        fulfill(value)
+                    }, onRejected: reject)
+                } catch {
+                    reject(error)
                 }
             }, onRejected: reject)
         }
@@ -364,6 +379,28 @@ public final class Promise<Value> {
         onFulfilled: @escaping (Value) -> Void,
         onRejected: @escaping (Error) -> Void = { _ in }) -> Promise<Value> {
         addCallbacks(on: queue, onFulfilled: onFulfilled, onRejected: onRejected)
+        return self
+    }
+    @discardableResult
+    public func eraser(
+        on queue: ExecutionContext = DispatchQueue.main,
+        _ handler: @escaping (Swift.Error?) -> Void) -> Promise<Value> {
+        addCallbacks(on: queue) { _ in
+            handler(nil)
+        } onRejected: {
+            handler($0)
+        }
+        return self
+    }
+    @discardableResult
+    public func handle(
+        on queue: ExecutionContext = DispatchQueue.main,
+        _ handler: @escaping (Result<Value, Swift.Error>) -> Void) -> Promise<Value> {
+        addCallbacks(on: queue) {
+            handler(.success($0))
+        } onRejected: {
+            handler(.failure($0))
+        }
         return self
     }
     
