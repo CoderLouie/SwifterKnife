@@ -7,82 +7,11 @@
 
 import UIKit
 
-/*
-fileprivate class StarView: UIView {
-    var count: Int = 5
-    var _starSize: CGSize?
-    var margin: CGFloat = 15
-    var image: UIImage?
-    var starsView: [UIImageView] = []
-    
-    var starSize: CGSize {
-        _starSize ?? image?.size ?? CGSize(width: 36, height: 36)
-    }
-    
-}
-
-class RatingView: UIView {
-    var count: Int {
-        get { backView.count }
-        set {
-            guard backView.count != newValue else {
-                return
-            }
-            frontView.count = newValue
-            backView.count = newValue
-            setNeedsLayout()
-            invalidateIntrinsicContentSize()
-        }
-    }
-    var margin: CGFloat {
-        get { backView.margin }
-        set {
-            guard backView.margin != newValue else {
-                return
-            }
-            frontView.margin = newValue
-            backView.margin = newValue
-            setNeedsLayout()
-            invalidateIntrinsicContentSize()
-        }
-    }
-    var starSize: CGSize {
-        frontView.starSize
-    }
-    func setStarSize(_ size: CGSize?) {
-        if size == nil, backView._starSize == nil {
-            return
-        }
-        if let s = size, s == backView.starSize {
-            return
-        }
-        frontView._starSize = size
-        backView._starSize = size
-        setNeedsLayout()
-        invalidateIntrinsicContentSize()
-    }
-    var panEnable = false
-    
-    var score: Double = 0
-    
-    var highlightedImage: UIImage? {
-        set { frontView.image = newValue }
-        get { frontView.starsView.first?.image }
-    }
-    var normalImage: UIImage? {
-        set { backView.image = newValue }
-        get { backView.starsView.first?.image }
-    }
-    
-    private unowned var backView: StarView!
-    private unowned var frontView: StarView!
-}
-*/
 
 fileprivate class StarsView: UIView {
     private var aspectSize: CGSize = .zero
     
-    public init(count: Int,
+    fileprivate init(count: Int,
          image: UIImage?,
          margin: CGFloat,
          size: CGSize) {
