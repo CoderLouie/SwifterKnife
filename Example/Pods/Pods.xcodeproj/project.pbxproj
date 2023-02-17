@@ -52,7 +52,6 @@
 		4424982A057E466A621F70467BA26E4C /* CGSize+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE4C5C294C6ABF71DB8BF031B66A479 /* CGSize+Add.swift */; };
 		46E4E1F9AA70A683F9C53A8B704F0845 /* String+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835D730E5E44D3C9B0AFFA770C9283AB /* String+Add.swift */; };
 		472E3B71B65F5A09A810EDC32B17B36A /* Range+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B8E257CCF74B98FFF22E7CF7EAC67 /* Range+Add.swift */; };
-		4B17B09DBB110914E4634DEB4A393CE5 /* LayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B4442E98A1C35234EC1C16B7ADD637 /* LayoutGuide.swift */; };
 		4BAD99B7394E225CEDBF94B8100BCC7F /* ConstraintRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30E74C9EDB065D2E76B3EDCCB6E2153 /* ConstraintRelation.swift */; };
 		4DA72FD7F1FB2C0449EDEF4B8A579807 /* ConstraintPriorityTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7096225ED146E16EC168C99FEDD215B5 /* ConstraintPriorityTarget.swift */; };
 		5380454C48A12A6E376122ABD8096968 /* ConstraintDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0BC61944B3E89515CACB83BB1B976 /* ConstraintDescription.swift */; };
@@ -108,9 +107,11 @@
 		B5188013AA415D5731FB1E95DE730E68 /* UIFont+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46BE364E5AAABDD806DF721CD7476A7 /* UIFont+Add.swift */; };
 		B66F09AB2938939B002E2D62 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F09AA2938939B002E2D62 /* Position.swift */; };
 		B66F75CA295BE81C006E5E4E /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75C9295BE81C006E5E4E /* Regex.swift */; };
-		B66F75CC295C2805006E5E4E /* ViewAddition+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */; };
 		B68F02D609684505FC0BC4F090852E92 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D010CFFCFC328AC5BBD87196D177F1F /* CGRect+Add.swift */; };
 		B6A22FF2299F45FB007EA90D /* UIStackView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A22FF1299F45FB007EA90D /* UIStackView+Add.swift */; };
+		B6A22FFD299F866C007EA90D /* SKStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A22FFA299F866C007EA90D /* SKStackView.swift */; };
+		B6A22FFE299F866C007EA90D /* ScrollStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A22FFB299F866C007EA90D /* ScrollStackView.swift */; };
+		B6A22FFF299F866C007EA90D /* SKStackCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A22FFC299F866C007EA90D /* SKStackCellType.swift */; };
 		B6CB888129656C8A00E8110A /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888029656C8A00E8110A /* Random.swift */; };
 		B6CB8885296677B600E8110A /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB8884296677B600E8110A /* StateMachine.swift */; };
 		B6CB88872966AA0300E8110A /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB88862966AA0300E8110A /* Limiter.swift */; };
@@ -283,12 +284,13 @@
 		B0F9670A66012AD161E5D3AE193479D6 /* Haptic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
 		B16658D4E576BD8855D201AAD78F674C /* LocalizedKeyRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalizedKeyRepresentable.swift; sourceTree = "<group>"; };
 		B36B17BDB17156A1E3504204BE0D719F /* UICollectionView+Reusable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Reusable.swift"; sourceTree = "<group>"; };
-		B4B4442E98A1C35234EC1C16B7ADD637 /* LayoutGuide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LayoutGuide.swift; sourceTree = "<group>"; };
 		B57B4B15AAC3AB24B43306829FAA77A0 /* ConstraintPriority.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriority.swift; path = Sources/ConstraintPriority.swift; sourceTree = "<group>"; };
 		B66F09AA2938939B002E2D62 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		B66F75C9295BE81C006E5E4E /* Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
-		B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewAddition+Add.swift"; sourceTree = "<group>"; };
 		B6A22FF1299F45FB007EA90D /* UIStackView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Add.swift"; sourceTree = "<group>"; };
+		B6A22FFA299F866C007EA90D /* SKStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackView.swift; sourceTree = "<group>"; };
+		B6A22FFB299F866C007EA90D /* ScrollStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollStackView.swift; sourceTree = "<group>"; };
+		B6A22FFC299F866C007EA90D /* SKStackCellType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackCellType.swift; sourceTree = "<group>"; };
 		B6CB888029656C8A00E8110A /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B6CB8884296677B600E8110A /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		B6CB88862966AA0300E8110A /* Limiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
@@ -522,11 +524,11 @@
 		91A122E396942513A4FCD4E7553E7FEA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B6A22FF9299F866C007EA90D /* StackView */,
 				7739E99C26EA684C7BA693823AA9B544 /* AspectImageView.swift */,
 				569B11F4231F3C5D3197D11BAC12782C /* CarouselView.swift */,
 				8056C39F44557FED22AA159D8F4AE9E0 /* CustomTextView.swift */,
 				8717B247198E71881DE5A31E18E7653A /* GradientView.swift */,
-				B4B4442E98A1C35234EC1C16B7ADD637 /* LayoutGuide.swift */,
 				9D8C496B2A4FE945E2E549EF0C9BC702 /* LayoutView.swift */,
 				8434DFEAB5B2FC866AD91E927F0787AB /* LinearFlowView.swift */,
 				612ABD2E66AE6BF12069578FA335A522 /* PaddingButton.swift */,
@@ -534,7 +536,6 @@
 				B66F09AA2938939B002E2D62 /* Position.swift */,
 				72B150006CD3EA034636C60ECA383D7D /* RatingView.swift */,
 				4A35376A3A8172AB5720E4FEAE19ED46 /* TextField.swift */,
-				B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */,
 			);
 			name = Views;
 			path = SwifterKnife/Classes/Views;
@@ -596,6 +597,16 @@
 			);
 			name = "Support Files";
 			path = "Example/Pods/Target Support Files/SwifterKnife";
+			sourceTree = "<group>";
+		};
+		B6A22FF9299F866C007EA90D /* StackView */ = {
+			isa = PBXGroup;
+			children = (
+				B6A22FFB299F866C007EA90D /* ScrollStackView.swift */,
+				B6A22FFA299F866C007EA90D /* SKStackView.swift */,
+				B6A22FFC299F866C007EA90D /* SKStackCellType.swift */,
+			);
+			path = StackView;
 			sourceTree = "<group>";
 		};
 		BF4376E1C4FD50B2E5AEE80A3AECACC3 /* Localize */ = {
@@ -1007,6 +1018,7 @@
 				0F8AE3AF7A8808CE916F73236154DD7B /* BidirectionalCollection+Add.swift in Sources */,
 				2F65996BBCA769544EE6D4754B5F6655 /* BinaryFloatingPoint+Add.swift in Sources */,
 				3F6D2A47326848D9E110C9961B529655 /* CAAnimation+Add.swift in Sources */,
+				B6A22FFF299F866C007EA90D /* SKStackCellType.swift in Sources */,
 				EAF867043CB6A311C2DD7BAEAA10E93F /* CALayer+Add.swift in Sources */,
 				073698DFA4AF2F7C723FC4045E572271 /* CarouselView.swift in Sources */,
 				3505B40C1CC470167E4A1D072BBFD2AD /* CATransform3D+Add.swift in Sources */,
@@ -1034,7 +1046,6 @@
 				7A25B160E19255C64538EDBCE51264E5 /* Int+Add.swift in Sources */,
 				D78B5C8F8A809F6D2BECF0F327DD4430 /* KeyPath+Add.swift in Sources */,
 				2B4DEFB040A7635F798B505F8CA254EF /* Language.swift in Sources */,
-				4B17B09DBB110914E4634DEB4A393CE5 /* LayoutGuide.swift in Sources */,
 				121AA0BAF67448F87F2E47F504B10D7F /* LayoutView.swift in Sources */,
 				B6A22FF2299F45FB007EA90D /* UIStackView+Add.swift in Sources */,
 				544A44C0830CDF61BD66A006A8298CDC /* LinearFlowView.swift in Sources */,
@@ -1043,13 +1054,14 @@
 				E6B30D3648B25A6EEDD3FB744FC1F73A /* MutableCollection+Add.swift in Sources */,
 				B3074D1609A7FDE38DA9E7B8B7AFEE08 /* NSObject+Add.swift in Sources */,
 				D24FEF0FA915A8340565D26F4D6ADB30 /* Optional+Add.swift in Sources */,
+				B6A22FFD299F866C007EA90D /* SKStackView.swift in Sources */,
 				2524F4B269AA0BB3926A6481359CF73B /* PaddingButton.swift in Sources */,
 				8E5D78E5F091610420C1ABFC526C3028 /* PaddingLabel.swift in Sources */,
 				EF26D16CF5F1A47C1331389DBCF86C98 /* Promise.swift in Sources */,
 				B6CB888129656C8A00E8110A /* Random.swift in Sources */,
 				D16211537F90417C2B0FE82DD533CF35 /* Promise+Extras.swift in Sources */,
+				B6A22FFE299F866C007EA90D /* ScrollStackView.swift in Sources */,
 				C2DBA0A31BEB7A2AC9AD973C8A7FDDAA /* Queue.swift in Sources */,
-				B66F75CC295C2805006E5E4E /* ViewAddition+Add.swift in Sources */,
 				472E3B71B65F5A09A810EDC32B17B36A /* Range+Add.swift in Sources */,
 				00C9348C0191DA6EAD08826D70968605 /* RangeReplaceableCollection+Add.swift in Sources */,
 				89006B8657DA25FD358443E4AD03AD6E /* RatingView.swift in Sources */,

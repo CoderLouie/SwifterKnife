@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupBody5()
+//        setupBody5()
 //        setupButton1()
 //        setupRatingView()
 //        setupImageView()
@@ -723,90 +723,90 @@ extension ViewController {
             view.layer.addSublayer($0)
         }
     }
-    private func setupBody5() {
-        let guide = VLayoutGuide(owningView: view, aligment: .end).then {
-            $0.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }
-        let label = UILabel().then {
-            $0.text = "UILable"
-            guide.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.top.equalTo(guide)
-            }
-        }
-        let testView = UIView().then {
-            $0.backgroundColor = .cyan
-            guide.addSubview($0)
-            
-            $0.snp.makeConstraints { make in
-                make.top.equalTo(label.snp.bottom).offset(20)
-                make.height.equalTo(40)
+//    private func setupBody5() {
+//        let guide = VLayoutGuide(owningView: view, aligment: .end).then {
+//            $0.snp.makeConstraints { make in
+//                make.center.equalToSuperview()
+//            }
+//        }
+//        let label = UILabel().then {
+//            $0.text = "UILable"
+//            guide.addSubview($0)
+//            $0.snp.makeConstraints { make in
+//                make.top.equalTo(guide)
+//            }
+//        }
+//        let testView = UIView().then {
+//            $0.backgroundColor = .cyan
+//            guide.addSubview($0)
+//
+//            $0.snp.makeConstraints { make in
+//                make.top.equalTo(label.snp.bottom).offset(20)
+//                make.height.equalTo(40)
+////                make.width.equalTo(120)
+//                make.width.equalToSelfHeight().multipliedBy(3)
+//            }
+//        }
+////        guide.makeSizeToFit()
+////        guide.makeHorizontalSizeToFit()
+//        guide.snp.makeConstraints { make in
+//            make.height.equalToSelfWidth().multipliedBy(2)
+////            make.height.equalTo(guide.snp.width).multipliedBy(2)
+//        }
+//        DispatchQueue.main.after(1) {
+//            print(guide.layoutFrame)
+//            print("")
+//        }
+//        let label2 = UILabel().then {
+//            $0.text = "UILable2"
+//            view.addSubview($0)
+//            $0.snp.makeConstraints { make in
+//                make.centerY.equalTo(guide)
+////                make.bottom.equalTo(guide.snp.top).offset(-30)
+//                make.leading.equalTo(guide.snp.trailing).offset(10)
+//            }
+//        }
+//    }
+//    private func setupBody4() {
+//        let guide = HLayoutGuide(owningView: view, aligment: .start).then {
+//            $0.snp.makeConstraints { make in
+//                make.center.equalToSuperview()
+//            }
+//        }
+//        let label = UILabel().then {
+//            $0.text = "UILable"
+//            guide.addSubview($0)
+//            $0.snp.makeConstraints { make in
+//                make.leading.equalTo(guide)
+//            }
+//        }
+//        let testView = UIView().then {
+//            $0.backgroundColor = .cyan
+//            guide.addSubview($0)
+//
+//            $0.snp.makeConstraints { make in
+//                make.leading.equalTo(label.snp.trailing).offset(20)
+//                make.trailing.equalTo(guide)
+//                make.height.equalTo(40)
 //                make.width.equalTo(120)
-                make.width.equalToSelfHeight().multipliedBy(3)
-            }
-        }
-//        guide.makeSizeToFit()
-//        guide.makeHorizontalSizeToFit()
-        guide.snp.makeConstraints { make in
-            make.height.equalToSelfWidth().multipliedBy(2)
-//            make.height.equalTo(guide.snp.width).multipliedBy(2)
-        }
-        DispatchQueue.main.after(1) {
-            print(guide.layoutFrame)
-            print("")
-        }
-        let label2 = UILabel().then {
-            $0.text = "UILable2"
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.centerY.equalTo(guide)
-//                make.bottom.equalTo(guide.snp.top).offset(-30)
-                make.leading.equalTo(guide.snp.trailing).offset(10)
-            }
-        }
-    }
-    private func setupBody4() {
-        let guide = HLayoutGuide(owningView: view, aligment: .start).then {
-            $0.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }
-        let label = UILabel().then {
-            $0.text = "UILable"
-            guide.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.equalTo(guide)
-            }
-        }
-        let testView = UIView().then {
-            $0.backgroundColor = .cyan
-            guide.addSubview($0)
-            
-            $0.snp.makeConstraints { make in
-                make.leading.equalTo(label.snp.trailing).offset(20)
-                make.trailing.equalTo(guide)
-                make.height.equalTo(40)
-                make.width.equalTo(120)
-            }
-        }
-//        guide.makeSizeToFit()
-//        guide.makeHorizontalSizeToFit()
-        DispatchQueue.main.after(1) {
-            print(guide.layoutFrame)
-            print("")
-        }
-        let label2 = UILabel().then {
-            $0.text = "UILable2"
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.centerX.equalTo(guide)
-//                make.bottom.equalTo(guide.snp.top).offset(-30)
-                make.top.equalTo(guide.snp.bottom).offset(30)
-            }
-        }
-    }
+//            }
+//        }
+////        guide.makeSizeToFit()
+////        guide.makeHorizontalSizeToFit()
+//        DispatchQueue.main.after(1) {
+//            print(guide.layoutFrame)
+//            print("")
+//        }
+//        let label2 = UILabel().then {
+//            $0.text = "UILable2"
+//            view.addSubview($0)
+//            $0.snp.makeConstraints { make in
+//                make.centerX.equalTo(guide)
+////                make.bottom.equalTo(guide.snp.top).offset(-30)
+//                make.top.equalTo(guide.snp.bottom).offset(30)
+//            }
+//        }
+//    }
     private func setupBody3() {
         let container = UILayoutGuide().then {
             view.addLayoutGuide($0)

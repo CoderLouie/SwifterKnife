@@ -250,18 +250,49 @@ public extension UIView {
     /// Search all superviews until a view with the condition is found.
     ///
     /// - Parameter predicate: predicate to evaluate on superviews.
-    func ancestorView(where predicate: (UIView?) -> Bool) -> UIView? {
-        if predicate(superview) {
-            return superview
+    func ancestorView<T: UIView>(where predicate: (T) -> Bool) -> T? {
+        var view = superview
+        while let v = view {
+            if let typeView = v as? T,
+               predicate(typeView) {
+                return typeView
+            }
+            view = v.superview
         }
-        return superview?.ancestorView(where: predicate)
+        return nil
     }
     
-    /// Search all superviews until a view with this class is found.
-    ///
-    /// - Parameter name: class of the view to search.
-    func ancestorView<T: UIView>(withClass _: T.Type) -> T? {
-        return ancestorView(where: { $0 is T }) as? T
+    /**
+     let effectView: UIImageView? = view.searchSubview(reversed: false) {
+     $0.bounds.size.height < 2
+     }
+     */
+    func searchSubview<T: UIView>(
+        reversed: Bool = true,
+        where cond: (T) -> Bool) -> T? {
+        var views = [self]
+        var index = 0
+        repeat {
+            let view = views[index]
+            if let type = view as? T, cond(type) { return type }
+            index += 1
+            views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
+        } while index < views.count
+        return nil
+    }
+    
+    func firstSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
+        subviews.first {
+            guard let v = $0 as? T else { return false }
+            return cond?(v) ?? true
+        } as? T
+    }
+    
+    func lastSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
+        subviews.last {
+            guard let v = $0 as? T else { return false }
+            return cond?(v) ?? true
+        } as? T
     }
     
     /// Returns all the subviews of a given type recursively in the
@@ -324,39 +355,8 @@ public extension UIView {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
     
-    /**
-     let effectView: UIImageView? = view.searchSubview(reversed: false) {
-     $0.bounds.size.height < 2
-     }
-     */
-    func searchSubview<T: UIView>(
-        reversed: Bool = true,
-        where cond: (T) -> Bool) -> T? {
-        var views = [self]
-        var index = 0
-        repeat {
-            let view = views[index]
-            if let type = view as? T, cond(type) { return type }
-            index += 1
-            views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
-        } while index < views.count
-        return nil
-    }
-    func firstSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
-        subviews.first {
-            guard let v = $0 as? T else { return false }
-            return cond?(v) ?? true
-        } as? T
-    }
-    func lastSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
-        subviews.last {
-            guard let v = $0 as? T else { return false }
-            return cond?(v) ?? true
-        } as? T
-    }
-    
     @available(iOS 11.0, *)
-    func roundingCorners(_ radius: CGFloat,
+    func roundCorners(_ radius: CGFloat,
                          corners: UIRectCorner = .allCorners) {
         guard radius > 0 else { return }
         layer.masksToBounds = true
@@ -377,46 +377,6 @@ public extension UIView {
         layer.maskedCorners = maskCorners
     }
     
-    /// Set some or all corners radiuses of view.
-    ///
-    /// - Parameters:
-    ///   - radius: radius for selected corners.
-    ///   - corners: array of corners to change (example: [.bottomLeft, .topRight]).
-    ///   - fillColor: fillColor
-    ///   - borderWidth: borderWidth
-    ///   - borderColor: borderColor
-    func roundCorners(_ radius: CGFloat,
-                      corners: UIRectCorner,
-                      fillColor: UIColor? = nil,
-                      borderWidth: CGFloat? = nil,
-                      borderColor: UIColor? = nil) {
-        onDidLayout { this in
-            let path = UIBezierPath(roundedRect: this.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-            let maskLayer = CAShapeLayer()
-            var needAdd = false
-            if let width = borderWidth {
-                needAdd = true
-                maskLayer.lineWidth = width
-            }
-            if let color = borderColor {
-                needAdd = true
-                maskLayer.strokeColor = color.cgColor
-            }
-            maskLayer.path = path.cgPath
-            if !needAdd {
-                if let bg = fillColor {
-                    this.backgroundColor = bg
-                }
-                this.layer.mask = maskLayer
-            } else {
-                let bgColor = fillColor ?? this.backgroundColor
-                maskLayer.fillColor = bgColor?.cgColor
-                this.backgroundColor = .clear
-                this.layer.addSublayer(maskLayer)
-            }
-        }
-    }
-    
     
     static func noTransaction(_ work: () -> Void) {
         CATransaction.begin()
@@ -424,48 +384,9 @@ public extension UIView {
         work()
         CATransaction.commit()
     }
-     
-    
-    var contentHorCompressionResistanceLevel: Float {
-        get { contentCompressionResistancePriority(for: .horizontal).rawValue }
-        set {
-            setContentCompressionResistancePriority(UILayoutPriority(rawValue: newValue), for: .horizontal)
-        }
-    }
-    var contentVerCompressionResistanceLevel: Float {
-        get { contentCompressionResistancePriority(for: .vertical).rawValue }
-        set {
-            setContentCompressionResistancePriority(UILayoutPriority(rawValue: newValue), for: .vertical)
-        }
-    }
-    
-    var contentHorHuggingLevel: Float {
-        get { contentHuggingPriority(for: .horizontal).rawValue }
-        set {
-            setContentHuggingPriority(UILayoutPriority(rawValue: newValue), for: .horizontal)
-        }
-    }
-    var contentVerHuggingLevel: Float {
-        get { contentHuggingPriority(for: .vertical).rawValue }
-        set {
-            setContentHuggingPriority(UILayoutPriority(rawValue: newValue), for: .vertical)
-        }
-    } 
+      
 }
 
-open class WrapLabel: UILabel {
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        if numberOfLines == 1 { return }
-        let bounds = bounds
-        if preferredMaxLayoutWidth == bounds.width { return }
-        preferredMaxLayoutWidth = bounds.width
-        invalidateIntrinsicContentSize()
-    }
-    open override var intrinsicContentSize: CGSize {
-        super.intrinsicContentSize.adaptive(tramsform: \.pixCeil)
-    }
-}
 
 /*
  一句话总结“Intrinsic冲突”：两个或多个可以使用Intrinsic Content Size的组件，因为组件中添加的其他约束，而无法同时使用 intrinsic Content Size了。
@@ -482,44 +403,32 @@ open class WrapLabel: UILabel {
  $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
  */
 
-
-public protocol ViewAddition {}
-extension UIView: ViewAddition {}
-public extension ViewAddition where Self: UIView {
-    /// 在程序启动页面中不太建议调用此方法，
-    func onDidLayout(_ closure: @escaping (Self) -> Void) {
-        onDidLayout(closure, n: 0)
-    }
-    private func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int) {
-        // 防止试图本身没有设置约束及frame
-        if n > 4 {
-            closure(self)
-            return
+ 
+public extension UIVisualEffectView {
+    var bgColor: UIColor? {
+        get {
+            guard subviews.count > 1 else { return nil }
+            return subviews[1].backgroundColor
         }
-        if !bounds.isEmpty { 
-            closure(self)
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                guard let this = self else { return }
-                if let vc = this.parentViewController {
-                    vc.view.setNeedsLayout()
-                    vc.view.layoutIfNeeded()
-                } else {
-                    if var view = this.superview {
-                        var n = 2
-                        while let superV = view.superview,
-                              !superV.isKind(of: UIWindow.self),
-                              n > 0 {
-                            view = superV
-                            n -= 1
-                        }
-                        view.setNeedsLayout()
-                        view.layoutIfNeeded()
-                    }
-                }
-                this.onDidLayout(closure, n: n + 1)
-            }
+        set {
+            guard subviews.count > 1 else { return }
+            subviews[1].backgroundColor = newValue
         }
     }
 }
 
+open class WrapLabel: UILabel {
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if numberOfLines == 1 { return }
+        let bounds = bounds
+        if preferredMaxLayoutWidth > 0, preferredMaxLayoutWidth <= bounds.width {
+            return
+        }
+        preferredMaxLayoutWidth = bounds.width
+        invalidateIntrinsicContentSize()
+    }
+    open override var intrinsicContentSize: CGSize {
+        super.intrinsicContentSize.adaptive(tramsform: \.pixCeil)
+    }
+}

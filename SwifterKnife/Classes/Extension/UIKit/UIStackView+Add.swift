@@ -9,10 +9,10 @@ import UIKit
 
 public extension UIStackView {
     static var vertical: UIStackView {
-        return UIStackView(axis: .vertical)
+        return UIStackView(axis: .vertical, alignment: .center)
     }
     static var horizontal: UIStackView {
-        return UIStackView(axis: .horizontal)
+        return UIStackView(axis: .horizontal, alignment: .center)
     }
     
     /// Initialize an UIStackView with an array of UIView and common parameters.
