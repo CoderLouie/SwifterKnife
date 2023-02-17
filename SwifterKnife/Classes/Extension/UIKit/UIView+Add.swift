@@ -318,6 +318,8 @@ public extension UIView {
             withHorizontalFittingPriority: .fittingSizeLevel,
             verticalFittingPriority: .required)
     }
+    // layoutFittingCompressedSize(尽可能小)
+    // layoutFittingExpandedSize(尽可能大)
     var fittingSize: CGSize {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
@@ -450,7 +452,24 @@ public extension UIView {
         }
     } 
 }
+
+open class WrapLabel: UILabel {
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if numberOfLines == 1 { return }
+        let bounds = bounds
+        if preferredMaxLayoutWidth == bounds.width { return }
+        preferredMaxLayoutWidth = bounds.width
+        invalidateIntrinsicContentSize()
+    }
+    open override var intrinsicContentSize: CGSize {
+        super.intrinsicContentSize.adaptive(tramsform: \.pixCeil)
+    }
+}
+
 /*
+ 一句话总结“Intrinsic冲突”：两个或多个可以使用Intrinsic Content Size的组件，因为组件中添加的其他约束，而无法同时使用 intrinsic Content Size了。
+ 
  Content Hugging Priority
  抗拉伸 值(默认250)越小 越容易被拉伸，
  当子视图不足以填充满父视图的空间时，优先满足此属性值较大的子视图的内容展示，而拉伸属性值较低的子视图。

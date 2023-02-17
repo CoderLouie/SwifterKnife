@@ -77,7 +77,8 @@ extension Input: UITextFieldDelegate {
         if type == .done ||
             type == .go ||
             type == .search ||
-            type == .send {
+            type == .send ||
+            type == .next {
             textField.resignFirstResponder()
         }
         return true

@@ -110,6 +110,7 @@
 		B66F75CA295BE81C006E5E4E /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75C9295BE81C006E5E4E /* Regex.swift */; };
 		B66F75CC295C2805006E5E4E /* ViewAddition+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */; };
 		B68F02D609684505FC0BC4F090852E92 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D010CFFCFC328AC5BBD87196D177F1F /* CGRect+Add.swift */; };
+		B6A22FF2299F45FB007EA90D /* UIStackView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A22FF1299F45FB007EA90D /* UIStackView+Add.swift */; };
 		B6CB888129656C8A00E8110A /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888029656C8A00E8110A /* Random.swift */; };
 		B6CB8885296677B600E8110A /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB8884296677B600E8110A /* StateMachine.swift */; };
 		B6CB88872966AA0300E8110A /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB88862966AA0300E8110A /* Limiter.swift */; };
@@ -200,7 +201,7 @@
 		276C0CC4CF84926A15118C4C02413788 /* BidirectionalCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "BidirectionalCollection+Add.swift"; sourceTree = "<group>"; };
 		2AC5C215B859CBA3BBEC8006A25A846D /* BinaryFloatingPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "BinaryFloatingPoint+Add.swift"; sourceTree = "<group>"; };
 		2D5E06212626ED1C85A7C332E5BB7D2F /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwifterKnife; path = SwifterKnife.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwifterKnife.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FCB2DB0E01D4C9FA6F7FF6D3012D7E5 /* Comparable+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Comparable+Add.swift"; sourceTree = "<group>"; };
 		314EA82D65CB27529995AC26D10482CE /* DispatchQueue+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Add.swift"; sourceTree = "<group>"; };
 		368902E5B91EFD9196EB32A0E135E47E /* Reusable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
@@ -287,6 +288,7 @@
 		B66F09AA2938939B002E2D62 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		B66F75C9295BE81C006E5E4E /* Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
 		B66F75CB295C2804006E5E4E /* ViewAddition+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewAddition+Add.swift"; sourceTree = "<group>"; };
+		B6A22FF1299F45FB007EA90D /* UIStackView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Add.swift"; sourceTree = "<group>"; };
 		B6CB888029656C8A00E8110A /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B6CB8884296677B600E8110A /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		B6CB88862966AA0300E8110A /* Limiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
@@ -494,7 +496,7 @@
 				6639457C903B8AC67B43425E1AB0E5E4 /* Pods-SwifterKnife_Example */,
 				E6746702AF7BFF70C2B2B0BB25F72DE9 /* Pods-SwifterKnife_Tests */,
 				979486118B3E90C08386079D57962701 /* SnapKit */,
-				2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife */,
+				2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -723,6 +725,7 @@
 				05D0D307C29B8D29275F66D3C8FAA3DB /* UITableView+Add.swift */,
 				EDA93498A990929D152097A0C432CD98 /* UIView+Add.swift */,
 				6B84EAD25FE6A3C967303FFAC50C264D /* UIViewController+Add.swift */,
+				B6A22FF1299F45FB007EA90D /* UIStackView+Add.swift */,
 				275099F337850C4461CE84B7DC5E3C35 /* Reusable */,
 			);
 			path = UIKit;
@@ -876,7 +879,7 @@
 			);
 			name = SwifterKnife;
 			productName = SwifterKnife;
-			productReference = 2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife */;
+			productReference = 2F776642E947517B84E7AA5D13C640E4 /* SwifterKnife.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -1033,6 +1036,7 @@
 				2B4DEFB040A7635F798B505F8CA254EF /* Language.swift in Sources */,
 				4B17B09DBB110914E4634DEB4A393CE5 /* LayoutGuide.swift in Sources */,
 				121AA0BAF67448F87F2E47F504B10D7F /* LayoutView.swift in Sources */,
+				B6A22FF2299F45FB007EA90D /* UIStackView+Add.swift in Sources */,
 				544A44C0830CDF61BD66A006A8298CDC /* LinearFlowView.swift in Sources */,
 				1D0784988546B856D12469BE45D4C52B /* LocalizedKeyRepresentable.swift in Sources */,
 				B6CB888F2967B92800E8110A /* AttributedString.swift in Sources */,
@@ -1208,7 +1212,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwifterKnife/SwifterKnife-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwifterKnife/SwifterKnife-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/SwifterKnife/SwifterKnife.modulemap";
 				PRODUCT_MODULE_NAME = SwifterKnife;
@@ -1368,7 +1372,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwifterKnife/SwifterKnife-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwifterKnife/SwifterKnife-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/SwifterKnife/SwifterKnife.modulemap";
 				PRODUCT_MODULE_NAME = SwifterKnife;

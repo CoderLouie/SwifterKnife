@@ -300,3 +300,36 @@ public extension UIScrollView {
         return directions
     }
 }
+
+@available(iOS 11.0, *)
+public protocol BatchUpdatable {
+    func performBatchUpdates(_ updates: (() -> Void)?, completion: ((Bool) -> Void)?)
+}
+extension UITableView: BatchUpdatable {}
+extension UICollectionView: BatchUpdatable {}
+
+@available(iOS 11.0, *)
+extension BatchUpdatable {
+    public func batchUpdates(withDuration duration: TimeInterval, _ updates: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
+        if duration > 0 {
+            UIView.animate(
+                withDuration: duration,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 0,
+                options: [
+                    .beginFromCurrentState,
+                    .allowUserInteraction,
+                    .overrideInheritedCurve,
+                    .overrideInheritedOptions,
+                    .overrideInheritedDuration
+                ]) {
+                    self.performBatchUpdates(updates, completion: completion)
+                }
+        } else {
+            UIView.performWithoutAnimation {
+                self.performBatchUpdates(updates, completion: completion)
+            }
+        }
+    }
+}

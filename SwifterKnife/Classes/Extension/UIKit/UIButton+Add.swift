@@ -7,18 +7,39 @@
 
 import UIKit
 
+public struct TouchPosition: OptionSet {
+    public let rawValue: Int
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    public static var left: TouchPosition { .init(rawValue: 1 << 0) }
+    public static var right: TouchPosition { .init(rawValue: 1 << 1) }
+    public static var top: TouchPosition { .init(rawValue: 1 << 2) }
+    public static var bottom: TouchPosition { .init(rawValue: 1 << 3) }
+}
+
+extension UITouch {
+    public var touchPosition: TouchPosition {
+        guard let v = view else { return [] }
+        let p = location(in: v)
+        let size = v.bounds.size
+        
+        var res: TouchPosition = []
+        
+        if p.x > size.width * 0.5 {
+            res.formUnion(.right)
+        } else { res.formUnion(.left) }
+        
+        if p.y > size.height * 0.5 {
+            res.formUnion(.bottom)
+        } else { res.formUnion(.top) }
+        
+        return res
+    }
+}
+
 public extension UIButton {
     
-    struct TouchPosition: OptionSet {
-        public let rawValue: Int
-        public init(rawValue: Int) {
-            self.rawValue = rawValue
-        }
-        public static var left: TouchPosition { .init(rawValue: 1 << 0) }
-        public static var right: TouchPosition { .init(rawValue: 1 << 1) }
-        public static var top: TouchPosition { .init(rawValue: 1 << 2) }
-        public static var bottom: TouchPosition { .init(rawValue: 1 << 3) }
-    }
     /*
      Example
      btn.addTarget(self, action: #selector(onButtonClicked(_:_:)), for: .touchUpInside)
@@ -34,21 +55,7 @@ public extension UIButton {
      */
     func touchPosition(with event: UIEvent) -> TouchPosition {
         guard let touch = event.allTouches?.randomElement() else { return [] }
-        
-        let p = touch.location(in: self)
-        let size = bounds.size
-        
-        var res: TouchPosition = []
-        
-        if p.x > size.width * 0.5 {
-            res.formUnion(.right)
-        } else { res.formUnion(.left) }
-        
-        if p.y > size.height * 0.5 {
-            res.formUnion(.bottom)
-        } else { res.formUnion(.top) }
-        
-        return res
+        return touch.touchPosition
     }
     
     /// Center align title text and image.
