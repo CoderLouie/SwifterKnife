@@ -54,5 +54,5 @@ open class SpaceView: UIView {
     open override var intrinsicContentSize: CGSize {
         return intrinsicSize
     }
-} 
+}
  
