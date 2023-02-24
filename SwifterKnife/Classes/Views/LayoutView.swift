@@ -10,18 +10,8 @@ import SnapKit
  
 // 只用做布局，不做渲染，类似UIStackView
 open class VirtualView: UIView {
-    private class VirtualLayer: CATransformLayer {
-        override var backgroundColor: CGColor? {
-            set {}
-            get { return nil }
-        }
-        override var isOpaque: Bool {
-            set {}
-            get { return false }
-        }
-    }
     public override class var layerClass: AnyClass {
-        return VirtualLayer.self
+        return UIStackView.layerClass
     }
     
     public override init(frame: CGRect) {

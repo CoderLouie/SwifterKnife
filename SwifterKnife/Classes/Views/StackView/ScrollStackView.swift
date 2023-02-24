@@ -46,6 +46,9 @@ public final class ScrollStackView: UIScrollView {
         container.axis = .vertical
         addSubview(container)
         
+        alwaysBounceVertical = true
+        alwaysBounceHorizontal = false
+        
         container.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
             stackWidthCons = make.width.equalToSuperview().constraint

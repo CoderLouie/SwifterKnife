@@ -27,8 +27,7 @@ public extension UIStackView {
         spacing: CGFloat = 0.0,
         alignment: UIStackView.Alignment = .fill,
         distribution: UIStackView.Distribution = .fill) {
-        self.init(frame: .zero)
-        isUserInteractionEnabled = false
+        self.init(frame: .zero) 
         self.axis = axis
         self.spacing = spacing
         self.alignment = alignment

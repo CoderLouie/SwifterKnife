@@ -6,7 +6,7 @@
 //
 
 import UIKit
- 
+
 open class LinearFlowView: UIView {
     public enum Alignment: Int {
         case left

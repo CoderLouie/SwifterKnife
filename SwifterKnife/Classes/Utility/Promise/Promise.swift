@@ -284,6 +284,23 @@ public final class Promise<Value> {
         try! awaitCompleted()
     }
     
+    public func asyncFlatMap<NewValue>(
+        on queue: ExecutionContext = DispatchQueue.main,
+        closure: @escaping (_ value: Value, _ completion: @escaping (Result<Promise<NewValue>, Swift.Error>) -> Void) -> Void) -> Promise<NewValue> {
+        return Promise<NewValue> { fulfill, reject in
+            self.addCallbacks(on: queue, onFulfilled: { value in
+                closure(value) { result in
+                    switch result {
+                    case .success(let promise):
+                        promise.then(on: queue, onFulfilled: fulfill, onRejected: reject)
+                    case .failure(let error):
+                        reject(error)
+                    }
+                }
+            }, onRejected: reject)
+        }
+    }
+    
     public func flatMap<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {

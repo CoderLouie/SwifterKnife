@@ -41,7 +41,7 @@ open class Input: UITextField {
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0
     
-    public var onEditingEnd: ((Input) -> Void)?
+    public var onReturnKeyPressed: ((Input) -> Void)?
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,12 +51,8 @@ open class Input: UITextField {
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    @objc private func inputEnded() {
-        onEditingEnd?(self)
-    }
     open func setup() {
         delegate = self
-        addTarget(self, action: #selector(inputEnded), for: .editingDidEnd)
         NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextField.textDidChangeNotification, object: self)
     }
     // Limit the length of text
@@ -80,8 +76,8 @@ extension Input: UITextFieldDelegate {
             type == .send ||
             type == .next {
             textField.resignFirstResponder()
+            onReturnKeyPressed?(self)
         }
         return true
     }
 }
-
