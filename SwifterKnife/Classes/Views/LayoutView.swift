@@ -46,7 +46,13 @@ open class SpaceView: UIView {
     }
 }
 
-
+/*
+ 1. 已知该视图宽度，列个数，水平间距，垂直间距，每个cell的固有高度
+    求该是图高度
+ 2. 已知该视图宽度和高度，列个数，行个数，水平间距，垂直间距，
+    可确定每个cell的大小
+ 
+ */
 public final class SudokuView: VirtualView {
     public var columnCount = 3
     public var rowCount: Int? = nil

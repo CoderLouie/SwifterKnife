@@ -350,6 +350,20 @@ public final class Promise<Value> {
         }
     }
     
+    public func delay(_ delay: TimeInterval) -> Promise<Value> {
+        return Promise<Value> { fulfill, reject in
+            self.addCallbacks { value in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    fulfill(value)
+                }
+            } onRejected: { error in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    reject(error)
+                }
+            }
+        }
+    }
+
     public func verify1(
         on queue: ExecutionContext = DispatchQueue.main,
         test: @escaping (_ value: Value, _ completion: @escaping (Swift.Error?) -> Void) -> Void) -> Promise<Value> {
