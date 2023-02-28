@@ -51,3 +51,41 @@ public func parallel<T, U>(
     return (leftRes!, rightRes!)
 }
 
+/*
+public typealias ResultCallback<Success, Failure: Swift.Error> = (Result<Success, Failure>) -> Void
+
+infix operator ~>: MultiplicationPrecedence
+
+public func ~> <T, U, E>(
+    _ first: @escaping (ResultCallback<T, E>) -> Void,
+    _ second: @escaping (T, ResultCallback<U, E>) -> Void) -> (ResultCallback<U, E>) -> Void {
+    return { completion in
+        first { firstResult  in
+            switch firstResult {
+            case .success(let value):
+                second(value) { secondResult in
+                    completion(secondResult)
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}
+
+public func ~> <T, U, E>(
+    _ first: @escaping (ResultCallback<T, E>) -> Void,
+    _ transform: @escaping (T) -> U) -> (ResultCallback<U, E>) -> Void {
+    return { completion in
+        first { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let value):
+                completion(.success(transform(value)))
+            }
+        }
+    }
+}
+*/
+
