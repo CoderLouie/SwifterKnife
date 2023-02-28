@@ -105,6 +105,7 @@
 		B40E81984871F3DEC37DE17659138198 /* Pods-SwifterKnife_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 619A57EFE0D912DFEBD4DE168DB50242 /* Pods-SwifterKnife_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B43017FEC99D227D4CDD81DD2C27D9D9 /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0A527ED8F0A719FF610D743A87DAD3 /* ConstraintMakerPrioritizable.swift */; };
 		B5188013AA415D5731FB1E95DE730E68 /* UIFont+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46BE364E5AAABDD806DF721CD7476A7 /* UIFont+Add.swift */; };
+		B641467D29ADE9E70037CDF7 /* Funcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B641467C29ADE9E70037CDF7 /* Funcs.swift */; };
 		B66F09AB2938939B002E2D62 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F09AA2938939B002E2D62 /* Position.swift */; };
 		B66F75CA295BE81C006E5E4E /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F75C9295BE81C006E5E4E /* Regex.swift */; };
 		B68F02D609684505FC0BC4F090852E92 /* CGRect+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D010CFFCFC328AC5BBD87196D177F1F /* CGRect+Add.swift */; };
@@ -285,6 +286,7 @@
 		B16658D4E576BD8855D201AAD78F674C /* LocalizedKeyRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalizedKeyRepresentable.swift; sourceTree = "<group>"; };
 		B36B17BDB17156A1E3504204BE0D719F /* UICollectionView+Reusable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Reusable.swift"; sourceTree = "<group>"; };
 		B57B4B15AAC3AB24B43306829FAA77A0 /* ConstraintPriority.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriority.swift; path = Sources/ConstraintPriority.swift; sourceTree = "<group>"; };
+		B641467C29ADE9E70037CDF7 /* Funcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Funcs.swift; sourceTree = "<group>"; };
 		B66F09AA2938939B002E2D62 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		B66F75C9295BE81C006E5E4E /* Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
 		B6A22FF1299F45FB007EA90D /* UIStackView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Add.swift"; sourceTree = "<group>"; };
@@ -579,6 +581,7 @@
 				B6CB8884296677B600E8110A /* StateMachine.swift */,
 				B6CB88862966AA0300E8110A /* Limiter.swift */,
 				B6CB888E2967B92800E8110A /* AttributedString.swift */,
+				B641467C29ADE9E70037CDF7 /* Funcs.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1033,6 +1036,7 @@
 				277DB422A023B6443AB8AD9B02011438 /* Data+Add.swift in Sources */,
 				857AA41207E909C2FBCDB48BE2E8C77C /* DataCodable.swift in Sources */,
 				B6CB8885296677B600E8110A /* StateMachine.swift in Sources */,
+				B641467D29ADE9E70037CDF7 /* Funcs.swift in Sources */,
 				CDB9A2699F5521ABD18C80AE1292142C /* Date+Add.swift in Sources */,
 				8691A8BB5D0F152B30955A44CE147DD4 /* Deque.swift in Sources */,
 				35C995092F75BB31C1F83D1AAE1FEA7D /* Dictionary+Add.swift in Sources */,

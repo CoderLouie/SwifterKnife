@@ -33,6 +33,9 @@ public extension UIStackView {
         self.alignment = alignment
         self.distribution = distribution
     }
+    func addArrangedSubviews(_ views: UIView...) {
+        addArrangedSubviews(views)
+    }
     /// Adds array of views to the end of the arrangedSubviews array.
     ///
     /// - Parameter views: views array.

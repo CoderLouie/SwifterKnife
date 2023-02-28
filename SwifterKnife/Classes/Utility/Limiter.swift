@@ -16,11 +16,7 @@ public protocol SyncLimiter {
 extension SyncLimiter {
     public func execute<T>(_ block: () -> T) -> T? {
         var value: T? = nil
-
-        execute {
-            value = block()
-        }
-
+        execute { value = block() }
         return value
     }
 }
