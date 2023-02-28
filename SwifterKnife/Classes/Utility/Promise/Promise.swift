@@ -314,6 +314,26 @@ public final class Promise<Value> {
             }, onRejected: reject)
         }
     }
+    public func reduce<Next, Result>(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Value) throws -> Promise<Next>,
+        combine: @escaping (_ value: Value, _ next: Next) throws -> Result) -> Promise<Result> {
+        return Promise<Result> { fulfill, reject in
+            self.addCallbacks(on: queue, onFulfilled: { value in
+                do {
+                    try transform(value).then(on: queue, onFulfilled: { next in
+                        do {
+                            fulfill(try combine(value, next))
+                        } catch {
+                            reject(error)
+                        }
+                    }, onRejected: reject)
+                } catch {
+                    reject(error)
+                }
+            }, onRejected: reject)
+        }
+    }
 
     public func map<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
@@ -381,9 +401,8 @@ public final class Promise<Value> {
         _ s: Int,
         on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
         return mapError(on: queue) { error in
-            if let stepErr = error as? StepError {
-//                return StepError(step: s, error: rawError(stepErr))
-                return stepErr
+            if let stepError = error as? StepError { 
+                return stepError
             }
             return StepError(step: s, error: rawError(error))
         }
