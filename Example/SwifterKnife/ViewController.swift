@@ -852,29 +852,29 @@ extension ViewController {
         }
     }
     private func setupBody2() {
-        SudokuView().do { this in
-            this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
-            this.behaviour = .spacing(10, 15)
-//            this.behaviour = .itemLength(50, 130)
-            view.addSubview(this)
-            this.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-                make.centerY.equalToSuperview()
-                make.height.equalToSuperview().multipliedBy(0.7)
-            }
-            this.warpCount = 4
-            
-            for i in 1...5 {
-                let label = UILabel().then {
-                    $0.backgroundColor = .yellow
-                    $0.text = "\(i)"
-                    $0.font = UIFont.systemFont(ofSize: 25)
-                    $0.textAlignment = .center
-                }
-                this.addArrangedView(label)
-            }
-            this.placeArrangedViews()
-        }
+//        SudokuView().do { this in
+//            this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
+//            this.behaviour = .spacing(10, 15)
+////            this.behaviour = .itemLength(50, 130)
+//            view.addSubview(this)
+//            this.snp.makeConstraints { make in
+//                make.leading.trailing.equalToSuperview()
+//                make.centerY.equalToSuperview()
+//                make.height.equalToSuperview().multipliedBy(0.7)
+//            }
+//            this.warpCount = 4
+//            
+//            for i in 1...5 {
+//                let label = UILabel().then {
+//                    $0.backgroundColor = .yellow
+//                    $0.text = "\(i)"
+//                    $0.font = UIFont.systemFont(ofSize: 25)
+//                    $0.textAlignment = .center
+//                }
+//                this.addArrangedView(label)
+//            }
+//            this.placeArrangedViews()
+//        }
     }
     private func setupBody1() {
         let direction: CarouselView.ScrollDirection = .vertical

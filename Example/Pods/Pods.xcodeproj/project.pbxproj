@@ -117,6 +117,7 @@
 		B6CB8885296677B600E8110A /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB8884296677B600E8110A /* StateMachine.swift */; };
 		B6CB88872966AA0300E8110A /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB88862966AA0300E8110A /* Limiter.swift */; };
 		B6CB888F2967B92800E8110A /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB888E2967B92800E8110A /* AttributedString.swift */; };
+		B6D834B029AEF99C004C2BC3 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834AF29AEF99C004C2BC3 /* KeyboardObserver.swift */; };
 		B752F7C4BECB65894B1F49421049CE5F /* ConstraintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458867733779570F7398C76B46AEAF5E /* ConstraintView.swift */; };
 		BB14675EF9F29D99BCC1DA8E7840649E /* UICollectionView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBAB078EC334FF57922452331F71BC4 /* UICollectionView+Add.swift */; };
 		BD47CB74CD9B2B4D2D942C9B65748DFB /* SnapKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 143498449916D71708A8AF2F96E7320A /* SnapKit-dummy.m */; };
@@ -297,6 +298,7 @@
 		B6CB8884296677B600E8110A /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		B6CB88862966AA0300E8110A /* Limiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limiter.swift; sourceTree = "<group>"; };
 		B6CB888E2967B92800E8110A /* AttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
+		B6D834AF29AEF99C004C2BC3 /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		BA50A49AB14A27B030EF455D9943EB8B /* ConstraintLayoutSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupport.swift; path = Sources/ConstraintLayoutSupport.swift; sourceTree = "<group>"; };
 		BB67CFA01D2A73C89E6ED092B3195D53 /* SwifterKnife-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-umbrella.h"; sourceTree = "<group>"; };
 		BC8DFD8FEE78807F86F0544749C80450 /* ConstraintDirectionalInsets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDirectionalInsets.swift; path = Sources/ConstraintDirectionalInsets.swift; sourceTree = "<group>"; };
@@ -582,6 +584,7 @@
 				B6CB88862966AA0300E8110A /* Limiter.swift */,
 				B6CB888E2967B92800E8110A /* AttributedString.swift */,
 				B641467C29ADE9E70037CDF7 /* Funcs.swift */,
+				B6D834AF29AEF99C004C2BC3 /* KeyboardObserver.swift */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -1033,6 +1036,7 @@
 				1B4115CAB3EECF1B9F2ED74FB8DBF964 /* Comparable+Add.swift in Sources */,
 				6F5A074A4FFCB23DF8A1A1CDAEB84DE5 /* Console.swift in Sources */,
 				5FE6B7152EDA0449FBED7467BC18213B /* CustomTextView.swift in Sources */,
+				B6D834B029AEF99C004C2BC3 /* KeyboardObserver.swift in Sources */,
 				277DB422A023B6443AB8AD9B02011438 /* Data+Add.swift in Sources */,
 				857AA41207E909C2FBCDB48BE2E8C77C /* DataCodable.swift in Sources */,
 				B6CB8885296677B600E8110A /* StateMachine.swift in Sources */,

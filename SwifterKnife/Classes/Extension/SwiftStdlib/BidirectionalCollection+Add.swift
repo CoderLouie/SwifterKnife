@@ -18,4 +18,7 @@ public extension BidirectionalCollection {
         return self[indices.index(index, offsetBy: distance)]
     }
  
+    func last<T>(ofType type: T) -> T? {
+        last { $0 is T } as? T
+    }
 }

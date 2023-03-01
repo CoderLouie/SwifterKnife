@@ -89,6 +89,10 @@ public extension Collection {
             start = end
         }
     }
+    
+    func first<T>(ofType type: T) -> T? {
+        first { $0 is T } as? T
+    }
 }
 
 // MARK: - Methods (Equatable)

@@ -34,6 +34,17 @@ public enum App {
         UIApplication.shared.delegate?.window ?? nil
     }
     
+    @available(iOS 13.0, *)
+    public static var keyWindowSecne: UIWindow? {
+        UIApplication.shared.connectedScenes.filter {
+            $0.activationState == .foregroundActive
+        }.first {
+            $0 is UIWindowScene
+        }.flatMap {
+            $0 as? UIWindowScene
+        }?.windows.first(where: \.isKeyWindow)
+    }
+    
     /// 是否处于debug模式
     public static var isDebug: Bool {
         #if DEBUG
