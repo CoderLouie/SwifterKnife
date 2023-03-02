@@ -218,7 +218,7 @@ class DebugViewController: BaseViewController {
     }
     func testChainFunc() {
         let chainedServices = service1
-        >>> { String($1 / 2) }
+        >>> { String($1 / 2) // or throw some error }
         >>? isValidate
         >>> service2
         chainedServices(10) { result in

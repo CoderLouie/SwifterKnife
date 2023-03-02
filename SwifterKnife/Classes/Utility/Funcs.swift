@@ -281,7 +281,7 @@ func service2(_ param: Int, arg: String, _ completionHandler: ResultCompletion<S
     completionHandler(.success("🎉 \(arg)"))
 }
 func isValidate(_ param: Int, arg: String, _ completion: (AppError?) -> Void) {
-    completion(AppError.missed)
+    completion(nil)
 }
 func testChainFunc() {
     let chainedServices = service1
