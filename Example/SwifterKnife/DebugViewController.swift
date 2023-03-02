@@ -70,6 +70,8 @@ fileprivate enum TestCase: String, CaseIterable {
     case throttle = "throttle"
     case defaults = "UserDefaults"
     
+    case statement = "Statement"
+    
     private func peekus() {
         let r = Defaults[\.reviewed]
         let n = Defaults[\.reviewCount]
@@ -82,6 +84,15 @@ fileprivate enum TestCase: String, CaseIterable {
     }
     func perform(from vc: DebugViewController) {
         switch self {
+        case .statement:
+            let point = 70
+//            if_(point >= 90, point < 100) {
+//                
+//            }
+//            let val: Any = 70
+//            let val2 = if_some(val as? Int, and: point > 80) { v in
+//                return v + 10
+//            }
         case .defaults:
             peekus()
             Defaults[\.reviewed] = true
