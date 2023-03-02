@@ -213,15 +213,18 @@ class DebugViewController: BaseViewController {
     func service2(_ param: Int, arg: String, _ completionHandler: ResultCompletion<String, NetError>) {
         completionHandler(.success("🎉 \(arg)"))
     }
+    func isValidate(_ param: Int, arg: String, _ completion: (AppError?) -> Void) {
+        completion(nil)
+    }
     func testChainFunc() {
         let chainedServices = service1
-//        >>> { _ in throw AppError.missed }
         >>> { String($1 / 2) }
+        >>? isValidate
         >>> service2
         chainedServices(10) { result in
             switch result {
             case .success(let val):
-                print(val)
+                print(val)// Prints: 🎉 21
             case .failure(let anyError):
                 let error = anyError.error
                 print(error)

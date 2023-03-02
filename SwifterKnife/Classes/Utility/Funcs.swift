@@ -216,15 +216,16 @@ public typealias GeneralResultCompletion<Success> = ResultCompletion<Success, An
 // MARK: - Solving callback hell with function composition
 // 用函数组合解决回调地狱
 infix operator >>>: MultiplicationPrecedence
+infix operator >>?: MultiplicationPrecedence
 
-public func >>> <T, U, V, E1: Swift.Error, E2: Swift.Error>(
-    _ first: @escaping (V, ResultCompletion<T, E1>) -> Void,
-    _ second: @escaping (V, T, ResultCompletion<U, E2>) -> Void) -> (V, GeneralResultCompletion<U>) -> Void {
-    return { v, completion in
-        first(v) { firstResult  in
+public func >>> <P, T, U, E1: Swift.Error, E2: Swift.Error>(
+    _ first: @escaping (P, ResultCompletion<T, E1>) -> Void,
+    _ second: @escaping (P, T, ResultCompletion<U, E2>) -> Void) -> (P, GeneralResultCompletion<U>) -> Void {
+    return { p, completion in
+        first(p) { firstResult  in
             switch firstResult {
             case .success(let value):
-                second(v, value) { secondResult in
+                second(p, value) { secondResult in
                     completion(secondResult.mapError(AnyError.init(_:)))
                 }
             case .failure(let error):
@@ -233,18 +234,38 @@ public func >>> <T, U, V, E1: Swift.Error, E2: Swift.Error>(
         }
     }
 }
+public func >>? <P, T, E1: Swift.Error>(
+    _ first: @escaping (P, ResultCompletion<T, E1>) -> Void,
+    _ second: @escaping (P, T, (Swift.Error?) -> Void) -> Void) -> (P, GeneralResultCompletion<T>) -> Void {
+    return { p, completion in
+        first(p) { firstResult  in
+            switch firstResult {
+            case .success(let value):
+                second(p, value) { error in
+                    if let error = error {
+                        completion(.failure(AnyError(error)))
+                    } else {
+                        completion(.success(value))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(AnyError(error)))
+            }
+        }
+    }
+}
 
-public func >>> <T, U, V, E: Swift.Error>(
-    _ first: @escaping (V, ResultCompletion<T, E>) -> Void,
-    _ transform: @escaping (V, T) throws -> U) -> (V, GeneralResultCompletion<U>) -> Void {
-    return { v, completion in
-        first(v) { result in
+public func >>> <P, T, U, E: Swift.Error>(
+    _ first: @escaping (P, ResultCompletion<T, E>) -> Void,
+    _ transform: @escaping (P, T) throws -> U) -> (P, GeneralResultCompletion<U>) -> Void {
+    return { p, completion in
+        first(p) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(AnyError(error)))
             case .success(let value):
                 do {
-                    completion(.success(try transform(v, value)))
+                    completion(.success(try transform(p, value)))
                 } catch {
                     completion(.failure(AnyError(error)))
                 }
@@ -259,14 +280,18 @@ func service1(_ param: Int, _ completionHandler: ResultCompletion<Int, AppError>
 func service2(_ param: Int, arg: String, _ completionHandler: ResultCompletion<String, NetError>) {
     completionHandler(.success("🎉 \(arg)"))
 }
+func isValidate(_ param: Int, arg: String, _ completion: (AppError?) -> Void) {
+    completion(AppError.missed)
+}
 func testChainFunc() {
     let chainedServices = service1
     >>> { String($1 / 2) // or throw some error }
+    >>? isValidate
     >>> service2
     chainedServices(10) { result in
         switch result {
         case .success(let val):
-            print(val)
+            print(val)// Prints: 🎉 21
         case .failure(let anyError):
             let error = anyError.error
             print(error)
