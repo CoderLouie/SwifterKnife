@@ -85,7 +85,12 @@ fileprivate enum TestCase: String, CaseIterable {
     func perform(from vc: DebugViewController) {
         switch self {
         case .statement:
-            let point = 70
+            var a = 10, b = 3
+            until(a < b, a - 2 < b) {
+                a -= 1
+                print(a, b)
+            }
+//            let point = 70
 //            if_(point >= 90, point < 100) {
 //                
 //            }

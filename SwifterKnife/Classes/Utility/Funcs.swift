@@ -156,8 +156,29 @@ public extension Optional {
         case .some(let val): return val
         }
     }
-} 
+}
 
+
+public func until(_ condition: @autoclosure () -> Bool, statements: () -> Void) {
+    while !condition() {
+        statements()
+    }
+}
+public func until(_ cond1: @autoclosure () -> Bool,
+                  _ cond2: @autoclosure () -> Bool,
+                  statements: () -> Void) {
+    while !cond1(), !cond2() {
+        statements()
+    }
+}
+public func until(_ cond1: @autoclosure () -> Bool,
+                  _ cond2: @autoclosure () -> Bool,
+                  _ cond3: @autoclosure () -> Bool,
+                  statements: () -> Void) {
+    while !cond1(), !cond2(), !cond3() {
+        statements()
+    }
+}
 
 /*
 public typealias ResultCallback<Success, Failure: Swift.Error> = (Result<Success, Failure>) -> Void
