@@ -18,6 +18,8 @@ open class VirtualView: UIView {
         super.init(frame: frame)
         setup()
     }
+    
+    @available(*, unavailable)
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -143,5 +145,18 @@ public final class SudokuView: VirtualView {
             insHeight = y + rowMaxH
             invalidateIntrinsicContentSize()
         }
+    }
+}
+
+
+
+public extension ConstraintMaker {
+    func horizontalSpace(_ space: CGFloat) {
+        leading.equalTo(space)
+        trailing.equalTo(-space)
+    }
+    func verticalSpace(_ space: CGFloat) {
+        top.equalTo(space)
+        bottom.equalTo(-space)
     }
 }

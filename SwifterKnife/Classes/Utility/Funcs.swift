@@ -52,7 +52,7 @@ public func parallel<T, U>(
 }
 
 
-
+/*
 public func if_<Value>(_ condition: Bool, _ then: () -> Value) -> Value? {
     if condition { return then() }
     return nil
@@ -157,7 +157,7 @@ public extension Optional {
         }
     }
 }
-
+*/
 
 public func until(_ condition: @autoclosure () -> Bool, statements: () -> Void) {
     while !condition() {
@@ -181,40 +181,123 @@ public func until(_ cond1: @autoclosure () -> Bool,
 }
 
 /*
-public typealias ResultCallback<Success, Failure: Swift.Error> = (Result<Success, Failure>) -> Void
+ // 44
+ https://github.com/vincent-pradeilles/swift-tips#transform-an-asynchronous-function-into-a-synchronous-one
+ */
+ 
+public struct AnyError: Swift.Error {
+    public let error: Swift.Error
+    public init(_ error: Swift.Error) {
+        self.error = AnyError.rawError(of: error)
+    }
+    private static func rawError(of error: Swift.Error) -> Swift.Error {
+        if let anyError = error as? AnyError {
+            return rawError(of: anyError.error)
+        }
+        return error
+    }
+}
 
-infix operator ~>: MultiplicationPrecedence
+extension AnyError: CustomStringConvertible {
+    public var description: String {
+        "\(error)"
+    }
+}
+extension AnyError: Equatable {
+    public static func == (lhs: AnyError, rhs: AnyError) -> Bool {
+        lhs.description == rhs.description
+    }
+}
 
-public func ~> <T, U, E>(
-    _ first: @escaping (ResultCallback<T, E>) -> Void,
-    _ second: @escaping (T, ResultCallback<U, E>) -> Void) -> (ResultCallback<U, E>) -> Void {
-    return { completion in
-        first { firstResult  in
+public typealias Provider<T> = () -> T
+public typealias ResultCompletion<Success, Failure: Swift.Error> = (Result<Success, Failure>) -> Void
+public typealias GeneralResultCompletion<Success> = ResultCompletion<Success, AnyError>
+
+// MARK: - Solving callback hell with function composition
+// 用函数组合解决回调地狱
+infix operator >>>: MultiplicationPrecedence
+
+public func >>> <T, U, V, E1: Swift.Error, E2: Swift.Error>(
+    _ first: @escaping (V, ResultCompletion<T, E1>) -> Void,
+    _ second: @escaping (V, T, ResultCompletion<U, E2>) -> Void) -> (V, GeneralResultCompletion<U>) -> Void {
+    return { v, completion in
+        first(v) { firstResult  in
             switch firstResult {
             case .success(let value):
-                second(value) { secondResult in
-                    completion(secondResult)
+                second(v, value) { secondResult in
+                    completion(secondResult.mapError(AnyError.init(_:)))
                 }
             case .failure(let error):
-                completion(.failure(error))
+                completion(.failure(AnyError(error)))
             }
         }
     }
 }
 
-public func ~> <T, U, E>(
-    _ first: @escaping (ResultCallback<T, E>) -> Void,
-    _ transform: @escaping (T) -> U) -> (ResultCallback<U, E>) -> Void {
-    return { completion in
-        first { result in
+public func >>> <T, U, V, E: Swift.Error>(
+    _ first: @escaping (V, ResultCompletion<T, E>) -> Void,
+    _ transform: @escaping (V, T) throws -> U) -> (V, GeneralResultCompletion<U>) -> Void {
+    return { v, completion in
+        first(v) { result in
             switch result {
             case .failure(let error):
-                completion(.failure(error))
+                completion(.failure(AnyError(error)))
             case .success(let value):
-                completion(.success(transform(value)))
+                do {
+                    completion(.success(try transform(v, value)))
+                } catch {
+                    completion(.failure(AnyError(error)))
+                }
             }
+        }
+    }
+}
+/*
+func service1(_ param: Int, _ completionHandler: ResultCompletion<Int, AppError>) {
+    completionHandler(.success(42))
+}
+func service2(_ param: Int, arg: String, _ completionHandler: ResultCompletion<String, NetError>) {
+    completionHandler(.success("🎉 \(arg)"))
+}
+func testChainFunc() {
+    let chainedServices = service1
+    >>> { String($1 / 2) // or throw some error }
+    >>> service2
+    chainedServices(10) { result in
+        switch result {
+        case .success(let val):
+            print(val)
+        case .failure(let anyError):
+            let error = anyError.error
+            print(error)
         }
     }
 }
 */
 
+
+// MARK: - Transform an asynchronous function into a synchronous one
+// 将异步函数转换为同步函数
+public func makeSynchrone<A, B>(_ asyncFunction: @escaping (A, (B) -> Void) -> Void) -> (A) -> B {
+    return { arg in
+        let lock = NSRecursiveLock()
+        
+        var result: B? = nil
+        
+        asyncFunction(arg) {
+            result = $0
+            lock.unlock()
+        }
+        
+        lock.lock()
+        
+        return result!
+    }
+}
+/*
+func myAsyncFunction(arg: Int, completionHandler: (String) -> Void) {
+    completionHandler("🎉 \(arg)")
+}
+let syncFunction = makeSynchrone(myAsyncFunction)
+print(syncFunction(42)) // prints 🎉 42
+*/

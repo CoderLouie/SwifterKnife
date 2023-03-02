@@ -88,6 +88,7 @@ public extension UIView {
     }
 }
 
+// MARK: - Utils
 
 public extension UIView {
     /// Recursively find the first responder.
@@ -104,6 +105,30 @@ public extension UIView {
         } while index < views.count
         return nil
     }
+    
+    /// Remove all subviews in view.
+    func removeSubviews() {
+        while let lastView = subviews.last {
+            lastView.removeFromSuperview()
+        }
+    }
+    
+    /// Remove all gesture recognizers from view.
+    func removeGestureRecognizers() {
+        gestureRecognizers?.forEach(removeGestureRecognizer)
+    }
+    
+    
+    @discardableResult
+    func enqueueSubview<View: UIView>(_ view: View, config: (View) -> Void) -> View {
+        addSubview(view)
+        config(view)
+        return view
+    }
+}
+
+// MARK: - Animation
+public extension UIView {
     
     /// Fade in view.
     ///
@@ -131,18 +156,6 @@ public extension UIView {
         UIView.animate(withDuration: duration, animations: {
             self.alpha = 0
         }, completion: completion)
-    }
-    
-    /// Remove all subviews in view.
-    func removeSubviews() {
-        while let lastView = subviews.last {
-            lastView.removeFromSuperview()
-        }
-    }
-    
-    /// Remove all gesture recognizers from view.
-    func removeGestureRecognizers() {
-        gestureRecognizers?.forEach(removeGestureRecognizer)
     }
     
     /// Rotate view by angle on relative axis.
@@ -246,6 +259,11 @@ public extension UIView {
             layer.add(animation, forKey: "shake")
             CATransaction.commit()
         }
+}
+
+// MARK: - Search
+
+public extension UIView {
     
     /// Search all superviews until a view with the condition is found.
     ///

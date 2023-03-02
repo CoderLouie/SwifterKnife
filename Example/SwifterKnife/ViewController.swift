@@ -852,6 +852,9 @@ extension ViewController {
         }
     }
     private func setupBody2() {
+        let label = UILabel().chain.text("hello").font(.systemFont(ofSize: 12)).object.then { _ in
+            
+        }
 //        SudokuView().do { this in
 //            this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
 //            this.behaviour = .spacing(10, 15)

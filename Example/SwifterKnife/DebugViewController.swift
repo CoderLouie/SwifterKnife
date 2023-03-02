@@ -193,6 +193,10 @@ class Resource: CustomStringConvertible {
 }
 extension Resource: Then {}
 
+enum AppError: Swift.Error {
+    case missed
+}
+enum NetError: Swift.Error {}
 class DebugViewController: BaseViewController {
 //    lazy var mapPresentAd = Knife.throttle(presentAd(_:))
     func presentAd(_ completion: @escaping () -> Void) {
@@ -202,7 +206,28 @@ class DebugViewController: BaseViewController {
             print("exit presentAd")
         }
     }
-    
+     
+    func service1(_ param: Int, _ completionHandler: ResultCompletion<Int, AppError>) {
+        completionHandler(.success(42))
+    }
+    func service2(_ param: Int, arg: String, _ completionHandler: ResultCompletion<String, NetError>) {
+        completionHandler(.success("🎉 \(arg)"))
+    }
+    func testChainFunc() {
+        let chainedServices = service1
+//        >>> { _ in throw AppError.missed }
+        >>> { String($1 / 2) }
+        >>> service2
+        chainedServices(10) { result in
+            switch result {
+            case .success(let val):
+                print(val)
+            case .failure(let anyError):
+                let error = anyError.error
+                print(error)
+            }
+        }
+    }
     override func setupViews() {
         super.setupViews()
         title = "Debug"
