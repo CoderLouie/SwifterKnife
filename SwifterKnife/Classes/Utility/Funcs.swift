@@ -234,9 +234,9 @@ public func >>> <P, T, U, E1: Swift.Error, E2: Swift.Error>(
         }
     }
 }
-public func >>? <P, T, E1: Swift.Error, E2: Swift.Error>(
+public func >>? <P, T, E1: Swift.Error>(
     _ first: @escaping (P, @escaping ResultCompletion<T, E1>) -> Void,
-    _ second: @escaping (P, T, @escaping (E2?) -> Void) -> Void) -> (P, @escaping GeneralResultCompletion<T>) -> Void {
+    _ second: @escaping (P, T, @escaping (Swift.Error?) -> Void) -> Void) -> (P, @escaping GeneralResultCompletion<T>) -> Void {
     return { p, completion in
         first(p) { firstResult  in
             switch firstResult {

@@ -213,26 +213,23 @@ class DebugViewController: BaseViewController {
     func service2(_ param: Int, arg: String, _ completion: @escaping ResultCompletion<String, NetError>) {
         completion(.success("🎉 \(arg)"))
     }
-    func isValidate1(_ param: Int, arg: String, _ completion: @escaping (AppError?) -> Void) {
-        completion(nil)
-    }
-    func isValidate2(_ param: Int, arg: Int, _ completion: @escaping (AppError?) -> Void) {
+    func isValidate(_ param: Int, arg: String, _ completion: @escaping (AppError?) -> Void) {
         completion(nil)
     }
     func testChainFunc() {
-        let a = isValidate1
         let chainedServices = service1
-        >>> { (p, v) -> String in return String(v / 2) }// or throw some error
-        >>? isValidate1
+        >>> { String($1 / 2) }// or throw some error
+        >>? isValidate
         >>> service2
-//        chainedServices(10) { result in
-//            switch result {
-//            case .success(let val):
-//                print(val)// Prints: 🎉 21
-//            case .failure(let anyError):
-//                let error = anyError.error
-//                print(error)
-//            }
+        chainedServices(10) { result in
+            switch result {
+            case .success(let val):
+                print(val)// Prints: 🎉 21
+            case .failure(let anyError):
+                let error = anyError.error
+                print(error)
+            }
+        }
     }
     override func setupViews() {
         super.setupViews()
