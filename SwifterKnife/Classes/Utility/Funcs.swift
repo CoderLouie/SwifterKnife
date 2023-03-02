@@ -219,8 +219,8 @@ infix operator >>>: MultiplicationPrecedence
 infix operator >>?: MultiplicationPrecedence
 
 public func >>> <P, T, U, E1: Swift.Error, E2: Swift.Error>(
-    _ first: @escaping (P, ResultCompletion<T, E1>) -> Void,
-    _ second: @escaping (P, T, ResultCompletion<U, E2>) -> Void) -> (P, GeneralResultCompletion<U>) -> Void {
+    _ first: @escaping (P, @escaping ResultCompletion<T, E1>) -> Void,
+    _ second: @escaping (P, T, @escaping ResultCompletion<U, E2>) -> Void) -> (P, @escaping GeneralResultCompletion<U>) -> Void {
     return { p, completion in
         first(p) { firstResult  in
             switch firstResult {
@@ -234,9 +234,9 @@ public func >>> <P, T, U, E1: Swift.Error, E2: Swift.Error>(
         }
     }
 }
-public func >>? <P, T, E1: Swift.Error>(
-    _ first: @escaping (P, ResultCompletion<T, E1>) -> Void,
-    _ second: @escaping (P, T, (Swift.Error?) -> Void) -> Void) -> (P, GeneralResultCompletion<T>) -> Void {
+public func >>? <P, T, E1: Swift.Error, E2: Swift.Error>(
+    _ first: @escaping (P, @escaping ResultCompletion<T, E1>) -> Void,
+    _ second: @escaping (P, T, @escaping (E2?) -> Void) -> Void) -> (P, @escaping GeneralResultCompletion<T>) -> Void {
     return { p, completion in
         first(p) { firstResult  in
             switch firstResult {
@@ -256,8 +256,8 @@ public func >>? <P, T, E1: Swift.Error>(
 }
 
 public func >>> <P, T, U, E: Swift.Error>(
-    _ first: @escaping (P, ResultCompletion<T, E>) -> Void,
-    _ transform: @escaping (P, T) throws -> U) -> (P, GeneralResultCompletion<U>) -> Void {
+    _ first: @escaping (P, @escaping ResultCompletion<T, E>) -> Void,
+    _ transform: @escaping (P, T) throws -> U) -> (P, @escaping GeneralResultCompletion<U>) -> Void {
     return { p, completion in
         first(p) { result in
             switch result {
@@ -285,7 +285,7 @@ func isValidate(_ param: Int, arg: String, _ completion: (AppError?) -> Void) {
 }
 func testChainFunc() {
     let chainedServices = service1
-    >>> { String($1 / 2) // or throw some error }
+    >>> { String($1 / 2) }// or throw some error 
     >>? isValidate
     >>> service2
     chainedServices(10) { result in
