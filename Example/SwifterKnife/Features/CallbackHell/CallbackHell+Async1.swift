@@ -1,25 +1,12 @@
 //
-//  CallbackHell.swift
-//  BatterySwap
+//  CallbackHell+Async1.swift
+//  SwifterKnife_Example
 //
-//  Created by 李阳 on 2023/3/2.
+//  Created by 李阳 on 2023/3/3.
+//  Copyright © 2023 CocoaPods. All rights reserved.
 //
 
-import Foundation
-
-public struct AnyError: Swift.Error {
-    let error: Swift.Error
-    init(_ error: Swift.Error) {
-        self.error = AnyError.rawError(of: error)
-    }
-    
-    private static func rawError(of error: Swift.Error) -> Swift.Error {
-        if let anyError = error as? AnyError {
-            return rawError(of: anyError.error)
-        }
-        return error
-    }
-}
+import Foundation 
 
 public typealias GeneralAsync<V> = Async<V, AnyError>
 
@@ -120,4 +107,43 @@ extension Async where Error == AnyError {
     static func failed(_ error: Swift.Error) -> Async {
         Async { $0(.failure(AnyError(error))) }
     }
+}
+
+fileprivate func service1(_ completion: @escaping Async<Int, AppError>.ResultCompletion) {
+    DispatchQueue.main.after(1) {
+        completion(.success(52))
+    }
+}
+fileprivate func isValidate(arg: Int, _ completion: @escaping (AppError?) -> Void) {
+    if arg > 50 {
+        completion(.big)
+    } else if arg < 20 {
+        completion(.small)
+    } else {
+        completion(nil)
+    }
+}
+
+fileprivate func service2(arg: String, _ completion: @escaping Async<String, AppError>.ResultCompletion) {
+    DispatchQueue.main.after(2) {
+        completion(.success("🎉 \(arg)"))
+    }
+}
+fileprivate func service3(arg: String) -> Async<String, AppError> {
+    .init { completion in
+        DispatchQueue.main.after(2) {
+            completion(.success("🎉 \(arg)"))
+        }
+    }
+}
+
+func async1_test() {
+    Async(service1)
+        .validate(isValidate)
+        .map { String($0 / 2) }
+        .flatMap(service2)
+//        .flatMap(service3(arg:))
+        .execute { result in
+            print(result)
+        }
 }

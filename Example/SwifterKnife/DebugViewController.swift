@@ -192,10 +192,7 @@ class Resource: CustomStringConvertible {
     }
 }
 extension Resource: Then {}
-
-enum AppError: Swift.Error {
-    case missed
-}
+ 
 enum NetError: Swift.Error {}
 class DebugViewController: BaseViewController {
 //    lazy var mapPresentAd = Knife.throttle(presentAd(_:))
@@ -207,56 +204,7 @@ class DebugViewController: BaseViewController {
         }
     }
      
-    func service1(_ param: Int, _ completion: @escaping ResultCompletion<Int, AppError>) {
-        completion(.success(42))
-    }
-    func service2(_ param: Int, arg: String, _ completion: @escaping ResultCompletion<String, NetError>) {
-        completion(.success("🎉 \(arg)"))
-    }
-    func isValidate(_ param: Int, arg: String, _ completion: @escaping (AppError?) -> Void) {
-        completion(nil)
-    }
-    func testChainFunc1() {
-        let chainedServices = service1
-        >>> { String($1 / 2) }// or throw some error
-        >>? isValidate
-        >>> service2
-        chainedServices(10) { result in
-            switch result {
-            case .success(let val):
-                print(val)// Prints: 🎉 21
-            case .failure(let anyError):
-                let error = anyError.error
-                print(error)
-            }
-        }
-    }
     
-    
-   func service11(_ completion: @escaping ResultCompletion<Int, AppError>) {
-       completion(.success(42))
-   }
-   func service12(arg: String, _ completion: @escaping ResultCompletion<String, NetError>) {
-       completion(.success("🎉 \(arg)"))
-   }
-   func isValidate11(arg: String, _ completion: @escaping (AppError?) -> Void) {
-       completion(nil)
-   }
-   func testChainFunc2() {
-       let chainedServices = service11
-       >>> { String($0 / 2) }// or throw some error
-       >>? isValidate11
-       >>> service12
-       chainedServices { result in
-           switch result {
-           case .success(let val):
-               print(val)// Prints: 🎉 21
-           case .failure(let anyError):
-               let error = anyError.error
-               print(error)
-           }
-       }
-   }
     
     override func setupViews() {
         super.setupViews()
