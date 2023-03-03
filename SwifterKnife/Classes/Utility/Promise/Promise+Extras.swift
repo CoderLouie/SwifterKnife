@@ -238,6 +238,22 @@ extension Promises {
 }
 
 extension Promise {
+    public func chain<T1>(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
+        return Promise<(Value, T1)> { fulfill, reject in
+            self.then(on: queue, onFulfilled: { value in
+                do {
+                    try transform(value).then(on: queue, onFulfilled: {
+                        fulfill((value, $0))
+                    }, onRejected: reject)
+                } catch {
+                    reject(error)
+                }
+            }, onRejected: reject)
+        }
+    }
+    
     public func addTimeout(_ timeout: TimeInterval) -> Promise<Value> {
         let promise = Promise<Value>()
         then {
@@ -274,14 +290,14 @@ extension Promise {
             }
         }
     }
-    public func replace(replacerOnFulfilled: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
+    public func replace(replacerOnFulfill: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
         if replacerOnReject == nil,
-            replacerOnFulfilled == nil {
+           replacerOnFulfill == nil {
             return self
         }
         return Promise { fulfill, reject in
             self.then { val in
-                guard let tranform = replacerOnFulfilled else {
+                guard let tranform = replacerOnFulfill else {
                     fulfill(val)
                     return
                 }

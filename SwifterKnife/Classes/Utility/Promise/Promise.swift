@@ -212,6 +212,7 @@ public final class Promise<Value> {
             }
         }
     }
+    
     public static func create(
         queue: DispatchQueue = .global(qos: .userInitiated),
         work: @escaping (
@@ -219,6 +220,7 @@ public final class Promise<Value> {
             _ reject: @escaping (Error) -> Void) throws -> Void) -> Promise<Value> {
         return .init(queue: queue, work: work)
     }
+    
     public static func create(
         queue: DispatchQueue = .global(qos: .userInitiated),
         work: @escaping (Promise<Value>) -> Void) -> Promise<Value> {
@@ -227,13 +229,12 @@ public final class Promise<Value> {
             work(promise)
         }
         return promise
-    } 
+    }
     
     public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Success, Failure>) -> Void  {
-        return { result in
-            self.consume(result, mapSuccess, mapError)
-        }
+        return { self.consume($0, mapSuccess, mapError) }
     }
+    
     public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, _ mapSuccess: (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error)? = nil) {
         switch result {
         case .success(let success):
@@ -250,11 +251,11 @@ public final class Promise<Value> {
             reject(mapError?(e) ?? e)
         }
     }
+    
     public func produce<Failure: Swift.Error>(_ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Value, Failure>) -> Void  {
-        return { result in
-            self.consume(result, mapError)
-        }
+        return { self.consume($0, mapError) }
     }
+    
     public func consume<Failure: Swift.Error>(_ result: Result<Value, Failure>, _ mapError: ((Failure) -> Swift.Error)? = nil) {
         switch result {
         case .success(let success):
@@ -267,7 +268,7 @@ public final class Promise<Value> {
     /**
      调用这个方法的线程和将来调用fulfill或者reject方法不能是同一个线程，否则会死锁
      */
-    public func awaitCompleted() throws -> Value {
+    public func awaitCompleted() -> Swift.Result<Value, Swift.Error> {
         let semaphore = DispatchSemaphore(value: 0)
         var result: Result<Value, Swift.Error> = .failure(PromiseError.timeout)
         then(on: DispatchQueue.promiseAwait) { value in
@@ -278,17 +279,20 @@ public final class Promise<Value> {
             semaphore.signal()
         }
         semaphore.wait()
-        return try result.get()
+        return result
+    }
+    public func awaitCompleted() throws -> Value {
+        try awaitCompleted().get()
     }
     public func awaitFulfilled() -> Value {
-        try! awaitCompleted()
+        try! awaitCompleted().get()
     }
     
     public func asyncFlatMap<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
         closure: @escaping (_ value: Value, _ completion: @escaping (Result<Promise<NewValue>, Swift.Error>) -> Void) -> Void) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { value in
+            self.then(on: queue, onFulfilled: { value in
                 closure(value) { result in
                     switch result {
                     case .success(let promise):
@@ -305,7 +309,7 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { value in
+            self.then(on: queue, onFulfilled: { value in
                 do {
                     try transform(value).then(on: queue, onFulfilled: fulfill, onRejected: reject)
                 } catch {
@@ -319,7 +323,7 @@ public final class Promise<Value> {
         transform: @escaping (Value) throws -> Promise<Next>,
         combine: @escaping (_ value: Value, _ next: Next) throws -> Result) -> Promise<Result> {
         return Promise<Result> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { value in
+            self.then(on: queue, onFulfilled: { value in
                 do {
                     try transform(value).then(on: queue, onFulfilled: { next in
                         do {
@@ -339,7 +343,7 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> NewValue) -> Promise<NewValue> {
         return Promise<NewValue> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { val in
+            self.then(on: queue, onFulfilled: { val in
                 do {
                     let newVal = try transform(val)
                     fulfill(newVal)
@@ -352,7 +356,7 @@ public final class Promise<Value> {
     
     public func delay(_ delay: TimeInterval) -> Promise<Value> {
         return Promise<Value> { fulfill, reject in
-            self.addCallbacks { value in
+            self.then { value in
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     fulfill(value)
                 }
@@ -368,7 +372,7 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main,
         test: @escaping (_ value: Value, _ completion: @escaping (Swift.Error?) -> Void) -> Void) -> Promise<Value> {
         return Promise<Value> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { value in
+            self.then(on: queue, onFulfilled: { value in
                 test(value) { error in
                     if let err = error {
                         reject(err)
@@ -383,7 +387,7 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<Placholder>) -> Promise<Value> {
         return Promise<Value> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { value in
+            self.then(on: queue, onFulfilled: { value in
                 do {
                     try transform(value).then(on: queue, onFulfilled: { _ in
                         fulfill(value)
@@ -399,7 +403,7 @@ public final class Promise<Value> {
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
         return Promise<Value> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: fulfill) { error in
+            self.then(on: queue, onFulfilled: fulfill) { error in
                 do {
                     let newError = try transform(error)
                     reject(newError)
@@ -421,21 +425,12 @@ public final class Promise<Value> {
             return StepError(step: s, error: rawError(error))
         }
     }
-
     
-    @discardableResult
-    public func then(
-        on queue: ExecutionContext = DispatchQueue.main,
-        onFulfilled: @escaping (Value) -> Void,
-        onRejected: @escaping (Error) -> Void = { _ in }) -> Promise<Value> {
-        addCallbacks(on: queue, onFulfilled: onFulfilled, onRejected: onRejected)
-        return self
-    }
     @discardableResult
     public func eraser(
         on queue: ExecutionContext = DispatchQueue.main,
         _ handler: @escaping (Swift.Error?) -> Void) -> Promise<Value> {
-        addCallbacks(on: queue) { _ in
+        then(on: queue) { _ in
             handler(nil)
         } onRejected: {
             handler($0)
@@ -446,7 +441,7 @@ public final class Promise<Value> {
     public func handle(
         on queue: ExecutionContext = DispatchQueue.main,
         _ handler: @escaping (Result<Value, Swift.Error>) -> Void) -> Promise<Value> {
-        addCallbacks(on: queue) {
+        then(on: queue) {
             handler(.success($0))
         } onRejected: {
             handler(.failure($0))
@@ -520,18 +515,12 @@ public final class Promise<Value> {
         }
     }
     
-    private func updateState(_ newState: State<Value>) {
-        lockQueue.async {
-            guard case .pending(let callbacks) = self.state else { return }
-            self.state = newState
-            self.fireIfCompleted(callbacks: callbacks)
-        }
-    }
     
-    private func addCallbacks(
+    @discardableResult
+    public func then(
         on queue: ExecutionContext = DispatchQueue.main,
         onFulfilled: @escaping (Value) -> Void,
-        onRejected: @escaping (Error) -> Void) {
+        onRejected: @escaping (Error) -> Void = { _ in }) -> Promise<Value> {
         let callback = Callback(onFulfilled: onFulfilled, onRejected: onRejected, executionContext: queue)
         lockQueue.async(flags: .barrier) {
             switch self.state {
@@ -542,6 +531,15 @@ public final class Promise<Value> {
             case .rejected(let error):
                 callback.callReject(error)
             }
+        }
+        return self
+    }
+    
+    private func updateState(_ newState: State<Value>) {
+        lockQueue.async {
+            guard case .pending(let callbacks) = self.state else { return }
+            self.state = newState
+            self.fireIfCompleted(callbacks: callbacks)
         }
     }
     
@@ -569,27 +567,7 @@ public final class Promise<Value> {
             }
         }
     }
-}
-
-
-extension Promise {
-    public func chain<T1>(
-        on queue: ExecutionContext = DispatchQueue.main,
-        transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
-        return Promise<(Value, T1)> { fulfill, reject in
-            self.addCallbacks(on: queue, onFulfilled: { value in
-                do {
-                    try transform(value).then(on: queue, onFulfilled: {
-                        fulfill((value, $0))
-                    }, onRejected: reject)
-                } catch {
-                    reject(error)
-                }
-            }, onRejected: reject)
-        }
-    }
-    
-}
+} 
 
 public typealias AnyPromise = Promise<Any>
 public typealias VoidPromise = Promise<Void>
@@ -597,5 +575,7 @@ public typealias BoolPromise = Promise<Bool>
 public typealias IntPromise = Promise<Int>
 public typealias StringPromise = Promise<String>
 public typealias DataPromise = Promise<Data>
-public typealias JSONPromise = Promise<[String: Any]>
+public typealias DictPromise = Promise<[String: Any]>
 public typealias ArrayPromise<Element> = Promise<[Element]>
+public typealias JSONPromise = Promise<JSON>
+

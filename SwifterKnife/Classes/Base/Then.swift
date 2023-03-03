@@ -107,6 +107,13 @@ public struct Chain<Object: AnyObject> {
             return self
         }
     }
+    public subscript<Value>(dynamicMember keyPath: WritableKeyPath<Object, Value>) -> (Value) -> Chain<Object> {
+        var object = self.object
+        return {
+            object[keyPath: keyPath] = $0
+            return Chain(object)
+        }
+    }
     
     @inlinable
     public func then(_ block: (Object) throws -> Void) rethrows -> Object {

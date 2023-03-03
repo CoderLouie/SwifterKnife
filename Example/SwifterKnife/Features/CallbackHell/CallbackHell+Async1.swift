@@ -8,9 +8,9 @@
 
 import Foundation 
 
-public typealias GeneralAsync<V> = Async<V, AnyError>
+public typealias GeneralAsync1<V> = Async1<V, AnyError>
 
-public struct Async<Value, Error: Swift.Error> {
+public struct Async1<Value, Error: Swift.Error> {
     public typealias Result = Swift.Result<Value, Error>
     public typealias ResultCompletion = (Result) -> Void
     public typealias Trunk = (@escaping ResultCompletion) -> Void
@@ -24,7 +24,7 @@ public struct Async<Value, Error: Swift.Error> {
         trunk(completion)
     }
     
-    func map<U>(_ transform: @escaping (Value) throws -> U) -> GeneralAsync<U> {
+    func map<U>(_ transform: @escaping (Value) throws -> U) -> GeneralAsync1<U> {
         .init { completion in
             execute { result in
                 switch result {
@@ -41,7 +41,7 @@ public struct Async<Value, Error: Swift.Error> {
         }
     }
     
-    func flatMap<U, E: Swift.Error>(_ transform: @escaping (Value) throws -> Async<U, E>) -> GeneralAsync<U> {
+    func flatMap<U, E: Swift.Error>(_ transform: @escaping (Value) throws -> Async1<U, E>) -> GeneralAsync1<U> {
         .init { completion in
             execute { result in
                 switch result {
@@ -59,7 +59,7 @@ public struct Async<Value, Error: Swift.Error> {
             }
         }
     }
-    func flatMap<U, E: Swift.Error>(_ transform: @escaping (Value, @escaping Async<U, E>.ResultCompletion) -> Void) -> GeneralAsync<U> {
+    func flatMap<U, E: Swift.Error>(_ transform: @escaping (Value, @escaping Async1<U, E>.ResultCompletion) -> Void) -> GeneralAsync1<U> {
         .init { completion in
             execute { result in
                 switch result {
@@ -74,7 +74,7 @@ public struct Async<Value, Error: Swift.Error> {
         }
     }
     
-    func validate(_ work: @escaping (Value, @escaping (Swift.Error?) -> Void) -> Void) -> GeneralAsync<Value> {
+    func validate(_ work: @escaping (Value, @escaping (Swift.Error?) -> Void) -> Void) -> GeneralAsync1<Value> {
         .init { completion in
             execute { result in
                 switch result {
@@ -94,22 +94,22 @@ public struct Async<Value, Error: Swift.Error> {
     }
 }
 
-extension Async {
-    static func success(_ value: Value) -> Async {
-        Async { $0(.success(value)) }
+extension Async1 {
+    static func success(_ value: Value) -> Async1 {
+        Async1 { $0(.success(value)) }
     }
-    static func failed(_ error: Error) -> Async {
-        Async { $0(.failure(error)) }
-    }
-}
-
-extension Async where Error == AnyError {
-    static func failed(_ error: Swift.Error) -> Async {
-        Async { $0(.failure(AnyError(error))) }
+    static func failed(_ error: Error) -> Async1 {
+        Async1 { $0(.failure(error)) }
     }
 }
 
-fileprivate func service1(_ completion: @escaping Async<Int, AppError>.ResultCompletion) {
+extension Async1 where Error == AnyError {
+    static func failed(_ error: Swift.Error) -> Async1 {
+        Async1 { $0(.failure(AnyError(error))) }
+    }
+}
+
+fileprivate func service1(_ completion: @escaping Async1<Int, AppError>.ResultCompletion) {
     DispatchQueue.main.after(1) {
         completion(.success(52))
     }
@@ -124,12 +124,12 @@ fileprivate func isValidate(arg: Int, _ completion: @escaping (AppError?) -> Voi
     }
 }
 
-fileprivate func service2(arg: String, _ completion: @escaping Async<String, AppError>.ResultCompletion) {
+fileprivate func service2(arg: String, _ completion: @escaping Async1<String, AppError>.ResultCompletion) {
     DispatchQueue.main.after(2) {
         completion(.success("🎉 \(arg)"))
     }
 }
-fileprivate func service3(arg: String) -> Async<String, AppError> {
+fileprivate func service3(arg: String) -> Async1<String, AppError> {
     .init { completion in
         DispatchQueue.main.after(2) {
             completion(.success("🎉 \(arg)"))
@@ -138,7 +138,7 @@ fileprivate func service3(arg: String) -> Async<String, AppError> {
 }
 
 func async1_test() {
-    Async(service1)
+    Async1(service1)
         .validate(isValidate)
         .map { String($0 / 2) }
         .flatMap(service2)
