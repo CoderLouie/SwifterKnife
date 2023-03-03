@@ -252,13 +252,7 @@ public final class Promise<Value> {
         }
     }
     
-//    public func produceError(_ mapError: ((Swift.Error) -> Swift.Error)? = nil) -> (Swift.Error?) -> Void {
-//        { error in
-//            if let err = error {
-//                self.reject(mapError?(err) ?? err)
-//            }
-//        }
-//    }
+    
     public func produce<Failure: Swift.Error>(_ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Value, Failure>) -> Void  {
         return { self.consume($0, mapError) }
     }
