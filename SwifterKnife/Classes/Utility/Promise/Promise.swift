@@ -252,6 +252,13 @@ public final class Promise<Value> {
         }
     }
     
+//    public func produceError(_ mapError: ((Swift.Error) -> Swift.Error)? = nil) -> (Swift.Error?) -> Void {
+//        { error in
+//            if let err = error {
+//                self.reject(mapError?(err) ?? err)
+//            }
+//        }
+//    }
     public func produce<Failure: Swift.Error>(_ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Value, Failure>) -> Void  {
         return { self.consume($0, mapError) }
     }
@@ -425,18 +432,7 @@ public final class Promise<Value> {
             return StepError(step: s, error: rawError(error))
         }
     }
-    
-    @discardableResult
-    public func eraser(
-        on queue: ExecutionContext = DispatchQueue.main,
-        _ handler: @escaping (Swift.Error?) -> Void) -> Promise<Value> {
-        then(on: queue) { _ in
-            handler(nil)
-        } onRejected: {
-            handler($0)
-        }
-        return self
-    }
+     
     @discardableResult
     public func handle(
         on queue: ExecutionContext = DispatchQueue.main,
