@@ -22,13 +22,149 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
+public final class ConstraintMakerExtendable {
+    
+    internal let description: ConstraintDescription
+    
+    internal init(_ description: ConstraintDescription) {
+        self.description = description
+    }
+    
+    internal func relatedTo(_ other: ConstraintRelatableTarget, relation: ConstraintRelation, file: String, line: UInt) -> ConstraintMakerEditable {
+        let related: ConstraintItem
+        let constant: ConstraintConstantTarget
+        
+        if let other = other as? ConstraintItem {
+            let otherAttributes = other.attributes
+            let otherLayoutAttributes = otherAttributes.layoutAttributes
+            
+            let selfAttributes = description.attributes
+            let selfLayoutAttributes = selfAttributes.layoutAttributes
+            
+            guard otherAttributes == ConstraintAttributes.none ||
+                    otherLayoutAttributes.count <= 1 ||
+                    otherLayoutAttributes == selfLayoutAttributes ||
+                    otherAttributes == .edges && selfAttributes == .margins ||
+                    otherAttributes == .margins ||
+                    otherAttributes == .directionalEdges && selfAttributes == .directionalMargins ||
+                    otherAttributes == .directionalMargins else {
+                        fatalError("Cannot constraint to multiple non identical attributes. (\(file), \(line))");
+                    }
+            
+            related = other
+            constant = 0.0
+        } else if let other = other as? ConstraintView {
+            related = ConstraintItem(target: other, attributes: .none)
+            constant = 0.0
+        } else if let other = other as? ConstraintConstantTarget {
+            related = ConstraintItem(target: nil, attributes: .none)
+            constant = other
+        } else if #available(iOS 9.0, OSX 10.11, *), let other = other as? ConstraintLayoutGuide {
+            related = ConstraintItem(target: other, attributes: .none)
+            constant = 0.0
+        } else {
+            fatalError("Invalid constraint. (\(file), \(line))")
+        }
+        
+        let editable = ConstraintMakerEditable(description)
+        editable.description.sourceLocation = (file, line)
+        editable.description.relation = relation
+        editable.description.related = related
+        editable.description.constant = constant
+        return editable
+    }
+    
+    @discardableResult
+    public func equalTo(_ other: ConstraintRelatableTarget, _ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        return relatedTo(other, relation: .equal, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func equalToSuperview(_ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        guard let other = description.item.superview else {
+            fatalError("Expected superview but found nil when attempting make constraint `equalToSuperview`.")
+        }
+        return relatedTo(other, relation: .equal, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func lessThanOrEqualTo(_ other: ConstraintRelatableTarget, _ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        return relatedTo(other, relation: .lessThanOrEqual, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func lessThanOrEqualToSuperview(_ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        guard let other = description.item.superview else {
+            fatalError("Expected superview but found nil when attempting make constraint `lessThanOrEqualToSuperview`.")
+        }
+        return relatedTo(other, relation: .lessThanOrEqual, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func greaterThanOrEqualTo(_ other: ConstraintRelatableTarget, _ file: String = #file, line: UInt = #line) -> ConstraintMakerEditable {
+        return relatedTo(other, relation: .greaterThanOrEqual, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func greaterThanOrEqualToSuperview(_ file: String = #file, line: UInt = #line) -> ConstraintMakerEditable {
+        guard let other = description.item.superview else {
+            fatalError("Expected superview but found nil when attempting make constraint `greaterThanOrEqualToSuperview`.")
+        }
+        return relatedTo(other, relation: .greaterThanOrEqual, file: file, line: line)
+    }
+}
 
-public class ConstraintMakerExtendable: ConstraintMakerRelatable {
+extension ConstraintMakerExtendable {
+    
+    @discardableResult
+    public func equalToSelf(_ keyPath: KeyPath<ConstraintBasicAttributesDSL, ConstraintItem>, _ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        guard let snp = self.description.item._snp else {
+            fatalError("Expected snp but found nil when attempting make constraint `equalToSelf`.")
+        }
+        return equalTo(snp[keyPath: keyPath], file, line)
+    }
+    
+    @discardableResult
+    public func equalToSelfWidth(_ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        return equalToSelf(\.width, file, line)
+    }
+    
+    @discardableResult
+    public func equalToSelfHeight(_ file: String = #file, _ line: UInt = #line) -> ConstraintMakerEditable {
+        return equalToSelf(\.height, file, line)
+    }
+    
+    @discardableResult
+    public func equalToSuperview<T: ConstraintRelatableTarget>(_ closure: (ConstraintView) -> T, _ file: String = #file, line: UInt = #line) -> ConstraintMakerEditable {
+        guard let other = self.description.item.superview else {
+            fatalError("Expected superview but found nil when attempting make constraint `equalToSuperview`.")
+        }
+        return self.relatedTo(closure(other), relation: .equal, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func lessThanOrEqualToSuperview<T: ConstraintRelatableTarget>(_ closure: (ConstraintView) -> T, _ file: String = #file, line: UInt = #line) -> ConstraintMakerEditable {
+        guard let other = self.description.item.superview else {
+            fatalError("Expected superview but found nil when attempting make constraint `lessThanOrEqualToSuperview`.")
+        }
+        return self.relatedTo(closure(other), relation: .lessThanOrEqual, file: file, line: line)
+    }
+    
+    @discardableResult
+    public func greaterThanOrEqualToSuperview<T: ConstraintRelatableTarget>(_ closure: (ConstraintView) -> T, _ file: String = #file, line: UInt = #line) -> ConstraintMakerEditable {
+        guard let other = self.description.item.superview else {
+            fatalError("Expected superview but found nil when attempting make constraint `greaterThanOrEqualToSuperview`.")
+        }
+        return self.relatedTo(closure(other), relation: .greaterThanOrEqual, file: file, line: line)
+    }
+}
+
+extension ConstraintMakerExtendable {
     
     public var left: ConstraintMakerExtendable {
         self.description.attributes += .left
@@ -78,7 +214,7 @@ public class ConstraintMakerExtendable: ConstraintMakerRelatable {
     public var centerY: ConstraintMakerExtendable {
         self.description.attributes += .centerY
         return self
-    } 
+    }
     
     public var lastBaseline: ConstraintMakerExtendable {
         self.description.attributes += .lastBaseline
@@ -176,10 +312,10 @@ public class ConstraintMakerExtendable: ConstraintMakerRelatable {
     
     @available(iOS 8.0, *)
     public var directionalMargins: ConstraintMakerExtendable {
-      self.description.attributes += .directionalMargins
-      return self
+        self.description.attributes += .directionalMargins
+        return self
     }
-
+    
     @available(iOS 8.0, *)
     public var centerWithinMargins: ConstraintMakerExtendable {
         self.description.attributes += .centerWithinMargins

@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -50,22 +50,30 @@ extension ConstraintInsets: ConstraintInsetTarget {
 }
 
 extension ConstraintInsetTarget {
-
+    
     internal var constraintInsetTargetValue: ConstraintInsets {
         if let amount = self as? ConstraintInsets {
             return amount
-        } else if let amount = self as? Float {
-            return ConstraintInsets(top: CGFloat(amount), left: CGFloat(amount), bottom: CGFloat(amount), right: CGFloat(amount))
-        } else if let amount = self as? Double {
-            return ConstraintInsets(top: CGFloat(amount), left: CGFloat(amount), bottom: CGFloat(amount), right: CGFloat(amount))
-        } else if let amount = self as? CGFloat {
-            return ConstraintInsets(top: amount, left: amount, bottom: amount, right: amount)
-        } else if let amount = self as? Int {
-            return ConstraintInsets(top: CGFloat(amount), left: CGFloat(amount), bottom: CGFloat(amount), right: CGFloat(amount))
-        } else if let amount = self as? UInt {
-            return ConstraintInsets(top: CGFloat(amount), left: CGFloat(amount), bottom: CGFloat(amount), right: CGFloat(amount))
         } else {
-            return ConstraintInsets(top: 0, left: 0, bottom: 0, right: 0)
+            let side: CGFloat
+            if let amount = self as? Float {
+                side = CGFloat(amount)
+            } else if let amount = self as? Double {
+                side = CGFloat(amount)
+            } else if let amount = self as? CGFloat {
+                side = CGFloat(amount)
+            } else if let amount = self as? Int {
+                side = CGFloat(amount)
+            } else if let amount = self as? UInt {
+                side = CGFloat(amount) 
+            } else {
+                side = 0
+            }
+            
+            return ConstraintInsets(top: side,
+                                    left: side,
+                                    bottom: side,
+                                    right: side)
         }
     }
     

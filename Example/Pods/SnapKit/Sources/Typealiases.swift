@@ -24,19 +24,41 @@
 import Foundation
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #if swift(>=4.2)
-    typealias LayoutRelation = NSLayoutConstraint.Relation
-    typealias LayoutAttribute = NSLayoutConstraint.Attribute
+typealias LayoutRelation = NSLayoutConstraint.Relation
+typealias LayoutAttribute = NSLayoutConstraint.Attribute
 #else
-    typealias LayoutRelation = NSLayoutRelation
-    typealias LayoutAttribute = NSLayoutAttribute
+typealias LayoutRelation = NSLayoutRelation
+typealias LayoutAttribute = NSLayoutAttribute
 #endif
-    typealias LayoutPriority = UILayoutPriority
+typealias LayoutPriority = UILayoutPriority
+
+public typealias ConstraintInsets = UIEdgeInsets
+
+@available(iOS 11.0, tvOS 11.0, *)
+public typealias ConstraintDirectionalInsets = NSDirectionalEdgeInsets
+
+public typealias ConstraintView = UIView
+
+@available(iOS 9.0, *)
+public typealias ConstraintLayoutGuide = UILayoutGuide
+
+@available(iOS 8.0, *)
+public typealias ConstraintLayoutSupport = UILayoutSupport
 #else
-    import AppKit
-    typealias LayoutRelation = NSLayoutConstraint.Relation
-    typealias LayoutAttribute = NSLayoutConstraint.Attribute
-    typealias LayoutPriority = NSLayoutConstraint.Priority
+import AppKit
+typealias LayoutRelation = NSLayoutConstraint.Relation
+typealias LayoutAttribute = NSLayoutConstraint.Attribute
+typealias LayoutPriority = NSLayoutConstraint.Priority
+
+public typealias ConstraintInsets = NSEdgeInsets
+
+public typealias ConstraintView = NSView
+
+@available(OSX 10.11, *)
+public typealias ConstraintLayoutGuide = NSLayoutGuide
+
+public final class ConstraintLayoutSupport {}
 #endif
 

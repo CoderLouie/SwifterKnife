@@ -22,25 +22,24 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
 public class LayoutConstraint : NSLayoutConstraint {
     
     public var label: String? {
-        get {
-            return self.identifier
-        }
-        set {
-            self.identifier = newValue
-        }
+        get { identifier }
+        set { identifier = newValue }
     }
     
     internal weak var constraint: Constraint? = nil
     
+    internal var validAttribute: NSLayoutConstraint.Attribute {
+        (secondAttribute == .notAnAttribute) ? firstAttribute : secondAttribute
+    }
 }
 
 internal func ==(lhs: LayoutConstraint, rhs: LayoutConstraint) -> Bool {
@@ -49,13 +48,13 @@ internal func ==(lhs: LayoutConstraint, rhs: LayoutConstraint) -> Bool {
     // your layout code hold strong references to things like Views, LayoutGuides
     // and LayoutAnchors as SnapKit will not keep strong references to any of these.
     guard lhs.firstAttribute == rhs.firstAttribute &&
-          lhs.secondAttribute == rhs.secondAttribute &&
-          lhs.relation == rhs.relation &&
-          lhs.priority == rhs.priority &&
-          lhs.multiplier == rhs.multiplier &&
-          lhs.secondItem === rhs.secondItem &&
-          lhs.firstItem === rhs.firstItem else {
-        return false
-    }
+            lhs.secondAttribute == rhs.secondAttribute &&
+            lhs.relation == rhs.relation &&
+            lhs.priority == rhs.priority &&
+            lhs.multiplier == rhs.multiplier &&
+            lhs.secondItem === rhs.secondItem &&
+            lhs.firstItem === rhs.firstItem else {
+                return false
+            }
     return true
 }

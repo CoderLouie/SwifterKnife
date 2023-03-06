@@ -22,14 +22,14 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
 public class ConstraintMakerEditable: ConstraintMakerPrioritizable {
-
+    
     @discardableResult
     public func multipliedBy(_ amount: ConstraintMultiplierTarget) -> ConstraintMakerEditable {
         description.multiplier = amount
@@ -48,23 +48,17 @@ public class ConstraintMakerEditable: ConstraintMakerPrioritizable {
     }
     
     @discardableResult
-    public func soffset(_ amount: ConstraintOffset) -> ConstraintMakerEditable {
-        self.description.constant = amount.value
-        return self
-    }
-    
-    @discardableResult
     public func inset(_ amount: ConstraintInsetTarget) -> ConstraintMakerEditable {
         description.constant = amount.constraintInsetTargetValue
         return self
     }
     
-    #if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
     @discardableResult
     @available(iOS 11.0, tvOS 11.0, *)
     public func inset(_ amount: ConstraintDirectionalInsetTarget) -> ConstraintMakerEditable {
         description.constant = amount.constraintDirectionalInsetTargetValue
         return self
     }
-    #endif
+#endif
 }

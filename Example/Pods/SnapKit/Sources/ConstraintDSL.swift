@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -44,7 +44,6 @@ extension ConstraintDSL {
     public func label() -> String? {
         return objc_getAssociatedObject(target as Any, &labelKey) as? String
     }
-    
 }
 private var labelKey: UInt8 = 0
 
@@ -100,25 +99,25 @@ extension ConstraintBasicAttributesDSL {
     }
     
     public var directionalEdges: ConstraintItem {
-      return ConstraintItem(target: target, attributes: .directionalEdges)
+        return ConstraintItem(target: target, attributes: .directionalEdges)
     }
-
+    
     public var horizontalEdges: ConstraintItem {
         return ConstraintItem(target: target, attributes: .horizontalEdges)
     }
-
+    
     public var verticalEdges: ConstraintItem {
         return ConstraintItem(target: target, attributes: .verticalEdges)
     }
-
+    
     public var directionalHorizontalEdges: ConstraintItem {
         return ConstraintItem(target: target, attributes: .directionalHorizontalEdges)
     }
-
+    
     public var directionalVerticalEdges: ConstraintItem {
         return ConstraintItem(target: target, attributes: .directionalVerticalEdges)
     }
-
+    
     public var size: ConstraintItem {
         return ConstraintItem(target: target, attributes: .size)
     }
@@ -133,7 +132,7 @@ public protocol ConstraintAttributesDSL : ConstraintBasicAttributesDSL {
 }
 extension ConstraintAttributesDSL {
     
-    // MARK: Baselines 
+    // MARK: Baselines
     
     @available(iOS 8.0, OSX 10.11, *)
     public var lastBaseline: ConstraintItem {
@@ -194,9 +193,9 @@ extension ConstraintAttributesDSL {
     
     @available(iOS 8.0, *)
     public var directionalMargins: ConstraintItem {
-      return ConstraintItem(target: target, attributes: .directionalMargins)
+        return ConstraintItem(target: target, attributes: .directionalMargins)
     }
-
+    
     @available(iOS 8.0, *)
     public var centerWithinMargins: ConstraintItem {
         return ConstraintItem(target: target, attributes: .centerWithinMargins)

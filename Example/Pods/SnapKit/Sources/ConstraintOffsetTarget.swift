@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -46,22 +46,6 @@ extension Double: ConstraintOffsetTarget {
 extension CGFloat: ConstraintOffsetTarget {
 }
 
-public struct ConstraintOffset: ConstraintOffsetTarget {
-    var value: CGFloat
-    public init(_ value: CGFloat) {
-        self.value = value
-    }
-}
-extension ConstraintOffset: ExpressibleByIntegerLiteral {
-    public init(integerLiteral value: Int) {
-        self.value = CGFloat(value)
-    }
-}
-extension ConstraintOffset: ExpressibleByFloatLiteral {
-    public init(floatLiteral value: Double) {
-        self.value = CGFloat(value)
-    }
-}
 
 extension ConstraintOffsetTarget {
     
@@ -77,8 +61,6 @@ extension ConstraintOffsetTarget {
             offset = CGFloat(amount)
         } else if let amount = self as? UInt {
             offset = CGFloat(amount)
-        } else if let amount = self as? ConstraintOffset {
-            offset = amount.value
         } else {
             offset = 0.0
         }
