@@ -161,7 +161,15 @@ extension WeakTable: MutableCollection {
 extension WeakTable: RandomAccessCollection { }
 
 extension WeakTable: RangeReplaceableCollection {
-    public func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, E? == C.Element { }
+    public func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == E? {
+        guard subrange.count >= newElements.count else {
+            return
+        }
+        let start = subrange.lowerBound
+        for (i, element) in newElements.enumerated() {
+            ptrs.replacePointer(at: start + i, withPointer: ptr(of: element))
+        }
+    }
 }
 
 extension WeakTable: LazyCollectionProtocol { }
