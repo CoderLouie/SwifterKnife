@@ -158,8 +158,10 @@ extension WeakTable: MutableCollection {
 }
 
 
-//extension WeakTable: RandomAccessCollection { }
-//
-//extension WeakTable: RangeReplaceableCollection { }
-//
-//extension WeakTable: LazyCollectionProtocol { }
+extension WeakTable: RandomAccessCollection { }
+
+extension WeakTable: RangeReplaceableCollection {
+    public func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, E? == C.Element { }
+}
+
+extension WeakTable: LazyCollectionProtocol { }

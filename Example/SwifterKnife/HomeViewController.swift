@@ -18,7 +18,7 @@ fileprivate class BottomBar: UIView {
     }
     private func setup() {
         backgroundColor = .cyan
-//        layoutMargins = .zero
+        layoutMargins = UIEdgeInsets(top: 8, bottom: 8, left: 20, right: 55)
         
         let redView = UIView().then {
             addSubview($0)
@@ -29,8 +29,14 @@ fileprivate class BottomBar: UIView {
 //                make.top.equalTo(snp.topMargin)
 //                make.bottom.equalTo(snp.bottomMargin)
 //                make.trailing.top.bottom.equalTo(snp.directionalMargins)
-                make.left.top.bottom.equalTo(snp.margins)
-                make.width.equalTo(90)
+                make.top.bottom.equalToSuperviewMargin()
+//                make.horizontal.inset(30)
+//                make.left.top.bottom.equalTo(snp.margins)
+                make.width.equalTo(100)
+                make.centerX.equalTo(snp.centerXWithinMargins)
+//                make.centerX.equalTo(10)
+//                make.centerX.inset(10)
+//                make.centerX.offset(10)
                 make.height.equalTo(30)
             }
         }
@@ -51,7 +57,8 @@ class BaseViewController: UIViewController {
             $0.snp.makeConstraints { make in
                 make.leading.trailing.equalTo(0)
 //                make.top.equalTo(view.snp.topMargin)
-                make.top.equalTo(0)
+//                make.top.equalTo(0)
+                make.bottom.equalTo(0)
             }
         }
     }

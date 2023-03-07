@@ -43,9 +43,7 @@ public typealias ConstraintView = UIView
 
 @available(iOS 9.0, *)
 public typealias ConstraintLayoutGuide = UILayoutGuide
-
-@available(iOS 8.0, *)
-public typealias ConstraintLayoutSupport = UILayoutSupport
+ 
 #else
 import AppKit
 typealias LayoutRelation = NSLayoutConstraint.Relation
@@ -58,7 +56,6 @@ public typealias ConstraintView = NSView
 
 @available(OSX 10.11, *)
 public typealias ConstraintLayoutGuide = NSLayoutGuide
-
-public final class ConstraintLayoutSupport {}
+ 
 #endif
 

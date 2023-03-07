@@ -243,3 +243,13 @@ extension ConstraintMaker {
         return makeExtendableWithAttributes(.centerWithinMargins)
     }
 }
+
+
+extension ConstraintMaker { 
+    public var horizontal: ConstraintMakerExtendable {
+        return makeExtendableWithAttributes([.leading, .trailing])
+    }
+    public var vertical: ConstraintMakerExtendable {
+        return makeExtendableWithAttributes([.top, .bottom])
+    }
+}

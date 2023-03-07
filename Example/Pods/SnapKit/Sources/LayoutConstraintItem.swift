@@ -47,7 +47,7 @@ extension LayoutConstraintItem {
         }
     }
     
-    internal var _snp: ConstraintBasicAttributesDSL? {
+    internal var _snp: ConstraintAttributesDSL? {
         if let view = self as? ConstraintView {
             return view.snp
         }
