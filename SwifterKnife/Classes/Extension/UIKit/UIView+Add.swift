@@ -367,10 +367,13 @@ public extension UIView {
             withHorizontalFittingPriority: .fittingSizeLevel,
             verticalFittingPriority: .required)
     }
-    // layoutFittingCompressedSize(尽可能小)
-    // layoutFittingExpandedSize(尽可能大)
-    var fittingSize: CGSize {
+    /// layoutFittingCompressedSize(尽可能小)
+    var compressedSize: CGSize {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    }
+    /// layoutFittingExpandedSize(尽可能大)
+    var expandedSize: CGSize {
+        systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
     }
     
     @available(iOS 11.0, *)
