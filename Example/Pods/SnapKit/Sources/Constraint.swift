@@ -111,6 +111,10 @@ public final class Constraint {
                         layoutToAttribute = .leadingMargin
                     case .trailing:
                         layoutToAttribute = .trailingMargin
+                    case .centerX:
+                        layoutToAttribute = .centerXWithinMargins
+                    case .centerY:
+                        layoutToAttribute = .centerYWithinMargins
                     case .top:
                         layoutToAttribute = .topMargin
                     case .bottom:

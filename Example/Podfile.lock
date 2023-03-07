@@ -24,7 +24,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SnapKit:
-    :commit: b8fe717a219396e6b0d1658964c6d05437de722e
+    :commit: 4bc045ba6657053c6fa8a87111a2a653a63943af
     :git: https://github.com/CoderLouie/SnapKit.git
 
 SPEC CHECKSUMS:
