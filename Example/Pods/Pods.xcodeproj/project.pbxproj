@@ -101,6 +101,7 @@
 		ADBC5B71F6A08DDED6E8ECDF2AE0CA82 /* WeakTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1912A877432B0A8F9E200C65C0A76CDE /* WeakTable.swift */; };
 		B3BC0707606EB261FB6AA761951C6B0A /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A68645ACB5B10712D9C60C53DBBE9D /* ConstraintAttributes.swift */; };
 		B40E81984871F3DEC37DE17659138198 /* Pods-SwifterKnife_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 619A57EFE0D912DFEBD4DE168DB50242 /* Pods-SwifterKnife_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6D834D329B824E7004C2BC3 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834D229B824E7004C2BC3 /* SeparatorView.swift */; };
 		B87F35534A8C625383B575E5148D1D1C /* UIImage+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69662ACADE32DB3485C8D389F8F12E1 /* UIImage+Add.swift */; };
 		BACE98C1517019731041AE39CBA759D0 /* Dictionary+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DA4DCAE393EE460C32C8276CA69F1 /* Dictionary+Add.swift */; };
 		BD8D633519E897E0BA6BA7BDF11E49DE /* CATransform3D+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E73D5D3928E148AB4843526BFD312B2 /* CATransform3D+Add.swift */; };
@@ -207,7 +208,7 @@
 		590CA91CFF7E932347132FA8D54CEF9D /* ConstraintViewDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintViewDSL.swift; path = Sources/ConstraintViewDSL.swift; sourceTree = "<group>"; };
 		5A05B15657314EAA78EBC1E5EBE16470 /* ConstraintMakerPrioritizable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerPrioritizable.swift; path = Sources/ConstraintMakerPrioritizable.swift; sourceTree = "<group>"; };
 		5DE21A6E7A12FD2C8FB56069D085CC7F /* Pods-SwifterKnife_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		5DE39982115CCF35A113FF77B15269FD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		5DE39982115CCF35A113FF77B15269FD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		612923B7F350929D3CDD534AC59D6597 /* SwiftyAdaptable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftyAdaptable.swift; sourceTree = "<group>"; };
 		619A57EFE0D912DFEBD4DE168DB50242 /* Pods-SwifterKnife_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwifterKnife_Example-umbrella.h"; sourceTree = "<group>"; };
 		620620B72AFDF90843CBB4778FF13FD3 /* CGRect+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGRect+Add.swift"; sourceTree = "<group>"; };
@@ -231,7 +232,7 @@
 		71B75D5D714A0B8C94A3950E96E1421E /* ConstraintPriority.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriority.swift; path = Sources/ConstraintPriority.swift; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		732A866272476D982859B0EA52D26F7B /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		7425D115AA658941235A5AC11BC7754B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		7425D115AA658941235A5AC11BC7754B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		74F419C501074A9E4281E1B145BDC6B7 /* Typealiases.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Typealiases.swift; path = Sources/Typealiases.swift; sourceTree = "<group>"; };
 		75646A5A6511D86643F95BE4F007CE8A /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMultiplierTarget.swift; path = Sources/ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
 		772BBF24516D3430CB811CF4E2801644 /* Pods-SwifterKnife_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwifterKnife_Tests-Info.plist"; sourceTree = "<group>"; };
@@ -262,7 +263,7 @@
 		9A8D260FFCA03F53350EAE9FF296E7CF /* SwifterKnife-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife-prefix.pch"; sourceTree = "<group>"; };
 		9C3F01B7E7185F1FC44B54A5C938E792 /* Either.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		9D55AB4FBB81E72CFA9A2622C00FA925 /* MutableCollection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MutableCollection+Add.swift"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E1ADA6F24AA8B873F82C3D60B43B94E /* CALayer+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CALayer+Add.swift"; sourceTree = "<group>"; };
 		A004F12AC1915DB28BDC7A0A28DC5803 /* DispatchQueue+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Add.swift"; sourceTree = "<group>"; };
 		A0A2E73DA77BA91CD4FC201DFC8DCC06 /* UITableView+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Add.swift"; sourceTree = "<group>"; };
@@ -277,8 +278,9 @@
 		B2FA617246A6E0D187CE0BD715EF2270 /* UIButton+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIButton+Add.swift"; sourceTree = "<group>"; };
 		B403D4C1D66D31F0AA0CA9F855C45FD4 /* Collection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Collection+Add.swift"; sourceTree = "<group>"; };
 		B69662ACADE32DB3485C8D389F8F12E1 /* UIImage+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Add.swift"; sourceTree = "<group>"; };
+		B6D834D229B824E7004C2BC3 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		B86889DB02D667E1413FA03118474CB2 /* Data+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
-		B93B1A8807FA7A20548A8E4B7AF6E1E7 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		B93B1A8807FA7A20548A8E4B7AF6E1E7 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B9796D70E05A4135034AC4D317A32C32 /* SwifterKnife-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwifterKnife-dummy.m"; sourceTree = "<group>"; };
 		BC42429DFB8D314A70946F9C2A60A42B /* UICollectionView+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Add.swift"; sourceTree = "<group>"; };
 		C318BAC3F855F42AD953EEDE344B8024 /* Pods-SwifterKnife_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwifterKnife_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -400,7 +402,6 @@
 				74F419C501074A9E4281E1B145BDC6B7 /* Typealiases.swift */,
 				18D2F41575AC23FBFEBD5F85695C408C /* Support Files */,
 			);
-			name = SnapKit;
 			path = SnapKit;
 			sourceTree = "<group>";
 		};
@@ -410,8 +411,8 @@
 				C3A3E90670D8C741DF5BB6E94CD5239D /* ScrollStackView.swift */,
 				37520C6913F1D1968BD5AB57A5906A29 /* SKStackCellType.swift */,
 				47D4CC0952442841117D8637EC47AD24 /* SKStackView.swift */,
+				B6D834D229B824E7004C2BC3 /* SeparatorView.swift */,
 			);
-			name = StackView;
 			path = StackView;
 			sourceTree = "<group>";
 		};
@@ -458,7 +459,6 @@
 				18BF265F5136B5224CC7F66D0306766A /* UIViewController+Add.swift */,
 				A91E982175012C544AEAC9BEB8899BC5 /* Reusable */,
 			);
-			name = UIKit;
 			path = UIKit;
 			sourceTree = "<group>";
 		};
@@ -468,7 +468,6 @@
 				112E785F67CD97D3D588BD4C7623D060 /* Language.swift */,
 				A497E3916B60E8C0BA4E330D84FDB2BA /* LocalizedKeyRepresentable.swift */,
 			);
-			name = Localize;
 			path = Localize;
 			sourceTree = "<group>";
 		};
@@ -506,7 +505,6 @@
 			children = (
 				A004F12AC1915DB28BDC7A0A28DC5803 /* DispatchQueue+Add.swift */,
 			);
-			name = Dispatch;
 			path = Dispatch;
 			sourceTree = "<group>";
 		};
@@ -537,7 +535,6 @@
 				620620B72AFDF90843CBB4778FF13FD3 /* CGRect+Add.swift */,
 				786F67ADF4C899FBAA367DF022C175A7 /* CGSize+Add.swift */,
 			);
-			name = QuartzCore;
 			path = QuartzCore;
 			sourceTree = "<group>";
 		};
@@ -640,7 +637,6 @@
 				70F1E58039E21CA43722737B42BEE496 /* UICollectionView+Reusable.swift */,
 				FF6AC8708680B8ADA8880CFE2B6374BF /* UITableView+Reusable.swift */,
 			);
-			name = Reusable;
 			path = Reusable;
 			sourceTree = "<group>";
 		};
@@ -650,7 +646,6 @@
 				12E5D3B4BBC0600592A2079669BAB05F /* Promise.swift */,
 				6AEF96FDEA17693222125E326F3F167C /* Promise+Extras.swift */,
 			);
-			name = Promise;
 			path = Promise;
 			sourceTree = "<group>";
 		};
@@ -675,7 +670,6 @@
 				B19CB028C6D6DED1BBB8AFE3FE3E7045 /* Stack.swift */,
 				1912A877432B0A8F9E200C65C0A76CDE /* WeakTable.swift */,
 			);
-			name = Builtlns;
 			path = Builtlns;
 			sourceTree = "<group>";
 		};
@@ -700,7 +694,6 @@
 				7E57781FC45EC4AC0B8F4A9C732B604C /* SignedInteger+Add.swift */,
 				E7431CE93FE45AB77FF105C32FB4D242 /* String+Add.swift */,
 			);
-			name = SwiftStdlib;
 			path = SwiftStdlib;
 			sourceTree = "<group>";
 		};
@@ -747,7 +740,6 @@
 				F85E7F1E31BB92F93E9AD6A1D4FF2925 /* DataCodable.swift */,
 				53F2DEA4C5B7A2C666793BF238B50BAB /* ExCodable.swift */,
 			);
-			name = Protocol;
 			path = Protocol;
 			sourceTree = "<group>";
 		};
@@ -760,7 +752,6 @@
 				F710A65CBA1AB2D83CF732223B1D9C52 /* URL+Add.swift */,
 				B23069BF7667D83E4F2C7E4BECA08DD4 /* UserDefaults+Add.swift */,
 			);
-			name = Foundation;
 			path = Foundation;
 			sourceTree = "<group>";
 		};
@@ -1024,6 +1015,7 @@
 				BEF9EC5A441E5E1F59582425E101664B /* Then.swift in Sources */,
 				5AFE9E788B28F40C59A155FD170430C0 /* UIBarButtonItem+Add.swift in Sources */,
 				428827CDB7836DAEB6210FD5761021F3 /* UIButton+Add.swift in Sources */,
+				B6D834D329B824E7004C2BC3 /* SeparatorView.swift in Sources */,
 				E7C0729A8E784612F73AA7B45F63BAE7 /* UICollectionView+Add.swift in Sources */,
 				84DDBAF73864C916A684AC610D832017 /* UICollectionView+Reusable.swift in Sources */,
 				A7161A7FF8BE275A3541230A281A0893 /* UIColor+Add.swift in Sources */,
@@ -1304,8 +1296,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};

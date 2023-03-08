@@ -9,10 +9,12 @@ import UIKit
 
 public protocol SKStackCellType : AnyObject {
     var showSeparators: Bool? { get }
+    var separatorInset: UIEdgeInsets? { get }
     func didSelect(by stackView: SKStackView)
 }
 extension SKStackCellType {
     public var showSeparators: Bool? { nil }
+    public var separatorInset: UIEdgeInsets? { nil }
     public func didSelect(by stackView: SKStackView) {}
 }
 

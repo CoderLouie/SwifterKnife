@@ -51,16 +51,6 @@ class BaseViewController: UIViewController {
         setupViews()
     }
     func setupViews() {
-        
-        BottomBar().do {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.trailing.equalTo(0)
-//                make.top.equalTo(view.snp.topMargin)
-//                make.top.equalTo(0)
-                make.bottom.equalTo(0)
-            }
-        }
     }
     deinit {
         Console.logFunc(whose: self)
@@ -72,13 +62,28 @@ class HomeViewController: BaseViewController {
     override func setupViews() {
         super.setupViews()
         title = "Home"
+        
+        BottomBar().do {
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.equalTo(0)
+//                make.top.equalTo(view.snp.topMargin)
+//                make.top.equalTo(0)
+                make.bottom.equalTo(0)
+            }
+        }
+        
+        let cell = FormCell().then {
+            $0.backgroundColor = .groupTableViewBackground
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.height.equalTo(100)
+            }
+        }
+        cell.setHidden(true, animatied: true)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        let a = 10
-        
-//        if a > 5, a < 10 {
-//
-//        }
         
 //        let vc = DebugViewController()
 ////        let vc = TimerViewController()

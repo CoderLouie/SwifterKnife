@@ -723,8 +723,19 @@ extension JSON: Swift.RawRepresentable {
 
 extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
     
+    public var formatJSONString: String? {
+        guard let data = try? rawData(),
+              let raw = String(data: data, encoding: .utf8) else { return nil }
+        // \" -> "
+        // \\ ->
+        // \/ => / (链接)
+        // \n ->
+        let format = raw.replacingOccurrences(of: "\\\"", with: "\"").replacingOccurrences(of: "\\\\", with: "").replacingOccurrences(of: "\\/", with: "/").replacingOccurrences(of: "\\n", with: "")
+        return format
+    }
+
     public var description: String {
-        return rawString(options: .prettyPrinted) ?? "unknown"
+        return formatJSONString ?? "unknown"
     }
     
     public var debugDescription: String {

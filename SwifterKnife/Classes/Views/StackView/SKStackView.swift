@@ -1,5 +1,5 @@
 //
-//  VerifyViewController.swift
+//  SKStackView.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2023/2/14.
@@ -278,10 +278,15 @@ public final class SKStackView: UICollectionView, UICollectionViewDataSource, UI
         if indexPath.item == items.count - 1 {
             showSeparators = false
         }
+        let existLineView: UIView?
+        if let v = contentView.subviews.last, v.tag == LayoutKeys.separatorTag {
+            existLineView = v
+        } else { existLineView = nil }
+        
         if showSeparators, let size = item.size {
             
             let lineView: UIView
-            if let v = contentView.subviews.last, v.tag == LayoutKeys.separatorTag {
+            if let v = existLineView {
                 lineView = v
             } else {
                 lineView = UIView()
@@ -290,7 +295,7 @@ public final class SKStackView: UICollectionView, UICollectionViewDataSource, UI
                 contentView.addSubview(lineView)
             }
             let lineH = 1 / UIScreen.main.scale
-            let inset = separatorInset
+            let inset = (view as? SKStackCellType)?.separatorInset ?? separatorInset
             switch direction {
             case .horizontal:
                 let w = lineH
@@ -300,6 +305,8 @@ public final class SKStackView: UICollectionView, UICollectionViewDataSource, UI
                 lineView.frame = CGRect(x: inset.left, y: size.height - h - inset.bottom, width: size.width - inset.left - inset.right, height: h)
             @unknown default: fatalError()
             }
+        } else {
+            existLineView?.isHidden = true
         }
         
         return cell
