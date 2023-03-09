@@ -111,9 +111,7 @@
 		C21E1DB7DD382B1D4AB1E7BAC8655C27 /* Console.swift in Sources */ = {isa = PBXBuildFile; fileRef = D469E6A51CAFF50DBA5D658DAF8DCEFE /* Console.swift */; };
 		C3AAF7159B54B00FF901DB3C9334AED7 /* CALayer+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1ADA6F24AA8B873F82C3D60B43B94E /* CALayer+Add.swift */; };
 		C86C23C4BFA00478276E3116F3922C68 /* UINavigationBar+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCD16FB24A85FC0F68A49E3A4E4E02F /* UINavigationBar+Add.swift */; };
-		CBF7F23A40005213F27EED5DCE3949FF /* SKStackCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37520C6913F1D1968BD5AB57A5906A29 /* SKStackCellType.swift */; };
 		CEA31AAA9D302C27A42507A0A50C9D3A /* Deque.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7E2FCB1CAAF324D54958B7732410E4 /* Deque.swift */; };
-		CECE36E8980B88C11F8D251A9086C4D7 /* SKStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4CC0952442841117D8637EC47AD24 /* SKStackView.swift */; };
 		D04D89C8FB82E591FB09029E25D76017 /* NSObject+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713D51AF8BF6B7D4F305C39CD823B80C /* NSObject+Add.swift */; };
 		D17C45B22EFE8E13D0D19B56BB66DE44 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC07345652BEA02F605AEE3DF101AD5 /* KeyboardObserver.swift */; };
 		D1CD4E3E10E1F44C6761F4196CDCB10E /* CGAffineTransform+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659077533DBDEF06E54B1EB7AD57CA6A /* CGAffineTransform+Add.swift */; };
@@ -193,11 +191,9 @@
 		334798D1D7953FFF0B8B1C1CD7871EE5 /* UIScrollView+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Add.swift"; sourceTree = "<group>"; };
 		36A5D6CBE4A5EB1B1451A76428CF7D52 /* CGPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Add.swift"; sourceTree = "<group>"; };
 		3701D549578F2EA664BF38397612724D /* AttributedString.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
-		37520C6913F1D1968BD5AB57A5906A29 /* SKStackCellType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SKStackCellType.swift; sourceTree = "<group>"; };
 		3B1DA4DCAE393EE460C32C8276CA69F1 /* Dictionary+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Dictionary+Add.swift"; sourceTree = "<group>"; };
 		4048C720DEDD8339BD5D3E4FDE45ECD1 /* ConstraintRelatableTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintRelatableTarget.swift; path = Sources/ConstraintRelatableTarget.swift; sourceTree = "<group>"; };
 		42CE0C607853523BA320BEBC0E2D3570 /* Range+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Range+Add.swift"; sourceTree = "<group>"; };
-		47D4CC0952442841117D8637EC47AD24 /* SKStackView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SKStackView.swift; sourceTree = "<group>"; };
 		498339833AB80733FAC1A022BD3B97DC /* SandBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SandBox.swift; sourceTree = "<group>"; };
 		4BA84AC1909EF266355311BB90200B78 /* FloatingPoint+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "FloatingPoint+Add.swift"; sourceTree = "<group>"; };
 		4E61AE0696988989E98446EC1DE64531 /* Pods-SwifterKnife_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SwifterKnife_Tests-dummy.m"; sourceTree = "<group>"; };
@@ -411,8 +407,6 @@
 			isa = PBXGroup;
 			children = (
 				C3A3E90670D8C741DF5BB6E94CD5239D /* ScrollStackView.swift */,
-				37520C6913F1D1968BD5AB57A5906A29 /* SKStackCellType.swift */,
-				47D4CC0952442841117D8637EC47AD24 /* SKStackView.swift */,
 				B6D834D229B824E7004C2BC3 /* SeparatorView.swift */,
 			);
 			path = StackView;
@@ -1005,8 +999,6 @@
 				0576FDAA58AE94F9DF263582567234B9 /* ScrollStackView.swift in Sources */,
 				177DB761882AD92276126CC28BF084CB /* Sequence+Add.swift in Sources */,
 				F9DD730BCF3AFFB530BF2F715F5397DA /* SignedInteger+Add.swift in Sources */,
-				CBF7F23A40005213F27EED5DCE3949FF /* SKStackCellType.swift in Sources */,
-				CECE36E8980B88C11F8D251A9086C4D7 /* SKStackView.swift in Sources */,
 				8CBADB2F4B623F61371C9E2A84599CB3 /* Stack.swift in Sources */,
 				63E8D11851D3FF85C32564BDB91F345D /* StateMachine.swift in Sources */,
 				5609FFC0DDE2B1A9FA03F9959C1FC70D /* String+Add.swift in Sources */,

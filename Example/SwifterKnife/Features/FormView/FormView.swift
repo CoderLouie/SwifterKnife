@@ -74,6 +74,7 @@ open class FormView: UIScrollView {
             stackHeightCons.update(offset: -(inset.top + inset.bottom))
         }
     }
+    public var onSelectedCell: ((FormCellType, Int) -> Void)?
     
     @available(*, unavailable)
     required public init?(coder: NSCoder) {

@@ -11,6 +11,8 @@ import UIKit
 class TitleCell: FormFeedbackCell {
     override func setup() {
         super.setup()
+        separatorMode = .automaticlly
+        separatorInset = UIEdgeInsets(inset: 12)
         
         titleLabel = UILabel().then {
             addSubview($0)
@@ -33,7 +35,6 @@ class MessageCell: TitleCell {
     override func setup() {
         super.setup()
         isHighlightable = false
-        
         titleLabel.snp.remakeConstraints { make in
             make.leading.top.equalTo(12)
         }
@@ -57,6 +58,7 @@ class MessageCell: TitleCell {
 
 class SwitchCell: TitleCell {
     override func setup() {
+        super.setup()
         control = UISwitch().then {
             addSubview($0)
             $0.addTarget(self, action: #selector(controlDidClick), for: .touchUpInside)
@@ -67,7 +69,7 @@ class SwitchCell: TitleCell {
         }
     }
     @objc private func controlDidClick() {
-        
+        removeFromFormView()
     }
     
     private unowned var control: UISwitch!
@@ -78,7 +80,7 @@ class FormViewController: BaseViewController {
         super.setupViews()
         
         formView = FormView().then {
-            $0.contentInset = UIEdgeInsets(top: Screen.safeAreaT, bottom: Screen.safeAreaB, left: 0, right: 0)
+            $0.contentInset = UIEdgeInsets(top: Screen.navbarH, bottom: Screen.safeAreaB, left: 0, right: 0)
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.edges.equalToSuperview()

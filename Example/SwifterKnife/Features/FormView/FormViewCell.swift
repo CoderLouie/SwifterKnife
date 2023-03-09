@@ -156,7 +156,7 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
             $0.isHidden = true
         }
     }
-    override func didSetup() {
+    override fileprivate func didSetup() {
         bringSubviewToFront(separatorView)
     }
     
@@ -174,7 +174,10 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
     }
     
     private func updateSeperatorViewIfNeeded() {
-        guard let inset = separatorInset else { return }
+        guard let inset = separatorInset else {
+            separatorView.snp.removeConstraints()
+            return
+        }
         let axis = self.axis.crossed
         separatorView.axis = axis
         separatorView.snp.remakeConstraints { make in
@@ -191,6 +194,8 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
 
 open class FormFeedbackCell: FormSeperatorCell {
     
+    public var onTouch: ((FormFeedbackCell) -> Void)?
+    
     public var highlightColor: UIColor? = .systemFeedback
     
     public var isHighlightable: Bool = true
@@ -198,15 +203,21 @@ open class FormFeedbackCell: FormSeperatorCell {
     public var isHighlighted = false {
         didSet {
             guard isHighlighted != oldValue else { return }
-            guard let color = highlightColor else { return }
+            if isHighlighted, highlightColor == nil { return }
             
-            highlightColor = backgroundColor
-            backgroundColor = color
+//            guard let color = highlightColor else { return }
+            UIView.animate(withDuration: 0.25) {
+                let color = self.highlightColor
+                self.highlightColor = self.backgroundColor
+                self.backgroundColor = color
+            }
         }
     }
     
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        
+        onTouch?(self)
         
         if isHighlightable {
             isHighlighted = true

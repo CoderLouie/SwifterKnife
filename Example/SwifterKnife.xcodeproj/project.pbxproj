@@ -41,6 +41,8 @@
 		B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834D529B82BFD004C2BC3 /* FormView.swift */; };
 		B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834D729B82C0B004C2BC3 /* FormViewCell.swift */; };
 		B6D834DC29B9CA69004C2BC3 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DB29B9CA69004C2BC3 /* FormViewController.swift */; };
+		B6D834E029B9F2D0004C2BC3 /* SKStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DE29B9F2D0004C2BC3 /* SKStackView.swift */; };
+		B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 		B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05DF292A73D00057E659 /* DebugViewController.swift */; };
 		B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05E1292A751F0057E659 /* HomeViewController.swift */; };
@@ -105,6 +107,8 @@
 		B6D834D529B82BFD004C2BC3 /* FormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
 		B6D834D729B82C0B004C2BC3 /* FormViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewCell.swift; sourceTree = "<group>"; };
 		B6D834DB29B9CA69004C2BC3 /* FormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
+		B6D834DE29B9F2D0004C2BC3 /* SKStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackView.swift; sourceTree = "<group>"; };
+		B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackCellType.swift; sourceTree = "<group>"; };
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		B6ED86802726A1E3003103F6 /* KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKView.m; sourceTree = "<group>"; };
@@ -267,6 +271,7 @@
 		B6D834C129B19168004C2BC3 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B6D834DD29B9F2AE004C2BC3 /* StackView */,
 				B6D834D429B82BE0004C2BC3 /* FormView */,
 				B6D834CB29B19308004C2BC3 /* if_.swift */,
 				B6D834C929B192F4004C2BC3 /* Func.swift */,
@@ -294,6 +299,15 @@
 				B6D834D529B82BFD004C2BC3 /* FormView.swift */,
 			);
 			path = FormView;
+			sourceTree = "<group>";
+		};
+		B6D834DD29B9F2AE004C2BC3 /* StackView */ = {
+			isa = PBXGroup;
+			children = (
+				B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */,
+				B6D834DE29B9F2D0004C2BC3 /* SKStackView.swift */,
+			);
+			path = StackView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -489,9 +503,11 @@
 				B6D834C629B191CB004C2BC3 /* CallbackHell+Async1.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
 				B6D834CC29B19308004C2BC3 /* if_.swift in Sources */,
+				B6D834E029B9F2D0004C2BC3 /* SKStackView.swift in Sources */,
 				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
+				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,

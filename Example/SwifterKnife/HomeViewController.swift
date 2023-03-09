@@ -66,6 +66,7 @@ extension UIView {
             print(typename)
             return typename.contains("CanvasView")
         }
+        target?.removeSubviews()
         target?.isUserInteractionEnabled = true
         return target
     }
