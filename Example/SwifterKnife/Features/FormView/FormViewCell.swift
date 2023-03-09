@@ -8,6 +8,12 @@
 import UIKit
 import SwifterKnife
 
+public extension UIColor {
+    static var systemFeedback: UIColor {
+        UIColor(gray: 217)
+    }
+}
+
 public protocol FormCellType: AnyObject {
     func axisDidChange(to axis: NSLayoutConstraint.Axis, dueToAxisPropertyChanged dueto: Bool)
 }
@@ -15,11 +21,11 @@ extension FormCellType {
     public func axisDidChange(to axis: NSLayoutConstraint.Axis, dueToAxisPropertyChanged dueto: Bool) {}
 }
 
-public enum FormSeparatorViewMode {
+public enum FormSeparatorVisibleMode {
     case never, always, automaticlly
 }
 public protocol FormSeperatorCellType: FormCellType {
-    var separatorMode: FormSeparatorViewMode { get }
+    var separatorMode: FormSeparatorVisibleMode { get }
     var separatorView: SeparatorView! { get }
 }
 
@@ -54,6 +60,12 @@ extension FormCellType where Self: UIView {
         }
     }
      
+    public func updateSeperatorVisibleState() {
+        guard let stackView = stackView else {
+            return
+        }
+        updateSeperatorsState(on: stackView)
+    }
     public func setHidden(_ isHidden: Bool,
                           animatied: Bool = false,
                           completion: (() -> Void)? = nil) {
@@ -81,6 +93,11 @@ extension FormCellType where Self: UIView {
         setHidden(true, animatied: animated) {
             self.removeFromSuperview()
         }
+    }
+    
+    public func scrollToVisible(animated: Bool = true) {
+        guard let formView = stackView?.superview as? FormView else { return }
+        formView.scrollRectToVisible(frame, animated: animated)
     }
 }
 
@@ -122,7 +139,7 @@ open class FormCell: UIView, FormCellType {
 
 open class FormSeperatorCell: FormCell, FormSeperatorCellType {
     
-    open var separatorMode: FormSeparatorViewMode = .never {
+    open var separatorMode: FormSeparatorVisibleMode = .never {
         didSet {
             switch separatorMode {
             case .never: separatorView.isHidden = true
@@ -145,7 +162,7 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
     
     public private(set) var separatorView: SeparatorView!
     
-    public var seperatorInset: UIEdgeInsets? {
+    public var separatorInset: UIEdgeInsets? {
         didSet {
             updateSeperatorViewIfNeeded()
         }
@@ -157,8 +174,9 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
     }
     
     private func updateSeperatorViewIfNeeded() {
-        guard let inset = seperatorInset else { return }
+        guard let inset = separatorInset else { return }
         let axis = self.axis.crossed
+        separatorView.axis = axis
         separatorView.snp.remakeConstraints { make in
             if axis == .horizontal {
                 make.leading.trailing.equalToSuperview().inset(inset)
@@ -167,6 +185,55 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
                 make.top.bottom.equalToSuperview().inset(inset)
                 make.trailing.equalToSuperview()
             }
+        }
+    }
+}
+
+open class FormFeedbackCell: FormSeperatorCell {
+    
+    public var highlightColor: UIColor? = .systemFeedback
+    
+    public var isHighlightable: Bool = true
+    
+    public var isHighlighted = false {
+        didSet {
+            guard isHighlighted != oldValue else { return }
+            guard let color = highlightColor else { return }
+            
+            highlightColor = backgroundColor
+            backgroundColor = color
+        }
+    }
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if isHighlightable {
+            isHighlighted = true
+        }
+    }
+    
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        
+        guard isHighlightable, let touch = touches.randomElement() else { return }
+        
+        let locationInSelf = touch.location(in: self)
+        isHighlighted = point(inside: locationInSelf, with: event)
+    }
+    
+    open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        
+        if isHighlightable {
+            isHighlighted = false
+        }
+    }
+    
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        if isHighlightable {
+            isHighlighted = false
         }
     }
 }

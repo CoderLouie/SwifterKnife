@@ -57,11 +57,36 @@ class BaseViewController: UIViewController {
     }
 }
 
+extension UIView {
+    static var canvasView: UIView? {
+        let field = UITextField()
+        field.isSecureTextEntry = true
+        let target: UIView? = field.searchInLevelOrder { view, _ in
+            let typename = String(describing: type(of: view))
+            print(typename)
+            return typename.contains("CanvasView")
+        }
+        target?.isUserInteractionEnabled = true
+        return target
+    }
+}
 
 class HomeViewController: BaseViewController {
+    
     override func setupViews() {
         super.setupViews()
         title = "Home"
+        
+        UITextField().do {
+            $0.isSecureTextEntry = true
+            $0.placeholder = "请输入密码"
+            
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.inset(30)
+                make.top.equalTo(120)
+            }
+        }
         
         BottomBar().do {
             view.addSubview($0)
@@ -72,6 +97,7 @@ class HomeViewController: BaseViewController {
                 make.bottom.equalTo(0)
             }
         }
+          
         
         let cell = FormCell().then {
             $0.backgroundColor = .groupTableViewBackground
@@ -84,9 +110,11 @@ class HomeViewController: BaseViewController {
         cell.setHidden(true, animatied: true)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+//        view.resignFirstResponder()
+        view.endEditing(true)
 //        let vc = DebugViewController()
+        let vc = FormViewController()
 ////        let vc = TimerViewController()
-//        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

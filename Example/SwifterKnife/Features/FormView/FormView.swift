@@ -96,6 +96,7 @@ extension FormView {
     
     open func insertCell<T: FormViewCell>(_ cell: T, at index: Int, animated: Bool = false) {
         container.insertArrangedSubview(cell, at: index)
+        cell.axisDidChange(to: axis, dueToAxisPropertyChanged: false)
         cell.updateSeperatorsState(on: container)
         if animated {
             cell.alpha = 0

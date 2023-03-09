@@ -102,6 +102,7 @@
 		B3BC0707606EB261FB6AA761951C6B0A /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A68645ACB5B10712D9C60C53DBBE9D /* ConstraintAttributes.swift */; };
 		B40E81984871F3DEC37DE17659138198 /* Pods-SwifterKnife_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 619A57EFE0D912DFEBD4DE168DB50242 /* Pods-SwifterKnife_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6D834D329B824E7004C2BC3 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834D229B824E7004C2BC3 /* SeparatorView.swift */; };
+		B6D834DA29B998D9004C2BC3 /* UIView+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834D929B998D9004C2BC3 /* UIView+Search.swift */; };
 		B87F35534A8C625383B575E5148D1D1C /* UIImage+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69662ACADE32DB3485C8D389F8F12E1 /* UIImage+Add.swift */; };
 		BACE98C1517019731041AE39CBA759D0 /* Dictionary+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DA4DCAE393EE460C32C8276CA69F1 /* Dictionary+Add.swift */; };
 		BD8D633519E897E0BA6BA7BDF11E49DE /* CATransform3D+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E73D5D3928E148AB4843526BFD312B2 /* CATransform3D+Add.swift */; };
@@ -279,6 +280,7 @@
 		B403D4C1D66D31F0AA0CA9F855C45FD4 /* Collection+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Collection+Add.swift"; sourceTree = "<group>"; };
 		B69662ACADE32DB3485C8D389F8F12E1 /* UIImage+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Add.swift"; sourceTree = "<group>"; };
 		B6D834D229B824E7004C2BC3 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
+		B6D834D929B998D9004C2BC3 /* UIView+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Search.swift"; sourceTree = "<group>"; };
 		B86889DB02D667E1413FA03118474CB2 /* Data+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Data+Add.swift"; sourceTree = "<group>"; };
 		B93B1A8807FA7A20548A8E4B7AF6E1E7 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B9796D70E05A4135034AC4D317A32C32 /* SwifterKnife-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwifterKnife-dummy.m"; sourceTree = "<group>"; };
@@ -579,6 +581,7 @@
 				627207D5B7CEB6B063C6CF672444E0EB /* Position.swift */,
 				777F5EEE32869A03EDA7B048C5054C15 /* RatingView.swift */,
 				11960FE9B3FC11EB554E287A48FD4B60 /* TextField.swift */,
+				B6D834D929B998D9004C2BC3 /* UIView+Search.swift */,
 				0B857DC64281EF098F45CAC47B5533BA /* StackView */,
 			);
 			name = Views;
@@ -1015,6 +1018,7 @@
 				BEF9EC5A441E5E1F59582425E101664B /* Then.swift in Sources */,
 				5AFE9E788B28F40C59A155FD170430C0 /* UIBarButtonItem+Add.swift in Sources */,
 				428827CDB7836DAEB6210FD5761021F3 /* UIButton+Add.swift in Sources */,
+				B6D834DA29B998D9004C2BC3 /* UIView+Search.swift in Sources */,
 				B6D834D329B824E7004C2BC3 /* SeparatorView.swift in Sources */,
 				E7C0729A8E784612F73AA7B45F63BAE7 /* UICollectionView+Add.swift in Sources */,
 				84DDBAF73864C916A684AC610D832017 /* UICollectionView+Reusable.swift in Sources */,

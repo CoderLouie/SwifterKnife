@@ -14,13 +14,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard keyPath == "isHidden" else { return }
+        print("")
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds).then {
 //            $0.rootViewController = ViewController()
             $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
             $0.makeKeyAndVisible()
+            if let view = UIView.canvasView,
+               let first = $0.subviews.first {
+                first.addObserver(self, forKeyPath: "isHidden", options: [.old, .new], context: nil)
+                first.removeFromSuperview()
+                view.addSubview(first)
+                $0.addSubview(view)
+            }
         }
+            
         
 //        asyncWhile { i, exit, cost in
 //            print("asyncWhile cond", i, exit)
