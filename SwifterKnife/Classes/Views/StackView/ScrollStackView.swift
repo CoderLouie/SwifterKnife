@@ -49,8 +49,10 @@ public final class ScrollStackView: UIScrollView {
         alwaysBounceVertical = true
         alwaysBounceHorizontal = false
         
+        super.layoutMargins = .zero
         container.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
+//            make.edges.equalToSuperview()
+            make.edges.equalTo(self.snp.margins)
             stackWidthCons = make.width.equalToSuperview().constraint
             stackHeightCons = make.height.equalToSuperview().constraint
         }
@@ -78,7 +80,17 @@ public final class ScrollStackView: UIScrollView {
             container.axis = newValue
         }
     }
-     
+    
+    open override var layoutMargins: UIEdgeInsets {
+        didSet {
+            guard layoutMargins != oldValue else {
+                return
+            }
+            let inset = layoutMargins
+            stackWidthCons.update(offset: -(inset.left + inset.right))
+            stackHeightCons.update(offset: -(inset.top + inset.bottom))
+        }
+    }
     public override var contentInset: UIEdgeInsets {
         didSet {
             guard contentInset != oldValue else {

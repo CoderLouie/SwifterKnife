@@ -7,6 +7,12 @@
 
 import UIKit
 
+open class NormalStackView: UIStackView {
+    open override class var layerClass: AnyClass {
+        UIView.layerClass
+    }
+}
+
 public extension UIStackView {
     static var vertical: UIStackView {
         return UIStackView(axis: .vertical, alignment: .center)
@@ -50,6 +56,13 @@ public extension UIStackView {
         for view in arrangedSubviews {
             removeArrangedSubview(view)
         }
+    }
+    
+    func addArrangedView(_ view: UIView, spaceToPrevious space: CGFloat) {
+        if let prev = arrangedSubviews.last {
+            setCustomSpacing(space, after: prev)
+        }
+        addArrangedSubview(view)
     }
     
     /// Exchanges two views of the arranged subviews.

@@ -20,8 +20,19 @@ open class SeparatorView: UIView {
         }
     }
     
+    open var thickness = SeparatorView.amount {
+        didSet {
+            invalidateIntrinsicContentSize()
+        }
+    }
+    
+    open var color: UIColor? {
+        get { backgroundColor }
+        set { backgroundColor = newValue }
+    }
+    
     open override var intrinsicContentSize: CGSize {
-        let amount = SeparatorView.amount
+        let amount = thickness
         if axis == .horizontal {
             return CGSize(width: -1, height: amount)
         } else {

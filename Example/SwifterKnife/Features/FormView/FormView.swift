@@ -28,8 +28,10 @@ open class FormView: UIScrollView {
         alwaysBounceVertical = true
         alwaysBounceHorizontal = false
         
+        super.layoutMargins = .zero
         container.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
+//            make.edges.equalToSuperview()
+            make.edges.equalTo(self.snp.margins)
             stackWidthCons = make.width.equalToSuperview().constraint
             stackHeightCons = make.height.equalToSuperview().constraint
         }
@@ -63,7 +65,16 @@ open class FormView: UIScrollView {
             }
         }
     }
-     
+    open override var layoutMargins: UIEdgeInsets {
+        didSet {
+            guard layoutMargins != oldValue else {
+                return
+            }
+            let inset = layoutMargins
+            stackWidthCons.update(offset: -(inset.left + inset.right))
+            stackHeightCons.update(offset: -(inset.top + inset.bottom))
+        }
+    }
     public override var contentInset: UIEdgeInsets {
         didSet {
             guard contentInset != oldValue else {
@@ -73,8 +84,7 @@ open class FormView: UIScrollView {
             stackWidthCons.update(offset: -(inset.left + inset.right))
             stackHeightCons.update(offset: -(inset.top + inset.bottom))
         }
-    }
-    public var onSelectedCell: ((FormCellType, Int) -> Void)?
+    } 
     
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
@@ -91,6 +101,20 @@ extension FormView: FormCellType { }
 public typealias FormViewCell = FormCellType & UIView
 
 extension FormView {
+    @discardableResult
+    open func addSpace(amount: CGFloat, animated: Bool = false) -> FormSpaceCell {
+        insertSpace(amount: amount, at: container.arrangedSubviews.count, animated: animated)
+    }
+    @discardableResult
+    open func insertSpace(amount: CGFloat,
+                          at index: Int,
+                          animated: Bool = false) -> FormSpaceCell {
+        let cell = FormSpaceCell()
+        cell.amount = amount
+        insertCell(cell, at: index, animated: animated)
+        return cell
+    }
+    
     open func addCell<T: FormViewCell>(_ cell: T, animated: Bool = false) {
         insertCell(cell, at: container.arrangedSubviews.count, animated: animated)
     }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TitleCell: FormFeedbackCell {
+class TitleCell: FormTouchCell {
     override func setup() {
         super.setup()
         separatorMode = .automaticlly
@@ -34,7 +34,6 @@ class TitleCell: FormFeedbackCell {
 class MessageCell: TitleCell {
     override func setup() {
         super.setup()
-        isHighlightable = false
         titleLabel.snp.remakeConstraints { make in
             make.leading.top.equalTo(12)
         }
@@ -69,7 +68,7 @@ class SwitchCell: TitleCell {
         }
     }
     @objc private func controlDidClick() {
-        removeFromFormView()
+        removeFromFormView(animated: true)
     }
     
     private unowned var control: UISwitch!
@@ -80,7 +79,12 @@ class FormViewController: BaseViewController {
         super.setupViews()
         
         formView = FormView().then {
-            $0.contentInset = UIEdgeInsets(top: Screen.navbarH, bottom: Screen.safeAreaB, left: 0, right: 0)
+            $0.layoutMargins = UIEdgeInsets(top: 50, bottom: 50, left: 10, right: 10)
+//            $0.contentInset = UIEdgeInsets(top: Screen.navbarH, bottom: Screen.safeAreaB, left: 0, right: 0)
+            $0.onSelectedCell = { cell in
+//                Console.log("点击FormView", index)
+                cell.removeFromFormView(animated: true)
+            }
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.edges.equalToSuperview()

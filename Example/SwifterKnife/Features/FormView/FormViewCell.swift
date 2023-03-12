@@ -32,10 +32,10 @@ public protocol FormSeperatorCellType: FormCellType {
 
 extension FormCellType where Self: UIView {
     
-    fileprivate var stackView: UIStackView? {
+    fileprivate var ancestorInfo: (UIStackView, FormView)? {
         if let stackView = superview as? UIStackView,
-           let _ = stackView.superview as? FormView {
-            return stackView
+           let formView = stackView.superview as? FormView {
+            return (stackView, formView)
         }
         return nil
     }
@@ -59,9 +59,25 @@ extension FormCellType where Self: UIView {
             aboveCell?.setSeperatorShow(true)
         }
     }
+//    fileprivate func indexOfVisibleArrangedSubViews(on stackView: UIStackView) -> Int? {
+//        var index: Int = 0
+//        for subview in stackView.arrangedSubviews {
+//            if subview === self { return index }
+//            if subview.isHidden { continue }
+//            index += 1
+//        }
+//        return nil
+//    }
      
+//    public var indexInFormView: Int? {
+//        guard let stackView = ancestorInfo?.0 else {
+//            return nil
+//        }
+//        return indexOfVisibleArrangedSubViews(on: stackView)
+//    }
+    
     public func updateSeperatorVisibleState() {
-        guard let stackView = stackView else {
+        guard let stackView = ancestorInfo?.0 else {
             return
         }
         updateSeperatorsState(on: stackView)
@@ -71,7 +87,7 @@ extension FormCellType where Self: UIView {
                           completion: (() -> Void)? = nil) {
         guard self.isHidden != isHidden else { return }
 
-        guard let stackView = stackView else {
+        guard let stackView = ancestorInfo?.0 else {
             return
         }
         if animatied {
@@ -96,7 +112,7 @@ extension FormCellType where Self: UIView {
     }
     
     public func scrollToVisible(animated: Bool = true) {
-        guard let formView = stackView?.superview as? FormView else { return }
+        guard let formView = ancestorInfo?.1 else { return }
         formView.scrollRectToVisible(frame, animated: animated)
     }
 }
@@ -115,20 +131,74 @@ fileprivate extension NSLayoutConstraint.Axis {
     }
 }
 
-open class FormCell: UIView, FormCellType {
+open class FormCell: UIView, FormCellType, FormSeperatorCellType {
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        separatorView = SeparatorView().then {
+            addSubview($0)
+            $0.isHidden = true
+        }
         setup()
-        didSetup()
+        defer {
+            bringSubviewToFront(separatorView)
+        }
     }
+    
+    open var separatorMode: FormSeparatorVisibleMode = .never {
+        didSet {
+            switch separatorMode {
+            case .never: separatorView.isHidden = true
+            case .always: separatorView.isHidden = false
+            default: break
+            }
+        }
+    }
+    
+    open var separatorThickness: CGFloat {
+        get { separatorView.thickness }
+        set { separatorView.thickness = newValue }
+    }
+    
+    open var separatorColor: UIColor? {
+        get { separatorView.color }
+        set { separatorView.color = newValue }
+    }
+    
+    open var separatorInset: UIEdgeInsets? {
+        didSet {
+            updateSeperatorViewIfNeeded()
+        }
+    }
+    
+    public private(set) var separatorView: SeparatorView!
+    
     public private(set) var axis: NSLayoutConstraint.Axis = .vertical
     
-    public func axisDidChange(to axis: NSLayoutConstraint.Axis, dueToAxisPropertyChanged dueto: Bool) {
+    open func axisDidChange(to axis: NSLayoutConstraint.Axis, dueToAxisPropertyChanged dueto: Bool) {
         self.axis = axis
+        updateSeperatorViewIfNeeded()
+    }
+    
+    private func updateSeperatorViewIfNeeded() {
+        guard let inset = separatorInset else {
+            separatorView.snp.removeConstraints()
+            return
+        }
+        let axis = self.axis.crossed
+        separatorView.axis = axis
+        separatorView.snp.remakeConstraints { make in
+            if axis == .horizontal {
+                make.leading.trailing.equalToSuperview().inset(inset)
+                make.bottom.equalToSuperview()
+            } else {
+                make.top.bottom.equalToSuperview().inset(inset)
+                make.trailing.equalToSuperview()
+            }
+        }
     }
     
     open func setup() { }
-    fileprivate func didSetup() {}
     
     @available(*, unavailable)
     required public init?(coder: NSCoder) {
@@ -137,6 +207,36 @@ open class FormCell: UIView, FormCellType {
     
 }
 
+public final class FormSpaceCell: FormCell { 
+    
+    public var amount: CGFloat = 10 {
+        didSet {
+            invalidateIntrinsicContentSize()
+        }
+    }
+    public override var intrinsicContentSize: CGSize {
+        if axis == .horizontal {
+            return CGSize(width: amount, height: -1)
+        } else {
+            return CGSize(width: -1, height: amount)
+        }
+    }
+    public override func axisDidChange(to axis: NSLayoutConstraint.Axis, dueToAxisPropertyChanged dueto: Bool) {
+        super.axisDidChange(to: axis, dueToAxisPropertyChanged: dueto)
+        invalidateIntrinsicContentSize()
+    }
+}
+
+open class FormTouchCell: FormCell {
+    public var onTouch: ((FormTouchCell) -> Void)?
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        onTouch?(self) 
+    }
+}
+
+/*
 open class FormSeperatorCell: FormCell, FormSeperatorCellType {
     
     open var separatorMode: FormSeparatorVisibleMode = .never {
@@ -148,15 +248,14 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
             }
         }
     }
-     
-    open override func setup() {
-        super.setup()
+      
+    override fileprivate func beforeSetup() {
         separatorView = SeparatorView().then {
             addSubview($0)
             $0.isHidden = true
         }
     }
-    override fileprivate func didSetup() {
+    override fileprivate func afterSetup() {
         bringSubviewToFront(separatorView)
     }
     
@@ -191,10 +290,11 @@ open class FormSeperatorCell: FormCell, FormSeperatorCellType {
         }
     }
 }
+ */
 
+/*
 open class FormFeedbackCell: FormSeperatorCell {
     
-    public var onTouch: ((FormFeedbackCell) -> Void)?
     
     public var highlightColor: UIColor? = .systemFeedback
     
@@ -204,8 +304,7 @@ open class FormFeedbackCell: FormSeperatorCell {
         didSet {
             guard isHighlighted != oldValue else { return }
             if isHighlighted, highlightColor == nil { return }
-            
-//            guard let color = highlightColor else { return }
+             
             UIView.animate(withDuration: 0.25) {
                 let color = self.highlightColor
                 self.highlightColor = self.backgroundColor
@@ -216,8 +315,6 @@ open class FormFeedbackCell: FormSeperatorCell {
     
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        
-        onTouch?(self)
         
         if isHighlightable {
             isHighlighted = true
@@ -248,3 +345,4 @@ open class FormFeedbackCell: FormSeperatorCell {
         }
     }
 }
+*/
