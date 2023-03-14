@@ -62,8 +62,7 @@ extension UIView {
         let field = UITextField()
         field.isSecureTextEntry = true
         let target: UIView? = field.searchInLevelOrder { view, _ in
-            let typename = String(describing: type(of: view))
-            print(typename)
+            let typename = String(describing: type(of: view)) 
             return typename.contains("CanvasView")
         }
         target?.removeSubviews()

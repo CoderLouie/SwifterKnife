@@ -32,17 +32,16 @@ import SnapKit
  
  */
 public final class ScrollStackView: UIScrollView {
-    public override init(frame: CGRect) {
+    
+    public init(normalized: Bool, frame: CGRect, arrangedSubviews: [UIView] = []) {
         super.init(frame: frame)
-        setup()
-    }
-    private func setup() {
+        
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
         contentInsetAdjustmentBehavior = .never
         backgroundColor = .clear
         
-        container = UIStackView()
+        container = normalized ? NormalStackView(arrangedSubviews: arrangedSubviews) : UIStackView(arrangedSubviews: arrangedSubviews)
         container.axis = .vertical
         addSubview(container)
         
@@ -57,6 +56,16 @@ public final class ScrollStackView: UIScrollView {
             stackHeightCons = make.height.equalToSuperview().constraint
         }
         stackHeightCons.deactivate()
+    }
+    
+    public convenience override init(frame: CGRect) {
+        self.init(normalized: false, frame: frame)
+    }
+    public convenience init() {
+        self.init(normalized: false, frame: .zero)
+    }
+    public static var normalized: ScrollStackView {
+        .init(normalized: true, frame: .zero)
     }
     
     public var isVertical: Bool {
@@ -80,8 +89,12 @@ public final class ScrollStackView: UIScrollView {
             container.axis = newValue
         }
     }
+    public func axis(_ axis: NSLayoutConstraint.Axis) -> Self {
+        self.axis = axis
+        return self
+    }
     
-    open override var layoutMargins: UIEdgeInsets {
+    public override var layoutMargins: UIEdgeInsets {
         didSet {
             guard layoutMargins != oldValue else {
                 return
@@ -99,8 +112,11 @@ public final class ScrollStackView: UIScrollView {
             let inset = contentInset
             stackWidthCons.update(offset: -(inset.left + inset.right))
             stackHeightCons.update(offset: -(inset.top + inset.bottom))
-//            container.setNeedsUpdateConstraints()
         }
+    }
+    public func contentInset(_ inset: UIEdgeInsets) -> Self {
+        self.contentInset = inset
+        return self
     }
     
     required init?(coder: NSCoder) {
@@ -110,4 +126,15 @@ public final class ScrollStackView: UIScrollView {
     public private(set) var container: UIStackView!
     private var stackHeightCons: Constraint!
     private var stackWidthCons: Constraint!
+}
+
+
+
+public func hScrollStack(normalized: Bool = false,
+                   @ViewsBuilder views: () -> [UIView]) -> ScrollStackView {
+    .init(normalized: normalized, frame: .zero, arrangedSubviews: views()).axis(.horizontal)
+}
+public func vScrollStack(normalized: Bool = false,
+                   @ViewsBuilder views: () -> [UIView]) -> ScrollStackView {
+    .init(normalized: normalized, frame: .zero, arrangedSubviews: views())
 }

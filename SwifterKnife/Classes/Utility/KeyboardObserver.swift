@@ -115,6 +115,7 @@ public final class KeyboardObserver {
         eventListen.removeAll()
         NotificationCenter.default.removeObserver(self)
     }
+    public init() {}
     
     public func observe(_ name: KeyboardEvent.Name, closure: @escaping Listener) {
         if var listeners = eventListen[name] {

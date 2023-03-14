@@ -9,47 +9,6 @@ import Foundation
 
 // https://github.com/Nirma/Attributed.git
 
-public struct Attributed<Base> {
-    let base: Base
-    public init(_ base: Base) {
-        self.base = base
-    }
-}
-
-public protocol AttributedCompatible {
-    associatedtype CompatibleType
-
-    var at: Attributed<CompatibleType> { get }
-}
-
-public extension AttributedCompatible {
-    var at: Attributed<Self> {
-        return Attributed(self)
-    }
-}
-
-extension String: AttributedCompatible { }
-extension NSString: AttributedCompatible { }
-
-extension Attributed where Base == String {
-    public func build(with attributes: Attributes) -> NSAttributedString {
-        NSAttributedString(string: base, attributes: attributes.dictionary)
-    }
-    public func build(_ attributeBlock: (Attributes) -> Void) -> NSAttributedString {
-        let attributes = Attributes()
-        attributeBlock(attributes)
-        return NSAttributedString(string: base, attributes: attributes.dictionary)
-    }
-}
-extension Attributed where Base == NSString {
-    public func build(with attributes: Attributes) -> NSAttributedString {
-        (base as String).at.build(with: attributes)
-    }
-    public func build(_ attributeBlock: (Attributes) -> Void) -> NSAttributedString {
-        (base as String).at.build(attributeBlock)
-    }
-}
-
 public extension NSAttributedString {
     
     func modified(with attributes: Attributes, for range: NSRange) -> NSAttributedString {
@@ -80,19 +39,43 @@ public func + (lhs: NSAttributedString, rhs: String) -> NSAttributedString {
     return NSAttributedString(attributedString: result)
 }
 
+public extension String {
+    var build: NSMutableAttributedString {
+        NSMutableAttributedString(string: self)
+    }
+    var rich: Attributes {
+        .init(self)
+    }
+    func build(with attributes: Attributes) -> NSAttributedString {
+        NSAttributedString(string: self, attributes: attributes.dictionary)
+    }
+}
+
 public final class Attributes {
     public private(set) var dictionary: [NSAttributedString.Key: Any]
      
+    private let target: String
+    
     public init() {
         dictionary = [:]
+        target = ""
     }
     
+    fileprivate init(_ target: String) {
+        dictionary = [:]
+        self.target = target
+    }
+        
     public static var one: Attributes {
         return Attributes()
     }
     
     public func apply(_ string: String) -> NSAttributedString {
         NSAttributedString(string: string, attributes: dictionary)
+    }
+    
+    public var build: NSAttributedString {
+        NSAttributedString(string: target, attributes: dictionary)
     }
 }
 
@@ -143,6 +126,17 @@ public extension Attributes {
     
     @discardableResult
     func background(color: UIColor) -> Attributes {
+        dictionary[.backgroundColor] = color
+        return self
+    }
+    @discardableResult
+    func fgColor(_ color: UIColor) -> Attributes {
+        dictionary[.foregroundColor] = color
+        return self
+    }
+    
+    @discardableResult
+    func bgColor(_ color: UIColor) -> Attributes {
         dictionary[.backgroundColor] = color
         return self
     }
@@ -287,4 +281,35 @@ public extension Attributes {
             $0.hyphenationFactor = hyphenationFactor
         }
     }
+}
+
+@resultBuilder
+public enum AttributedStringBuilder {
+    public static func buildBlock(_ components: NSAttributedString...) -> NSAttributedString {
+        components.reduce(into: NSMutableAttributedString()) {
+            $0.append($1)
+        }
+    }
+    public static func buildOptional(_ component: NSAttributedString?) -> NSAttributedString {
+        component ?? NSAttributedString(string: "")
+    }
+    
+    public static func buildEither(first component: NSAttributedString) -> NSAttributedString {
+        component
+    }
+    
+    public static func buildEither(second component: NSAttributedString) -> NSAttributedString {
+        component
+    }
+    
+    public static func buildArray(_ components: [NSAttributedString]) -> NSAttributedString {
+        components.reduce(into: NSMutableAttributedString()) {
+            $0.append($1)
+        }
+    }
+}
+
+
+public func attributed(@AttributedStringBuilder body: () -> NSAttributedString) -> NSAttributedString {
+    body() 
 }

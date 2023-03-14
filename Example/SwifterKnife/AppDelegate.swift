@@ -8,17 +8,48 @@
 
 import UIKit
 
+class ShieldWindow: UIWindow {
+    private func viewIsCanvas(_ view: UIView) -> Bool {
+        let typename = String(describing: type(of: view))
+        return typename.contains("CanvasView")
+    }
+    override func addSubview(_ view: UIView) {
+        super.addSubview(view)
+        DispatchQueue.main.async {
+            self.startWork()
+        }
+    }
+    func startWork() {
+        guard let view = subviews.first,
+              !viewIsCanvas(view),
+              let container = UIView.canvasView else {
+            return
+        }
+        container.frame = view.bounds
+        container.addSubview(view)
+        insertSubview(container, at: 0)
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let age = 9
+        switch age {
+        case { $0 > 10 }:
+            print("greather than 10")
+        default:
+            break
+        }
         // Override point for customization after application launch.
-        window = UIWindow(frame: UIScreen.main.bounds).then {
+        window = ShieldWindow(frame: UIScreen.main.bounds).then {
 //            $0.rootViewController = ViewController()
             $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
             $0.makeKeyAndVisible()
+//            $0.startWork()
 //            if let view = UIView.canvasView,
 //               let first = $0.subviews.first {
 //                first.removeFromSuperview()

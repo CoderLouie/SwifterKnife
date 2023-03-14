@@ -14,31 +14,35 @@ open class NormalStackView: UIStackView {
 }
 
 public extension UIStackView {
-    static var vertical: UIStackView {
-        return UIStackView(axis: .vertical, alignment: .center)
+    static var vertical: Self {
+        return .create(axis: .vertical, alignment: .center)
     }
-    static var horizontal: UIStackView {
-        return UIStackView(axis: .horizontal, alignment: .center)
+    static var horizontal: Self {
+        return .create(axis: .horizontal, alignment: .center)
     }
     
-    /// Initialize an UIStackView with an array of UIView and common parameters.
+    /// Create an UIStackView with an array of UIView and common parameters.
     ///
     /// - Parameters:
+    ///   - arrangedSubviews: The UIViews to add to the stack.
     ///   - axis: The axis along which the arranged views are laid out.
     ///   - spacing: The distance in points between the adjacent edges of the stack view’s arranged views (default: 0.0).
     ///   - alignment: The alignment of the arranged subviews perpendicular to the stack view’s axis (default: .fill).
     ///   - distribution: The distribution of the arranged views along the stack view’s axis (default: .fill).
-    convenience init(
+    static func create(
         axis: NSLayoutConstraint.Axis,
+        arrangedSubviews: [UIView] = [],
         spacing: CGFloat = 0.0,
         alignment: UIStackView.Alignment = .fill,
-        distribution: UIStackView.Distribution = .fill) {
-        self.init(frame: .zero) 
-        self.axis = axis
-        self.spacing = spacing
-        self.alignment = alignment
-        self.distribution = distribution
+        distribution: UIStackView.Distribution = .fill) -> Self {
+        let view = Self(arrangedSubviews: arrangedSubviews)
+        view.axis = axis
+        view.spacing = spacing
+        view.alignment = alignment
+        view.distribution = distribution
+        return view
     }
+    
     func addArrangedSubviews(_ views: UIView...) {
         addArrangedSubviews(views)
     }
@@ -58,11 +62,55 @@ public extension UIStackView {
         }
     }
     
-    func addArrangedView(_ view: UIView, spaceToPrevious space: CGFloat) {
-        if let prev = arrangedSubviews.last {
-            setCustomSpacing(space, after: prev)
+    func prependArrangedSubview(_ view: UIView) {
+        insertArrangedSubview(view, at: 0)
+    }
+    
+    func firstArrangedSubview<T: UIView>(as type: T.Type = T.self) -> T? {
+        arrangedSubviews.first { $0 is T } as? T
+    }
+    func lastArrangedSubview<T: UIView>(as type: T.Type = T.self) -> T? {
+        arrangedSubviews.last { $0 is T } as? T
+    }
+    
+    func arrangedIndex(of view: UIView) -> Int? {
+        return arrangedSubviews.firstIndex(of: view)
+    }
+    
+    func addArrangedSubview(_ view: UIView, spaceToPrevious space: CGFloat) {
+        insertArrangedSubview(view, at: arrangedSubviews.count, spaceToPrevious: space)
+    }
+    func insertArrangedSubview(_ view: UIView, at index: Int, spaceToPrevious space: CGFloat) {
+        let subviews = arrangedSubviews
+        if subviews.count >= index, index > 0 {
+            setCustomSpacing(space, after: subviews[index - 1])
         }
         addArrangedSubview(view)
+    }
+    
+    @discardableResult
+    func margin(_ margins: UIEdgeInsets) -> UIStackView {
+        layoutMargins = margins
+        isLayoutMarginsRelativeArrangement = true
+        return self
+    }
+
+    @discardableResult
+    func alignment(_ alignment: UIStackView.Alignment) -> UIStackView {
+        self.alignment = alignment
+        return self
+    }
+    
+    @discardableResult
+    func spacing(_ spacing: CGFloat) -> UIStackView {
+        self.spacing = spacing
+        return self
+    }
+
+    @discardableResult
+    func distribution(_ distribution: UIStackView.Distribution) -> UIStackView {
+        self.distribution = distribution
+        return self
     }
     
     /// Exchanges two views of the arranged subviews.
@@ -99,4 +147,60 @@ public extension UIStackView {
             swapViews(view1, view2)
         }
     }
+}
+
+
+@resultBuilder
+public enum ArrayBuilder<I> {
+
+    public typealias Expression = I
+    public typealias Component = [I]
+
+    public static func buildExpression(_ expression: Expression) -> Component {
+        return [expression]
+    }
+
+    public static func buildExpression(_ expression: Component) -> Component {
+        return expression
+    }
+
+    public static func buildExpression(_ expression: Expression?) -> Component {
+        guard let expression = expression else { return [] }
+        return [expression]
+    }
+
+    public static func buildBlock(_ children: Component...) -> Component {
+        return children.flatMap { $0 }
+    }
+
+    public static func buildBlock(_ component: Component) -> Component {
+        return component
+    }
+
+    public static func buildOptional(_ children: Component?) -> Component {
+        return children ?? []
+    }
+
+    public static func buildEither(first child: Component) -> Component {
+        return child
+    }
+
+    public static func buildEither(second child: Component) -> Component {
+        return child
+    }
+
+    public static func buildArray(_ components: [Component]) -> Component {
+        return components.flatMap { $0 }
+    }
+}
+
+public typealias ViewsBuilder = ArrayBuilder<UIView>
+
+public func hStack(normalized: Bool = false,
+                   @ViewsBuilder views: () -> [UIView]) -> UIStackView {
+    (normalized ? NormalStackView.self : UIStackView.self).create(axis: .horizontal, arrangedSubviews: views())
+}
+public func vStack(normalized: Bool = false,
+                   @ViewsBuilder views: () -> [UIView]) -> UIStackView {
+    (normalized ? NormalStackView.self : UIStackView.self).create(axis: .vertical, arrangedSubviews: views())
 }

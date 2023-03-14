@@ -42,6 +42,7 @@ open class Input: UITextField {
     open var maxLength: Int = 0
     
     public var onReturnKeyPressed: ((Input) -> Void)?
+    public var onTextDidChange: ((Input) -> Void)?
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,13 +59,15 @@ open class Input: UITextField {
     // Limit the length of text
     @objc private func textDidChange(notification: Notification) {
         guard let sender = notification.object as? Input, sender === self else { return }
-        guard maxLength > 0,
+        if maxLength > 0,
               let text = text,
               markedTextRange == nil,
-              text.count > maxLength else { return }
-        let endIndex = text.index(text.startIndex, offsetBy: maxLength)
-        self.text = String(text[..<endIndex])
-        undoManager?.removeAllActions()
+              text.count > maxLength {
+            let endIndex = text.index(text.startIndex, offsetBy: maxLength)
+            self.text = String(text[..<endIndex])
+            undoManager?.removeAllActions()
+        }
+        onTextDidChange?(self)
     }
 }
 extension Input: UITextFieldDelegate {

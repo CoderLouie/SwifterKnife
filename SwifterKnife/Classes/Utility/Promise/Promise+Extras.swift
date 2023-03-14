@@ -199,13 +199,11 @@ public struct IndexError: Swift.Error {
     }
 }
 extension Promises {
-    public static func asyncMap
-    <Element, Value, Failure: Swift.Error>(
+    public static func asyncMap<Element, Value>(
         of array: [Element],
         on queue: DispatchQueue = .global(qos: .userInitiated),
         using closure: @escaping (_ element: Element,
-                         _ index: Int,
-                         _ completion: @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<[Value]> {
+                                  _ index: Int) -> Promise<Value>) -> Promise<[Value]> {
         let promise = Promise<[Value]>()
         var iterator = array.enumerated().makeIterator()
         guard let first = iterator.next() else {
@@ -218,17 +216,14 @@ extension Promises {
                 promise.fulfill(res)
                 return
             }
-            closure(pair.element, pair.offset) { result in
-                switch result {
-                case .success(let val):
-                    queue.async {
-                        res.append(val)
-                        work(pair: iterator.next())
-                    }
-                case .failure(let err):
-                    queue.async {
-                        promise.reject(IndexError(index: pair.offset, error: err))
-                    }
+            closure(pair.element, pair.offset).then { val in
+                queue.async {
+                    res.append(val)
+                    work(pair: iterator.next())
+                }
+            } onRejected: { err in
+                queue.async {
+                    promise.reject(IndexError(index: pair.offset, error: err))
                 }
             }
         }

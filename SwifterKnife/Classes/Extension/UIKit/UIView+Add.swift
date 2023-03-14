@@ -453,3 +453,21 @@ open class WrapLabel: UILabel {
         super.intrinsicContentSize.adaptive(tramsform: \.pixCeil)
     }
 }
+
+/*
+class XXView: UIView {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let point = touch.location(in: self)
+        switch (self, point, event) {
+        case .deleteView:
+            print("touch deleteView")
+        default: break
+        }
+    }
+}
+*/
+public func ~=(pattern: UIView, value: (superview: UIView, point: CGPoint, event: UIEvent?)) -> Bool {
+    let point = value.superview.convert(value.point, to: pattern)
+    return pattern.point(inside: point, with: value.event)
+}

@@ -78,3 +78,13 @@ public typealias Provider<T> = () -> T
 
 
 
+infix operator <=>: AssignmentPrecedence
+public func <=><T>(lhs: inout T, rhs: T) -> T {
+    lhs = rhs
+    return rhs
+}
+
+public func ~=<T>(pattern: (T) -> Bool, value: T) -> Bool {
+    pattern(value)
+}
+

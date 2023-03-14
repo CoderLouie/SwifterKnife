@@ -27,6 +27,17 @@ open class VirtualView: UIView {
 }
 
 open class SpaceView: UIView {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
+        setContentHuggingPriority(.fittingSizeLevel, for: .vertical)
+        setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
+        setContentCompressionResistancePriority(.fittingSizeLevel, for: .vertical)
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public convenience init(width: CGFloat) {
         self.init(frame: .zero)
         intrinsicSize.width = width

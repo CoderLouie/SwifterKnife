@@ -75,16 +75,28 @@ class SwitchCell: TitleCell {
 }
 
 class FormViewController: BaseViewController {
+    private unowned var label1: UILabel!
     override func setupViews() {
         super.setupViews()
+        
+        let val: NSAttributedString = attributed {
+            "Hello".rich.fgColor(.red).font(.bold(20)).build
+            "\n".build
+            "word".build
+        }
+        
+        hStack {
+            label1 <=> UILabel()
+            SpaceView(height: 20)
+        }
         
         formView = FormView().then {
             $0.layoutMargins = UIEdgeInsets(top: 50, bottom: 50, left: 10, right: 10)
 //            $0.contentInset = UIEdgeInsets(top: Screen.navbarH, bottom: Screen.safeAreaB, left: 0, right: 0)
-            $0.onSelectedCell = { cell in
-//                Console.log("点击FormView", index)
-                cell.removeFromFormView(animated: true)
-            }
+//            $0.onSelectedCell = { cell in
+////                Console.log("点击FormView", index)
+//                cell.removeFromFormView(animated: true)
+//            }
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
