@@ -79,6 +79,17 @@ class FormViewController: BaseViewController {
     override func setupViews() {
         super.setupViews()
         
+        let age = 10
+        let newAge = buildResult {
+//            if age > 20 { 30 }
+//            else { 10 }
+            switch age {
+            case 30: 20
+            case 10..<30: 10
+            default: 5
+            }
+        }
+        
         let val: NSAttributedString = attributed {
             "Hello".rich.fgColor(.red).font(.bold(20)).build
             "\n".build

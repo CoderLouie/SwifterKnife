@@ -12,6 +12,24 @@ public func resultOf<T>(_ code: () -> T) -> T {
     return code()
 }
 
+
+@resultBuilder
+public enum ResultBuilder<T> {
+    public static func buildBlock(_ components: T...) -> T {
+        let n = components.count
+        return components[n - 1]
+    }
+    public static func buildEither(first component: T) -> T {
+        component
+    }
+    public static func buildEither(second component: T) -> T {
+        component
+    }
+}
+public func buildResult<T>(@ResultBuilder<T> body: () -> T) -> T {
+    return body()
+}
+
 public func && (lhs: Bool?, rhs: Bool?) -> Bool? {
     switch (lhs, rhs) {
     case (false, _), (_, false):

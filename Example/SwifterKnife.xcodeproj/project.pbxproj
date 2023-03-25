@@ -17,6 +17,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		B648D68029418287004FFDCE /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648D67F29418287004FFDCE /* Defaults.swift */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
+		B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65E581129C8478600C48C3A /* TypedNotification.swift */; };
 		B66414742988C7970071C0FA /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66414732988C7970071C0FA /* TimerViewController.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
@@ -80,6 +81,7 @@
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwiftKnifeTrash/Defaults.swift; sourceTree = SOURCE_ROOT; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
+		B65E581129C8478600C48C3A /* TypedNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedNotification.swift; sourceTree = "<group>"; };
 		B66414732988C7970071C0FA /* TimerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
 		B67F61E128A34A44008AD997 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B67F61E328A34A56008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				B6D834C929B192F4004C2BC3 /* Func.swift */,
 				B6D834C229B19192004C2BC3 /* CallbackHell */,
 				B6D834CD29B1E09C004C2BC3 /* Validator.swift */,
+				B65E581129C8478600C48C3A /* TypedNotification.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				B6D834B929B0C89B004C2BC3 /* XcodeKeys.swift in Sources */,
 				B648D68029418287004FFDCE /* Defaults.swift in Sources */,
 				B6D834BC29B190C5004C2BC3 /* CallbackHell.swift in Sources */,
+				B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

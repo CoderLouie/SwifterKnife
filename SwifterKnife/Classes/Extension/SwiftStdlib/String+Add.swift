@@ -248,8 +248,8 @@ public extension String {
     /// - Returns: The words contained in a string.
     func words() -> [String] {
         // https://stackoverflow.com/questions/42822838
-        let chararacterSet = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
-        let comps = components(separatedBy: chararacterSet)
+        let characterSet = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        let comps = components(separatedBy: characterSet)
         return comps.filter { !$0.isEmpty }
     }
  

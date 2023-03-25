@@ -8,29 +8,6 @@
 
 import UIKit
 
-class ShieldWindow: UIWindow {
-    private func viewIsCanvas(_ view: UIView) -> Bool {
-        let typename = String(describing: type(of: view))
-        return typename.contains("CanvasView")
-    }
-    override func addSubview(_ view: UIView) {
-        super.addSubview(view)
-        DispatchQueue.main.async {
-            self.startWork()
-        }
-    }
-    func startWork() {
-        guard let view = subviews.first,
-              !viewIsCanvas(view),
-              let container = UIView.canvasView else {
-            return
-        }
-        container.frame = view.bounds
-        container.addSubview(view)
-        insertSubview(container, at: 0)
-    }
-}
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -45,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             break
         }
         // Override point for customization after application launch.
-        window = ShieldWindow(frame: UIScreen.main.bounds).then {
+        window = UIWindow(frame: UIScreen.main.bounds).then {
 //            $0.rootViewController = ViewController()
             $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
             $0.makeKeyAndVisible()

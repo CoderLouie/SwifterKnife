@@ -6,6 +6,8 @@
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
+import UIKit
+
 
 fileprivate class BottomBar: UIView {
     override init(frame: CGRect) {
@@ -99,22 +101,35 @@ class HomeViewController: BaseViewController {
         }
           
         
-        let cell = FormCell().then {
-            $0.backgroundColor = .groupTableViewBackground
+//        let cell = FormCell().then {
+//            $0.backgroundColor = .groupTableViewBackground
+//            view.addSubview($0)
+//            $0.snp.makeConstraints { make in
+//                make.center.equalToSuperview()
+//                make.width.height.equalTo(100)
+//            }
+//        }
+//        cell.setHidden(true, animatied: true)
+        
+        label = UILabel().then {
+            $0.text = "touchesBegantouchesBegantouchesBegantouchesBegantouchesBegantouchesBegan"
+            $0.numberOfLines = 0
             view.addSubview($0)
             $0.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.height.equalTo(100)
+                make.leading.trailing.inset(50)
+                make.centerY.equalToSuperview()
             }
         }
-        cell.setHidden(true, animatied: true)
     }
+    private unowned var label: UILabel!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let width = view.bounds.width - 60
+        print(label.frame, label.fittingSize(withRequiredWidth: width), label.compressedSize)
 //        view.resignFirstResponder()
-        view.endEditing(true)
+//        view.endEditing(true)
 //        let vc = DebugViewController()
-        let vc = FormViewController()
+//        let vc = FormViewController()
 ////        let vc = TimerViewController()
-        navigationController?.pushViewController(vc, animated: true)
+//        navigationController?.pushViewController(vc, animated: true)
     }
 }
