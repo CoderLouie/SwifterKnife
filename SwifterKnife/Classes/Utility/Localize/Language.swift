@@ -21,6 +21,7 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         let languages = bundle.localizations
         return languages.map(Language.init(rawValue:))
     }
+    
     public static func availableCodes(for bundle: Bundle = .main) -> Set<String> {
         Set(bundle.localizations)
     }
