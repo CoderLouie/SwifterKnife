@@ -21,6 +21,17 @@ public extension UIStackView {
         return .create(axis: .horizontal, alignment: .center)
     }
     
+    static func vertical(spacing: CGFloat = 0,
+                         alignment: UIStackView.Alignment = .fill,
+                         @ViewsBuilder views: () -> [UIView]) -> Self {
+        create(axis: .vertical, arrangedSubviews: views(), spacing: spacing, alignment: alignment, distribution: .fill)
+    }
+    static func horizontal(spacing: CGFloat = 0,
+                           alignment: UIStackView.Alignment = .fill,
+                           @ViewsBuilder views: () -> [UIView]) -> Self {
+        create(axis: .horizontal, arrangedSubviews: views(), spacing: spacing, alignment: alignment, distribution: .fill)
+    }
+    
     /// Create an UIStackView with an array of UIView and common parameters.
     ///
     /// - Parameters:
@@ -73,6 +84,13 @@ public extension UIStackView {
         arrangedSubviews.last { $0 is T } as? T
     }
     
+    func arrangedSubview<T: UIView>(at index: Int) -> T? {
+        let views = arrangedSubviews
+        guard views.indices.contains(index) else { return nil }
+        return views[index] as? T
+    }
+    
+    
     func arrangedIndex(of view: UIView) -> Int? {
         return arrangedSubviews.firstIndex(of: view)
     }
@@ -85,9 +103,18 @@ public extension UIStackView {
         if subviews.count >= index, index > 0 {
             setCustomSpacing(space, after: subviews[index - 1])
         }
-        addArrangedSubview(view)
+        insertArrangedSubview(view, at: index)
     }
     
+    
+    @discardableResult
+    func customSpacing(_ spacing: CGFloat, at index: Int) -> UIStackView {
+        let subviews = arrangedSubviews
+        if subviews.count >= index, index > 0 {
+            setCustomSpacing(spacing, after: subviews[index - 1])
+        }
+        return self
+    }
     @discardableResult
     func margin(_ margins: UIEdgeInsets) -> UIStackView {
         layoutMargins = margins
@@ -195,12 +222,3 @@ public enum ArrayBuilder<I> {
 }
 
 public typealias ViewsBuilder = ArrayBuilder<UIView>
-
-public func hStack(normalized: Bool = false,
-                   @ViewsBuilder views: () -> [UIView]) -> UIStackView {
-    (normalized ? NormalStackView.self : UIStackView.self).create(axis: .horizontal, arrangedSubviews: views())
-}
-public func vStack(normalized: Bool = false,
-                   @ViewsBuilder views: () -> [UIView]) -> UIStackView {
-    (normalized ? NormalStackView.self : UIStackView.self).create(axis: .vertical, arrangedSubviews: views())
-}
