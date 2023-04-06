@@ -92,14 +92,14 @@ class FormViewController: BaseViewController {
         
         let val: NSAttributedString = attributed {
             "Hello".rich.fgColor(.red).font(.bold(20)).build
-            "\n".build
+            "\n"
             "word".build
         }
         
-        hStack {
-            label1 <=> UILabel()
-            SpaceView(height: 20)
-        }
+//        hStack {
+//            label1 <=> UILabel()
+//            SpaceView(height: 20)
+//        }
         
         formView = FormView().then {
             $0.layoutMargins = UIEdgeInsets(top: 50, bottom: 50, left: 10, right: 10)

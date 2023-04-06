@@ -307,6 +307,14 @@ public enum AttributedStringBuilder {
             $0.append($1)
         }
     }
+    
+    public static func buildExpression(_ expression: String) -> NSAttributedString {
+        NSAttributedString(string: expression)
+    }
+    
+    public static func buildExpression(_ expression: NSAttributedString) -> NSAttributedString {
+        expression
+    }
 }
 
 

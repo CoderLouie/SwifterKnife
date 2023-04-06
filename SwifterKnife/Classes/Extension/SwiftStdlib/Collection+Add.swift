@@ -114,7 +114,7 @@ public extension Collection {
                     index2 = self.index(after: index2)
                     if index2 >= endIndex {
                         index1 = self.index(after: index1)
-                        index2 = self.index(after:index1)
+                        index2 = self.index(after: index1)
                     }
                 }
                 return (self[index1], self[index2])
