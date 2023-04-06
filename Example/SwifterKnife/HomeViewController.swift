@@ -78,8 +78,10 @@ class HomeViewController: BaseViewController {
     override func setupViews() {
         super.setupViews()
         title = "Home"
-        view.keyboardKeepSpaceClosure = { 20 + CGFloat($0.tag) }
+        view.keyboardKeepSpaceClosure = { CGFloat($0.tag) }
+//        view.keyboardKeepSpace = 20
         UITextField().do {
+            $0.backgroundColor = .lightGray
             $0.isSecureTextEntry = true
             $0.placeholder = "请输入密码1"
             $0.tag = 40
@@ -90,6 +92,7 @@ class HomeViewController: BaseViewController {
             }
         }
         UITextField().do {
+            $0.backgroundColor = .lightGray
             $0.isSecureTextEntry = true
             $0.placeholder = "请输入密码1"
             $0.tag = 10

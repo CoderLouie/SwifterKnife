@@ -161,7 +161,7 @@ extension UIView {
         }
     }
     /// 输入视图需要和键盘保持的距离
-    public var keyboardKeepSpaceClosure: ((UIView) -> CGFloat?)? {
+    public var keyboardKeepSpaceClosure: ((UIView) -> CGFloat)? {
         set {
             objc_setAssociatedObject(self, &keyboardKeepSpaceKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             if newValue == nil {
@@ -172,11 +172,17 @@ extension UIView {
                 _keyboardObserver = observer
                 
                 observer.observe(.willShow) { [unowned self] event in
+                    if let space = self.keyboardAvoidingSpace {
+                        var frame = self.frame
+                        frame.origin.y -= space
+                        self.frame = frame
+                        self.keyboardAvoidingSpace = nil
+                    }
                     guard let inputView = self.theInputView,
-                          let closure = self.keyboardKeepSpaceClosure,
-                          let space = closure(inputView) else {
+                          let closure = self.keyboardKeepSpaceClosure else {
                         return
                     }
+                    let space = closure(inputView)
                     let rect = inputView.convert(inputView.bounds, to: nil)
                     let delta = Screen.height - rect.maxY - event.endFrame.height - space
                     if delta > 0 { return }
@@ -202,7 +208,7 @@ extension UIView {
             }
         }
         get {
-            objc_getAssociatedObject(self, &keyboardKeepSpaceKey) as? (UIView) -> CGFloat?
+            objc_getAssociatedObject(self, &keyboardKeepSpaceKey) as? (UIView) -> CGFloat
         }
     }
     
