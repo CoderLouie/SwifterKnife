@@ -78,30 +78,7 @@ class HomeViewController: BaseViewController {
     override func setupViews() {
         super.setupViews()
         title = "Home"
-        view.keyboardKeepSpaceClosure = { CGFloat($0.tag) }
-//        view.keyboardKeepSpace = 20
-        UITextField().do {
-            $0.backgroundColor = .lightGray
-            $0.isSecureTextEntry = true
-            $0.placeholder = "请输入密码1"
-            $0.tag = 40
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.trailing.inset(30)
-                make.bottom.equalTo(-100)
-            }
-        }
-        UITextField().do {
-            $0.backgroundColor = .lightGray
-            $0.isSecureTextEntry = true
-            $0.placeholder = "请输入密码1"
-            $0.tag = 10
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.trailing.inset(30)
-                make.bottom.equalTo(-160)
-            }
-        }
+        setupTextFieldsAndButtons()
         
         BottomBar().do {
             view.addSubview($0)
@@ -134,6 +111,109 @@ class HomeViewController: BaseViewController {
 //            }
 //        }
         
+        
+    }
+//    private unowned var label: UILabel!
+    private unowned var textField1: UITextField!
+    private unowned var textField2: UITextField!
+    private unowned var redView: UIView!
+    private unowned var greenView: UIView!
+    private unowned var blueView: UIView!
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+        return ()
+        
+//        let width = view.bounds.width - 60
+//        print(label.frame, label.fittingSize(withRequiredWidth: width), label.compressedSize)
+        
+        
+        
+//        view.resignFirstResponder()
+//        view.endEditing(true)
+//        let vc = DebugViewController()
+//        let vc = FormViewController()
+////        let vc = TimerViewController()
+//        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension HomeViewController {
+    private func setupTextFieldsAndButtons() {
+        view.keyboardKeepSpaceClosure = { CGFloat($0.tag) }
+//        view.keyboardKeepSpace = 20
+        textField1 = UITextField().then {
+            $0.backgroundColor = .lightGray
+            $0.isSecureTextEntry = true
+            $0.placeholder = "请输入密码1"
+            $0.tag = 40
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.inset(30)
+                make.bottom.equalTo(-100)
+            }
+        }
+        textField2 = UITextField().then {
+            $0.backgroundColor = .lightGray
+            $0.isSecureTextEntry = true
+            $0.placeholder = "请输入密码2"
+            $0.tag = 10
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.inset(30)
+                make.bottom.equalTo(-160)
+            }
+        }
+        
+        let btn1 = UIButton().then {
+            $0.setTitleColor(.black, for: .normal)
+            $0.setTitle("Next", for: .normal)
+            $0.addTarget(self, action: #selector(onNext), for: .touchUpInside)
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.equalTo(50)
+                make.top.equalTo(400)
+            }
+        }
+        UIButton().do {
+            $0.setTitleColor(.black, for: .normal)
+            $0.setTitle("Previous", for: .normal)
+            $0.addTarget(self, action: #selector(onPrevious), for: .touchUpInside)
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.trailing.equalTo(-50)
+                make.centerY.equalTo(btn1)
+            }
+        }
+    }
+    
+    @objc private func onNext() {
+        if textField1.isFirstResponder {
+            textField2.becomeFirstResponder()
+        } else {
+            textField1.becomeFirstResponder()
+        }
+    }
+    @objc private func onPrevious() {
+        if textField2.isFirstResponder {
+            textField1.becomeFirstResponder()
+        } else {
+            textField1.becomeFirstResponder()
+        }
+    }
+}
+
+extension HomeViewController {
+    private func printConvertRect() {
+        
+        print(view.convert(blueView.frame, from: redView))
+        print(redView.convert(blueView.frame, to: view))
+        print(blueView.convert(blueView.bounds, to: view))
+        
+        
+        print(blueView.convert(CGRect(x: 50, y: 50, width: 100, height: 100), to: greenView))
+        print(blueView.convert(blueView.frame, to: greenView))
+    }
+    private func setupColorViews() {
         greenView = UIView().then {
             $0.backgroundColor = .green
             $0.frame = CGRect(x: 20, y: 100, width: 50, height: 50)
@@ -149,32 +229,5 @@ class HomeViewController: BaseViewController {
             $0.frame = CGRect(x: 50, y: 50, width: 100, height: 100)
             redView.addSubview($0)
         }
-    }
-//    private unowned var label: UILabel!
-    private unowned var redView: UIView!
-    private unowned var greenView: UIView!
-    private unowned var blueView: UIView!
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-        return ()
-        
-        print(view.convert(blueView.frame, from: redView))
-        print(redView.convert(blueView.frame, to: view))
-        print(blueView.convert(blueView.bounds, to: view))
-        
-        
-        print(blueView.convert(CGRect(x: 50, y: 50, width: 100, height: 100), to: greenView))
-        print(blueView.convert(blueView.frame, to: greenView))
-//        let width = view.bounds.width - 60
-//        print(label.frame, label.fittingSize(withRequiredWidth: width), label.compressedSize)
-        
-        
-        
-//        view.resignFirstResponder()
-//        view.endEditing(true)
-//        let vc = DebugViewController()
-//        let vc = FormViewController()
-////        let vc = TimerViewController()
-//        navigationController?.pushViewController(vc, animated: true)
     }
 }

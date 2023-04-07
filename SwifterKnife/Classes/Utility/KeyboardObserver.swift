@@ -174,7 +174,7 @@ extension UIView {
                 observer.observe(.willShow) { [unowned self] event in
                     if let space = self.keyboardAvoidingSpace {
                         var frame = self.frame
-                        frame.origin.y -= space
+                        frame.origin.y += space
                         self.frame = frame
                         self.keyboardAvoidingSpace = nil
                     }
@@ -184,12 +184,12 @@ extension UIView {
                     }
                     let space = closure(inputView)
                     let rect = inputView.convert(inputView.bounds, to: nil)
-                    let delta = Screen.height - rect.maxY - event.endFrame.height - space
-                    if delta > 0 { return }
+                    let delta = rect.maxY + event.endFrame.height + space - Screen.height
+                    if delta < 0 { return }
                     self.keyboardAvoidingSpace = delta
                     
                     var frame = self.frame
-                    frame.origin.y += delta
+                    frame.origin.y -= delta
                     UIView.animate(withDuration: event.duration, delay: 0, options: event.options) { [weak self] in
                         self?.frame = frame
                     }
@@ -198,7 +198,7 @@ extension UIView {
                     guard let space = self.keyboardAvoidingSpace else { return }
                     
                     var frame = self.frame
-                    frame.origin.y -= space
+                    frame.origin.y += space
                     UIView.animate(withDuration: event.duration, delay: 0, options: event.options) { [weak self] in
                         self?.frame = frame
                     } completion: { [weak self] _ in
@@ -212,7 +212,7 @@ extension UIView {
         }
     }
     
-    /// 键盘遮挡的距离 负值
+    /// 键盘遮挡的距离
     private var keyboardAvoidingSpace: CGFloat? {
         get {
             objc_getAssociatedObject(self, &keyboardAvoidingSpaceKey) as? CGFloat
@@ -230,73 +230,3 @@ extension UIView {
         }
     }
 }
-
-/*
-public protocol KeyboardAvoiding: AnyObject {
-    var containerView: UIView { get }
-    var theInputView: UIView? { get }
-    var spaceBetweenInputAndKeyboard: CGFloat { get }
-}
-
-private var keyboardObserverKey: UInt8 = 0
-private var containerOriginFrameKey: UInt8 = 0
-public extension KeyboardAvoiding {
-    var theInputView: UIView? {
-        containerView.firstResponder()
-    }
-    var spaceBetweenInputAndKeyboard: CGFloat {
-        10
-    }
-    
-    func startWorking() {
-        let observer = self.keyboardObserver
-        
-        observer.observe(.willShow) { [unowned self] event in
-            if let _ = self.containerOriginFrame { return }
-            guard let inputView = self.theInputView else {
-                return
-            }
-            let container = self.containerView
-            let rect = inputView.convert(inputView.frame, to: nil)
-            let delta = Screen.height - rect.maxY - event.endFrame.height - self.spaceBetweenInputAndKeyboard
-            if delta > 0 { return }
-            
-            var frame = container.frame
-            containerOriginFrame = frame
-            frame.origin.y = delta
-            UIView.animate(withDuration: event.duration, delay: 0, options: event.options) {
-                container.frame = frame
-            }
-        }
-        observer.observe(.willHide) { [unowned self] event in
-            guard let frame = self.containerOriginFrame else { return }
-            let container = self.containerView
-            UIView.animate(withDuration: event.duration, delay: 0, options: event.options) {
-                container.frame = frame
-            } completion: { _ in
-                self.containerOriginFrame = nil
-            }
-        }
-    }
-    
-    private var containerOriginFrame: CGRect? {
-        get {
-            objc_getAssociatedObject(self, &containerOriginFrameKey) as? CGRect
-        }
-        set {
-            objc_setAssociatedObject(self, &containerOriginFrameKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
-        }
-    }
-    private var keyboardObserver: KeyboardObserver {
-        let observer: KeyboardObserver
-        
-        if let existing = objc_getAssociatedObject(self, &keyboardObserverKey) as? KeyboardObserver {
-            observer = existing
-        } else {
-            observer = KeyboardObserver()
-            objc_setAssociatedObject(self, &keyboardObserverKey, observer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        return observer
-    }
-}
-*/
