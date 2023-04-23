@@ -70,6 +70,12 @@ public final class Attributes {
         return Attributes()
     }
     
+    public var copied: Attributes {
+        let copied = Attributes(target)
+        copied.dictionary = dictionary
+        return copied
+    }
+    
     public func apply(_ string: String) -> NSAttributedString {
         NSAttributedString(string: string, attributes: dictionary)
     }

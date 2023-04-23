@@ -158,6 +158,7 @@ extension UIView {
     private var theInputView: UIView? {
         searchInLevelOrder { view, _ in
             view.isFirstResponder
+//            && (view is UITextInput)
         }
     }
     /// 输入视图需要和键盘保持的距离
