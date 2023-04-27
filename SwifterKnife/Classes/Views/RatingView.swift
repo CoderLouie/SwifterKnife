@@ -83,7 +83,8 @@ public class RatingView: UIView {
         
         backView = StarsView(count: count, image: normalImage, margin: margin, size: starSize)
         frontView = StarsView(count: count, image: highlightedImage, margin: margin, size: starSize)
-
+        frontView.frame.size.width = 0
+        
         super.init(frame: .zero)
         addSubview(backView)
         addSubview(frontView)
@@ -115,7 +116,7 @@ public class RatingView: UIView {
     /// 一个完整的星星代表多少分，权重
     public var weight: Double = 1
     
-    /// 最低评分值 默认一颗完整星星表示的分数
+    /// 最低评分值 默认0分
     public var minGrade: Double {
         get { _minProgress * weight }
         set {
@@ -142,7 +143,7 @@ public class RatingView: UIView {
             }
         }
     }
-    /// 默认满分
+    /// 默认0分
     public var grade: Double {
         get { _progress * weight }
         set {
@@ -163,11 +164,11 @@ public class RatingView: UIView {
         }
     }
     
-    private lazy var _progress = _maxProgress
+    private lazy var _progress: Double = 0
     private var _maxProgress: Double {
         Double(count)
     }
-    private var _minProgress: Double = 1
+    private var _minProgress: Double = 0
     
     private func widthForProgress(_ progress: Double) -> CGFloat {
         var left: Double = 0

@@ -49,6 +49,11 @@ public extension String {
     func build(with attributes: Attributes) -> NSAttributedString {
         NSAttributedString(string: self, attributes: attributes.dictionary)
     }
+    func build(with closure: (Attributes) -> Void) -> NSAttributedString {
+        let attr = Attributes.one
+        closure(attr)
+        return NSAttributedString(string: self, attributes: attr.dictionary)
+    }
 }
 
 public final class Attributes {

@@ -148,7 +148,7 @@ private extension LinearFlowView {
         
         let boundsW = frame.width
         
-        let views = arrangedViews as [UIView] + rowViews
+        let views = arrangedViews + rowViews
         guard !views.isEmpty else { return }
         
         views.forEach { $0.removeFromSuperview() }
@@ -156,7 +156,7 @@ private extension LinearFlowView {
         
         var tagViewSizes: [CGSize] = []
         for tagView in arrangedViews {
-            tagViewSizes.append(tagView.intrinsicContentSize)
+            tagViewSizes.append(tagView.intrinsicContentSize.adaptive { $0.pixCeil })
         }
         let isMultipleLines = numberOfLines != 1
         let frameWidth: CGFloat
@@ -166,15 +166,10 @@ private extension LinearFlowView {
         } else {
             let widths = tagViewSizes.map(\.width)
             let sumw = widths.reduce(into: 0, +=) + CGFloat(widths.count - 1) * marginX
-            let estimedW = sumw / CGFloat(numberOfLines)
-            if estimedW <= boundsW {
-                frameWidth = boundsW
-            } else {
-                let pair = splitArray(widths, numberOfLines)
-                let tmpWidth = pair.0 + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
-                let targetW = Swift.max(minPlaceWidth, boundsW)
-                frameWidth = tmpWidth < targetW ? targetW : tmpWidth
-            }
+            let pair = splitArray(widths, numberOfLines)
+            let tmpWidth = Darwin.ceil(pair.0) + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
+            let targetW = Swift.max(minPlaceWidth, boundsW)
+            frameWidth = tmpWidth < targetW ? targetW : tmpWidth
         }
         hasLayout = true
 
@@ -203,7 +198,7 @@ private extension LinearFlowView {
         for (i, tagView) in arrangedViews.enumerated() {
             let tagViewSize = tagViewSizes[i]
             currentTagH = tagViewSize.height
-            currentTagW = min(tagViewSize.width, placeWidth)
+            currentTagW = tagViewSize.width
             
             currentRowH = max(currentRowH, currentTagH)
             
