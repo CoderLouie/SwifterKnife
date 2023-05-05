@@ -310,7 +310,27 @@ private extension ViewController {
     }
     func regexTestEntry() {
 //        regexa1()
-        regrxaaaa()
+//        regrxaaaa()
+        regexa3()
+    }
+    func regexa3() {
+        let values: [String: Any] = [
+            "age": 10,
+            "score": [10, 20, 30],
+            "name": "xiaohuang"
+        ]
+        let num = 10
+        let val = 3.1415926
+        Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
+    }
+    func regexa2() {
+        print(String(format: "hello%05qd", 3))
+        let regex: Regex = #"(%@)|(%c)|(%s)|(%\d*l{0,2}[d|D|i|u|U])|(%\d*\.*\d*[f|g])"#
+        let str = "hello %%@, wordd %%02d, in %02u,hah %d, %f %.g, %.2f,xx, %x3.g%3.g"
+        let result = regex.matches(in: str)
+        for (i, r) in result.enumerated() {
+            print(i, r, r.groupValues)
+        }
     }
     /// 提取重叠的字母数字
     func regex1() {

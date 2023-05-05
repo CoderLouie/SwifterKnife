@@ -21,6 +21,8 @@
 		B66414742988C7970071C0FA /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66414732988C7970071C0FA /* TimerViewController.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
+		B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12529FBAF900009ACFA /* Mems.swift */; };
+		B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */; };
 		B6B038F4290B71840091B31D /* Watchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B038F3290B71830091B31D /* Watchdog.swift */; };
 		B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF0272BDC34001BBBE1 /* IAP.swift */; };
 		B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF3272BE66E001BBBE1 /* Query.swift */; };
@@ -88,6 +90,8 @@
 		B67F61E428A34A57008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B67F61E528A34A60008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "banner_home_1aging@2x.jpg"; sourceTree = "<group>"; };
+		B6A2B12529FBAF900009ACFA /* Mems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Mems.swift; path = SwiftKnifeTrash/Mems.swift; sourceTree = SOURCE_ROOT; };
+		B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyOnWrite.swift; sourceTree = "<group>"; };
 		B6B038F3290B71830091B31D /* Watchdog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watchdog.swift; sourceTree = "<group>"; };
 		B6B5FAF0272BDC34001BBBE1 /* IAP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAP.swift; sourceTree = "<group>"; };
 		B6B5FAF3272BE66E001BBBE1 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
@@ -180,6 +184,8 @@
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				B6D834B429B0B4FB004C2BC3 /* Empty.swift */,
+				B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */,
+				B6A2B12529FBAF900009ACFA /* Mems.swift */,
 				B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */,
 				B6FC05E1292A751F0057E659 /* HomeViewController.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
@@ -496,6 +502,7 @@
 				B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
+				B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
 				B6D834B529B0B4FB004C2BC3 /* Empty.swift in Sources */,
 				B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */,
@@ -514,6 +521,7 @@
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
+				B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */,
 				B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */,
 				B66414742988C7970071C0FA /* TimerViewController.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,

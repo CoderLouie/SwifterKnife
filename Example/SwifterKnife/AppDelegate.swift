@@ -21,10 +21,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         default:
             break
         }
+//        var num: Int? = nil
+//        let val = num.lazyLoad(10) {
+//            print($0)
+//        }
+//        var label: UILabel!
+////        label.unwrap(or: UILabel().then {
+////
+////        })
+//        let lbl = label.lazyLoad {
+//            $0.text = ""
+//        }
+        
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds).then {
-//            $0.rootViewController = ViewController()
-            $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
+            $0.rootViewController = ViewController()
+//            $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
             $0.makeKeyAndVisible()
 //            $0.startWork()
 //            if let view = UIView.canvasView,

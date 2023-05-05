@@ -132,20 +132,45 @@ public extension Optional {
         return self
     }
     
-    func map<U>(_ transform: (Wrapped) throws -> U, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
-        switch self {
-        case .some(let x): return try transform(x)
-        case .none: return try defaultValue()
-        }
-    }
-    func flatMap<U>(_ transform: (Wrapped) throws -> U?, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
-        switch self {
-        case .some(let x): return try transform(x) ?? defaultValue()
-        case .none: return try defaultValue()
-        }
-    }
+//    func map<U>(_ transform: (Wrapped) throws -> U, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
+//        switch self {
+//        case .some(let x): return try transform(x)
+//        case .none: return try defaultValue()
+//        }
+//    }
+//    func flatMap<U>(_ transform: (Wrapped) throws -> U?, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
+//        switch self {
+//        case .some(let x): return try transform(x) ?? defaultValue()
+//        case .none: return try defaultValue()
+//        }
+//    }
 }
 
+//extension Optional {
+//    public mutating func lazyLoad(_ fill: @autoclosure () -> Wrapped,
+//                                  config: ((Wrapped) -> Void)? = nil) -> Wrapped {
+//        switch self {
+//        case let .some(value): return value
+//        case .none:
+//            let value = fill()
+//            config?(value)
+//            self = .some(value)
+//            return value
+//        }
+//    }
+//}
+//extension Optional where Wrapped: NSObject {
+//    public mutating func lazyLoad(config fill: (Wrapped) -> Void) -> Wrapped {
+//        switch self {
+//        case let .some(value): return value
+//        case .none:
+//            let value = Wrapped()
+//            fill(value)
+//            self = .some(value)
+//            return value
+//        }
+//    }
+//}
 
 // MARK: - Methods (Collection)
 

@@ -108,6 +108,11 @@ public struct Regex {
             .matches(in: string, options: options, range: string.nsrange)
             .map { Match(result: $0, in: string) }
     }
+    public func matchesCount(in string: String,
+                        options: MatchingOptions = []) -> Int {
+        nsRegex
+            .matches(in: string, options: options, range: string.nsrange).count
+    }
     
     public func split(_ string: String,
                       options: MatchingOptions = []) -> [Split] {
@@ -279,7 +284,7 @@ extension Regex {
             public let intRange: Range<Int>
             
             fileprivate init?(baseString: String, range: NSRange) {
-                if range.location == NSNotFound,
+                if range.location == NSNotFound ||
                    range.length > 0 { return nil }
                 self.range = baseString.rangeBetter(from: range)
                 self.value = String(baseString[self.range])

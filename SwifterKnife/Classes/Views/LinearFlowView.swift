@@ -156,7 +156,8 @@ private extension LinearFlowView {
         
         var tagViewSizes: [CGSize] = []
         for tagView in arrangedViews {
-            tagViewSizes.append(tagView.intrinsicContentSize.adaptive { $0.pixCeil })
+            let tagFrame = tagView.frame
+            tagViewSizes.append((tagFrame.isEmpty ? tagView.intrinsicContentSize : tagFrame.size).adaptive { $0.pixCeil })
         }
         let isMultipleLines = numberOfLines != 1
         let frameWidth: CGFloat
@@ -165,7 +166,6 @@ private extension LinearFlowView {
             if boundsW <= 0 { return }
         } else {
             let widths = tagViewSizes.map(\.width)
-            let sumw = widths.reduce(into: 0, +=) + CGFloat(widths.count - 1) * marginX
             let pair = splitArray(widths, numberOfLines)
             let tmpWidth = Darwin.ceil(pair.0) + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
             let targetW = Swift.max(minPlaceWidth, boundsW)
