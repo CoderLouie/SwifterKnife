@@ -22,12 +22,12 @@ public extension UIStackView {
     }
     
     static func vertical(spacing: CGFloat = 0,
-                         alignment: UIStackView.Alignment = .fill,
+                         alignment: UIStackView.Alignment = .center,
                          @ViewsBuilder views: () -> [UIView]) -> Self {
         create(axis: .vertical, arrangedSubviews: views(), spacing: spacing, alignment: alignment, distribution: .fill)
     }
     static func horizontal(spacing: CGFloat = 0,
-                           alignment: UIStackView.Alignment = .fill,
+                           alignment: UIStackView.Alignment = .center,
                            @ViewsBuilder views: () -> [UIView]) -> Self {
         create(axis: .horizontal, arrangedSubviews: views(), spacing: spacing, alignment: alignment, distribution: .fill)
     }
@@ -38,13 +38,13 @@ public extension UIStackView {
     ///   - arrangedSubviews: The UIViews to add to the stack.
     ///   - axis: The axis along which the arranged views are laid out.
     ///   - spacing: The distance in points between the adjacent edges of the stack view’s arranged views (default: 0.0).
-    ///   - alignment: The alignment of the arranged subviews perpendicular to the stack view’s axis (default: .fill).
+    ///   - alignment: The alignment of the arranged subviews perpendicular to the stack view’s axis (default: .center).
     ///   - distribution: The distribution of the arranged views along the stack view’s axis (default: .fill).
     static func create(
         axis: NSLayoutConstraint.Axis,
         arrangedSubviews: [UIView] = [],
         spacing: CGFloat = 0.0,
-        alignment: UIStackView.Alignment = .fill,
+        alignment: UIStackView.Alignment = .center,
         distribution: UIStackView.Distribution = .fill) -> Self {
         let view = Self(arrangedSubviews: arrangedSubviews)
         view.axis = axis
@@ -144,35 +144,35 @@ public extension UIStackView {
     /// - Parameters:
     ///   - view1: first view to swap.
     ///   - view2: second view to swap.
-    ///   - animated: set true to animate swap (default is true).
-    ///   - duration: animation duration in seconds (default is 1 second).
-    ///   - delay: animation delay in seconds (default is 1 second).
+    func swap(_ view1: UIView, _ view2: UIView) {
+        guard let view1Index = arrangedSubviews.firstIndex(of: view1),
+              let view2Index = arrangedSubviews.firstIndex(of: view2)
+        else { return }
+        removeArrangedSubview(view1)
+        insertArrangedSubview(view1, at: view2Index)
+
+        removeArrangedSubview(view2)
+        insertArrangedSubview(view2, at: view1Index)
+    }
+    
+    
+    /// Exchanges two views of the arranged subviews animated.
+    /// - Parameters:
+    ///   - view1: first view to swap.
+    ///   - view2: second view to swap.
+    ///   - duration: animation duration in seconds (default is 0.25 second).
+    ///   - delay: animation delay in seconds (default is 0 second).
     ///   - options: animation options (default is AnimationOptions.curveLinear).
     ///   - completion: optional completion handler to run with animation finishes (default is nil).
-    func swap(_ view1: UIView, _ view2: UIView,
-              animated: Bool = false,
-              duration: TimeInterval = 0.25,
-              delay: TimeInterval = 0,
-              options: UIView.AnimationOptions = .curveLinear,
-              completion: ((Bool) -> Void)? = nil) {
-        func swapViews(_ view1: UIView, _ view2: UIView) {
-            guard let view1Index = arrangedSubviews.firstIndex(of: view1),
-                  let view2Index = arrangedSubviews.firstIndex(of: view2)
-            else { return }
-            removeArrangedSubview(view1)
-            insertArrangedSubview(view1, at: view2Index)
-
-            removeArrangedSubview(view2)
-            insertArrangedSubview(view2, at: view1Index)
-        }
-        if animated {
-            UIView.animate(withDuration: duration, delay: delay, options: options, animations: {
-                swapViews(view1, view2)
-                self.layoutIfNeeded()
-            }, completion: completion)
-        } else {
-            swapViews(view1, view2)
-        }
+    func swapAnimated(_ view1: UIView, _ view2: UIView,
+                      duration: TimeInterval = 0.25,
+                      delay: TimeInterval = 0,
+                      options: UIView.AnimationOptions = .curveLinear,
+                      completion: ((Bool) -> Void)? = nil) {
+        UIView.animate(withDuration: duration, delay: delay, options: options, animations: {
+            self.swap(view1, view2)
+            self.layoutIfNeeded()
+        }, completion: completion)
     }
 }
 

@@ -298,7 +298,7 @@ private extension ViewController {
         let regex: Regex = #".(at)g"#
         let str = "The fat cat sat on the mat."
         print(regex.firstMatch(in: str)?.value ?? "nil")
-        
+//        try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIView.self, from: Data())
 //        let random: Double = Random.one(3, 10)
     }
     func regrxaaaa() {
@@ -311,7 +311,7 @@ private extension ViewController {
     func regexTestEntry() {
 //        regexa1()
 //        regrxaaaa()
-        regexa3()
+        regexa2()
     }
     func regexa3() {
         let values: [String: Any] = [

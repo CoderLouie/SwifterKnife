@@ -33,9 +33,10 @@ import SnapKit
  */
 public final class ScrollStackView: UIScrollView {
     
-    public init(normalized: Bool, frame: CGRect, arrangedSubviews: [UIView] = []) {
+    public init(normalized: Bool, frame: CGRect = .zero, arrangedSubviews: [UIView] = []) {
         super.init(frame: frame)
         
+        keyboardDismissMode = .onDrag
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
         contentInsetAdjustmentBehavior = .never
@@ -47,6 +48,7 @@ public final class ScrollStackView: UIScrollView {
         
         alwaysBounceVertical = true
         alwaysBounceHorizontal = false
+        insetsLayoutMarginsFromSafeArea = false
         
         super.layoutMargins = .zero
         container.snp.remakeConstraints { make in
@@ -121,6 +123,13 @@ public final class ScrollStackView: UIScrollView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public static var vertical: ScrollStackView {
+        .init(normalized: false, frame: .zero, arrangedSubviews: [])
+    }
+    public static var horizontal: ScrollStackView {
+        .init(normalized: false, frame: .zero, arrangedSubviews: []).axis(.horizontal)
     }
     
     public private(set) var container: UIStackView!
