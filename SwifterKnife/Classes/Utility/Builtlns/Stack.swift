@@ -10,7 +10,7 @@ import Foundation
 /// Swift 栈数据结构
 public final class Stack<Element> {
     fileprivate class Node {
-        let value: Element
+        var value: Element
         let next: Node?
         init(_ value: Element, _ next: Node? = nil) {
             self.value = value
@@ -20,12 +20,26 @@ public final class Stack<Element> {
     private var size = 0
     fileprivate var head: Node? = nil
     
+    public init() {}
+    
     public func push(_ element: Element) {
         let node = Node(element, head)
         head = node
         size += 1
     }
     
+    public func popAll() {
+        head = nil
+        size = 0
+    }
+    public func popToKeepCount(_ n: Int) {
+        if n >= size || n < 0 { return }
+        while size != n {
+            head = head?.next
+            size -= 1
+        }
+    }
+
     @discardableResult
     public func pop() -> Element? {
         guard let first = head else { return nil }
@@ -33,9 +47,18 @@ public final class Stack<Element> {
         size -= 1
         return first.value
     }
+    
     public var top: Element? {
-        return head?.value
+        get { head?.value }
+        set {
+            if let val = newValue {
+                head?.value = val
+            } else {
+                pop()
+            }
+        }
     }
+    
     public var count: Int { return size }
     public var isEmpty: Bool { return size == 0 }
 }

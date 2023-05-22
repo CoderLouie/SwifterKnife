@@ -175,6 +175,20 @@ public extension UIStackView {
         }, completion: completion)
     }
 }
+public final class PairView<V1: UIView, V2: UIView>: UIStackView {
+    public convenience init(config1: (V1) -> Void, config2: (V2) -> Void) {
+        self.init(v1: V1().then(config1), v2: V2().then(config2))
+    }
+    public convenience init(v1: V1, v2: V2) {
+        self.init(arrangedSubviews: [v1, v2])
+        axis = .vertical
+        alignment = .center
+        view1 = v1
+        view2 = v2
+    }
+    public private(set) unowned var view1: V1!
+    public private(set) unowned var view2: V2!
+}
 
 
 @resultBuilder
