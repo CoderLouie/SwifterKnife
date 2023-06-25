@@ -210,6 +210,7 @@ class DebugViewController: BaseViewController {
         super.setupViews()
         title = "Debug"
         setupBody()
+         
     }
 //    lazy var res = Lazy(Resource(age:  110).then { [unowned self] _ in
 //        print("execute lazy", self.n)

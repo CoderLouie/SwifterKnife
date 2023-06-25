@@ -331,9 +331,13 @@ public extension UIImage {
         let tmp = size
         return stretchableImage(withLeftCapWidth: Int(tmp.width * x), topCapHeight: Int(tmp.height * y))
     }
+    static func fileNamed(_ fileName: String,
+                          in bundleClass: AnyClass? = nil) -> UIImage? {
+        UIImage(fileNamed: fileName, in: bundleClass)
+    }
     
     convenience init?(fileNamed name: String,
-                             in bundleClass: AnyClass? = nil) {
+                      in bundleClass: AnyClass? = nil) {
         guard !name.hasSuffix("/") else { return nil }
         let nspath = name as NSString
         

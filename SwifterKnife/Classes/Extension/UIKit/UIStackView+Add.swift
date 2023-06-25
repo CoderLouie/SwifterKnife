@@ -179,12 +179,27 @@ public final class PairView<V1: UIView, V2: UIView>: UIStackView {
     public convenience init(config1: (V1) -> Void, config2: (V2) -> Void) {
         self.init(v1: V1().then(config1), v2: V2().then(config2))
     }
-    public convenience init(v1: V1, v2: V2) {
-        self.init(arrangedSubviews: [v1, v2])
+    public init(v1: V1, v2: V2) {
+        super.init(frame: .zero)
+        addArrangedSubview(v1)
+        addArrangedSubview(v2)
         axis = .vertical
         alignment = .center
         view1 = v1
         view2 = v2
+    }
+    public convenience init(v1: V1) {
+        self.init(v1: v1, v2: .init())
+    }
+    public convenience init(v2: V2) {
+        self.init(v1: .init(), v2: v2)
+    }
+    public override convenience init(frame: CGRect) {
+        self.init(v1: .init(), v2: .init())
+    }
+    
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     public private(set) unowned var view1: V1!
     public private(set) unowned var view2: V2!

@@ -144,6 +144,25 @@ public enum SandBox {
         return nil
     }
     
+    public static func allFiles(in directory: String, isInclude: (_ fileURL: URL) -> Bool) -> [URL] {
+        let keys: [URLResourceKey] = [.isDirectoryKey]
+        guard let enumerator = FileManager.default.enumerator(at: URL(fileURLWithPath: directory), includingPropertiesForKeys: keys, options: .skipsHiddenFiles, errorHandler: nil) else {
+            return []
+        }
+        var res: [URL] = []
+        while let next = enumerator.nextObject() {
+            guard let fileURL = next as? URL,
+            let values = try? fileURL.resourceValues(forKeys: Set(keys)) else { continue }
+            guard let v = values.allValues[.isDirectoryKey] as? Bool, !v else {
+                continue
+            }
+            if isInclude(fileURL) {
+                res.append(fileURL)
+            }
+        }
+        return res
+    }
+    
     public static func moveDirectory(atPath srcPath: String, toPath dstPath: String) throws {
         guard srcPath != dstPath else { return }
         

@@ -47,11 +47,116 @@ class Student: Person {
 enum SomeError: Swift.Error {
     case timeout
 }
+
+fileprivate extension NSString {
+    func prevSearch(of str: NSString, from index: Int) -> Int? {
+        let len = str.length
+        let targetStr = str as String
+        var idx = index - len
+        if idx < 0 { return nil }
+        while idx >= 0 {
+            let range = NSRange(location: idx, length: len)
+            if substring(with: range) == targetStr { return idx + len }
+            idx -= 1
+        }
+        return nil
+    }
+    func search(of str: NSString, from index: Int) -> Int? {
+        let len = str.length
+        let targetStr = str as String
+        let n = self.length - len
+        if index > n { return nil }
+        var idx = index
+        while idx <= n {
+            let range = NSRange(location: idx, length: len)
+            if substring(with: range) == targetStr { return idx }
+            idx += 1
+        }
+        return nil
+    }
+}
+extension ViewController: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard textView.markedTextRange == nil else {
+            return true
+        }
+        print("shouldChangeTextIn", text, range, textView.selectedRange)
+        let loc = range.location
+        let len = range.length
+        let oldCursorLoc = cursorLoc
+        cursorLoc = loc
+        let textCount = text.count
+        let nsText = textView.text as NSString
+        let seperator: NSString = ","
+        if textCount == 0, len == 1 {// 删除一个字符
+            let willDelete = nsText.substring(with: range) as NSString
+            if willDelete == seperator {
+                let prevLoc = nsText.prevSearch(of: seperator, from: loc) ?? 0
+                if loc > prevLoc {
+                    let prevStr = nsText.substring(with: NSRange(location: prevLoc, length: loc - prevLoc))
+                    print("find 1", prevStr)
+                }
+                let nextLoc = nsText.search(of: seperator, from: loc + len) ?? nsText.length
+                if nextLoc > loc + len {
+                    let nextStr = nsText.substring(with: NSRange(location: loc + len, length: nextLoc - (loc + len)))
+                    print("find 2", nextStr)
+                }
+            } else {
+                if let oldLoc = oldCursorLoc,
+                    oldLoc - len == loc {
+                    return true
+                }
+                let prevLoc = nsText.prevSearch(of: seperator, from: loc) ?? 0
+                let nextLoc = nsText.search(of: seperator, from: loc + len) ?? nsText.length
+                if nextLoc > prevLoc {
+                    let mapStr = nsText.substring(with: NSRange(location: prevLoc, length: nextLoc - prevLoc))
+                    print("find 3", mapStr)
+                }
+            }
+        } else if textCount > 0 {
+            if let oldLoc = oldCursorLoc,
+                oldLoc + textCount == loc {
+//                print("插入的是同一个单词")
+                return true
+            } else {
+//                print("插入新的单词，", text)
+                let prevLoc = nsText.prevSearch(of: seperator, from: loc) ?? 0
+                let nextLoc = nsText.search(of: seperator, from: loc + len) ?? nsText.length
+                if nextLoc > prevLoc {
+                    let mapStr = nsText.substring(with: NSRange(location: prevLoc, length: nextLoc - prevLoc))
+                    print("find 4", mapStr)
+                }
+            }
+        }
+        return true
+    }
+}
+
 class ViewController: UIViewController {
+    
+   private var cursorLoc: Int? = nil
+
+    private func setupTextView() {
+        UITextView().do {
+            $0.layer.borderColor = UIColor.gray.cgColor
+            $0.layer.borderWidth = 1
+            $0.layer.cornerRadius = 12
+            $0.font = .regular(16)
+            $0.delegate = self
+            $0.text = "red eyes,anger vein,one eye closed,cat ears,bunny hair ornament,frog hair ornament,folded ponytail,smirk,ringlets,hair bow"
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.width.equalTo(300)
+                make.height.equalTo(200)
+                make.center.equalToSuperview()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupTextView()
 //        setupBody5()
 //        setupButton1()
 //        setupRatingView()

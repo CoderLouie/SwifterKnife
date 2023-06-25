@@ -40,6 +40,10 @@ extension UITouch {
 
 public extension UIButton {
     
+    func addTouchUpInside(_ target: Any?, _ action: Selector) {
+        addTarget(target, action: action, for: .touchUpInside)
+    }
+    
     /*
      Example
      btn.addTarget(self, action: #selector(onButtonClicked(_:_:)), for: .touchUpInside)

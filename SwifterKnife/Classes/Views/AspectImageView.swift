@@ -42,6 +42,7 @@ open class AspectFitView: UIView {
             addSubview($0)
         }
     }
+    open var imageContentModel: UIView.ContentMode = .top
     open override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = bounds
@@ -54,7 +55,19 @@ open class AspectFitView: UIView {
             size = CGSize(width: rect.width, height: rect.width / ratio)
         }
         imgView.contentMode = .scaleAspectFit
-        imgView.frame = rect.resizing(to: size, model: .scaleAspectFit).pixelate
+        var frame = rect.resizing(to: size, model: .scaleAspectFit).pixelate
+        switch imageContentModel {
+        case .top:
+            frame.origin.y = 0
+        case .left:
+            frame.origin.x = 0
+        case .right:
+            frame.origin.x = rect.maxX - frame.size.width
+        case .bottom:
+            frame.origin.y = rect.maxY - frame.size.height
+        default: break
+        }
+        imgView.frame = frame
     }
     private(set) public unowned var imgView: UIImageView!
 }
