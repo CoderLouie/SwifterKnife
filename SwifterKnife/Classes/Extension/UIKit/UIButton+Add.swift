@@ -38,18 +38,14 @@ extension UITouch {
     }
 }
 
-public extension UIButton {
-    
-    func addTouchUpInside(_ target: Any?, _ action: Selector) {
-        addTarget(target, action: action, for: .touchUpInside)
-    }
+extension UIEvent {
     
     /*
      Example
      btn.addTarget(self, action: #selector(onButtonClicked(_:_:)), for: .touchUpInside)
      
      @objc func onButtonClicked(_ sender: UIButton, _ event: UIEvent) {
-        let pos = sender.touchPosition(with: event)
+        let res = event.touchPosition
         if res.contains(.right) {
             xxx
         } else {
@@ -57,10 +53,20 @@ public extension UIButton {
         }
      }
      */
-    func touchPosition(with event: UIEvent) -> TouchPosition {
-        guard let touch = event.allTouches?.randomElement() else { return [] }
+    public var touchPosition: TouchPosition {
+        guard let touch = allTouches?.randomElement() else { return [] }
         return touch.touchPosition
     }
+}
+
+public extension UIControl {
+    
+    func addTouchUpInside(_ target: Any?, _ action: Selector) {
+        addTarget(target, action: action, for: .touchUpInside)
+    }
+}
+
+public extension UIButton {
     
     /// Center align title text and image.
     /// - Parameters:
