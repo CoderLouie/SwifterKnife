@@ -259,6 +259,58 @@ public extension UIView {
             layer.add(animation, forKey: "shake")
             CATransaction.commit()
         }
+    
+    enum PresentToward {
+        case up, down, left, right
+        fileprivate var isHorizontal: Bool {
+            switch self {
+            case .left, .right: return true
+            case .up, .down: return false
+            }
+        }
+    }
+    func present(toward: PresentToward,
+                 distance: CGFloat? = nil,
+                 duration: TimeInterval = 0.25,
+                 completion: ((Bool) -> Void)? = nil) {
+        guard let view = superview else { return }
+        let delta = distance ?? {
+            var frame = self.frame
+            if frame.isEmpty {
+                view.layoutIfNeeded()
+                frame = self.frame
+            }
+            return toward.isHorizontal ? frame.width : frame.height
+        }()
+        let animation = {
+            let x: CGFloat, y: CGFloat
+            switch toward {
+            case .up: x = 0; y = -abs(delta)
+            case .down: x = 0; y = abs(delta)
+            case .left: y = 0; x = -abs(delta)
+            case .right: y = 0; x = abs(delta)
+            }
+            self.transform = CGAffineTransform(translationX: x, y: y)
+        }
+        guard duration > 0 else {
+            animation()
+            completion?(true)
+            return
+        }
+        UIView.animate(withDuration: duration, animations: animation, completion: completion)
+    }
+    func dismiss(duration: TimeInterval = 0.25,
+                 completion: ((Bool) -> Void)? = nil) {
+        let animation = {
+            self.transform = CGAffineTransform(translationX: 0, y: 0)
+        }
+        guard duration > 0 else {
+            animation()
+            completion?(true)
+            return
+        }
+        UIView.animate(withDuration: duration, animations: animation, completion: completion)
+    }
 }
 
 // MARK: - Search
