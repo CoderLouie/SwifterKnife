@@ -37,6 +37,11 @@ public extension CGSize {
 
 import UIKit
 public extension CGSize {
+    @inlinable
+    init(dimension: CGFloat) {
+        self = CGSize(width: dimension, height: dimension)
+    }
+    
     var isEmpty: Bool {
         width == 0 && height == 0
     }
@@ -45,12 +50,18 @@ public extension CGSize {
         CGSize(width: width + inset.left + inset.right, height: height + inset.top + inset.bottom)
     }
     
-    @inlinable
-    init(dimension: CGFloat) {
-        self = CGSize(width: dimension, height: dimension)
+    static func limitWidth(_ w: CGFloat) -> CGSize {
+        CGSize(width: w, height: CGFloat.greatestFiniteMagnitude)
+    }
+
+    static func limitHeight(_ h: CGFloat) -> CGSize {
+        CGSize(width: CGFloat.greatestFiniteMagnitude, height: h)
     }
     
-    
+    static var unlimit: CGSize {
+        CGSize(width: CGFloat.greatestFiniteMagnitude,
+               height: CGFloat.greatestFiniteMagnitude)
+    }
 }
 
 // MARK: - Methods
