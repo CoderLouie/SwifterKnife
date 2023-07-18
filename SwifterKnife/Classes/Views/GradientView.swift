@@ -152,15 +152,6 @@ open class GradientControl: UIControl {
             if case .border = self { return true }
             return false
         }
-        
-        public static func == (lhs: GradientComponent, rhs: GradientComponent) -> Bool {
-            switch (lhs, rhs) {
-            case (.background, .background): return true
-            case let (.border(lw), .border(rw)):
-                return lw == rw
-            default: return false
-            }
-        }
     }
     public enum RoundedDirection {
         case horizontal
@@ -191,7 +182,6 @@ open class GradientControl: UIControl {
     }
     public var gradientComponent: GradientComponent = .background {
         didSet {
-            guard gradientComponent != oldValue else { return }
             setNeedsLayout()
         }
     }

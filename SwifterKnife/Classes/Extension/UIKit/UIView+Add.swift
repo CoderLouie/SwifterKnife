@@ -299,8 +299,8 @@ public extension UIView {
         }
         UIView.animate(withDuration: duration, animations: animation, completion: completion)
     }
-    func dismiss(duration: TimeInterval = 0.25,
-                 completion: ((Bool) -> Void)? = nil) {
+    func depresent(duration: TimeInterval = 0.25,
+                   completion: ((Bool) -> Void)? = nil) {
         let animation = {
             self.transform = CGAffineTransform(translationX: 0, y: 0)
         }

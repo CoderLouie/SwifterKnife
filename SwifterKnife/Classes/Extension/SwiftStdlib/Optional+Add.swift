@@ -177,15 +177,12 @@ public extension Optional {
 public extension Optional where Wrapped: Collection {
     /// Check if optional is nil or empty collection.
     var isNilOrEmpty: Bool {
-        guard let collection = self else { return true }
-        return collection.isEmpty
+        return self?.isEmpty ?? true
     }
 
     /// Returns the collection only if it is not nil and not empty.
     var nonEmpty: Wrapped? {
-        guard let collection = self else { return nil }
-        guard !collection.isEmpty else { return nil }
-        return collection
+        return (self?.isEmpty ?? true) ? nil : self
     }
 }
 

@@ -694,3 +694,9 @@ public extension String {
         return aspectFitSize(for: font, limitSize: size, model: model).width
     }
 }
+extension UIFont {
+    var singleLineHeight: CGFloat {
+        "Hello".aspectFitHeight(for: self,
+                                maxWidth: .greatestFiniteMagnitude)
+    }
+}

@@ -11,17 +11,21 @@ import Foundation
 
 public extension URL {
     /// Dictionary of the URL's query parameters.
+    ///
+    /// Duplicated query keys are ignored, taking only the first instance.
     var queryParameters: [String: String]? {
-        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
-              let queryItems = components.queryItems else { return nil }
-
-        var items: [String: String] = [:]
-
-        for queryItem in queryItems {
-            items[queryItem.name] = queryItem.value
+        guard let queryItems = URLComponents(url: self, resolvingAgainstBaseURL: false)?.queryItems else {
+            return nil
         }
 
-        return items
+        return Dictionary(queryItems.lazy.compactMap {
+            guard let value = $0.value else { return nil }
+            return ($0.name, value)
+        }) { first, _ in first }
+    }
+    /// Array of the URL's query parameters.
+    var allQueryParameters: [URLQueryItem]? {
+        URLComponents(url: self, resolvingAgainstBaseURL: false)?.queryItems
     }
 } 
 
@@ -43,6 +47,20 @@ public extension URL {
         return urlComponents.url!
     }
 
+    /// URL with appending query parameters.
+    ///
+    ///        let url = URL(string: "https://google.com")!
+    ///        let param = [URLQueryItem(name: "q", value: "Swifter Swift")]
+    ///        url.appendingQueryParameters(params) -> "https://google.com?q=Swifter%20Swift"
+    ///
+    /// - Parameter parameters: parameters dictionary.
+    /// - Returns: URL with appending given query parameters.
+    func appendingQueryParameters(_ parameters: [URLQueryItem]) -> URL {
+        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = (urlComponents.queryItems ?? []) + parameters
+        return urlComponents.url!
+    }
+    
     /// Append query parameters to URL.
     ///
     ///        var url = URL(string: "https://google.com")!
@@ -55,6 +73,20 @@ public extension URL {
         self = appendingQueryParameters(parameters)
     }
 
+    /// Append query parameters to URL.
+    ///
+    ///        var url = URL(string: "https://google.com")!
+    ///        let param = [URLQueryItem(name: "q", value: "Swifter Swift")]
+    ///        url.appendQueryParameters(params)
+    ///        print(url) // prints "https://google.com?q=Swifter%20Swift"
+    ///
+    /// - Parameter parameters: parameters dictionary.
+    mutating func appendQueryParameters(_ parameters: [URLQueryItem]) {
+        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = (urlComponents.queryItems ?? []) + parameters
+        self = urlComponents.url!
+    }
+    
     /// Get value of a query key.
     ///
     ///    var url = URL(string: "https://google.com?code=12345")!
@@ -62,9 +94,9 @@ public extension URL {
     ///
     /// - Parameter key: The key of a query value.
     func queryValue(for key: String) -> String? {
-        return URLComponents(string: absoluteString)?
+        return URLComponents(url: self, resolvingAgainstBaseURL: false)?
             .queryItems?
-            .first(where: { $0.name == key })?
+            .first { $0.name == key }?
             .value
     }
 

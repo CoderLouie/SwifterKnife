@@ -23,10 +23,22 @@ public extension UIScrollView {
             UIGraphicsEndImageContext()
         }
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        let previousFrame = frame
-        frame = CGRect(origin: frame.origin, size: contentSize)
+        let prevFrame = frame
+        let prevOffset = contentOffset
+        let prevBounds = layer.bounds
+        
+        let contentSize = contentSize
+        if #available(iOS 13, *) {
+            layer.bounds = CGRect(origin: .zero, size: contentSize)
+        }
+        contentOffset = .zero
+        frame = CGRect(origin: .zero, size: contentSize)
         layer.render(in: context)
-        frame = previousFrame
+        frame = prevFrame
+        contentOffset = prevOffset
+        if #available(iOS 13, *) {
+            layer.bounds = prevBounds
+        }
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 

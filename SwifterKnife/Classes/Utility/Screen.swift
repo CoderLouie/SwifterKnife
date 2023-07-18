@@ -122,10 +122,10 @@ import UIKit
         return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
     }
     
-    @objc public static var frontViewController: UIViewController {
+    @objc public static var frontViewController: UIViewController? {
         guard let window = currentWindow,
               let rootVC = window.rootViewController else {
-            fatalError()
+            return nil
         }
         return rootVC.front()
     }
