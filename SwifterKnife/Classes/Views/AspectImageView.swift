@@ -46,7 +46,8 @@ open class AspectFitView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = bounds
-        let rect = bounds.inset(by: contentInset)
+        let inset = contentInset
+        let rect = bounds.inset(by: inset)
         guard let ratio = imgView.image?.size.whRatio else { return }
         let size: CGSize
         if ratio < 1 {
@@ -58,9 +59,9 @@ open class AspectFitView: UIView {
         var frame = rect.resizing(to: size, model: .scaleAspectFit).pixelate
         switch imageContentModel {
         case .top:
-            frame.origin.y = 0
+            frame.origin.y = inset.top
         case .left:
-            frame.origin.x = 0
+            frame.origin.x = inset.left
         case .right:
             frame.origin.x = rect.maxX - frame.size.width
         case .bottom:

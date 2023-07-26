@@ -66,6 +66,10 @@ public struct KeyboardEvent {
     public let duration: TimeInterval
     public var isLocal: Bool?
     
+    public var isPresented: Bool {
+        endFrame.minY < UIScreen.main.bounds.height
+    }
+    
     public var options: UIView.AnimationOptions {
         return UIView.AnimationOptions(rawValue: UInt(curve.rawValue << 16))
     }
@@ -116,6 +120,16 @@ public final class KeyboardObserver {
         NotificationCenter.default.removeObserver(self)
     }
     public init() {}
+    
+    private var isKeyboardPresented = false
+    public func observeWillChangeFrame(closure: @escaping (_ isPresented: Bool, _ event: KeyboardEvent) -> Void) {
+        observe(.willChangeFrame) { [unowned self] event in
+            let isPresented = event.isPresented
+            if self.isKeyboardPresented == isPresented { return }
+            self.isKeyboardPresented = isPresented
+            closure(isPresented, event)
+        }
+    }
     
     public func observe(_ name: KeyboardEvent.Name, closure: @escaping Listener) {
         if var listeners = eventListen[name] {

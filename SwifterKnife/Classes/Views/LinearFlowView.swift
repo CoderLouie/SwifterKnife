@@ -163,7 +163,7 @@ private extension LinearFlowView {
         let frameWidth: CGFloat
         if numberOfLines < 2 {
             frameWidth = boundsW
-            if boundsW <= 0 { return }
+            if isMultipleLines, boundsW <= 0 { return }
         } else {
             let widths = tagViewSizes.map(\.width)
             let pair = splitArray(widths, numberOfLines)
@@ -224,8 +224,12 @@ private extension LinearFlowView {
         }
         if currentRowTagCount > 0 { currentRowW -= marginX }
         rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
-         
-        totalWidth = frameWidth
+        
+        if isMultipleLines {
+            totalWidth = frameWidth
+        } else {
+            totalWidth = currentRowW + inset.horizontal
+        }
         
         var alignment = self.alignment
         
