@@ -72,3 +72,126 @@ open class AspectFitView: UIView {
     }
     private(set) public unowned var imgView: UIImageView!
 }
+
+
+open class FitVImageView: UIImageView {
+    open override var image: UIImage? {
+        didSet {
+            if bounds.width > 0 {
+                invalidateIntrinsicContentSize()
+            }
+        }
+    }
+    open override var intrinsicContentSize: CGSize {
+        guard let img = image else {
+            return super.intrinsicContentSize
+        }
+        let imgSize = img.size
+        if imgSize.width == 0 {
+            return super.intrinsicContentSize
+        }
+        let size = bounds.size
+        if size.width == 0 {
+            return super.intrinsicContentSize
+        }
+        let w = size.width
+        let h = imgSize.height * w / imgSize.width
+        return CGSize(width: w, height: h.pixCeil)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let img = image else { return }
+        let size = bounds.size
+        let imgS = img.size
+        if Int(imgS.width) == Int(size.width) {
+            return // 没有设置宽约束
+        }
+        if size.width > 0,
+            Int(imgS.height) == Int(size.height) {
+            invalidateIntrinsicContentSize()
+        }
+    }
+}
+open class FitHImageView: UIImageView {
+    open override var image: UIImage? {
+        didSet {
+            if bounds.height > 0 {
+                invalidateIntrinsicContentSize()
+            }
+        }
+    }
+    open override var intrinsicContentSize: CGSize {
+        guard let img = image else {
+            return super.intrinsicContentSize
+        }
+        let imgSize = img.size
+        if imgSize.height == 0 {
+            return super.intrinsicContentSize
+        }
+        let size = bounds.size
+        if size.height == 0 {
+            return super.intrinsicContentSize
+        }
+        let h = size.height
+        let w = imgSize.width * h / imgSize.height
+        return CGSize(width: w.pixCeil, height: h)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let img = image else { return }
+        let size = bounds.size
+        let imgS = img.size
+        if Int(imgS.height) == Int(size.height) {
+            return // 没有设置高度约束
+        }
+        if size.height > 0,
+           Int(imgS.width) == Int(size.width) {// 第一次进入此方法
+            invalidateIntrinsicContentSize()
+        }
+    }
+}
+/*
+open class FitImageView: UIImageView {
+    public enum FitDirection {
+        case horizontal, vertical
+    }
+    public var fitDirection: FitDirection = .vertical
+    open override var intrinsicContentSize: CGSize {
+        let bounds = bounds
+        guard let img = image, !bounds.isEmpty else {
+            return super.intrinsicContentSize
+        }
+        let imgSize = img.size
+        if imgSize.width == 0 || imgSize.height == 0 {
+            return super.intrinsicContentSize
+        }
+        switch fitDirection {
+        case .horizontal:
+            let h = bounds.height
+            let w = imgSize.width * h / imgSize.height
+            return CGSize(width: w.pixCeil, height: h)
+        case .vertical:
+            let w = bounds.width
+            let h = imgSize.height * w / imgSize.width
+            return CGSize(width: w, height: h.pixCeil)
+        }
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        let bounds = bounds
+        guard let img = image, !bounds.isEmpty else {
+            return
+        }
+        let imgS = img.size
+        let size = bounds.size
+        if Int(imgS.width) == Int(size.width),
+           Int(imgS.height) == Int(size.height) {
+            return // 没有设置宽/高约束
+        }
+        invalidateIntrinsicContentSize()
+    }
+}
+*/

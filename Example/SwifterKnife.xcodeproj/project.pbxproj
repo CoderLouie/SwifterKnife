@@ -21,6 +21,10 @@
 		B66414742988C7970071C0FA /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66414732988C7970071C0FA /* TimerViewController.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
+		B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560A2A73950A0037B59A /* UserDefaultsTest.swift */; };
+		B691560D2A7395D90037B59A /* StatementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560C2A7395D90037B59A /* StatementTest.swift */; };
+		B691560F2A7397370037B59A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560E2A7397370037B59A /* BaseViewController.swift */; };
+		B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69156132A7398510037B59A /* FitImageViewVC.swift */; };
 		B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12529FBAF900009ACFA /* Mems.swift */; };
 		B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */; };
 		B6B038F4290B71840091B31D /* Watchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B038F3290B71830091B31D /* Watchdog.swift */; };
@@ -81,7 +85,7 @@
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwiftKnifeTrash/Defaults.swift; sourceTree = SOURCE_ROOT; };
+		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwifterKnife/Features/Defaults.swift; sourceTree = SOURCE_ROOT; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		B65E581129C8478600C48C3A /* TypedNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedNotification.swift; sourceTree = "<group>"; };
 		B66414732988C7970071C0FA /* TimerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
@@ -90,7 +94,11 @@
 		B67F61E428A34A57008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B67F61E528A34A60008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "banner_home_1aging@2x.jpg"; sourceTree = "<group>"; };
-		B6A2B12529FBAF900009ACFA /* Mems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Mems.swift; path = SwiftKnifeTrash/Mems.swift; sourceTree = SOURCE_ROOT; };
+		B691560A2A73950A0037B59A /* UserDefaultsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsTest.swift; sourceTree = "<group>"; };
+		B691560C2A7395D90037B59A /* StatementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementTest.swift; sourceTree = "<group>"; };
+		B691560E2A7397370037B59A /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		B69156132A7398510037B59A /* FitImageViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitImageViewVC.swift; sourceTree = "<group>"; };
+		B6A2B12529FBAF900009ACFA /* Mems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Mems.swift; path = SwifterKnife/Features/Mems.swift; sourceTree = SOURCE_ROOT; };
 		B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyOnWrite.swift; sourceTree = "<group>"; };
 		B6B038F3290B71830091B31D /* Watchdog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watchdog.swift; sourceTree = "<group>"; };
 		B6B5FAF0272BDC34001BBBE1 /* IAP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAP.swift; sourceTree = "<group>"; };
@@ -177,26 +185,15 @@
 		607FACD21AFB9204008FA782 /* Example for SwifterKnife */ = {
 			isa = PBXGroup;
 			children = (
-				B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */,
-				B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */,
+				B69156122A7397F60037B59A /* Other */,
+				B69156112A7397D90037B59A /* VCs */,
+				B69156102A7397C80037B59A /* Resources */,
+				B69156092A7394F40037B59A /* Test */,
 				B6D834BD29B19111004C2BC3 /* IAP */,
 				B6D834C129B19168004C2BC3 /* Features */,
-				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				B6D834B429B0B4FB004C2BC3 /* Empty.swift */,
-				B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */,
-				B6A2B12529FBAF900009ACFA /* Mems.swift */,
-				B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */,
-				B6FC05E1292A751F0057E659 /* HomeViewController.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				B691560E2A7397370037B59A /* BaseViewController.swift */,
 				B6FC05DF292A73D00057E659 /* DebugViewController.swift */,
-				B6D834DB29B9CA69004C2BC3 /* FormViewController.swift */,
-				B66414732988C7970071C0FA /* TimerViewController.swift */,
-				B6ED867F2726A1E3003103F6 /* KKView.h */,
-				B6ED86802726A1E3003103F6 /* KKView.m */,
-				B648D67F29418287004FFDCE /* Defaults.swift */,
-				B6B038F3290B71830091B31D /* Watchdog.swift */,
-				B650CC9F282374E8003170BB /* Permission.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -254,6 +251,48 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		B69156092A7394F40037B59A /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				B691560A2A73950A0037B59A /* UserDefaultsTest.swift */,
+				B691560C2A7395D90037B59A /* StatementTest.swift */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		B69156102A7397C80037B59A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */,
+				B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B69156112A7397D90037B59A /* VCs */ = {
+			isa = PBXGroup;
+			children = (
+				B6D834DB29B9CA69004C2BC3 /* FormViewController.swift */,
+				B66414732988C7970071C0FA /* TimerViewController.swift */,
+				B6FC05E1292A751F0057E659 /* HomeViewController.swift */,
+				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				B69156132A7398510037B59A /* FitImageViewVC.swift */,
+			);
+			path = VCs;
+			sourceTree = "<group>";
+		};
+		B69156122A7397F60037B59A /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
+				B6D834B429B0B4FB004C2BC3 /* Empty.swift */,
+				B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */,
+				B6ED867F2726A1E3003103F6 /* KKView.h */,
+				B6ED86802726A1E3003103F6 /* KKView.m */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
 		B6D834BD29B19111004C2BC3 /* IAP */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +318,11 @@
 		B6D834C129B19168004C2BC3 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B650CC9F282374E8003170BB /* Permission.swift */,
+				B6B038F3290B71830091B31D /* Watchdog.swift */,
+				B648D67F29418287004FFDCE /* Defaults.swift */,
+				B6A2B12529FBAF900009ACFA /* Mems.swift */,
+				B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */,
 				B6D834DD29B9F2AE004C2BC3 /* StackView */,
 				B6D834D429B82BE0004C2BC3 /* FormView */,
 				B6D834CB29B19308004C2BC3 /* if_.swift */,
@@ -510,6 +554,7 @@
 				B6D834C829B1923F004C2BC3 /* CallbackHell+Async2.swift in Sources */,
 				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
 				B6D834CA29B192F4004C2BC3 /* Func.swift in Sources */,
+				B691560F2A7397370037B59A /* BaseViewController.swift in Sources */,
 				B6D834C629B191CB004C2BC3 /* CallbackHell+Async1.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
 				B6D834CC29B19308004C2BC3 /* if_.swift in Sources */,
@@ -519,14 +564,17 @@
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
+				B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */,
 				B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */,
 				B66414742988C7970071C0FA /* TimerViewController.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,
+				B691560D2A7395D90037B59A /* StatementTest.swift in Sources */,
 				B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
+				B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */,
 				B650CCA0282374E8003170BB /* Permission.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,
 				B6D834B929B0C89B004C2BC3 /* XcodeKeys.swift in Sources */,

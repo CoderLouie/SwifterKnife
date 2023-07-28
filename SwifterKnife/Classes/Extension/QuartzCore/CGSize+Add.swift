@@ -43,7 +43,7 @@ public extension CGSize {
     }
     
     var isEmpty: Bool {
-        width == 0 && height == 0
+        width == 0 || height == 0
     }
     
     func inset(_ inset: UIEdgeInsets) -> CGSize {

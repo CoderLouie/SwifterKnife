@@ -45,19 +45,6 @@ fileprivate class BottomBar: UIView {
     }
 }
 
-class BaseViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        setupViews()
-    }
-    func setupViews() {
-    }
-    deinit {
-        Console.logFunc(whose: self)
-    }
-}
 
 extension UIView {
     static var canvasView: UIView? {

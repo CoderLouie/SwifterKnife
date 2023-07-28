@@ -14,50 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let age = 9
-        switch age {
-        case { $0 > 10 }:
-            print("greather than 10")
-        default:
-            break
-        }
-//        var num: Int? = nil
-//        let val = num.lazyLoad(10) {
-//            print($0)
-//        }
-//        var label: UILabel!
-////        label.unwrap(or: UILabel().then {
-////
-////        })
-//        let lbl = label.lazyLoad {
-//            $0.text = ""
-//        }
         
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds).then {
-            $0.rootViewController = ViewController()
-//            $0.rootViewController = UINavigationController(rootViewController: HomeViewController())
+            $0.rootViewController = UINavigationController(rootViewController: DebugViewController())
             $0.makeKeyAndVisible()
-//            $0.startWork()
-//            if let view = UIView.canvasView,
-//               let first = $0.subviews.first {
-//                first.removeFromSuperview()
-//                view.addSubview(first)
-//                $0.addSubview(view)
-//            }
-        }
-            
-        
-//        asyncWhile { i, exit, cost in
-//            print("asyncWhile cond", i, exit)
-//            if i > 3 {
-//                exit = true
-//                print(cost())
-//            }
-//            return self.window!.rootViewController!.view.frame.height > 0
-//        } execute: { i, cost in
-//            print("asyncWhile result", i, cost(), self.window!.rootViewController!.view.frame)
-//        }
+        } 
         return true
     }
 
