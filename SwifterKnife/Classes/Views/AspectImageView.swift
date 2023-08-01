@@ -82,6 +82,7 @@ open class FitVImageView: UIImageView {
             }
         }
     }
+    public var ratioMap: ((CGFloat, UIImage) -> CGFloat)?
     open override var intrinsicContentSize: CGSize {
         guard let img = image else {
             return super.intrinsicContentSize
@@ -94,8 +95,10 @@ open class FitVImageView: UIImageView {
         if size.width == 0 {
             return super.intrinsicContentSize
         }
+        let imgRatio = imgSize.width / imgSize.height
+        let ratio = ratioMap?(imgRatio, img) ?? imgRatio
         let w = size.width
-        let h = imgSize.height * w / imgSize.width
+        let h = w / ratio
         return CGSize(width: w, height: h.pixCeil)
     }
     
@@ -121,6 +124,7 @@ open class FitHImageView: UIImageView {
             }
         }
     }
+    public var ratioMap: ((CGFloat, UIImage) -> CGFloat)?
     open override var intrinsicContentSize: CGSize {
         guard let img = image else {
             return super.intrinsicContentSize
@@ -133,8 +137,10 @@ open class FitHImageView: UIImageView {
         if size.height == 0 {
             return super.intrinsicContentSize
         }
+        let imgRatio = imgSize.width / imgSize.height
+        let ratio = ratioMap?(imgRatio, img) ?? imgRatio
         let h = size.height
-        let w = imgSize.width * h / imgSize.height
+        let w = h * ratio
         return CGSize(width: w.pixCeil, height: h)
     }
     
