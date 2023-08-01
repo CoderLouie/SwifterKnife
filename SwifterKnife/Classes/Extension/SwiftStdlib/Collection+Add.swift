@@ -128,6 +128,15 @@ public extension Collection {
     }
 }
 
+//extension Collection {
+//    public func removeNils<Wrapped>() -> [Wrapped] where Element == Wrapped? {
+//        compactMap { $0 }
+//    }
+//    public func removeNils<Wrapped>(by keyPath: KeyPath<Element, Wrapped?>) -> [Element] {
+//        compactMap { $0[keyPath: keyPath] == nil ? nil : $0 }
+//    }
+//}
+
 // MARK: - Methods (Equatable)
 
 public extension Collection where Element: Equatable {

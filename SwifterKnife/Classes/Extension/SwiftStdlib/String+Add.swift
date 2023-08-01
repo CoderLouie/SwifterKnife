@@ -653,16 +653,19 @@ public extension String {
     func compareVersion(_ version: String) -> ComparisonResult {
         guard !version.isEmpty else { return .orderedDescending }
         let set = CharacterSet.decimalDigits.inverted
-        let nums1 = components(separatedBy: set)
-        let nums2 = version.components(separatedBy: set)
-        for i in 0..<min(nums1.count, nums2.count) {
-            guard let num1 = Int(nums1[i]) else { return .orderedAscending }
-            guard let num2 = Int(nums2[i]) else { return .orderedDescending }
-            guard num1 != num2 else { continue }
-            return num1 < num2 ? .orderedAscending : .orderedDescending
+        var nums1 = components(separatedBy: set)
+        var nums2 = version.components(separatedBy: set)
+        let n1 = nums1.count
+        let n2 = nums2.count
+        if n1 != n2 {
+            let remain = Array(repeating: "0", count: abs(n1 - n2))
+            if n1 > n2 {
+                nums2.append(contentsOf: remain)
+            } else {
+                nums1.append(contentsOf: remain)
+            }
         }
-        if nums1.count == nums2.count { return .orderedSame }
-        return nums1.count < nums2.count ? .orderedAscending : .orderedDescending
+        return nums1.joined().compare(nums2.joined())
     }
     
     func splitBy(charactersIn string: String) -> [String] {
