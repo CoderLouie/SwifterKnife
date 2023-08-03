@@ -74,7 +74,7 @@ public struct KeyboardEvent {
         return UIView.AnimationOptions(rawValue: UInt(curve.rawValue << 16))
     }
     
-    init?(notification: Notification) {
+    public init?(notification: Notification) {
         guard let userInfo = (notification as NSNotification).userInfo else { return nil }
         guard let name = KeyboardEvent.Name(rawValue: notification.name) else { return nil }
         guard let beginFrame = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue else { return nil }

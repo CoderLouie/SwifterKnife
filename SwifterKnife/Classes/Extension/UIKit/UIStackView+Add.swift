@@ -207,6 +207,9 @@ public final class PairView<V1: UIView, V2: UIView>: UIStackView {
     public private(set) unowned var view1: V1!
     public private(set) unowned var view2: V2!
 }
+public typealias ImageLabel = PairView<UIImageView, UILabel>
+public typealias LabelImage = PairView<UILabel, UIImageView>
+public typealias Labels = PairView<UILabel, UILabel>
 
 
 @resultBuilder

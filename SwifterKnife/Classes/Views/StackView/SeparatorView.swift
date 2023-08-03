@@ -2,7 +2,7 @@
 //  SeparatorView.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2023/3/8.
+//  Created by liyang on 2023/3/8.
 //
 
 import UIKit
