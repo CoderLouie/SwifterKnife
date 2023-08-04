@@ -30,6 +30,8 @@ fileprivate enum TestCase: String, CaseIterable {
     case statement = "Statement"
     case home = "Home"
     case fitImageView
+    case other
+    
     func perform(from vc: DebugViewController) {
         switch self {
         case .statement:
@@ -42,6 +44,11 @@ fileprivate enum TestCase: String, CaseIterable {
         case .fitImageView:
             let nextVc = FitImageViewVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
+            DispatchQueue.main.after(1) {
+                Notify.peek()
+            }
+        case .other:
+            Notify.peek()
         }
     }
 }

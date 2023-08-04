@@ -165,7 +165,6 @@ public final class KeyboardObserver {
 }
 
 
-private var keyboardObserverKey: UInt8 = 0
 private var keyboardAvoidingSpaceKey: UInt8 = 0
 private var keyboardKeepSpaceKey: UInt8 = 0
 extension UIView {
@@ -180,46 +179,9 @@ extension UIView {
         set {
             objc_setAssociatedObject(self, &keyboardKeepSpaceKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             if newValue == nil {
-                _keyboardObserver = nil
+                NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillChangeFrameNotification, object: nil)
             } else {
-                if let _ = _keyboardObserver { return }
-                let observer = KeyboardObserver()
-                _keyboardObserver = observer
-                
-                observer.observe(.willShow) { [unowned self] event in
-                    if let space = self.keyboardAvoidingSpace {
-                        var frame = self.frame
-                        frame.origin.y += space
-                        self.frame = frame
-                        self.keyboardAvoidingSpace = nil
-                    }
-                    guard let inputView = self.theInputView,
-                          let closure = self.keyboardKeepSpaceClosure else {
-                        return
-                    }
-                    let space = closure(inputView)
-                    let rect = inputView.convert(inputView.bounds, to: nil)
-                    let delta = rect.maxY + event.endFrame.height + space - Screen.height
-                    if delta < 0 { return }
-                    self.keyboardAvoidingSpace = delta
-                    
-                    var frame = self.frame
-                    frame.origin.y -= delta
-                    UIView.animate(withDuration: event.duration, delay: 0, options: event.options) { [weak self] in
-                        self?.frame = frame
-                    }
-                }
-                observer.observe(.willHide) { [unowned self] event in
-                    guard let space = self.keyboardAvoidingSpace else { return }
-                    
-                    var frame = self.frame
-                    frame.origin.y += space
-                    UIView.animate(withDuration: event.duration, delay: 0, options: event.options) { [weak self] in
-                        self?.frame = frame
-                    } completion: { [weak self] _ in
-                        self?.keyboardAvoidingSpace = nil
-                    }
-                }
+                NotificationCenter.default.addObserver(self, selector: #selector(at_keyboardWillChangeFrame(_:)), name: UIApplication.keyboardWillChangeFrameNotification, object: nil)
             }
         }
         get {
@@ -227,6 +189,33 @@ extension UIView {
         }
     }
     
+    @objc private func at_keyboardWillChangeFrame(_ notify: Notification) {
+        guard let event = KeyboardEvent(notification: notify),
+              let view = theInputView else { return }
+        let isPresented = event.isPresented
+        
+        UIView.animate(withDuration: event.duration, delay: 0, options: event.options) {
+            if isPresented { 
+                if let delta = self.keyboardAvoidingSpace {
+                    self.transform = self.transform.translatedBy(x: 0, y: -delta)
+                }
+                guard let closure = self.keyboardKeepSpaceClosure else {
+                    return
+                }
+                let crect = view.convert(view.bounds, to: nil)
+                let delta = event.endFrame.minY - crect.maxY - closure(view)
+                guard delta < 0 else { return }
+                self.keyboardAvoidingSpace = delta
+                self.transform = self.transform.translatedBy(x: 0, y: delta)
+            } else {
+                guard let delta = self.keyboardAvoidingSpace else {
+                    return
+                }
+                self.transform = self.transform.translatedBy(x: 0, y: -delta)
+                self.keyboardAvoidingSpace = nil
+            }
+        }
+    }
     /// 键盘遮挡的距离
     private var keyboardAvoidingSpace: CGFloat? {
         get {
@@ -234,14 +223,6 @@ extension UIView {
         }
         set {
             objc_setAssociatedObject(self, &keyboardAvoidingSpaceKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
-        }
-    }
-    private var _keyboardObserver: KeyboardObserver? {
-        get {
-            objc_getAssociatedObject(self, &keyboardObserverKey) as? KeyboardObserver
-        }
-        set {
-            objc_setAssociatedObject(self, &keyboardObserverKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }

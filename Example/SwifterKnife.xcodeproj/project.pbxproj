@@ -16,6 +16,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA592A7BB4DC00769B08 /* ISODate.swift */; };
+		B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA5D2A7CA28500769B08 /* Notify.swift */; };
 		B648D68029418287004FFDCE /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648D67F29418287004FFDCE /* Defaults.swift */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
 		B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65E581129C8478600C48C3A /* TypedNotification.swift */; };
@@ -87,6 +88,7 @@
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B640CA592A7BB4DC00769B08 /* ISODate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISODate.swift; sourceTree = "<group>"; };
+		B640CA5D2A7CA28500769B08 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwifterKnife/Features/Defaults.swift; sourceTree = SOURCE_ROOT; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		B65E581129C8478600C48C3A /* TypedNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedNotification.swift; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 				B6A2B12529FBAF900009ACFA /* Mems.swift */,
 				B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */,
 				B640CA592A7BB4DC00769B08 /* ISODate.swift */,
+				B640CA5D2A7CA28500769B08 /* Notify.swift */,
 				B6D834DD29B9F2AE004C2BC3 /* StackView */,
 				B6D834D429B82BE0004C2BC3 /* FormView */,
 				B6D834CB29B19308004C2BC3 /* if_.swift */,
@@ -570,6 +573,7 @@
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
+				B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */,
 				B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */,

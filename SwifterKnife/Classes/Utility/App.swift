@@ -9,7 +9,19 @@ import UIKit
  
 public enum App {
     
-    public var isIdleTimerEnable: Bool {
+    public static func exit(animationInterval: TimeInterval = 0.5) {
+        if animationInterval > 0 {
+            UIView.animate(withDuration: animationInterval) {
+                window?.alpha = 0
+            } completion: { _ in
+                Darwin.exit(0)
+            }
+        } else {
+            Darwin.exit(0)
+        }
+    }
+    
+    public static var isIdleTimerEnable: Bool {
         get { !UIApplication.shared.isIdleTimerDisabled }
         set {
             UIApplication.shared.isIdleTimerDisabled = !newValue
@@ -120,6 +132,9 @@ public enum App {
         openURL(url)
     }
     
+    public static func openURLString(_ urlString: String?, completion: ((Bool) -> Void)? = nil) {
+        openURL(urlString.flatMap(URL.init(string:)), completion: completion)
+    }
     public static func openURL(_ url: URL?, completion: ((Bool) -> Void)? = nil) {
         guard let url = url else { completion?(false); return }
         if #available(iOS 10.0, *) {

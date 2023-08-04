@@ -9,10 +9,12 @@ import Foundation
 
 extension HTTPURLResponse {
     /// 响应时间
-    public var at_Date: Date? {
+    public var at_date: Date? {
+        /// Thu, 03 Aug 2023 08:42:31 GMT
         if let str = allHeaderFields["Date"] as? String {
             let fmt = DateFormatter()
             fmt.locale = Locale(identifier: "en_US_POSIX")
+            fmt.timeZone = TimeZone(secondsFromGMT: 0)
             fmt.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
             return fmt.date(from: str)
         }
@@ -83,7 +85,7 @@ public enum ISODate {
             return
         }
         URLSession.shared.dataTask(with: url) { _, res , _ in
-            completion((res as? HTTPURLResponse)?.at_Date)
+            completion((res as? HTTPURLResponse)?.at_date)
         }.resume()
     }
     

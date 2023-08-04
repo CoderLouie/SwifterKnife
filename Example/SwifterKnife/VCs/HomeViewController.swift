@@ -107,7 +107,14 @@ class HomeViewController: BaseViewController {
     private unowned var greenView: UIView!
     private unowned var blueView: UIView!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
+        if textField1.isFirstResponder {
+            textField2.becomeFirstResponder()
+        } else if textField2.isFirstResponder {
+            textField2.resignFirstResponder()
+        } else {
+            textField1.becomeFirstResponder()
+        }
+//        self.view.endEditing(true)
         return ()
         
 //        let width = view.bounds.width - 60
@@ -184,7 +191,7 @@ extension HomeViewController {
         if textField2.isFirstResponder {
             textField1.becomeFirstResponder()
         } else {
-            textField1.becomeFirstResponder()
+            textField2.becomeFirstResponder()
         }
     }
 }

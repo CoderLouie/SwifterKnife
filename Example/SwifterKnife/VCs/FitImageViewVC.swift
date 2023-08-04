@@ -9,6 +9,12 @@
 import UIKit
 import SwifterKnife
 
+fileprivate extension NSNotification.Name {
+    static var didFitImage: NSNotification.Name {
+        .init(rawValue: "didFitImage")
+    }
+}
+
 class FitImageViewVC: BaseViewController {
     private var flag = false
     
@@ -19,6 +25,7 @@ class FitImageViewVC: BaseViewController {
         } else {
             pairView.view1.image = .fileNamed("h2000")
         }
+        Notify.post(name: .didFitImage, userInfo: ["flag": flag])
         UIView.animate(withDuration: 0.25) {
             self.pairView.layoutIfNeeded()
         }
@@ -26,6 +33,10 @@ class FitImageViewVC: BaseViewController {
     
     override func setupViews() {
         super.setupViews()
+        
+        Notify.addObserver(self, name: .didFitImage) { obj, no in
+            print("didFitImage", (no.userInfo?["flag"] as? Bool) ??? "nil")
+        }
         
         pairView = .init().then {
             $0.spacing = 10
