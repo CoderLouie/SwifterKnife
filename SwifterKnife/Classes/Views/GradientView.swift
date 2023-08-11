@@ -241,6 +241,6 @@ open class GradientControl: UIControl {
             gradientLayer.mask = maskLayer
         }
     }
-    private unowned var gradientLayer: CAGradientLayer!
+    public private(set) unowned var gradientLayer: CAGradientLayer!
 }
 

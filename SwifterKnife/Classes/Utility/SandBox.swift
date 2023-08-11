@@ -69,6 +69,12 @@ public enum SandBox {
             try manager.createDirectory(atPath: mapPath, withIntermediateDirectories: true, attributes: nil)
         }
     }
+    public static func createDirectory(atPath path: String) throws {
+        try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+    }
+    public static func createDirectory(at fileUrl: URL) throws {
+        try FileManager.default.createDirectory(at: fileUrl, withIntermediateDirectories: true, attributes: nil)
+    }
     
     public static func moveItem(atPath: String, toPath: String) throws {
         try FileManager.default.moveItem(atPath: atPath, toPath: toPath)

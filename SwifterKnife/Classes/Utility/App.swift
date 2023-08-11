@@ -9,14 +9,13 @@ import UIKit
  
 public enum App {
     
-    public static func exit(animationInterval: TimeInterval = 0.5) {
-        if animationInterval > 0 {
-            UIView.animate(withDuration: animationInterval) {
-                window?.alpha = 0
-            } completion: { _ in
-                Darwin.exit(0)
-            }
-        } else {
+    public static func exit() {
+        Darwin.exit(0)
+    }
+    public static func exitAnimated(with view: UIView? = nil, duration: TimeInterval = 0.5) {
+        UIView.animate(withDuration: duration) {
+            (view ?? window)?.alpha = 0
+        } completion: { _ in
             Darwin.exit(0)
         }
     }

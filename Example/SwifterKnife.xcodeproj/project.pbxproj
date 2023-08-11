@@ -15,6 +15,17 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		B63EDC192A84DB28008B251C /* apple.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B63EDC182A84DB28008B251C /* apple.mp4 */; };
+		B63EDC2B2A84E13D008B251C /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC2A2A84E13D008B251C /* PhotoManager.swift */; };
+		B63EDC482A84E39D008B251C /* YiVideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC412A84E39D008B251C /* YiVideoEditor.swift */; };
+		B63EDC492A84E39D008B251C /* YiVideoEditorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC422A84E39D008B251C /* YiVideoEditorData.swift */; };
+		B63EDC4A2A84E39E008B251C /* YiRotateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC442A84E39D008B251C /* YiRotateCommand.swift */; };
+		B63EDC4B2A84E39E008B251C /* YiCropCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC452A84E39D008B251C /* YiCropCommand.swift */; };
+		B63EDC4C2A84E39E008B251C /* YiAddLayerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC462A84E39D008B251C /* YiAddLayerCommand.swift */; };
+		B63EDC4D2A84E39E008B251C /* YiAddAudioCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC472A84E39D008B251C /* YiAddAudioCommand.swift */; };
+		B63EDC522A85DC85008B251C /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC502A85DC85008B251C /* FileHelper.swift */; };
+		B63EDC532A85DC85008B251C /* LivePhotoGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC512A85DC85008B251C /* LivePhotoGenerator.swift */; };
+		B63EDC552A85DD4A008B251C /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC542A85DD4A008B251C /* VideoEditor.swift */; };
 		B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA592A7BB4DC00769B08 /* ISODate.swift */; };
 		B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA5D2A7CA28500769B08 /* Notify.swift */; };
 		B648D68029418287004FFDCE /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648D67F29418287004FFDCE /* Defaults.swift */; };
@@ -87,6 +98,17 @@
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		B63EDC182A84DB28008B251C /* apple.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = apple.mp4; sourceTree = "<group>"; };
+		B63EDC2A2A84E13D008B251C /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
+		B63EDC412A84E39D008B251C /* YiVideoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiVideoEditor.swift; sourceTree = "<group>"; };
+		B63EDC422A84E39D008B251C /* YiVideoEditorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiVideoEditorData.swift; sourceTree = "<group>"; };
+		B63EDC442A84E39D008B251C /* YiRotateCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiRotateCommand.swift; sourceTree = "<group>"; };
+		B63EDC452A84E39D008B251C /* YiCropCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiCropCommand.swift; sourceTree = "<group>"; };
+		B63EDC462A84E39D008B251C /* YiAddLayerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddLayerCommand.swift; sourceTree = "<group>"; };
+		B63EDC472A84E39D008B251C /* YiAddAudioCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddAudioCommand.swift; sourceTree = "<group>"; };
+		B63EDC502A85DC85008B251C /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
+		B63EDC512A85DC85008B251C /* LivePhotoGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivePhotoGenerator.swift; sourceTree = "<group>"; };
+		B63EDC542A85DD4A008B251C /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		B640CA592A7BB4DC00769B08 /* ISODate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISODate.swift; sourceTree = "<group>"; };
 		B640CA5D2A7CA28500769B08 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwifterKnife/Features/Defaults.swift; sourceTree = SOURCE_ROOT; };
@@ -189,6 +211,7 @@
 		607FACD21AFB9204008FA782 /* Example for SwifterKnife */ = {
 			isa = PBXGroup;
 			children = (
+				B63EDC4E2A85DC73008B251C /* Tool */,
 				B69156122A7397F60037B59A /* Other */,
 				B69156112A7397D90037B59A /* VCs */,
 				B69156102A7397C80037B59A /* Resources */,
@@ -198,6 +221,8 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				B691560E2A7397370037B59A /* BaseViewController.swift */,
 				B6FC05DF292A73D00057E659 /* DebugViewController.swift */,
+				B63EDC402A84E39D008B251C /* YiVideoEditor */,
+				B63EDC182A84DB28008B251C /* apple.mp4 */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -253,6 +278,47 @@
 				9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		B63EDC402A84E39D008B251C /* YiVideoEditor */ = {
+			isa = PBXGroup;
+			children = (
+				B63EDC412A84E39D008B251C /* YiVideoEditor.swift */,
+				B63EDC422A84E39D008B251C /* YiVideoEditorData.swift */,
+				B63EDC432A84E39D008B251C /* Commands */,
+			);
+			name = YiVideoEditor;
+			path = ../../../../../../gomo/Project/Aipics/Aipics/Modules/AIDream/YiVideoEditor;
+			sourceTree = "<group>";
+		};
+		B63EDC432A84E39D008B251C /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				B63EDC442A84E39D008B251C /* YiRotateCommand.swift */,
+				B63EDC452A84E39D008B251C /* YiCropCommand.swift */,
+				B63EDC462A84E39D008B251C /* YiAddLayerCommand.swift */,
+				B63EDC472A84E39D008B251C /* YiAddAudioCommand.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
+		B63EDC4E2A85DC73008B251C /* Tool */ = {
+			isa = PBXGroup;
+			children = (
+				B63EDC542A85DD4A008B251C /* VideoEditor.swift */,
+				B63EDC2A2A84E13D008B251C /* PhotoManager.swift */,
+				B63EDC4F2A85DC85008B251C /* LivePhoto */,
+			);
+			path = Tool;
+			sourceTree = "<group>";
+		};
+		B63EDC4F2A85DC85008B251C /* LivePhoto */ = {
+			isa = PBXGroup;
+			children = (
+				B63EDC502A85DC85008B251C /* FileHelper.swift */,
+				B63EDC512A85DC85008B251C /* LivePhotoGenerator.swift */,
+			);
+			path = LivePhoto;
 			sourceTree = "<group>";
 		};
 		B69156092A7394F40037B59A /* Test */ = {
@@ -463,6 +529,7 @@
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				B63EDC192A84DB28008B251C /* apple.mp4 in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 				B6FEE108283CB5EC00D8BCB2 /* h2000.jpg in Resources */,
 			);
@@ -554,14 +621,19 @@
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
 				B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */,
 				B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */,
+				B63EDC4C2A84E39E008B251C /* YiAddLayerCommand.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
 				B6D834B529B0B4FB004C2BC3 /* Empty.swift in Sources */,
 				B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */,
 				B6D834DC29B9CA69004C2BC3 /* FormViewController.swift in Sources */,
 				B6D834C829B1923F004C2BC3 /* CallbackHell+Async2.swift in Sources */,
+				B63EDC522A85DC85008B251C /* FileHelper.swift in Sources */,
+				B63EDC482A84E39D008B251C /* YiVideoEditor.swift in Sources */,
 				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
 				B6D834CA29B192F4004C2BC3 /* Func.swift in Sources */,
+				B63EDC4B2A84E39E008B251C /* YiCropCommand.swift in Sources */,
 				B691560F2A7397370037B59A /* BaseViewController.swift in Sources */,
+				B63EDC532A85DC85008B251C /* LivePhotoGenerator.swift in Sources */,
 				B6D834C629B191CB004C2BC3 /* CallbackHell+Async1.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
 				B6D834CC29B19308004C2BC3 /* if_.swift in Sources */,
@@ -571,6 +643,7 @@
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
+				B63EDC552A85DD4A008B251C /* VideoEditor.swift in Sources */,
 				B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
 				B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */,
@@ -578,8 +651,12 @@
 				B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */,
 				B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */,
 				B66414742988C7970071C0FA /* TimerViewController.swift in Sources */,
+				B63EDC4D2A84E39E008B251C /* YiAddAudioCommand.swift in Sources */,
+				B63EDC492A84E39D008B251C /* YiVideoEditorData.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,
+				B63EDC4A2A84E39E008B251C /* YiRotateCommand.swift in Sources */,
 				B691560D2A7395D90037B59A /* StatementTest.swift in Sources */,
+				B63EDC2B2A84E13D008B251C /* PhotoManager.swift in Sources */,
 				B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */,

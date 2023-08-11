@@ -31,7 +31,7 @@ public struct ATDefaults<T> {
         get { rawValue }
         set {
             rawValue = newValue
-            UserDefaults.standard.setValue(newValue, forKey: key)
+            UserDefaults.standard.set(newValue, forKey: key)
         }
     }
     public init(defaultValue: T, key: String) {

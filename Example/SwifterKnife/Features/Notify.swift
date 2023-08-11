@@ -55,15 +55,15 @@ public enum Notify {
         return true
     }
     
-    public static func post(name: NSNotification.Name, userInfo: [AnyHashable: Any]? = nil) {
+    public static func post(name: Notification.Name, userInfo: [AnyHashable: Any]? = nil) {
         NotificationCenter.default.post(name: name, object: nil, userInfo: userInfo)
     }
     
-    public static func addObserver(_ observer: Any, selector aSelector: Selector, name aName: NSNotification.Name) {
+    public static func addObserver(_ observer: Any, selector aSelector: Selector, name aName: Notification.Name) {
         NotificationCenter.default.addObserver(observer, selector: aSelector, name: aName, object: nil)
     }
     
-    public static func addObserver<T: AnyObject>(_ observer: T, name aName: NSNotification.Name, closure: @escaping (T, Notification) -> Void) {
+    public static func addObserver<T: AnyObject>(_ observer: T, name aName: Notification.Name, closure: @escaping (T, Notification) -> Void) {
         let wrap = Wrapper(object: observer) { w, object, no in
             guard let obj = object as? T else {
                 w.clear()

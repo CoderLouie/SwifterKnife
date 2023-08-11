@@ -195,7 +195,7 @@ extension UIView {
         let isPresented = event.isPresented
         
         UIView.animate(withDuration: event.duration, delay: 0, options: event.options) {
-            if isPresented { 
+            if isPresented {
                 if let delta = self.keyboardAvoidingSpace {
                     self.transform = self.transform.translatedBy(x: 0, y: -delta)
                 }

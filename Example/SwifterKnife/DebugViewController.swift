@@ -22,9 +22,10 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
     func setup() {
     }
 }
-
-
+ 
 fileprivate enum TestCase: String, CaseIterable {
+    case watermark
+    case overlay
     case defaults = "UserDefaults"
     
     case statement = "Statement"
@@ -32,8 +33,54 @@ fileprivate enum TestCase: String, CaseIterable {
     case fitImageView
     case other
     
+    
+    
     func perform(from vc: DebugViewController) {
         switch self {
+        case .overlay:
+            let videoPath = "apple.mp4".filePath(under: .bundle)
+            let destPath = "watermarkapple3.mp4".filePath(under: .document)
+//            let videoPath = "/Users/liyang/Desktop/Programe/Exercise/2021/11/SwifterKnife/Example/SwifterKnife/apple.mp4"
+//            let destPath = "/Users/liyang/Desktop/Programe/Exercise/2023/08/newapple.mp4"
+            let begin = CACurrentMediaTime()
+            let flag = VideoEditor.addOverlay({ bounds in
+                let layer = CALayer().then {
+                    $0.backgroundColor = UIColor.red.cgColor
+                    $0.frame = CGRect(x: 10, y: 10, width: 60, height: 30)
+                }
+                return [layer]
+            }, to: videoPath, exportAt: destPath) { error in
+                print("[export finish]", begin.coseTime, error ??? "nil")
+                if error == nil {
+                    PhotoManager.saveVideoToAlbum(url: URL(fileURLWithPath: destPath)) { success in
+                        print("[Save finish]", success.opDescription, begin.coseTime)
+                    }
+                }
+            }
+            print("[Add Overlay]", flag.opDescription)
+        case .watermark:
+            let filename = "apple.mp4"
+//            let filename = "IMG_4396.MOV"
+            let tmpUrl = URL(fileURLWithPath: filename.filePath(under: .bundle))
+            let videoEditor = YiVideoEditor(videoURL: tmpUrl)
+            videoEditor.addOverlay { _ in
+                CALayer().then {
+                    $0.backgroundColor = UIColor.red.cgColor
+                    $0.frame = CGRect(x: 10, y: 10, width: 40, height: 20)
+                }
+            }
+            let destPath = "watermarkapple1.mp4".filePath(under: .document)
+            let destUrl = URL(fileURLWithPath: destPath)
+            videoEditor.export(at: destUrl) { session in
+                print("[AIDream] export finished", session.status.rawValue, session.error ??? "nil")
+                if session.status == .completed {
+                    PhotoManager.saveVideoToAlbum(url: destUrl) { success in
+                        if success {
+                            print("save success")
+                        }
+                    }
+                }
+            }
         case .statement:
             statement_test_entry()
         case .defaults:
