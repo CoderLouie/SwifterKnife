@@ -9,6 +9,19 @@
 import UIKit
 import SwifterKnife
 
+import Lottie
+
+extension LottieAnimationView {
+    static var frog: LottieAnimationView {
+        LottieAnimationView(name: "青蛙").then {
+            $0.contentMode = .scaleAspectFill
+            $0.backgroundColor = .clear
+            $0.loopMode = .loop
+            $0.backgroundBehavior = .pauseAndRestore
+        }
+    }
+}
+
 fileprivate class TestCaseCell: UITableViewCell, Reusable {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -26,22 +39,45 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
 fileprivate enum TestCase: String, CaseIterable {
     case watermark
     case overlay
+    case overlay1
     case defaults = "UserDefaults"
     
     case statement = "Statement"
     case home = "Home"
     case fitImageView
     case other
-    
+    case dictation = "语音输入"
     
     
     func perform(from vc: DebugViewController) {
         switch self {
+        case .dictation:
+            let nextVc = DictationVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .overlay1:
+            let videoPath = "inputResources.mp4".filePath(under: .bundle)
+            let destPath = "watermark.mp4".filePath(under: .temporary)
+//            LottieConfiguration.shared.renderingEngine = .mainThread
+            let mark = LottieAnimationView.frog.then { 
+                $0.animationSpeed = 5
+                $0.frame = CGRect(x: 150, y: 340, width: 80, height: 80)
+                $0.play { _ in
+                    print("lottie play finish")
+                }
+            }
+            let begin = CACurrentMediaTime()
+            let flag = VideoEditor.addOverlay(mark.layer, to: videoPath, exportAt: destPath) { error in
+                print("[export finish]", begin.coseTime, error ??? "nil", mark.frame)
+                if error == nil {
+                    PhotoManager.saveVideoToAlbum(url: URL(fileURLWithPath: destPath)) { success in
+                        print("[Save finish]", success.opDescription, begin.coseTime)
+                    }
+                }
+            }
+            print("[Add Overlay]", flag.opDescription)
         case .overlay:
             let videoPath = "apple.mp4".filePath(under: .bundle)
             let destPath = "watermarkapple3.mp4".filePath(under: .document)
-//            let videoPath = "/Users/liyang/Desktop/Programe/Exercise/2021/11/SwifterKnife/Example/SwifterKnife/apple.mp4"
-//            let destPath = "/Users/liyang/Desktop/Programe/Exercise/2023/08/newapple.mp4"
             let begin = CACurrentMediaTime()
             let flag = VideoEditor.addOverlay({ bounds in
                 let layer = CALayer().then {

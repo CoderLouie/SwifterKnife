@@ -1,15 +1,31 @@
 //
 //  VideoEditor.swift
-//  SwifterKnife_Example
+//  SwifterKnife
 //
-//  Created by 李阳 on 2023/8/11.
-//  Copyright © 2023 CocoaPods. All rights reserved.
+//  Created by liyang on 2023/8/11.
 //
 
 import Foundation
 import AVFoundation
 
+/*
+ https://github.com/evekeen/watermark/blob/main/Shared/Composer.swift
+ https://github.com/coderyi/YiVideoEditor
+ */
+
 enum VideoEditor {
+    
+    @discardableResult
+    static func addOverlay(_ layer: CALayer,
+                           to sourcePath: String,
+                           exportAt outputPath: String,
+                           outputFileType: AVFileType = .mp4,
+                           presetName: String = AVAssetExportPreset1280x720,
+                           completion: @escaping (Error?) -> Void) -> Bool {
+        addOverlay({ _ in
+            return [layer]
+        }, to: sourcePath, exportAt: outputPath, outputFileType: outputFileType, presetName: presetName, completion: completion)
+    }
     
     @discardableResult
     static func addOverlay(_ overlay: (CGRect) -> [CALayer],
@@ -25,7 +41,6 @@ enum VideoEditor {
         } completion: { error in
             completion(error)
         }
-
     }
     
     @discardableResult
@@ -40,7 +55,7 @@ enum VideoEditor {
         let videoUrl = URL(fileURLWithPath: videoPath)
         guard videoUrl.isFileURL else { return false }
         
-        let asset = AVURLAsset(url: videoUrl)
+        let asset = AVURLAsset(url: videoUrl, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         guard let videoTrack = asset.tracks(withMediaType: .video).first else {
             return false
         }
@@ -56,53 +71,63 @@ enum VideoEditor {
         }
         
         let composition = AVMutableComposition()
-        let videoComposition = AVMutableVideoComposition().then {
-            $0.frameDuration = CMTime(value: 1, timescale: 30)
-            $0.renderSize = videoSize
+        guard let videoCompositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid) else {
+            print("[AddOverlay] cannot create track")
+            return false
         }
-        let videoCompositionTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
         let assetTimeRange = CMTimeRange(start: .zero, duration: asset.duration)
-        try? videoCompositionTrack?.insertTimeRange(assetTimeRange, of: videoTrack, at: .zero)
+        do {
+            try videoCompositionTrack.insertTimeRange(assetTimeRange, of: videoTrack, at: .zero)
+        } catch {
+            print("[AddOverlay] insertTimeRange Error", error)
+            return false
+        }
+        videoCompositionTrack.preferredTransform = videoTrack.preferredTransform
         
-        let audioTrack = asset.tracks(withMediaType: .audio).first
-        let audioCompositionTrack: AVMutableCompositionTrack?
-        if let audioTrack = audioTrack {
-            audioCompositionTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-            try? audioCompositionTrack?.insertTimeRange(assetTimeRange, of: audioTrack, at: .zero)
-        } else {
-            audioCompositionTrack = nil
+        // Add audio track
+        if
+            let audioTrack = asset.tracks(withMediaType: .audio).first,
+            let compositionAudioTrack = composition.addMutableTrack(
+                withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid
+            ) {
+            try? compositionAudioTrack.insertTimeRange(assetTimeRange, of: audioTrack, at: .zero)
         }
         
         let videoLayer = CALayer().then {
             $0.frame = bounds
         }
         let parentLayer = CALayer().then {
+            $0.isGeometryFlipped = true
             $0.frame = bounds
             $0.addSublayer(videoLayer)
             for l in overlayLayers {
                 $0.addSublayer(l)
             }
         }
-        if videoComposition.instructions.isEmpty {
-            let instruction = AVMutableVideoCompositionInstruction()
-            instruction.timeRange = CMTimeRange(start: .zero, duration: composition.duration)
-            if let assetTrack = videoCompositionTrack {
-                let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: assetTrack)
-                instruction.layerInstructions = [layerInstruction]
-                videoComposition.instructions = [instruction]
-            }
+        
+        let videoComposition = AVMutableVideoComposition().then {
+            $0.frameDuration = CMTime(value: 1, timescale: 30)
+            $0.renderSize = videoSize
         }
         videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, in: parentLayer)
-        guard let compositionAsset = composition.copy() as? AVAsset else {
-            return false
+        
+        let instruction = AVMutableVideoCompositionInstruction()
+        instruction.timeRange = CMTimeRange(start: .zero, duration: composition.duration)
+        instruction.enablePostProcessing = true
+        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoCompositionTrack).then {
+            $0.setTransform(.identity, at: .zero)
         }
-        guard let session = AVAssetExportSession(asset: compositionAsset, presetName: presetName) else {
+        instruction.layerInstructions = [layerInstruction]
+        videoComposition.instructions = [instruction]
+        
+        guard let session = AVAssetExportSession(asset: composition, presetName: presetName) else {
+            print("[AddOverlay] cannot export session")
             return false
         }
         session.videoComposition = videoComposition
         configExportSession(session)
         guard let exportURL = session.outputURL,
-                let _ = session.outputFileType else {
+              let _ = session.outputFileType else {
             return false
         }
         

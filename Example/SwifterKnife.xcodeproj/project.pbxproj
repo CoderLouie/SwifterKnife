@@ -15,17 +15,110 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		B620AFBA2A8B7932007243DC /* DictationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620AFB92A8B7932007243DC /* DictationVC.swift */; };
+		B620B0192A8C6DC7007243DC /* inputResources.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B620AFBC2A8C6DC6007243DC /* inputResources.mp4 */; };
+		B620B01A2A8C6DC7007243DC /* 青蛙.json in Resources */ = {isa = PBXBuildFile; fileRef = B620AFBD2A8C6DC6007243DC /* 青蛙.json */; };
+		B620B01B2A8C6DC7007243DC /* 雨天青蛙_00013.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFBF2A8C6DC6007243DC /* 雨天青蛙_00013.png */; };
+		B620B01C2A8C6DC7007243DC /* 雨天青蛙_00007.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC02A8C6DC6007243DC /* 雨天青蛙_00007.png */; };
+		B620B01D2A8C6DC7007243DC /* 雨天青蛙_00006.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC12A8C6DC6007243DC /* 雨天青蛙_00006.png */; };
+		B620B01E2A8C6DC7007243DC /* 雨天青蛙_00012.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC22A8C6DC6007243DC /* 雨天青蛙_00012.png */; };
+		B620B01F2A8C6DC7007243DC /* 雨天青蛙_00038.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC32A8C6DC6007243DC /* 雨天青蛙_00038.png */; };
+		B620B0202A8C6DC7007243DC /* 雨天青蛙_00004.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC42A8C6DC6007243DC /* 雨天青蛙_00004.png */; };
+		B620B0212A8C6DC7007243DC /* 雨天青蛙_00010.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC52A8C6DC6007243DC /* 雨天青蛙_00010.png */; };
+		B620B0222A8C6DC7007243DC /* 雨天青蛙_00011.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC62A8C6DC6007243DC /* 雨天青蛙_00011.png */; };
+		B620B0232A8C6DC7007243DC /* 雨天青蛙_00005.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC72A8C6DC6007243DC /* 雨天青蛙_00005.png */; };
+		B620B0242A8C6DC7007243DC /* 雨天青蛙_00039.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC82A8C6DC6007243DC /* 雨天青蛙_00039.png */; };
+		B620B0252A8C6DC7007243DC /* 雨天青蛙_00001.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFC92A8C6DC6007243DC /* 雨天青蛙_00001.png */; };
+		B620B0262A8C6DC7007243DC /* 雨天青蛙_00015.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFCA2A8C6DC6007243DC /* 雨天青蛙_00015.png */; };
+		B620B0272A8C6DC7007243DC /* 雨天青蛙_00029.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFCB2A8C6DC6007243DC /* 雨天青蛙_00029.png */; };
+		B620B0282A8C6DC7007243DC /* 雨天青蛙_00028.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFCC2A8C6DC6007243DC /* 雨天青蛙_00028.png */; };
+		B620B0292A8C6DC7007243DC /* 雨天青蛙_00014.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFCD2A8C6DC6007243DC /* 雨天青蛙_00014.png */; };
+		B620B02A2A8C6DC7007243DC /* 雨天青蛙_00000.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFCE2A8C6DC6007243DC /* 雨天青蛙_00000.png */; };
+		B620B02B2A8C6DC7007243DC /* 雨天青蛙_00016.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFCF2A8C6DC6007243DC /* 雨天青蛙_00016.png */; };
+		B620B02C2A8C6DC7007243DC /* 雨天青蛙_00002.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD02A8C6DC6007243DC /* 雨天青蛙_00002.png */; };
+		B620B02D2A8C6DC7007243DC /* 雨天青蛙_00003.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD12A8C6DC6007243DC /* 雨天青蛙_00003.png */; };
+		B620B02E2A8C6DC7007243DC /* 雨天青蛙_00017.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD22A8C6DC6007243DC /* 雨天青蛙_00017.png */; };
+		B620B02F2A8C6DC7007243DC /* 雨天青蛙_00058.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD32A8C6DC6007243DC /* 雨天青蛙_00058.png */; };
+		B620B0302A8C6DC7007243DC /* 雨天青蛙_00070.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD42A8C6DC6007243DC /* 雨天青蛙_00070.png */; };
+		B620B0312A8C6DC7007243DC /* 雨天青蛙_00064.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD52A8C6DC6007243DC /* 雨天青蛙_00064.png */; };
+		B620B0322A8C6DC7007243DC /* 雨天青蛙_00065.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD62A8C6DC6007243DC /* 雨天青蛙_00065.png */; };
+		B620B0332A8C6DC7007243DC /* 雨天青蛙_00071.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD72A8C6DC6007243DC /* 雨天青蛙_00071.png */; };
+		B620B0342A8C6DC7007243DC /* 雨天青蛙_00059.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD82A8C6DC6007243DC /* 雨天青蛙_00059.png */; };
+		B620B0352A8C6DC7007243DC /* 雨天青蛙_00067.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFD92A8C6DC6007243DC /* 雨天青蛙_00067.png */; };
+		B620B0362A8C6DC7007243DC /* 雨天青蛙_00073.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFDA2A8C6DC6007243DC /* 雨天青蛙_00073.png */; };
+		B620B0372A8C6DC7007243DC /* 雨天青蛙_00072.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFDB2A8C6DC6007243DC /* 雨天青蛙_00072.png */; };
+		B620B0382A8C6DC7007243DC /* 雨天青蛙_00066.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFDC2A8C6DC6007243DC /* 雨天青蛙_00066.png */; };
+		B620B0392A8C6DC7007243DC /* 雨天青蛙_00062.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFDD2A8C6DC6007243DC /* 雨天青蛙_00062.png */; };
+		B620B03A2A8C6DC7007243DC /* 雨天青蛙_00076.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFDE2A8C6DC6007243DC /* 雨天青蛙_00076.png */; };
+		B620B03B2A8C6DC7007243DC /* 雨天青蛙_00089.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFDF2A8C6DC6007243DC /* 雨天青蛙_00089.png */; };
+		B620B03C2A8C6DC7007243DC /* 雨天青蛙_00088.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE02A8C6DC6007243DC /* 雨天青蛙_00088.png */; };
+		B620B03D2A8C6DC7007243DC /* 雨天青蛙_00077.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE12A8C6DC6007243DC /* 雨天青蛙_00077.png */; };
+		B620B03E2A8C6DC7007243DC /* 雨天青蛙_00063.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE22A8C6DC6007243DC /* 雨天青蛙_00063.png */; };
+		B620B03F2A8C6DC7007243DC /* 雨天青蛙_00075.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE32A8C6DC6007243DC /* 雨天青蛙_00075.png */; };
+		B620B0402A8C6DC7007243DC /* 雨天青蛙_00061.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE42A8C6DC6007243DC /* 雨天青蛙_00061.png */; };
+		B620B0412A8C6DC7007243DC /* 雨天青蛙_00049.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE52A8C6DC6007243DC /* 雨天青蛙_00049.png */; };
+		B620B0422A8C6DC7007243DC /* 雨天青蛙_00048.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE62A8C6DC6007243DC /* 雨天青蛙_00048.png */; };
+		B620B0432A8C6DC7007243DC /* 雨天青蛙_00060.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE72A8C6DC6007243DC /* 雨天青蛙_00060.png */; };
+		B620B0442A8C6DC7007243DC /* 雨天青蛙_00074.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE82A8C6DC6007243DC /* 雨天青蛙_00074.png */; };
+		B620B0452A8C6DC7007243DC /* 雨天青蛙_00079.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFE92A8C6DC6007243DC /* 雨天青蛙_00079.png */; };
+		B620B0462A8C6DC7007243DC /* 雨天青蛙_00051.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFEA2A8C6DC6007243DC /* 雨天青蛙_00051.png */; };
+		B620B0472A8C6DC7007243DC /* 雨天青蛙_00045.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFEB2A8C6DC6007243DC /* 雨天青蛙_00045.png */; };
+		B620B0482A8C6DC7007243DC /* 雨天青蛙_00086.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFEC2A8C6DC6007243DC /* 雨天青蛙_00086.png */; };
+		B620B0492A8C6DC7007243DC /* 雨天青蛙_00087.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFED2A8C6DC6007243DC /* 雨天青蛙_00087.png */; };
+		B620B04A2A8C6DC7007243DC /* 雨天青蛙_00044.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFEE2A8C6DC6007243DC /* 雨天青蛙_00044.png */; };
+		B620B04B2A8C6DC7007243DC /* 雨天青蛙_00050.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFEF2A8C6DC6007243DC /* 雨天青蛙_00050.png */; };
+		B620B04C2A8C6DC7007243DC /* 雨天青蛙_00078.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF02A8C6DC6007243DC /* 雨天青蛙_00078.png */; };
+		B620B04D2A8C6DC7007243DC /* 雨天青蛙_00046.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF12A8C6DC6007243DC /* 雨天青蛙_00046.png */; };
+		B620B04E2A8C6DC7007243DC /* 雨天青蛙_00052.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF22A8C6DC6007243DC /* 雨天青蛙_00052.png */; };
+		B620B04F2A8C6DC7007243DC /* 雨天青蛙_00085.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF32A8C6DC6007243DC /* 雨天青蛙_00085.png */; };
+		B620B0502A8C6DC7007243DC /* 雨天青蛙_00084.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF42A8C6DC6007243DC /* 雨天青蛙_00084.png */; };
+		B620B0512A8C6DC7007243DC /* 雨天青蛙_00053.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF52A8C6DC6007243DC /* 雨天青蛙_00053.png */; };
+		B620B0522A8C6DC7007243DC /* 雨天青蛙_00047.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF62A8C6DC6007243DC /* 雨天青蛙_00047.png */; };
+		B620B0532A8C6DC7007243DC /* 雨天青蛙_00043.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF72A8C6DC6007243DC /* 雨天青蛙_00043.png */; };
+		B620B0542A8C6DC7007243DC /* 雨天青蛙_00057.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF82A8C6DC6007243DC /* 雨天青蛙_00057.png */; };
+		B620B0552A8C6DC7007243DC /* 雨天青蛙_00080.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFF92A8C6DC6007243DC /* 雨天青蛙_00080.png */; };
+		B620B0562A8C6DC7007243DC /* 雨天青蛙_00081.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFFA2A8C6DC6007243DC /* 雨天青蛙_00081.png */; };
+		B620B0572A8C6DC7007243DC /* 雨天青蛙_00056.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFFB2A8C6DC6007243DC /* 雨天青蛙_00056.png */; };
+		B620B0582A8C6DC7007243DC /* 雨天青蛙_00042.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFFC2A8C6DC6007243DC /* 雨天青蛙_00042.png */; };
+		B620B0592A8C6DC7007243DC /* 雨天青蛙_00054.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFFD2A8C6DC6007243DC /* 雨天青蛙_00054.png */; };
+		B620B05A2A8C6DC7007243DC /* 雨天青蛙_00040.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFFE2A8C6DC6007243DC /* 雨天青蛙_00040.png */; };
+		B620B05B2A8C6DC7007243DC /* 雨天青蛙_00068.png in Resources */ = {isa = PBXBuildFile; fileRef = B620AFFF2A8C6DC6007243DC /* 雨天青蛙_00068.png */; };
+		B620B05C2A8C6DC7007243DC /* 雨天青蛙_00083.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0002A8C6DC6007243DC /* 雨天青蛙_00083.png */; };
+		B620B05D2A8C6DC7007243DC /* 雨天青蛙_00082.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0012A8C6DC6007243DC /* 雨天青蛙_00082.png */; };
+		B620B05E2A8C6DC7007243DC /* 雨天青蛙_00069.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0022A8C6DC6007243DC /* 雨天青蛙_00069.png */; };
+		B620B05F2A8C6DC7007243DC /* 雨天青蛙_00041.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0032A8C6DC6007243DC /* 雨天青蛙_00041.png */; };
+		B620B0602A8C6DC7007243DC /* 雨天青蛙_00055.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0042A8C6DC7007243DC /* 雨天青蛙_00055.png */; };
+		B620B0612A8C6DC7007243DC /* 雨天青蛙_00032.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0052A8C6DC7007243DC /* 雨天青蛙_00032.png */; };
+		B620B0622A8C6DC7007243DC /* 雨天青蛙_00026.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0062A8C6DC7007243DC /* 雨天青蛙_00026.png */; };
+		B620B0632A8C6DC7007243DC /* 雨天青蛙_00027.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0072A8C6DC7007243DC /* 雨天青蛙_00027.png */; };
+		B620B0642A8C6DC7007243DC /* 雨天青蛙_00033.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0082A8C6DC7007243DC /* 雨天青蛙_00033.png */; };
+		B620B0652A8C6DC7007243DC /* 雨天青蛙_00019.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0092A8C6DC7007243DC /* 雨天青蛙_00019.png */; };
+		B620B0662A8C6DC7007243DC /* 雨天青蛙_00025.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B00A2A8C6DC7007243DC /* 雨天青蛙_00025.png */; };
+		B620B0672A8C6DC7007243DC /* 雨天青蛙_00031.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B00B2A8C6DC7007243DC /* 雨天青蛙_00031.png */; };
+		B620B0682A8C6DC7007243DC /* 雨天青蛙_00030.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B00C2A8C6DC7007243DC /* 雨天青蛙_00030.png */; };
+		B620B0692A8C6DC7007243DC /* 雨天青蛙_00024.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B00D2A8C6DC7007243DC /* 雨天青蛙_00024.png */; };
+		B620B06A2A8C6DC7007243DC /* 雨天青蛙_00018.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B00E2A8C6DC7007243DC /* 雨天青蛙_00018.png */; };
+		B620B06B2A8C6DC7007243DC /* 雨天青蛙_00020.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B00F2A8C6DC7007243DC /* 雨天青蛙_00020.png */; };
+		B620B06C2A8C6DC7007243DC /* 雨天青蛙_00034.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0102A8C6DC7007243DC /* 雨天青蛙_00034.png */; };
+		B620B06D2A8C6DC7007243DC /* 雨天青蛙_00008.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0112A8C6DC7007243DC /* 雨天青蛙_00008.png */; };
+		B620B06E2A8C6DC7007243DC /* 雨天青蛙_00009.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0122A8C6DC7007243DC /* 雨天青蛙_00009.png */; };
+		B620B06F2A8C6DC7007243DC /* 雨天青蛙_00035.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0132A8C6DC7007243DC /* 雨天青蛙_00035.png */; };
+		B620B0702A8C6DC7007243DC /* 雨天青蛙_00021.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0142A8C6DC7007243DC /* 雨天青蛙_00021.png */; };
+		B620B0712A8C6DC7007243DC /* 雨天青蛙_00037.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0152A8C6DC7007243DC /* 雨天青蛙_00037.png */; };
+		B620B0722A8C6DC7007243DC /* 雨天青蛙_00023.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0162A8C6DC7007243DC /* 雨天青蛙_00023.png */; };
+		B620B0732A8C6DC7007243DC /* 雨天青蛙_00022.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0172A8C6DC7007243DC /* 雨天青蛙_00022.png */; };
+		B620B0742A8C6DC7007243DC /* 雨天青蛙_00036.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0182A8C6DC7007243DC /* 雨天青蛙_00036.png */; };
 		B63EDC192A84DB28008B251C /* apple.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B63EDC182A84DB28008B251C /* apple.mp4 */; };
 		B63EDC2B2A84E13D008B251C /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC2A2A84E13D008B251C /* PhotoManager.swift */; };
-		B63EDC482A84E39D008B251C /* YiVideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC412A84E39D008B251C /* YiVideoEditor.swift */; };
-		B63EDC492A84E39D008B251C /* YiVideoEditorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC422A84E39D008B251C /* YiVideoEditorData.swift */; };
-		B63EDC4A2A84E39E008B251C /* YiRotateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC442A84E39D008B251C /* YiRotateCommand.swift */; };
-		B63EDC4B2A84E39E008B251C /* YiCropCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC452A84E39D008B251C /* YiCropCommand.swift */; };
-		B63EDC4C2A84E39E008B251C /* YiAddLayerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC462A84E39D008B251C /* YiAddLayerCommand.swift */; };
-		B63EDC4D2A84E39E008B251C /* YiAddAudioCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC472A84E39D008B251C /* YiAddAudioCommand.swift */; };
 		B63EDC522A85DC85008B251C /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC502A85DC85008B251C /* FileHelper.swift */; };
 		B63EDC532A85DC85008B251C /* LivePhotoGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC512A85DC85008B251C /* LivePhotoGenerator.swift */; };
 		B63EDC552A85DD4A008B251C /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC542A85DD4A008B251C /* VideoEditor.swift */; };
+		B63EDC602A860F36008B251C /* YiVideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC592A860F36008B251C /* YiVideoEditor.swift */; };
+		B63EDC612A860F36008B251C /* YiVideoEditorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC5A2A860F36008B251C /* YiVideoEditorData.swift */; };
+		B63EDC622A860F36008B251C /* YiRotateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC5C2A860F36008B251C /* YiRotateCommand.swift */; };
+		B63EDC632A860F36008B251C /* YiCropCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC5D2A860F36008B251C /* YiCropCommand.swift */; };
+		B63EDC642A860F36008B251C /* YiAddLayerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC5E2A860F36008B251C /* YiAddLayerCommand.swift */; };
+		B63EDC652A860F36008B251C /* YiAddAudioCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC5F2A860F36008B251C /* YiAddAudioCommand.swift */; };
 		B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA592A7BB4DC00769B08 /* ISODate.swift */; };
 		B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA5D2A7CA28500769B08 /* Notify.swift */; };
 		B648D68029418287004FFDCE /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648D67F29418287004FFDCE /* Defaults.swift */; };
@@ -98,17 +191,110 @@
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		B620AFB92A8B7932007243DC /* DictationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationVC.swift; sourceTree = "<group>"; };
+		B620AFBC2A8C6DC6007243DC /* inputResources.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = inputResources.mp4; sourceTree = "<group>"; };
+		B620AFBD2A8C6DC6007243DC /* 青蛙.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "青蛙.json"; sourceTree = "<group>"; };
+		B620AFBF2A8C6DC6007243DC /* 雨天青蛙_00013.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00013.png"; sourceTree = "<group>"; };
+		B620AFC02A8C6DC6007243DC /* 雨天青蛙_00007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00007.png"; sourceTree = "<group>"; };
+		B620AFC12A8C6DC6007243DC /* 雨天青蛙_00006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00006.png"; sourceTree = "<group>"; };
+		B620AFC22A8C6DC6007243DC /* 雨天青蛙_00012.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00012.png"; sourceTree = "<group>"; };
+		B620AFC32A8C6DC6007243DC /* 雨天青蛙_00038.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00038.png"; sourceTree = "<group>"; };
+		B620AFC42A8C6DC6007243DC /* 雨天青蛙_00004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00004.png"; sourceTree = "<group>"; };
+		B620AFC52A8C6DC6007243DC /* 雨天青蛙_00010.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00010.png"; sourceTree = "<group>"; };
+		B620AFC62A8C6DC6007243DC /* 雨天青蛙_00011.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00011.png"; sourceTree = "<group>"; };
+		B620AFC72A8C6DC6007243DC /* 雨天青蛙_00005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00005.png"; sourceTree = "<group>"; };
+		B620AFC82A8C6DC6007243DC /* 雨天青蛙_00039.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00039.png"; sourceTree = "<group>"; };
+		B620AFC92A8C6DC6007243DC /* 雨天青蛙_00001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00001.png"; sourceTree = "<group>"; };
+		B620AFCA2A8C6DC6007243DC /* 雨天青蛙_00015.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00015.png"; sourceTree = "<group>"; };
+		B620AFCB2A8C6DC6007243DC /* 雨天青蛙_00029.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00029.png"; sourceTree = "<group>"; };
+		B620AFCC2A8C6DC6007243DC /* 雨天青蛙_00028.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00028.png"; sourceTree = "<group>"; };
+		B620AFCD2A8C6DC6007243DC /* 雨天青蛙_00014.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00014.png"; sourceTree = "<group>"; };
+		B620AFCE2A8C6DC6007243DC /* 雨天青蛙_00000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00000.png"; sourceTree = "<group>"; };
+		B620AFCF2A8C6DC6007243DC /* 雨天青蛙_00016.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00016.png"; sourceTree = "<group>"; };
+		B620AFD02A8C6DC6007243DC /* 雨天青蛙_00002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00002.png"; sourceTree = "<group>"; };
+		B620AFD12A8C6DC6007243DC /* 雨天青蛙_00003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00003.png"; sourceTree = "<group>"; };
+		B620AFD22A8C6DC6007243DC /* 雨天青蛙_00017.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00017.png"; sourceTree = "<group>"; };
+		B620AFD32A8C6DC6007243DC /* 雨天青蛙_00058.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00058.png"; sourceTree = "<group>"; };
+		B620AFD42A8C6DC6007243DC /* 雨天青蛙_00070.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00070.png"; sourceTree = "<group>"; };
+		B620AFD52A8C6DC6007243DC /* 雨天青蛙_00064.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00064.png"; sourceTree = "<group>"; };
+		B620AFD62A8C6DC6007243DC /* 雨天青蛙_00065.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00065.png"; sourceTree = "<group>"; };
+		B620AFD72A8C6DC6007243DC /* 雨天青蛙_00071.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00071.png"; sourceTree = "<group>"; };
+		B620AFD82A8C6DC6007243DC /* 雨天青蛙_00059.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00059.png"; sourceTree = "<group>"; };
+		B620AFD92A8C6DC6007243DC /* 雨天青蛙_00067.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00067.png"; sourceTree = "<group>"; };
+		B620AFDA2A8C6DC6007243DC /* 雨天青蛙_00073.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00073.png"; sourceTree = "<group>"; };
+		B620AFDB2A8C6DC6007243DC /* 雨天青蛙_00072.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00072.png"; sourceTree = "<group>"; };
+		B620AFDC2A8C6DC6007243DC /* 雨天青蛙_00066.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00066.png"; sourceTree = "<group>"; };
+		B620AFDD2A8C6DC6007243DC /* 雨天青蛙_00062.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00062.png"; sourceTree = "<group>"; };
+		B620AFDE2A8C6DC6007243DC /* 雨天青蛙_00076.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00076.png"; sourceTree = "<group>"; };
+		B620AFDF2A8C6DC6007243DC /* 雨天青蛙_00089.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00089.png"; sourceTree = "<group>"; };
+		B620AFE02A8C6DC6007243DC /* 雨天青蛙_00088.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00088.png"; sourceTree = "<group>"; };
+		B620AFE12A8C6DC6007243DC /* 雨天青蛙_00077.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00077.png"; sourceTree = "<group>"; };
+		B620AFE22A8C6DC6007243DC /* 雨天青蛙_00063.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00063.png"; sourceTree = "<group>"; };
+		B620AFE32A8C6DC6007243DC /* 雨天青蛙_00075.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00075.png"; sourceTree = "<group>"; };
+		B620AFE42A8C6DC6007243DC /* 雨天青蛙_00061.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00061.png"; sourceTree = "<group>"; };
+		B620AFE52A8C6DC6007243DC /* 雨天青蛙_00049.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00049.png"; sourceTree = "<group>"; };
+		B620AFE62A8C6DC6007243DC /* 雨天青蛙_00048.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00048.png"; sourceTree = "<group>"; };
+		B620AFE72A8C6DC6007243DC /* 雨天青蛙_00060.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00060.png"; sourceTree = "<group>"; };
+		B620AFE82A8C6DC6007243DC /* 雨天青蛙_00074.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00074.png"; sourceTree = "<group>"; };
+		B620AFE92A8C6DC6007243DC /* 雨天青蛙_00079.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00079.png"; sourceTree = "<group>"; };
+		B620AFEA2A8C6DC6007243DC /* 雨天青蛙_00051.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00051.png"; sourceTree = "<group>"; };
+		B620AFEB2A8C6DC6007243DC /* 雨天青蛙_00045.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00045.png"; sourceTree = "<group>"; };
+		B620AFEC2A8C6DC6007243DC /* 雨天青蛙_00086.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00086.png"; sourceTree = "<group>"; };
+		B620AFED2A8C6DC6007243DC /* 雨天青蛙_00087.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00087.png"; sourceTree = "<group>"; };
+		B620AFEE2A8C6DC6007243DC /* 雨天青蛙_00044.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00044.png"; sourceTree = "<group>"; };
+		B620AFEF2A8C6DC6007243DC /* 雨天青蛙_00050.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00050.png"; sourceTree = "<group>"; };
+		B620AFF02A8C6DC6007243DC /* 雨天青蛙_00078.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00078.png"; sourceTree = "<group>"; };
+		B620AFF12A8C6DC6007243DC /* 雨天青蛙_00046.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00046.png"; sourceTree = "<group>"; };
+		B620AFF22A8C6DC6007243DC /* 雨天青蛙_00052.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00052.png"; sourceTree = "<group>"; };
+		B620AFF32A8C6DC6007243DC /* 雨天青蛙_00085.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00085.png"; sourceTree = "<group>"; };
+		B620AFF42A8C6DC6007243DC /* 雨天青蛙_00084.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00084.png"; sourceTree = "<group>"; };
+		B620AFF52A8C6DC6007243DC /* 雨天青蛙_00053.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00053.png"; sourceTree = "<group>"; };
+		B620AFF62A8C6DC6007243DC /* 雨天青蛙_00047.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00047.png"; sourceTree = "<group>"; };
+		B620AFF72A8C6DC6007243DC /* 雨天青蛙_00043.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00043.png"; sourceTree = "<group>"; };
+		B620AFF82A8C6DC6007243DC /* 雨天青蛙_00057.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00057.png"; sourceTree = "<group>"; };
+		B620AFF92A8C6DC6007243DC /* 雨天青蛙_00080.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00080.png"; sourceTree = "<group>"; };
+		B620AFFA2A8C6DC6007243DC /* 雨天青蛙_00081.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00081.png"; sourceTree = "<group>"; };
+		B620AFFB2A8C6DC6007243DC /* 雨天青蛙_00056.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00056.png"; sourceTree = "<group>"; };
+		B620AFFC2A8C6DC6007243DC /* 雨天青蛙_00042.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00042.png"; sourceTree = "<group>"; };
+		B620AFFD2A8C6DC6007243DC /* 雨天青蛙_00054.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00054.png"; sourceTree = "<group>"; };
+		B620AFFE2A8C6DC6007243DC /* 雨天青蛙_00040.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00040.png"; sourceTree = "<group>"; };
+		B620AFFF2A8C6DC6007243DC /* 雨天青蛙_00068.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00068.png"; sourceTree = "<group>"; };
+		B620B0002A8C6DC6007243DC /* 雨天青蛙_00083.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00083.png"; sourceTree = "<group>"; };
+		B620B0012A8C6DC6007243DC /* 雨天青蛙_00082.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00082.png"; sourceTree = "<group>"; };
+		B620B0022A8C6DC6007243DC /* 雨天青蛙_00069.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00069.png"; sourceTree = "<group>"; };
+		B620B0032A8C6DC6007243DC /* 雨天青蛙_00041.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00041.png"; sourceTree = "<group>"; };
+		B620B0042A8C6DC7007243DC /* 雨天青蛙_00055.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00055.png"; sourceTree = "<group>"; };
+		B620B0052A8C6DC7007243DC /* 雨天青蛙_00032.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00032.png"; sourceTree = "<group>"; };
+		B620B0062A8C6DC7007243DC /* 雨天青蛙_00026.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00026.png"; sourceTree = "<group>"; };
+		B620B0072A8C6DC7007243DC /* 雨天青蛙_00027.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00027.png"; sourceTree = "<group>"; };
+		B620B0082A8C6DC7007243DC /* 雨天青蛙_00033.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00033.png"; sourceTree = "<group>"; };
+		B620B0092A8C6DC7007243DC /* 雨天青蛙_00019.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00019.png"; sourceTree = "<group>"; };
+		B620B00A2A8C6DC7007243DC /* 雨天青蛙_00025.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00025.png"; sourceTree = "<group>"; };
+		B620B00B2A8C6DC7007243DC /* 雨天青蛙_00031.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00031.png"; sourceTree = "<group>"; };
+		B620B00C2A8C6DC7007243DC /* 雨天青蛙_00030.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00030.png"; sourceTree = "<group>"; };
+		B620B00D2A8C6DC7007243DC /* 雨天青蛙_00024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00024.png"; sourceTree = "<group>"; };
+		B620B00E2A8C6DC7007243DC /* 雨天青蛙_00018.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00018.png"; sourceTree = "<group>"; };
+		B620B00F2A8C6DC7007243DC /* 雨天青蛙_00020.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00020.png"; sourceTree = "<group>"; };
+		B620B0102A8C6DC7007243DC /* 雨天青蛙_00034.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00034.png"; sourceTree = "<group>"; };
+		B620B0112A8C6DC7007243DC /* 雨天青蛙_00008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00008.png"; sourceTree = "<group>"; };
+		B620B0122A8C6DC7007243DC /* 雨天青蛙_00009.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00009.png"; sourceTree = "<group>"; };
+		B620B0132A8C6DC7007243DC /* 雨天青蛙_00035.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00035.png"; sourceTree = "<group>"; };
+		B620B0142A8C6DC7007243DC /* 雨天青蛙_00021.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00021.png"; sourceTree = "<group>"; };
+		B620B0152A8C6DC7007243DC /* 雨天青蛙_00037.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00037.png"; sourceTree = "<group>"; };
+		B620B0162A8C6DC7007243DC /* 雨天青蛙_00023.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00023.png"; sourceTree = "<group>"; };
+		B620B0172A8C6DC7007243DC /* 雨天青蛙_00022.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00022.png"; sourceTree = "<group>"; };
+		B620B0182A8C6DC7007243DC /* 雨天青蛙_00036.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00036.png"; sourceTree = "<group>"; };
 		B63EDC182A84DB28008B251C /* apple.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = apple.mp4; sourceTree = "<group>"; };
 		B63EDC2A2A84E13D008B251C /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
-		B63EDC412A84E39D008B251C /* YiVideoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiVideoEditor.swift; sourceTree = "<group>"; };
-		B63EDC422A84E39D008B251C /* YiVideoEditorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiVideoEditorData.swift; sourceTree = "<group>"; };
-		B63EDC442A84E39D008B251C /* YiRotateCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiRotateCommand.swift; sourceTree = "<group>"; };
-		B63EDC452A84E39D008B251C /* YiCropCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiCropCommand.swift; sourceTree = "<group>"; };
-		B63EDC462A84E39D008B251C /* YiAddLayerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddLayerCommand.swift; sourceTree = "<group>"; };
-		B63EDC472A84E39D008B251C /* YiAddAudioCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddAudioCommand.swift; sourceTree = "<group>"; };
 		B63EDC502A85DC85008B251C /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		B63EDC512A85DC85008B251C /* LivePhotoGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivePhotoGenerator.swift; sourceTree = "<group>"; };
 		B63EDC542A85DD4A008B251C /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
+		B63EDC592A860F36008B251C /* YiVideoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiVideoEditor.swift; sourceTree = "<group>"; };
+		B63EDC5A2A860F36008B251C /* YiVideoEditorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiVideoEditorData.swift; sourceTree = "<group>"; };
+		B63EDC5C2A860F36008B251C /* YiRotateCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiRotateCommand.swift; sourceTree = "<group>"; };
+		B63EDC5D2A860F36008B251C /* YiCropCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiCropCommand.swift; sourceTree = "<group>"; };
+		B63EDC5E2A860F36008B251C /* YiAddLayerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddLayerCommand.swift; sourceTree = "<group>"; };
+		B63EDC5F2A860F36008B251C /* YiAddAudioCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddAudioCommand.swift; sourceTree = "<group>"; };
 		B640CA592A7BB4DC00769B08 /* ISODate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISODate.swift; sourceTree = "<group>"; };
 		B640CA5D2A7CA28500769B08 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwifterKnife/Features/Defaults.swift; sourceTree = SOURCE_ROOT; };
@@ -221,8 +407,7 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				B691560E2A7397370037B59A /* BaseViewController.swift */,
 				B6FC05DF292A73D00057E659 /* DebugViewController.swift */,
-				B63EDC402A84E39D008B251C /* YiVideoEditor */,
-				B63EDC182A84DB28008B251C /* apple.mp4 */,
+				B620AFBB2A8C6DB3007243DC /* VideoAddLottie */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -280,31 +465,118 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		B63EDC402A84E39D008B251C /* YiVideoEditor */ = {
+		B620AFBB2A8C6DB3007243DC /* VideoAddLottie */ = {
 			isa = PBXGroup;
 			children = (
-				B63EDC412A84E39D008B251C /* YiVideoEditor.swift */,
-				B63EDC422A84E39D008B251C /* YiVideoEditorData.swift */,
-				B63EDC432A84E39D008B251C /* Commands */,
+				B63EDC182A84DB28008B251C /* apple.mp4 */,
+				B620AFBD2A8C6DC6007243DC /* 青蛙.json */,
+				B620AFBE2A8C6DC6007243DC /* 雨天青蛙 */,
+				B620AFBC2A8C6DC6007243DC /* inputResources.mp4 */,
 			);
-			name = YiVideoEditor;
-			path = ../../../../../../gomo/Project/Aipics/Aipics/Modules/AIDream/YiVideoEditor;
+			path = VideoAddLottie;
 			sourceTree = "<group>";
 		};
-		B63EDC432A84E39D008B251C /* Commands */ = {
+		B620AFBE2A8C6DC6007243DC /* 雨天青蛙 */ = {
 			isa = PBXGroup;
 			children = (
-				B63EDC442A84E39D008B251C /* YiRotateCommand.swift */,
-				B63EDC452A84E39D008B251C /* YiCropCommand.swift */,
-				B63EDC462A84E39D008B251C /* YiAddLayerCommand.swift */,
-				B63EDC472A84E39D008B251C /* YiAddAudioCommand.swift */,
+				B620AFBF2A8C6DC6007243DC /* 雨天青蛙_00013.png */,
+				B620AFC02A8C6DC6007243DC /* 雨天青蛙_00007.png */,
+				B620AFC12A8C6DC6007243DC /* 雨天青蛙_00006.png */,
+				B620AFC22A8C6DC6007243DC /* 雨天青蛙_00012.png */,
+				B620AFC32A8C6DC6007243DC /* 雨天青蛙_00038.png */,
+				B620AFC42A8C6DC6007243DC /* 雨天青蛙_00004.png */,
+				B620AFC52A8C6DC6007243DC /* 雨天青蛙_00010.png */,
+				B620AFC62A8C6DC6007243DC /* 雨天青蛙_00011.png */,
+				B620AFC72A8C6DC6007243DC /* 雨天青蛙_00005.png */,
+				B620AFC82A8C6DC6007243DC /* 雨天青蛙_00039.png */,
+				B620AFC92A8C6DC6007243DC /* 雨天青蛙_00001.png */,
+				B620AFCA2A8C6DC6007243DC /* 雨天青蛙_00015.png */,
+				B620AFCB2A8C6DC6007243DC /* 雨天青蛙_00029.png */,
+				B620AFCC2A8C6DC6007243DC /* 雨天青蛙_00028.png */,
+				B620AFCD2A8C6DC6007243DC /* 雨天青蛙_00014.png */,
+				B620AFCE2A8C6DC6007243DC /* 雨天青蛙_00000.png */,
+				B620AFCF2A8C6DC6007243DC /* 雨天青蛙_00016.png */,
+				B620AFD02A8C6DC6007243DC /* 雨天青蛙_00002.png */,
+				B620AFD12A8C6DC6007243DC /* 雨天青蛙_00003.png */,
+				B620AFD22A8C6DC6007243DC /* 雨天青蛙_00017.png */,
+				B620AFD32A8C6DC6007243DC /* 雨天青蛙_00058.png */,
+				B620AFD42A8C6DC6007243DC /* 雨天青蛙_00070.png */,
+				B620AFD52A8C6DC6007243DC /* 雨天青蛙_00064.png */,
+				B620AFD62A8C6DC6007243DC /* 雨天青蛙_00065.png */,
+				B620AFD72A8C6DC6007243DC /* 雨天青蛙_00071.png */,
+				B620AFD82A8C6DC6007243DC /* 雨天青蛙_00059.png */,
+				B620AFD92A8C6DC6007243DC /* 雨天青蛙_00067.png */,
+				B620AFDA2A8C6DC6007243DC /* 雨天青蛙_00073.png */,
+				B620AFDB2A8C6DC6007243DC /* 雨天青蛙_00072.png */,
+				B620AFDC2A8C6DC6007243DC /* 雨天青蛙_00066.png */,
+				B620AFDD2A8C6DC6007243DC /* 雨天青蛙_00062.png */,
+				B620AFDE2A8C6DC6007243DC /* 雨天青蛙_00076.png */,
+				B620AFDF2A8C6DC6007243DC /* 雨天青蛙_00089.png */,
+				B620AFE02A8C6DC6007243DC /* 雨天青蛙_00088.png */,
+				B620AFE12A8C6DC6007243DC /* 雨天青蛙_00077.png */,
+				B620AFE22A8C6DC6007243DC /* 雨天青蛙_00063.png */,
+				B620AFE32A8C6DC6007243DC /* 雨天青蛙_00075.png */,
+				B620AFE42A8C6DC6007243DC /* 雨天青蛙_00061.png */,
+				B620AFE52A8C6DC6007243DC /* 雨天青蛙_00049.png */,
+				B620AFE62A8C6DC6007243DC /* 雨天青蛙_00048.png */,
+				B620AFE72A8C6DC6007243DC /* 雨天青蛙_00060.png */,
+				B620AFE82A8C6DC6007243DC /* 雨天青蛙_00074.png */,
+				B620AFE92A8C6DC6007243DC /* 雨天青蛙_00079.png */,
+				B620AFEA2A8C6DC6007243DC /* 雨天青蛙_00051.png */,
+				B620AFEB2A8C6DC6007243DC /* 雨天青蛙_00045.png */,
+				B620AFEC2A8C6DC6007243DC /* 雨天青蛙_00086.png */,
+				B620AFED2A8C6DC6007243DC /* 雨天青蛙_00087.png */,
+				B620AFEE2A8C6DC6007243DC /* 雨天青蛙_00044.png */,
+				B620AFEF2A8C6DC6007243DC /* 雨天青蛙_00050.png */,
+				B620AFF02A8C6DC6007243DC /* 雨天青蛙_00078.png */,
+				B620AFF12A8C6DC6007243DC /* 雨天青蛙_00046.png */,
+				B620AFF22A8C6DC6007243DC /* 雨天青蛙_00052.png */,
+				B620AFF32A8C6DC6007243DC /* 雨天青蛙_00085.png */,
+				B620AFF42A8C6DC6007243DC /* 雨天青蛙_00084.png */,
+				B620AFF52A8C6DC6007243DC /* 雨天青蛙_00053.png */,
+				B620AFF62A8C6DC6007243DC /* 雨天青蛙_00047.png */,
+				B620AFF72A8C6DC6007243DC /* 雨天青蛙_00043.png */,
+				B620AFF82A8C6DC6007243DC /* 雨天青蛙_00057.png */,
+				B620AFF92A8C6DC6007243DC /* 雨天青蛙_00080.png */,
+				B620AFFA2A8C6DC6007243DC /* 雨天青蛙_00081.png */,
+				B620AFFB2A8C6DC6007243DC /* 雨天青蛙_00056.png */,
+				B620AFFC2A8C6DC6007243DC /* 雨天青蛙_00042.png */,
+				B620AFFD2A8C6DC6007243DC /* 雨天青蛙_00054.png */,
+				B620AFFE2A8C6DC6007243DC /* 雨天青蛙_00040.png */,
+				B620AFFF2A8C6DC6007243DC /* 雨天青蛙_00068.png */,
+				B620B0002A8C6DC6007243DC /* 雨天青蛙_00083.png */,
+				B620B0012A8C6DC6007243DC /* 雨天青蛙_00082.png */,
+				B620B0022A8C6DC6007243DC /* 雨天青蛙_00069.png */,
+				B620B0032A8C6DC6007243DC /* 雨天青蛙_00041.png */,
+				B620B0042A8C6DC7007243DC /* 雨天青蛙_00055.png */,
+				B620B0052A8C6DC7007243DC /* 雨天青蛙_00032.png */,
+				B620B0062A8C6DC7007243DC /* 雨天青蛙_00026.png */,
+				B620B0072A8C6DC7007243DC /* 雨天青蛙_00027.png */,
+				B620B0082A8C6DC7007243DC /* 雨天青蛙_00033.png */,
+				B620B0092A8C6DC7007243DC /* 雨天青蛙_00019.png */,
+				B620B00A2A8C6DC7007243DC /* 雨天青蛙_00025.png */,
+				B620B00B2A8C6DC7007243DC /* 雨天青蛙_00031.png */,
+				B620B00C2A8C6DC7007243DC /* 雨天青蛙_00030.png */,
+				B620B00D2A8C6DC7007243DC /* 雨天青蛙_00024.png */,
+				B620B00E2A8C6DC7007243DC /* 雨天青蛙_00018.png */,
+				B620B00F2A8C6DC7007243DC /* 雨天青蛙_00020.png */,
+				B620B0102A8C6DC7007243DC /* 雨天青蛙_00034.png */,
+				B620B0112A8C6DC7007243DC /* 雨天青蛙_00008.png */,
+				B620B0122A8C6DC7007243DC /* 雨天青蛙_00009.png */,
+				B620B0132A8C6DC7007243DC /* 雨天青蛙_00035.png */,
+				B620B0142A8C6DC7007243DC /* 雨天青蛙_00021.png */,
+				B620B0152A8C6DC7007243DC /* 雨天青蛙_00037.png */,
+				B620B0162A8C6DC7007243DC /* 雨天青蛙_00023.png */,
+				B620B0172A8C6DC7007243DC /* 雨天青蛙_00022.png */,
+				B620B0182A8C6DC7007243DC /* 雨天青蛙_00036.png */,
 			);
-			path = Commands;
+			path = "雨天青蛙";
 			sourceTree = "<group>";
 		};
 		B63EDC4E2A85DC73008B251C /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				B63EDC582A860F36008B251C /* YiVideoEditor */,
 				B63EDC542A85DD4A008B251C /* VideoEditor.swift */,
 				B63EDC2A2A84E13D008B251C /* PhotoManager.swift */,
 				B63EDC4F2A85DC85008B251C /* LivePhoto */,
@@ -319,6 +591,27 @@
 				B63EDC512A85DC85008B251C /* LivePhotoGenerator.swift */,
 			);
 			path = LivePhoto;
+			sourceTree = "<group>";
+		};
+		B63EDC582A860F36008B251C /* YiVideoEditor */ = {
+			isa = PBXGroup;
+			children = (
+				B63EDC592A860F36008B251C /* YiVideoEditor.swift */,
+				B63EDC5A2A860F36008B251C /* YiVideoEditorData.swift */,
+				B63EDC5B2A860F36008B251C /* Commands */,
+			);
+			path = YiVideoEditor;
+			sourceTree = "<group>";
+		};
+		B63EDC5B2A860F36008B251C /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				B63EDC5C2A860F36008B251C /* YiRotateCommand.swift */,
+				B63EDC5D2A860F36008B251C /* YiCropCommand.swift */,
+				B63EDC5E2A860F36008B251C /* YiAddLayerCommand.swift */,
+				B63EDC5F2A860F36008B251C /* YiAddAudioCommand.swift */,
+			);
+			path = Commands;
 			sourceTree = "<group>";
 		};
 		B69156092A7394F40037B59A /* Test */ = {
@@ -347,6 +640,7 @@
 				B6FC05E1292A751F0057E659 /* HomeViewController.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				B69156132A7398510037B59A /* FitImageViewVC.swift */,
+				B620AFB92A8B7932007243DC /* DictationVC.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -525,12 +819,104 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B620B05A2A8C6DC7007243DC /* 雨天青蛙_00040.png in Resources */,
 				B67F61E028A34A44008AD997 /* Localizable.strings in Resources */,
+				B620B06F2A8C6DC7007243DC /* 雨天青蛙_00035.png in Resources */,
+				B620B0352A8C6DC7007243DC /* 雨天青蛙_00067.png in Resources */,
+				B620B0272A8C6DC7007243DC /* 雨天青蛙_00029.png in Resources */,
+				B620B0622A8C6DC7007243DC /* 雨天青蛙_00026.png in Resources */,
+				B620B0492A8C6DC7007243DC /* 雨天青蛙_00087.png in Resources */,
+				B620B01F2A8C6DC7007243DC /* 雨天青蛙_00038.png in Resources */,
+				B620B0402A8C6DC7007243DC /* 雨天青蛙_00061.png in Resources */,
+				B620B06D2A8C6DC7007243DC /* 雨天青蛙_00008.png in Resources */,
+				B620B0662A8C6DC7007243DC /* 雨天青蛙_00025.png in Resources */,
+				B620B01E2A8C6DC7007243DC /* 雨天青蛙_00012.png in Resources */,
+				B620B0692A8C6DC7007243DC /* 雨天青蛙_00024.png in Resources */,
+				B620B04F2A8C6DC7007243DC /* 雨天青蛙_00085.png in Resources */,
+				B620B0382A8C6DC7007243DC /* 雨天青蛙_00066.png in Resources */,
+				B620B03D2A8C6DC7007243DC /* 雨天青蛙_00077.png in Resources */,
+				B620B0372A8C6DC7007243DC /* 雨天青蛙_00072.png in Resources */,
+				B620B0412A8C6DC7007243DC /* 雨天青蛙_00049.png in Resources */,
+				B620B0552A8C6DC7007243DC /* 雨天青蛙_00080.png in Resources */,
+				B620B05E2A8C6DC7007243DC /* 雨天青蛙_00069.png in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				B620B0262A8C6DC7007243DC /* 雨天青蛙_00015.png in Resources */,
+				B620B0712A8C6DC7007243DC /* 雨天青蛙_00037.png in Resources */,
+				B620B02E2A8C6DC7007243DC /* 雨天青蛙_00017.png in Resources */,
+				B620B0672A8C6DC7007243DC /* 雨天青蛙_00031.png in Resources */,
+				B620B0532A8C6DC7007243DC /* 雨天青蛙_00043.png in Resources */,
+				B620B0502A8C6DC7007243DC /* 雨天青蛙_00084.png in Resources */,
+				B620B01D2A8C6DC7007243DC /* 雨天青蛙_00006.png in Resources */,
 				B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */,
+				B620B0242A8C6DC7007243DC /* 雨天青蛙_00039.png in Resources */,
+				B620B0592A8C6DC7007243DC /* 雨天青蛙_00054.png in Resources */,
+				B620B06B2A8C6DC7007243DC /* 雨天青蛙_00020.png in Resources */,
+				B620B04E2A8C6DC7007243DC /* 雨天青蛙_00052.png in Resources */,
+				B620B0512A8C6DC7007243DC /* 雨天青蛙_00053.png in Resources */,
+				B620B02B2A8C6DC7007243DC /* 雨天青蛙_00016.png in Resources */,
+				B620B05D2A8C6DC7007243DC /* 雨天青蛙_00082.png in Resources */,
+				B620B04D2A8C6DC7007243DC /* 雨天青蛙_00046.png in Resources */,
+				B620B0652A8C6DC7007243DC /* 雨天青蛙_00019.png in Resources */,
+				B620B0732A8C6DC7007243DC /* 雨天青蛙_00022.png in Resources */,
+				B620B0642A8C6DC7007243DC /* 雨天青蛙_00033.png in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				B620B0742A8C6DC7007243DC /* 雨天青蛙_00036.png in Resources */,
+				B620B0682A8C6DC7007243DC /* 雨天青蛙_00030.png in Resources */,
+				B620B03F2A8C6DC7007243DC /* 雨天青蛙_00075.png in Resources */,
+				B620B02D2A8C6DC7007243DC /* 雨天青蛙_00003.png in Resources */,
+				B620B0722A8C6DC7007243DC /* 雨天青蛙_00023.png in Resources */,
+				B620B0632A8C6DC7007243DC /* 雨天青蛙_00027.png in Resources */,
+				B620B0342A8C6DC7007243DC /* 雨天青蛙_00059.png in Resources */,
+				B620B0612A8C6DC7007243DC /* 雨天青蛙_00032.png in Resources */,
+				B620B06E2A8C6DC7007243DC /* 雨天青蛙_00009.png in Resources */,
+				B620B0222A8C6DC7007243DC /* 雨天青蛙_00011.png in Resources */,
+				B620B02C2A8C6DC7007243DC /* 雨天青蛙_00002.png in Resources */,
+				B620B0702A8C6DC7007243DC /* 雨天青蛙_00021.png in Resources */,
+				B620B06C2A8C6DC7007243DC /* 雨天青蛙_00034.png in Resources */,
+				B620B0422A8C6DC7007243DC /* 雨天青蛙_00048.png in Resources */,
+				B620B0192A8C6DC7007243DC /* inputResources.mp4 in Resources */,
+				B620B04C2A8C6DC7007243DC /* 雨天青蛙_00078.png in Resources */,
+				B620B0602A8C6DC7007243DC /* 雨天青蛙_00055.png in Resources */,
+				B620B04A2A8C6DC7007243DC /* 雨天青蛙_00044.png in Resources */,
+				B620B0232A8C6DC7007243DC /* 雨天青蛙_00005.png in Resources */,
 				B63EDC192A84DB28008B251C /* apple.mp4 in Resources */,
+				B620B01A2A8C6DC7007243DC /* 青蛙.json in Resources */,
+				B620B0252A8C6DC7007243DC /* 雨天青蛙_00001.png in Resources */,
+				B620B0562A8C6DC7007243DC /* 雨天青蛙_00081.png in Resources */,
+				B620B03C2A8C6DC7007243DC /* 雨天青蛙_00088.png in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+				B620B0472A8C6DC7007243DC /* 雨天青蛙_00045.png in Resources */,
+				B620B0302A8C6DC7007243DC /* 雨天青蛙_00070.png in Resources */,
+				B620B04B2A8C6DC7007243DC /* 雨天青蛙_00050.png in Resources */,
+				B620B0312A8C6DC7007243DC /* 雨天青蛙_00064.png in Resources */,
+				B620B0292A8C6DC7007243DC /* 雨天青蛙_00014.png in Resources */,
+				B620B0392A8C6DC7007243DC /* 雨天青蛙_00062.png in Resources */,
+				B620B0442A8C6DC7007243DC /* 雨天青蛙_00074.png in Resources */,
+				B620B02A2A8C6DC7007243DC /* 雨天青蛙_00000.png in Resources */,
+				B620B0482A8C6DC7007243DC /* 雨天青蛙_00086.png in Resources */,
+				B620B0362A8C6DC7007243DC /* 雨天青蛙_00073.png in Resources */,
+				B620B02F2A8C6DC7007243DC /* 雨天青蛙_00058.png in Resources */,
+				B620B0572A8C6DC7007243DC /* 雨天青蛙_00056.png in Resources */,
+				B620B0432A8C6DC7007243DC /* 雨天青蛙_00060.png in Resources */,
+				B620B05F2A8C6DC7007243DC /* 雨天青蛙_00041.png in Resources */,
+				B620B03A2A8C6DC7007243DC /* 雨天青蛙_00076.png in Resources */,
+				B620B05C2A8C6DC7007243DC /* 雨天青蛙_00083.png in Resources */,
+				B620B05B2A8C6DC7007243DC /* 雨天青蛙_00068.png in Resources */,
+				B620B0332A8C6DC7007243DC /* 雨天青蛙_00071.png in Resources */,
+				B620B0462A8C6DC7007243DC /* 雨天青蛙_00051.png in Resources */,
+				B620B0282A8C6DC7007243DC /* 雨天青蛙_00028.png in Resources */,
+				B620B01C2A8C6DC7007243DC /* 雨天青蛙_00007.png in Resources */,
+				B620B0452A8C6DC7007243DC /* 雨天青蛙_00079.png in Resources */,
+				B620B03E2A8C6DC7007243DC /* 雨天青蛙_00063.png in Resources */,
+				B620B0522A8C6DC7007243DC /* 雨天青蛙_00047.png in Resources */,
+				B620B01B2A8C6DC7007243DC /* 雨天青蛙_00013.png in Resources */,
+				B620B0542A8C6DC7007243DC /* 雨天青蛙_00057.png in Resources */,
+				B620B03B2A8C6DC7007243DC /* 雨天青蛙_00089.png in Resources */,
+				B620B06A2A8C6DC7007243DC /* 雨天青蛙_00018.png in Resources */,
+				B620B0582A8C6DC7007243DC /* 雨天青蛙_00042.png in Resources */,
+				B620B0212A8C6DC7007243DC /* 雨天青蛙_00010.png in Resources */,
+				B620B0322A8C6DC7007243DC /* 雨天青蛙_00065.png in Resources */,
+				B620B0202A8C6DC7007243DC /* 雨天青蛙_00004.png in Resources */,
 				B6FEE108283CB5EC00D8BCB2 /* h2000.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,13 +938,17 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SwifterKnife/SwifterKnife.framework",
+				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwifterKnife.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -621,28 +1011,28 @@
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
 				B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */,
 				B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */,
-				B63EDC4C2A84E39E008B251C /* YiAddLayerCommand.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
 				B6D834B529B0B4FB004C2BC3 /* Empty.swift in Sources */,
 				B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */,
 				B6D834DC29B9CA69004C2BC3 /* FormViewController.swift in Sources */,
 				B6D834C829B1923F004C2BC3 /* CallbackHell+Async2.swift in Sources */,
 				B63EDC522A85DC85008B251C /* FileHelper.swift in Sources */,
-				B63EDC482A84E39D008B251C /* YiVideoEditor.swift in Sources */,
 				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
+				B63EDC612A860F36008B251C /* YiVideoEditorData.swift in Sources */,
 				B6D834CA29B192F4004C2BC3 /* Func.swift in Sources */,
-				B63EDC4B2A84E39E008B251C /* YiCropCommand.swift in Sources */,
 				B691560F2A7397370037B59A /* BaseViewController.swift in Sources */,
 				B63EDC532A85DC85008B251C /* LivePhotoGenerator.swift in Sources */,
 				B6D834C629B191CB004C2BC3 /* CallbackHell+Async1.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
 				B6D834CC29B19308004C2BC3 /* if_.swift in Sources */,
+				B63EDC632A860F36008B251C /* YiCropCommand.swift in Sources */,
 				B6D834E029B9F2D0004C2BC3 /* SKStackView.swift in Sources */,
 				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
+				B63EDC652A860F36008B251C /* YiAddAudioCommand.swift in Sources */,
 				B63EDC552A85DD4A008B251C /* VideoEditor.swift in Sources */,
 				B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
@@ -651,20 +1041,21 @@
 				B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */,
 				B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */,
 				B66414742988C7970071C0FA /* TimerViewController.swift in Sources */,
-				B63EDC4D2A84E39E008B251C /* YiAddAudioCommand.swift in Sources */,
-				B63EDC492A84E39D008B251C /* YiVideoEditorData.swift in Sources */,
 				B6B038F4290B71840091B31D /* Watchdog.swift in Sources */,
-				B63EDC4A2A84E39E008B251C /* YiRotateCommand.swift in Sources */,
 				B691560D2A7395D90037B59A /* StatementTest.swift in Sources */,
 				B63EDC2B2A84E13D008B251C /* PhotoManager.swift in Sources */,
 				B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */,
+				B63EDC622A860F36008B251C /* YiRotateCommand.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */,
 				B650CCA0282374E8003170BB /* Permission.swift in Sources */,
 				B6ED86812726A1E3003103F6 /* KKView.m in Sources */,
 				B6D834B929B0C89B004C2BC3 /* XcodeKeys.swift in Sources */,
 				B648D68029418287004FFDCE /* Defaults.swift in Sources */,
+				B620AFBA2A8B7932007243DC /* DictationVC.swift in Sources */,
 				B6D834BC29B190C5004C2BC3 /* CallbackHell.swift in Sources */,
+				B63EDC602A860F36008B251C /* YiVideoEditor.swift in Sources */,
+				B63EDC642A860F36008B251C /* YiAddLayerCommand.swift in Sources */,
 				B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -764,7 +1155,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -810,7 +1201,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

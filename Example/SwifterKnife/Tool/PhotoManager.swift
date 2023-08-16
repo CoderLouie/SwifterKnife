@@ -77,7 +77,7 @@ enum PhotoManager {
     }
     
     
-    static func saveImage(_ image : UIImage?, completion: ( (Bool) -> Void )?){
+    static func saveImage(_ image : UIImage?, completion: ((Bool) -> Void)?){
         guard let img = image else {
             completion?(false)
             return
