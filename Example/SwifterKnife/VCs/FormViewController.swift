@@ -102,7 +102,7 @@ class FormViewController: BaseViewController {
 //        }
         
         formView = FormView().then {
-            $0.layoutMargins = UIEdgeInsets(top: 50, bottom: 50, left: 10, right: 10)
+            $0.layoutMargins = UIEdgeInsets(top: 50, left: 10, bottom: 50, right: 10)
 //            $0.contentInset = UIEdgeInsets(top: Screen.navbarH, bottom: Screen.safeAreaB, left: 0, right: 0)
 //            $0.onSelectedCell = { cell in
 ////                Console.log("点击FormView", index)

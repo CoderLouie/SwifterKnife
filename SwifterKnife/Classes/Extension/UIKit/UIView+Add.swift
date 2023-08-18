@@ -321,13 +321,11 @@ public extension UIView {
     ///
     /// - Parameter predicate: predicate to evaluate on superviews.
     func ancestorView<T: UIView>(where predicate: (T) -> Bool) -> T? {
-        var view = superview
-        while let v = view {
-            if let typeView = v as? T,
+        for view in sequence(first: self, next: \.superview) {
+            if let typeView = view as? T,
                predicate(typeView) {
                 return typeView
             }
-            view = v.superview
         }
         return nil
     }
@@ -457,7 +455,18 @@ public extension UIView {
         work()
         CATransaction.commit()
     }
-      
+     
+    func addBorder(color: UIColor,
+                   radius: CGFloat,
+                   width: CGFloat) {
+        addCorner(radius: radius)
+        layer.borderColor = color.cgColor
+        layer.borderWidth = width
+    }
+    func addCorner(radius: CGFloat) {
+        layer.masksToBounds = true
+        layer.cornerRadius = radius
+    }
 }
 
 
@@ -487,22 +496,6 @@ public extension UIVisualEffectView {
             guard subviews.count > 1 else { return }
             subviews[1].backgroundColor = newValue
         }
-    }
-}
-
-open class WrapLabel: UILabel {
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        if numberOfLines == 1 { return }
-        let bounds = bounds
-        if preferredMaxLayoutWidth > 0, preferredMaxLayoutWidth <= bounds.width {
-            return
-        }
-        preferredMaxLayoutWidth = bounds.width
-        invalidateIntrinsicContentSize()
-    }
-    open override var intrinsicContentSize: CGSize {
-        super.intrinsicContentSize.adaptive(tramsform: \.pixCeil)
     }
 }
 

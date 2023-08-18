@@ -89,6 +89,31 @@ public enum SandBox {
         return try Data(contentsOf: URL(fileURLWithPath: path))
     }
     
+    /// 逐行读取文本文件
+    public static func readLines(_ path: String, filter: (String) -> Bool) -> String? {
+        guard let handle = FileHandle(forReadingAtPath: path) else {
+            return nil
+        }
+        let newLineData = "\n".data(using: .utf8)
+        var data = Data()
+        let length = handle.seekToEndOfFile()
+        var offset: UInt64 = 0
+        handle.seek(toFileOffset: offset)
+        
+        while offset < length {
+            let chunk = handle.readData(ofLength: 1)
+            offset += 1
+            if chunk == newLineData {
+                if let str = String(data: data, encoding: .utf8),
+                   filter(str) { return str }
+                data = Data()
+            } else {
+                data += chunk
+            }
+        }
+        return nil
+    }
+    
     public static func diskSpaceFree() -> Int? {
         let manager = FileManager.default
         guard let attrs = try? manager.attributesOfFileSystem(forPath: NSHomeDirectory()) else { return nil }

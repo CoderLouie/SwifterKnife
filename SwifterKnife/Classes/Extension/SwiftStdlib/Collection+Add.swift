@@ -122,20 +122,7 @@ public extension Collection {
         }
     }
 
-    
-    func first<T>(ofType type: T) -> T? {
-        first { $0 is T } as? T
-    }
 }
-
-//extension Collection {
-//    public func removeNils<Wrapped>() -> [Wrapped] where Element == Wrapped? {
-//        compactMap { $0 }
-//    }
-//    public func removeNils<Wrapped>(by keyPath: KeyPath<Element, Wrapped?>) -> [Element] {
-//        compactMap { $0[keyPath: keyPath] == nil ? nil : $0 }
-//    }
-//}
 
 // MARK: - Methods (Equatable)
 
@@ -184,3 +171,16 @@ public extension Collection where Element: FloatingPoint {
     }
 }
 
+
+public extension Collection {
+    func shuffledOfLength(_ length: Int) -> [Element] {
+        guard length > 0, !isEmpty else { return [] }
+        var result = shuffled()
+        var lefts = count - length
+        while lefts > 0 {
+            result.removeLast()
+            lefts -= 1
+        }
+        return result
+    }
+}

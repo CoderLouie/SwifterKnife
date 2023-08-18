@@ -20,5 +20,5 @@ public extension BidirectionalCollection {
  
     func last<T>(ofType type: T) -> T? {
         last { $0 is T } as? T
-    }
+    } 
 }

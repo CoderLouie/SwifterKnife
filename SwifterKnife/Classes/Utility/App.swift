@@ -136,12 +136,7 @@ public enum App {
     }
     public static func openURL(_ url: URL?, completion: ((Bool) -> Void)? = nil) {
         guard let url = url else { completion?(false); return }
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: completion)
-        } else {
-            UIApplication.shared.openURL(url)
-            completion?(true)
-        }
+        UIApplication.shared.open(url, options: [:], completionHandler: completion)
     }
      
 //    public static var appID: String = ""

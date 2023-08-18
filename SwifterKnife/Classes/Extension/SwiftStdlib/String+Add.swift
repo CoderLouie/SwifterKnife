@@ -348,6 +348,22 @@ public extension String {
         }
         return components(separatedBy: string).count - 1
     }
+    
+    /// Check if string starts with substring.
+    ///
+    ///        "hello World".starts(with: "h") -> true
+    ///        "hello World".starts(with: "H", caseSensitive: false) -> true
+    ///
+    /// - Parameters:
+    ///   - suffix: substring to search if string starts with.
+    ///   - caseSensitive: set true for case sensitive search (default is true).
+    /// - Returns: true if string starts with substring.
+    func starts(with prefix: String, caseSensitive: Bool = true) -> Bool {
+        if !caseSensitive {
+            return lowercased().hasPrefix(prefix.lowercased())
+        }
+        return hasPrefix(prefix)
+    }
 
     /// Check if string ends with substring.
     ///
@@ -405,22 +421,6 @@ public extension String {
             self = String(str)
         }
         return self
-    }
-
-    /// Check if string starts with substring.
-    ///
-    ///        "hello World".starts(with: "h") -> true
-    ///        "hello World".starts(with: "H", caseSensitive: false) -> true
-    ///
-    /// - Parameters:
-    ///   - suffix: substring to search if string starts with.
-    ///   - caseSensitive: set true for case sensitive search (default is true).
-    /// - Returns: true if string starts with substring.
-    func starts(with prefix: String, caseSensitive: Bool = true) -> Bool {
-        if !caseSensitive {
-            return lowercased().hasPrefix(prefix.lowercased())
-        }
-        return hasPrefix(prefix)
     }
  
     /// Date object from string of date format.
@@ -639,14 +639,6 @@ public extension String {
     func appendingPathExtension(_ str: String) -> String? {
         return (self as NSString).appendingPathExtension(str)
     }
-
-    /// Accesses a contiguous subrange of the collection’s elements.
-    /// - Parameter nsRange: A range of the collection’s indices. The bounds of the range must be valid indices of the collection.
-    /// - Returns: A slice of the receiving string.
-    subscript(bounds: NSRange) -> Substring {
-        guard let range = Range(bounds, in: self) else { fatalError("Failed to find range \(bounds) in \(self)") }
-        return self[range]
-    }
 }
 
 public extension String {
@@ -703,3 +695,5 @@ extension UIFont {
                                 maxWidth: .greatestFiniteMagnitude)
     }
 }
+
+//https://www.jianshu.com/p/17fab783bfad

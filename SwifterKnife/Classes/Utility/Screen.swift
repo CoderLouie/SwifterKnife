@@ -25,7 +25,8 @@ import UIKit
     @objc public static let scale = UIScreen.main.scale
     
     @objc public static var isIPad: Bool {
-        UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
+//        UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
+        UIDevice.current.userInterfaceIdiom == .pad
     }
     @objc public static let isIPhoneXSeries: Bool = {
         var bottomSafeInset: CGFloat = 0

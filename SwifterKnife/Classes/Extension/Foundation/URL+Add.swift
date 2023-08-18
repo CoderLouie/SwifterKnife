@@ -107,10 +107,11 @@ public extension URL {
     ///
     /// - Returns: URL with all path components removed.
     func deletingAllPathComponents() -> URL {
-        guard !pathComponents.isEmpty else { return self }
+        let components = pathComponents
+        guard !components.isEmpty else { return self }
         
         var url: URL = self
-        for _ in 0..<pathComponents.count - 1 {
+        for _ in 0..<components.count - 1 {
             url.deleteLastPathComponent()
         }
         return url
@@ -122,9 +123,10 @@ public extension URL {
     ///        url.deleteAllPathComponents()
     ///        print(url) // prints "https://domain.com/"
     mutating func deleteAllPathComponents() {
-        guard !pathComponents.isEmpty else { return }
+        let components = pathComponents
+        guard !components.isEmpty else { return }
         
-        for _ in 0..<pathComponents.count - 1 {
+        for _ in 0..<components.count - 1 {
             deleteLastPathComponent()
         }
     }
@@ -143,5 +145,21 @@ public extension URL {
 
         let droppedScheme = String(absoluteString.dropFirst(2))
         return URL(string: droppedScheme)
+    }
+}
+
+
+extension HTTPURLResponse {
+    /// 响应时间
+    public var at_date: Date? {
+        /// Thu, 03 Aug 2023 08:42:31 GMT
+        if let str = allHeaderFields["Date"] as? String {
+            let fmt = DateFormatter()
+            fmt.locale = Locale(identifier: "en_US_POSIX")
+            fmt.timeZone = TimeZone(secondsFromGMT: 0)
+            fmt.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
+            return fmt.date(from: str)
+        }
+        return nil
     }
 }

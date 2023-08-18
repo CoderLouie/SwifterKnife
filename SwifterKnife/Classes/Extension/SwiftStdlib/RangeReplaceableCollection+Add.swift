@@ -85,20 +85,7 @@ public extension RangeReplaceableCollection {
     mutating func removeDuplicates<E: Hashable>(keyPath path: KeyPath<Element, E>) {
         var set = Set<E>()
         removeAll { !set.insert($0[keyPath: path]).inserted }
-    }
-
-    /// Accesses the element at the specified position.
-    ///
-    /// - Parameter offset: The offset position of the element to access. `offset` must be a valid index offset of the collection that is not equal to the `endIndex` property.
-    subscript(offset: Int) -> Element {
-        get {
-            return self[index(startIndex, offsetBy: offset)]
-        }
-        set {
-            let offsetIndex = index(startIndex, offsetBy: offset)
-            replaceSubrange(offsetIndex..<index(after: offsetIndex), with: [newValue])
-        }
-    }
+    } 
 
     /// Accesses a contiguous subrange of the collection’s elements.
     ///

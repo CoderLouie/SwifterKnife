@@ -48,17 +48,6 @@ public extension UIColor {
         let alpha = components[3]
         return (red: red, green: green, blue: blue, alpha: alpha)
     }
- 
-    /// Get components of hue, saturation, and brightness, and alpha (read-only).
-    var hsbaComponents: (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) {
-        var hue: CGFloat = 0.0
-        var saturation: CGFloat = 0.0
-        var brightness: CGFloat = 0.0
-        var alpha: CGFloat = 0.0
-
-        getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-        return (hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
-    }
 
     /// Hexadecimal value string (read-only).
     var hexString: String {
@@ -70,33 +59,10 @@ public extension UIColor {
         return String(format: "#%02X%02X%02X", components[0], components[1], components[2])
     }
 
-    /// Short hexadecimal value string (read-only, if applicable).
-    var shortHexString: String? {
-        let string = hexString.replacingOccurrences(of: "#", with: "")
-        let chrs = Array(string)
-        guard chrs[0] == chrs[1], chrs[2] == chrs[3], chrs[4] == chrs[5] else { return nil }
-        return "#\(chrs[0])\(chrs[2])\(chrs[4])"
-    }
-
-    /// Short hexadecimal value string, or full hexadecimal string if not possible (read-only).
-    var shortHexOrHexString: String {
-        let components: [Int] = {
-            let comps = cgColor.components!.map { Int($0 * 255.0) }
-            guard comps.count != 4 else { return comps }
-            return [comps[0], comps[0], comps[0], comps[1]]
-        }()
-        let hexString = String(format: "#%02X%02X%02X", components[0], components[1], components[2])
-        let string = hexString.replacingOccurrences(of: "#", with: "")
-        let chrs = Array(string)
-        guard chrs[0] == chrs[1], chrs[2] == chrs[3], chrs[4] == chrs[5] else { return hexString }
-        return "#\(chrs[0])\(chrs[2])\(chrs[4])"
-    }
-
     /// Alpha of Color (read-only).
     var alpha: CGFloat {
         return cgColor.alpha
     }
-   
 }
  
 
@@ -170,5 +136,4 @@ public extension UIColor {
         let blue = hexValue & 0xFF
         self.init(r: CGFloat(red), g: CGFloat(green), b: CGFloat(blue), a: alpha)
     }
- 
 }

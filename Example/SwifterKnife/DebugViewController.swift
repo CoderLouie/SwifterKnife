@@ -8,6 +8,15 @@
 
 import UIKit
 import SwifterKnife
+extension String {
+    var negativeWord: String? {
+        let path = "censorship.txt".filePath(under: .bundle)
+        return SandBox.readLines(path) {
+            contains($0)
+        }
+    }
+}
+
 
 import Lottie
 
@@ -37,9 +46,12 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
 }
  
 fileprivate enum TestCase: String, CaseIterable {
+    case negative = "敏感词汇"
+    case shuffled
     case watermark
     case overlay
     case overlay1
+    case overlay2
     case defaults = "UserDefaults"
     
     case statement = "Statement"
@@ -51,14 +63,52 @@ fileprivate enum TestCase: String, CaseIterable {
     
     func perform(from vc: DebugViewController) {
         switch self {
+        case .shuffled: 
+            let nums = [0, 2, 4, 7, 6]
+            nums.forEach(slice: 2) { print($0) }
+//            let nums = Array(0...5)
+//            print(nums.shuffledOfLength(8))
+//            print(nums.shuffledOfLength(7))
+//            print(nums.shuffledOfLength(6))
+//            print(nums.shuffledOfLength(4))
+//            print(nums.shuffledOfLength(3))
+//            print(nums.shuffledOfLength(1))
+//            print(nums.shuffledOfLength(0))
+        case .negative:
+            let word = "(1man), (male:1.2), youthful face, finely detailed eyes and face, unique and captivating look, exudes an air of sophistication, sienna skin, ombre spiky hair, silver eyes, Style-GravityMagic, focus on character, portrait, looking down, solo, ((upper body)), detailed background, ( (DarkFantasy:0.8), dark fantasy theme:1.1), privateer, rich Musket Brown pirate sailor outfit, bandana, evil grin, high seas, jolly roger flag, flintlock pistol, whirlpool, dark storm, rum, sunrise, pirate fantasy atmosphere, finely detailed background, Depth of Field, VFX',10:'Portrait photo of muscular bearded guy in a worn mech suit, ((light bokeh)), intricate, (steel metal [rust]), elegant, sharp focus, photo by greg rutkowski, soft lighting, vibrant colors, (masterpiece), ((streets)), (detailed face:1.2), (glowing blue eyes:1.1)"
+            print("[negativeWord]", word.negativeWord ?? "nil")
         case .dictation:
             let nextVc = DictationVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .overlay2:
+            let videoPath = "inputResources.mp4".filePath(under: .bundle)
+            let destPath = "watermark.mp4".filePath(under: .temporary)
+//            LottieConfiguration.shared.renderingEngine = .mainThread
+            let mark = LottieAnimationView.frog.then {
+                $0.animationSpeed = 5
+                $0.frame = CGRect(x: 150, y: 340, width: 80, height: 80)
+                $0.play { _ in
+                    print("lottie play finish")
+                }
+            }
+            let begin = CACurrentMediaTime()
+            let editor = YiVideoEditor(videoURL: .init(fileURLWithPath: videoPath))
+            editor.addOverlay { _ in mark.layer }
+            let destUrl = URL(fileURLWithPath: destPath)
+            editor.export(at: destUrl) { session in
+                let error = session.error
+                print("[export finish]", begin.coseTime, error ??? "nil")
+                if error == nil {
+                    PhotoManager.saveVideoToAlbum(url: destUrl) { success in
+                        print("[Save finish]", success.opDescription, begin.coseTime)
+                    }
+                }
+            }
         case .overlay1:
             let videoPath = "inputResources.mp4".filePath(under: .bundle)
             let destPath = "watermark.mp4".filePath(under: .temporary)
 //            LottieConfiguration.shared.renderingEngine = .mainThread
-            let mark = LottieAnimationView.frog.then { 
+            let mark = LottieAnimationView.frog.then {
                 $0.animationSpeed = 5
                 $0.frame = CGRect(x: 150, y: 340, width: 80, height: 80)
                 $0.play { _ in

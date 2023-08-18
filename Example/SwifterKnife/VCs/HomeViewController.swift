@@ -20,7 +20,7 @@ fileprivate class BottomBar: UIView {
     }
     private func setup() {
         backgroundColor = .cyan
-        layoutMargins = UIEdgeInsets(top: 8, bottom: 8, left: 20, right: 55)
+        layoutMargins = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 55)
         
         let redView = UIView().then {
             addSubview($0)

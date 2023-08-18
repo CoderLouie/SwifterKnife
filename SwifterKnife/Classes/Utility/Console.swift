@@ -137,7 +137,26 @@ public enum Console {
         NSLog("\n\(content)")
     }
     
-    
+    /*
+     
+     let values: [String: Any] = [
+         "age": 10,
+         "score": [10, 20, 30],
+         "name": "xiaohuang"
+     ]
+     let num = 10
+     let val = 3.1415926
+     Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
+     喝了咯 hello {
+        age = 10;
+        name = xiaohuang;
+        score = (
+            10,
+            20,
+            30
+        );
+     } 00010, 3.142, 10 3.1415926
+     */
     public static func trace(
         _ items: Any...,
         tag: Tag = .none,

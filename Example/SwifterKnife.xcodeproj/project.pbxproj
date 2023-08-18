@@ -108,6 +108,10 @@
 		B620B0722A8C6DC7007243DC /* 雨天青蛙_00023.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0162A8C6DC7007243DC /* 雨天青蛙_00023.png */; };
 		B620B0732A8C6DC7007243DC /* 雨天青蛙_00022.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0172A8C6DC7007243DC /* 雨天青蛙_00022.png */; };
 		B620B0742A8C6DC7007243DC /* 雨天青蛙_00036.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0182A8C6DC7007243DC /* 雨天青蛙_00036.png */; };
+		B620B0952A8E2EB4007243DC /* censorship.txt in Resources */ = {isa = PBXBuildFile; fileRef = B620B0932A8E2EB4007243DC /* censorship.txt */; };
+		B620B0992A8F8673007243DC /* ExCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B0982A8F8673007243DC /* ExCodable.swift */; };
+		B620B09B2A8F86A7007243DC /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B09A2A8F86A6007243DC /* StateMachine.swift */; };
+		B620B09D2A8F86CC007243DC /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B09C2A8F86CC007243DC /* Either.swift */; };
 		B63EDC192A84DB28008B251C /* apple.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B63EDC182A84DB28008B251C /* apple.mp4 */; };
 		B63EDC2B2A84E13D008B251C /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC2A2A84E13D008B251C /* PhotoManager.swift */; };
 		B63EDC522A85DC85008B251C /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC502A85DC85008B251C /* FileHelper.swift */; };
@@ -284,6 +288,10 @@
 		B620B0162A8C6DC7007243DC /* 雨天青蛙_00023.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00023.png"; sourceTree = "<group>"; };
 		B620B0172A8C6DC7007243DC /* 雨天青蛙_00022.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00022.png"; sourceTree = "<group>"; };
 		B620B0182A8C6DC7007243DC /* 雨天青蛙_00036.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雨天青蛙_00036.png"; sourceTree = "<group>"; };
+		B620B0932A8E2EB4007243DC /* censorship.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = censorship.txt; path = ../../../../../../../gomo/Project/Aipics/Aipics/Modules/AIDream/censorship.txt; sourceTree = "<group>"; };
+		B620B0982A8F8673007243DC /* ExCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExCodable.swift; sourceTree = "<group>"; };
+		B620B09A2A8F86A6007243DC /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
+		B620B09C2A8F86CC007243DC /* Either.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		B63EDC182A84DB28008B251C /* apple.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = apple.mp4; sourceTree = "<group>"; };
 		B63EDC2A2A84E13D008B251C /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
 		B63EDC502A85DC85008B251C /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
@@ -617,6 +625,7 @@
 		B69156092A7394F40037B59A /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				B620B0932A8E2EB4007243DC /* censorship.txt */,
 				B691560A2A73950A0037B59A /* UserDefaultsTest.swift */,
 				B691560C2A7395D90037B59A /* StatementTest.swift */,
 			);
@@ -682,6 +691,9 @@
 		B6D834C129B19168004C2BC3 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B620B09C2A8F86CC007243DC /* Either.swift */,
+				B620B09A2A8F86A6007243DC /* StateMachine.swift */,
+				B620B0982A8F8673007243DC /* ExCodable.swift */,
 				B650CC9F282374E8003170BB /* Permission.swift */,
 				B6B038F3290B71830091B31D /* Watchdog.swift */,
 				B648D67F29418287004FFDCE /* Defaults.swift */,
@@ -877,6 +889,7 @@
 				B620B0192A8C6DC7007243DC /* inputResources.mp4 in Resources */,
 				B620B04C2A8C6DC7007243DC /* 雨天青蛙_00078.png in Resources */,
 				B620B0602A8C6DC7007243DC /* 雨天青蛙_00055.png in Resources */,
+				B620B0952A8E2EB4007243DC /* censorship.txt in Resources */,
 				B620B04A2A8C6DC7007243DC /* 雨天青蛙_00044.png in Resources */,
 				B620B0232A8C6DC7007243DC /* 雨天青蛙_00005.png in Resources */,
 				B63EDC192A84DB28008B251C /* apple.mp4 in Resources */,
@@ -1011,6 +1024,7 @@
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
 				B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */,
 				B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */,
+				B620B0992A8F8673007243DC /* ExCodable.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
 				B6D834B529B0B4FB004C2BC3 /* Empty.swift in Sources */,
 				B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */,
@@ -1021,6 +1035,7 @@
 				B63EDC612A860F36008B251C /* YiVideoEditorData.swift in Sources */,
 				B6D834CA29B192F4004C2BC3 /* Func.swift in Sources */,
 				B691560F2A7397370037B59A /* BaseViewController.swift in Sources */,
+				B620B09D2A8F86CC007243DC /* Either.swift in Sources */,
 				B63EDC532A85DC85008B251C /* LivePhotoGenerator.swift in Sources */,
 				B6D834C629B191CB004C2BC3 /* CallbackHell+Async1.swift in Sources */,
 				B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */,
@@ -1029,6 +1044,7 @@
 				B6D834E029B9F2D0004C2BC3 /* SKStackView.swift in Sources */,
 				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				B620B09B2A8F86A7007243DC /* StateMachine.swift in Sources */,
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,

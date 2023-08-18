@@ -6,39 +6,8 @@
 //
 
 import Foundation
+import SwifterKnife
 
-extension HTTPURLResponse {
-    /// 响应时间
-    public var at_date: Date? {
-        /// Thu, 03 Aug 2023 08:42:31 GMT
-        if let str = allHeaderFields["Date"] as? String {
-            let fmt = DateFormatter()
-            fmt.locale = Locale(identifier: "en_US_POSIX")
-            fmt.timeZone = TimeZone(secondsFromGMT: 0)
-            fmt.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
-            return fmt.date(from: str)
-        }
-        return nil
-    }
-}
-
-@propertyWrapper
-public struct ATDefaults<T> {
-    private var rawValue: T
-    private let key: String
-    
-    public var wrappedValue: T {
-        get { rawValue }
-        set {
-            rawValue = newValue
-            UserDefaults.standard.set(newValue, forKey: key)
-        }
-    }
-    public init(defaultValue: T, key: String) {
-        rawValue = UserDefaults.standard.value(forKey: key) as? T ?? defaultValue
-        self.key = key
-    }
-}
 
 public enum ISODate {
     

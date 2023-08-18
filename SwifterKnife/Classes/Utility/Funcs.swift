@@ -7,6 +7,25 @@
 
 import Foundation
 
+
+@propertyWrapper
+public struct ATDefaults<T> {
+    private var rawValue: T
+    private let key: String
+    
+    public var wrappedValue: T {
+        get { rawValue }
+        set {
+            rawValue = newValue
+            UserDefaults.standard.set(newValue, forKey: key)
+        }
+    }
+    public init(defaultValue: T, key: String) {
+        rawValue = UserDefaults.standard.value(forKey: key) as? T ?? defaultValue
+        self.key = key
+    }
+}
+
 // https://github.com/vincent-pradeilles/swift-tips
 public func resultOf<T>(_ code: () -> T) -> T {
     return code()
