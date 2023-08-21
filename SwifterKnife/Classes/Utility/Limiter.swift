@@ -24,7 +24,7 @@ extension SyncLimiter {
 // MARK: TimedLimiter
 public final class TimedLimiter: SyncLimiter {
     public let limit: TimeInterval
-    public private(set) var lastExecutedTime: Date = .distantPast
+    public private(set) var lastExecutedTime: CFTimeInterval = 0
 
     private let syncQueue = DispatchQueue(label: "com.samsoffes.ratelimit", attributes: [])
 
@@ -35,8 +35,8 @@ public final class TimedLimiter: SyncLimiter {
     @discardableResult
     public func execute(_ block: () -> Void) -> Bool {
         let executed = syncQueue.sync { () -> Bool in
-            let now = Date()
-            let timeInterval = now.timeIntervalSince(lastExecutedTime)
+            let now = CACurrentMediaTime()
+            let timeInterval = now - lastExecutedTime
 
             // If the time since last execution is greater than the limit, execute
             if timeInterval > limit {
@@ -52,7 +52,7 @@ public final class TimedLimiter: SyncLimiter {
 
     public func reset() {
         syncQueue.sync {
-            lastExecutedTime = .distantPast
+            lastExecutedTime = 0
         }
     }
 }

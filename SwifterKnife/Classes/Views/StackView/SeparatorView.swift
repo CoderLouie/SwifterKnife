@@ -40,9 +40,7 @@ open class SeparatorView: UIView {
         }
     }
     
-    public static var amount: CGFloat {
-        1 / UIScreen.main.scale
-    }
+    public static var amount: CGFloat = 1 / UIScreen.main.scale
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
