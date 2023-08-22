@@ -125,6 +125,7 @@
 		B63EDC652A860F36008B251C /* YiAddAudioCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63EDC5F2A860F36008B251C /* YiAddAudioCommand.swift */; };
 		B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA592A7BB4DC00769B08 /* ISODate.swift */; };
 		B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = B640CA5D2A7CA28500769B08 /* Notify.swift */; };
+		B643461D2A937288005FA3F7 /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = B643461C2A937288005FA3F7 /* SortedArray.swift */; };
 		B648D68029418287004FFDCE /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648D67F29418287004FFDCE /* Defaults.swift */; };
 		B650CCA0282374E8003170BB /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650CC9F282374E8003170BB /* Permission.swift */; };
 		B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65E581129C8478600C48C3A /* TypedNotification.swift */; };
@@ -305,6 +306,7 @@
 		B63EDC5F2A860F36008B251C /* YiAddAudioCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YiAddAudioCommand.swift; sourceTree = "<group>"; };
 		B640CA592A7BB4DC00769B08 /* ISODate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISODate.swift; sourceTree = "<group>"; };
 		B640CA5D2A7CA28500769B08 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
+		B643461C2A937288005FA3F7 /* SortedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		B648D67F29418287004FFDCE /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Defaults.swift; path = SwifterKnife/Features/Defaults.swift; sourceTree = SOURCE_ROOT; };
 		B650CC9F282374E8003170BB /* Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		B65E581129C8478600C48C3A /* TypedNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedNotification.swift; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				B6D834C229B19192004C2BC3 /* CallbackHell */,
 				B6D834CD29B1E09C004C2BC3 /* Validator.swift */,
 				B65E581129C8478600C48C3A /* TypedNotification.swift */,
+				B643461C2A937288005FA3F7 /* SortedArray.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -1053,6 +1056,7 @@
 				B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
 				B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */,
+				B643461D2A937288005FA3F7 /* SortedArray.swift in Sources */,
 				B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */,
 				B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */,
 				B6D834D629B82BFD004C2BC3 /* FormView.swift in Sources */,

@@ -177,6 +177,10 @@ extension UIViewController {
         } else if let tab = self as? UITabBarController,
                   let selected = tab.selectedViewController {
             return selected.front()
+        } else if let page = self as? UIPageViewController,
+                  let vcs = page.viewControllers,
+                  vcs.count == 1 {
+            return vcs[0].front()
         } else {
             for vc in children.reversed() {
                 if vc.view.window != nil {

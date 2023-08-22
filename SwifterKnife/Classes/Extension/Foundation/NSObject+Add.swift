@@ -18,6 +18,8 @@
  }
  
  */
+
+/*
 import Foundation
 
 private final class Associated {
@@ -84,6 +86,105 @@ public extension Associable where Self: AnyObject {
 }
 
 extension NSObject: Associable {}
+ */
+
+
+public protocol Associable {}
+
+/// Policies related to associative references.
+public enum AssociationPolicy {
+    /// Specifies a weak reference to the associated object.
+    case assign
+    /// Specifies a strong reference to the associated object.
+    /// The association is not made atomically.
+    case retain
+    /// Specifies that the associated object is copied.
+    /// The association is not made atomically.
+    case copy
+    /// Specifies a strong reference to the associated object.
+    /// The association is made atomically.
+    case retainAtomic
+    /// Specifies that the associated object is copied.
+    /// The association is made atomically.
+    case copyAtomic
+    
+    fileprivate var objcPolicy: objc_AssociationPolicy {
+        switch self {
+        case .assign: return .OBJC_ASSOCIATION_ASSIGN
+        case .retain: return .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        case .copy: return .OBJC_ASSOCIATION_COPY_NONATOMIC
+        case .retainAtomic: return .OBJC_ASSOCIATION_RETAIN
+        case .copyAtomic: return .OBJC_ASSOCIATION_COPY
+        }
+    }
+}
+
+public struct AssociationKey: CustomDebugStringConvertible {
+    let address: UnsafeRawPointer
+    
+    public static func current(_ function: StaticString = #function) -> AssociationKey {
+        .init(function)
+    }
+    /// Create an ObjC association key.
+    ///
+    /// - warning: The key must be uniqued.
+    public init() {
+        self.address = UnsafeRawPointer(UnsafeMutablePointer<UInt8>.allocate(capacity: 1))
+    }
+    
+    /// Create an ObjC association key from a `StaticString`.
+    ///
+    ///     let key1 = AssociationKey("SomeString" as StaticString)
+    ///     let key2 = AssociationKey(#function as StaticString)
+    ///
+    /// - precondition: `key` has a pointer representation.
+    public init(_ key: StaticString) {
+        assert(key.hasPointerRepresentation)
+        self.address = UnsafeRawPointer(key.utf8Start)
+    }
+    
+    /// Create an ObjC association key from a `Selector`.
+    ///
+    ///     @objc var foo: String {
+    ///         get {
+    ///             re.associatedValue(forKey: AssociationKey(#selector(getter: self.foo)), default: "23")
+    ///         }
+    ///     }
+    ///
+    /// - Parameter key: An @objc function or computed property selector.
+    public init(_ key: Selector) {
+        self.address = UnsafeRawPointer(unsafeBitCast(key, to: UnsafePointer<Int8>.self))
+    }
+    
+    public var debugDescription: String {
+        address.debugDescription
+    }
+}
+
+
+extension Associable where Self: AnyObject {
+    func setAssociatedValue(
+        _ value: Any?,
+        forKey key: AssociationKey,
+        withPolicy policy: AssociationPolicy = .retain
+    ) {
+        objc_setAssociatedObject(self, key.address, value, policy.objcPolicy)
+    }
+    func associatedValue<Value>(forKey key: AssociationKey) -> Value? {
+        return (objc_getAssociatedObject(self, key.address) as? Value?) ?? nil
+    }
+    
+    func setAssociatedWeakObject<Object: AnyObject>(_ object: Object, forKey key: AssociationKey) {
+        let closure = { [weak object] in
+            return object
+        }
+        objc_setAssociatedObject(self, key.address, closure, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    }
+    func associatedWeakObject<Object: AnyObject>(forKey key: AssociationKey) -> Object? {
+        guard let closure = objc_getAssociatedObject(self, key.address) as? (() -> Object?) else { return nil }
+        return closure()
+    }
+}
 
 @discardableResult
 public func synchronizd<T>(_ lock: AnyObject, closure: () -> T) -> T {

@@ -12,16 +12,14 @@ public extension DispatchQueue {
 
     /// A Boolean value indicating whether the current dispatch queue is the main queue.
     static var isMainQueue: Bool {
-        enum Static {
-            static var key: DispatchSpecificKey<Void> = {
-                let key = DispatchSpecificKey<Void>()
-                DispatchQueue.main.setSpecific(key: key, value: ())
-                return key
-            }()
-        }
-        return DispatchQueue.getSpecific(key: Static.key) != nil
+        DispatchQueue.currentLabel == DispatchQueue.main.label
     }
 
+    
+    static var currentLabel: String {
+        let label = __dispatch_queue_get_label(nil)
+        return String(cString: label, encoding: .utf8) ?? ""
+    }
 }
 
 // MARK: - Methods
@@ -97,5 +95,9 @@ public extension DispatchQueue {
         
         _onceTracker.insert(token)
         block()
+    }
+    
+    static func deonce(_ token: String) {
+        _onceTracker.remove(token)
     }
 }

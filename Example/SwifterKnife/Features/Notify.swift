@@ -12,48 +12,31 @@ import Foundation
 public enum Notify {
     private final class Wrapper {
         
-        weak var object: AnyObject? {
-            willSet {
-                print("Notify.Wrapper willSetObject", newValue == nil)
-            }
-            didSet {
-                print("Notify.Wrapper didSetObject", object == nil)
-                if object == nil {
-                    clear()
-                }
-            }
-        }
-        var closure: ((Wrapper, AnyObject, Notification) -> Void)?
+        private var deinitObserveKey: UInt8 = 0
+        private let closure: (Notification) -> Void
         
-        init(object: AnyObject, closure: @escaping (Wrapper, AnyObject, Notification) -> Void) {
-            self.object = object
+        init(closure: @escaping (Notification) -> Void) {
             self.closure = closure
         }
-        @objc func didReceiveNotification(_ sender: Notification) {
-            guard let obj = object else {
-                clear()
-                return
-            }
-            closure?(self, obj, sender)
+        
+        func attach(to object: AnyObject) {
+            objc_setAssociatedObject(
+                object,
+                &deinitObserveKey,
+                self,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
         }
-        func clear() {
-            closure = nil
-            Notify.remove(ref: self)
+        
+        @objc func didReceiveNotification(_ sender: Notification) {
+            closure(sender)
         }
         deinit {
             Console.logFunc(whose: self)
+            NotificationCenter.default.removeObserver(self)
         }
     }
-    
-    private static var refs: [Wrapper] = []
-    @discardableResult
-    private static func remove(ref: Wrapper) -> Bool {
-        guard let idx = refs.firstIndex(where: { $0 === ref }) else {
-            return false
-        }
-        refs.remove(at: idx)
-        return true
-    }
+     
     
     public static func post(name: Notification.Name, userInfo: [AnyHashable: Any]? = nil) {
         NotificationCenter.default.post(name: name, object: nil, userInfo: userInfo)
@@ -64,21 +47,14 @@ public enum Notify {
     }
     
     public static func addObserver<T: AnyObject>(_ observer: T, name aName: Notification.Name, closure: @escaping (T, Notification) -> Void) {
-        let wrap = Wrapper(object: observer) { w, object, no in
-            guard let obj = object as? T else {
-                w.clear()
-                return
-            }
-            closure(obj, no)
+        let wrap = Wrapper { [weak observer] sender in
+            guard let object = observer else { return }
+            closure(object, sender)
         }
-        refs.append(wrap)
-        
+        wrap.attach(to: observer)
         NotificationCenter.default.addObserver(wrap, selector: #selector(Wrapper.didReceiveNotification(_:)), name: aName, object: nil)
     }
-    
-    public static func peek() {
-        Console.log("Notify peek", refs.last?.object ?? "nil")
-    }
+     
 }
 
 

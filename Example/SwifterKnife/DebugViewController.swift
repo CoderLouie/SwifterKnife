@@ -60,12 +60,18 @@ fileprivate enum TestCase: String, CaseIterable {
     case other
     case dictation = "语音输入"
     
+    var token: String {
+        return "\(#fileID)_\(#function)_\(#line)"
+    }
     
     func perform(from vc: DebugViewController) {
         switch self {
-        case .shuffled: 
-            let nums = [0, 2, 4, 7, 6]
-            nums.forEach(slice: 2) { print($0) }
+        case .shuffled:
+//            let nums = [0, 2, 4, 7, 6]
+//            nums.forEach(slice: 2) { print($0) }
+            print(AssociationKey.current())
+            print(AssociationKey.current())
+            print(token)
 //            let nums = Array(0...5)
 //            print(nums.shuffledOfLength(8))
 //            print(nums.shuffledOfLength(7))
@@ -177,11 +183,8 @@ fileprivate enum TestCase: String, CaseIterable {
         case .fitImageView:
             let nextVc = FitImageViewVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
-            DispatchQueue.main.after(1) {
-                Notify.peek()
-            }
         case .other:
-            Notify.peek()
+            break
         }
     }
 }

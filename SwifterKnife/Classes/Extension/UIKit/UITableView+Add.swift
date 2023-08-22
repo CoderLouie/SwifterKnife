@@ -8,6 +8,33 @@
 import UIKit
 
 public extension UITableView {
+    var lastSection: Int? {
+        let section = numberOfSections
+        return section > 0 ? section - 1 : nil
+    }
+    
+    func indexPathForLastRow(inSection section: Int) -> IndexPath? {
+        let section = numberOfSections
+        guard (0...section).contains(section) else { return nil }
+        let row = numberOfRows(inSection: section)
+        guard row > 0 else { return nil }
+        return IndexPath(row: row - 1, section: section)
+    }
+    var indexPathForLastRow: IndexPath? {
+        let section = numberOfSections - 1
+        guard section >= 0 else { return nil }
+        let row = numberOfRows(inSection: section) - 1
+        guard row >= 0 else { return nil }
+        return IndexPath(row: row, section: section)
+    }
+    
+    func at_reloadData(_ completion: @escaping () -> Void) {
+        UIView.animate(withDuration: 0) {
+            self.reloadData()
+        } completion: { _ in
+            completion()
+        }
+    }
     /// Gets the currently visibleCells of a section.
     ///
     /// - Parameter section: The section to filter the cells.
