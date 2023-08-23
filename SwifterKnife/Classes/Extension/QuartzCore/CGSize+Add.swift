@@ -45,6 +45,9 @@ public extension CGSize {
     var isEmpty: Bool {
         width == 0 || height == 0
     }
+    var valid: Bool {
+        width > 0 && height > 0
+    }
     
     func inset(_ inset: UIEdgeInsets) -> CGSize {
         CGSize(width: width + inset.left + inset.right, height: height + inset.top + inset.bottom)

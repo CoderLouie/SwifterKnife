@@ -68,37 +68,6 @@ public extension UIControl {
 
 public extension UIButton {
     
-    /// Center align title text and image.
-    /// - Parameters:
-    ///   - imageAboveText: set true to make image above title text, default is false, image on left of text.
-    ///   - spacing: spacing between title text and image.
-    func centerTextAndImage(imageAboveText: Bool = false, spacing: CGFloat) {
-        if imageAboveText {
-            // https://stackoverflow.com/questions/2451223/#7199529
-            guard
-                let imageSize = imageView?.image?.size,
-                let text = titleLabel?.text,
-                let font = titleLabel?.font else { return }
-
-            let titleSize = text.size(withAttributes: [.font: font])
-
-            let titleOffset = -(imageSize.height + spacing)
-            titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: titleOffset, right: 0.0)
-
-            let imageOffset = -(titleSize.height + spacing)
-            imageEdgeInsets = UIEdgeInsets(top: imageOffset, left: 0.0, bottom: 0.0, right: -titleSize.width)
-
-            let edgeOffset = abs(titleSize.height - imageSize.height) / 2.0
-            contentEdgeInsets = UIEdgeInsets(top: edgeOffset, left: 0.0, bottom: edgeOffset, right: 0.0)
-        } else {
-            let insetAmount = spacing / 2
-            imageEdgeInsets = UIEdgeInsets(top: 0, left: -insetAmount, bottom: 0, right: insetAmount)
-            titleEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: -insetAmount)
-            contentEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: insetAmount)
-        }
-    }
-    
-    
     /// Set background color for specified state.
     /// - Parameters:
     ///   - color: The color of the image that will be set as background for the button in the given state.
@@ -112,5 +81,121 @@ public extension UIButton {
 //            draw(.zero)
         }
         setBackgroundImage(colorImage, for: forState)
+    }
+}
+
+open class NewButton: UIButton {
+    public enum ImagePosition {
+        case left, right, top, bottom
+    }
+    public var imagePosition: ImagePosition = .left
+    public var spacing: CGFloat = 0
+    
+    @available(*, unavailable)
+    open override var titleEdgeInsets: UIEdgeInsets {
+        get { .zero }
+        set { }
+    }
+    @available(*, unavailable)
+    open override var imageEdgeInsets: UIEdgeInsets {
+        get { .zero }
+        set { }
+    }
+    
+    private var sizesInfo: (titleSize: CGSize, imgSize: CGSize, contentSize: CGSize, margin: CGFloat) {
+        let labelSize = titleLabel?.intrinsicContentSize
+        let imgSize = imageView?.intrinsicContentSize
+        let size1 = labelSize.filter(\.valid) ?? .zero
+        let size2 = imgSize.filter(\.valid) ?? .zero
+        var size: CGSize = .zero
+        let margin: CGFloat
+        switch imagePosition {
+        case .left, .right:
+            let w1 = size1.width
+            let w2 = size2.width
+            margin = (w1 > 0 && w2 > 0) ? spacing : 0
+            size.width = w1 + w2 + margin
+            size.height = max(size1.height, size2.height)
+        case .top, .bottom:
+            let h1 = size1.height
+            let h2 = size2.height
+            margin = (h1 > 0 && h2 > 0) ? spacing : 0
+            size.height = h1 + h2 + margin
+            size.width = max(size1.width, size2.width)
+        }
+        return (size1, size2, size, margin)
+    }
+    open override var intrinsicContentSize: CGSize {
+        let size = sizesInfo.contentSize
+        return size.inset(contentEdgeInsets)
+    }
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        let bounds = bounds
+        guard !bounds.isEmpty else { return }
+        let (titleSize, imgSize, contentSize, margin) = sizesInfo
+        imageView?.frame.size = imgSize
+        titleLabel?.frame.size = titleSize
+        let center = bounds.center
+        let inset = contentEdgeInsets
+        switch imagePosition {
+        case .left, .right:
+            switch contentVerticalAlignment {
+            case .top:
+                imageView?.frame.origin.y = inset.top
+                titleLabel?.frame.origin.y = inset.top
+            case .bottom:
+                let bottom = bounds.height - inset.bottom
+                imageView?.frame.origin.y = bottom - imgSize.height
+                titleLabel?.frame.origin.y = bottom - titleSize.height
+            default:
+                imageView?.center.y = center.y
+                titleLabel?.center.y = center.y
+            }
+            
+            let x = { () -> CGFloat in
+                let delta = bounds.width - contentSize.width
+                switch contentHorizontalAlignment {
+                case .left, .leading: return inset.left
+                case .right, .trailing: return delta - inset.right
+                default: return delta * 0.5
+                }
+            }()
+            if imagePosition == .left {
+                imageView?.frame.origin.x = x
+                titleLabel?.frame.origin.x = x + imgSize.width + margin
+            } else {
+                titleLabel?.frame.origin.x = x
+                imageView?.frame.origin.x = x + titleSize.width + margin
+            }
+        case .top, .bottom:
+            switch contentHorizontalAlignment {
+            case .left, .leading:
+                imageView?.frame.origin.x = inset.left
+                titleLabel?.frame.origin.x = inset.left
+            case .right, .trailing:
+                let right = bounds.width - inset.right
+                imageView?.frame.origin.x = right - imgSize.width
+                titleLabel?.frame.origin.x = right - titleSize.width
+            default:
+                imageView?.center.x = center.x
+                titleLabel?.center.x = center.x
+            }
+            let y = { () -> CGFloat in
+                let delta = (bounds.height - contentSize.height)
+                switch contentVerticalAlignment {
+                case .top: return inset.top
+                case .bottom: return delta - inset.bottom
+                default: return delta * 0.5
+                }
+            }()
+            if imagePosition == .top {
+                imageView?.frame.origin.y = y
+                titleLabel?.frame.origin.y = y + imgSize.height + margin
+            } else {
+                titleLabel?.frame.origin.y = y
+                imageView?.frame.origin.y = y + imgSize.height + margin
+            }
+        }
     }
 }

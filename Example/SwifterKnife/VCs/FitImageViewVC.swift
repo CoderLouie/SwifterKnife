@@ -58,6 +58,40 @@ class FitImageViewVC: BaseViewController {
                 make.centerY.equalToSuperview()
             }
         }
+        
+        
+        let bgView = UIView().then {
+            $0.backgroundColor = UIColor(gray: 40, alpha: 0.5)
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.top.equalTo(pairView.snp.bottom).offset(10)
+            }
+        }
+        NewButton().do {
+            $0.addBorder(color: .orange, radius: 0, width: 1)
+            $0.titleLabel?.font = .semibold(17).fit
+            $0.setTitle("Free Trial", for: .normal)
+            $0.setImage(UIImage(named: "checkbox_sub_off"), for: .normal)
+            $0.setImage(UIImage(named: "checkbox_sub_on"), for: .selected)
+//            $0.centerTextAndImage(imageAboveText: true, spacing: 10)
+            $0.titleLabel?.addBorder(color: .orange, radius: 0, width: 1)
+            $0.imageView?.addBorder(color: .orange, radius: 0, width: 1)
+            $0.imagePosition = .top
+            $0.spacing = 10
+//            $0.contentVerticalAlignment = .center
+//            $0.contentHorizontalAlignment = .right
+            $0.contentEdgeInsets = .inset(10)
+            bgView.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(10)
+//                make.width.equalTo(200)
+//                make.height.equalTo(40)
+//                make.width.equalTo(100)
+//                make.height.equalTo(100)
+            }
+        }
     }
     private unowned var pairView: PairView<FitVImageView, UILabel>!
 }
