@@ -89,7 +89,7 @@ public extension UIView {
         case left, right, top, bottom
     }
     
-    static func sizesInfo<V1: UIView, V2: UIView>(for view1: V1?, view2: V2?, view1Position pos: PlacePosition, spacing: CGFloat) -> (size1: CGSize, size2: CGSize, wrapSize: CGSize, margin: CGFloat) {
+    static func sizesInfo(for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat) -> (size1: CGSize, size2: CGSize, wrapSize: CGSize, margin: CGFloat) {
         let size1 = (view1?.intrinsicContentSize).filter(\.valid) ?? .zero
         let size2 = (view2?.intrinsicContentSize).filter(\.valid) ?? .zero
         var size: CGSize = .zero
@@ -111,12 +111,12 @@ public extension UIView {
         return (size1, size2, size, margin)
     }
     
-    static func layout<V1: UIView, V2: UIView>(in rect: CGRect, for view1: V1?, view2: V2?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets, verticalAlignment: UIControl.ContentVerticalAlignment, horizontalAlignment: UIControl.ContentHorizontalAlignment) {
+    static func layout(in rect: CGRect, for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
         guard !rect.isEmpty else { return }
         let (size1, size2, contentSize, margin) = sizesInfo(for: view1, view2: view2, view1Position: pos, spacing: spacing)
         view1?.frame.size = size1
         view2?.frame.size = size2
-        let center = rect.center 
+        let center = rect.center
         switch pos {
         case .left, .right:
             switch verticalAlignment {
