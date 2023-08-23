@@ -84,32 +84,17 @@ public extension UIButton {
     }
 }
 
-open class NewButton: UIButton {
-    public enum ImagePosition {
+public extension UIView {
+    enum PlacePosition {
         case left, right, top, bottom
     }
-    public var imagePosition: ImagePosition = .left
-    public var spacing: CGFloat = 0
     
-    @available(*, unavailable)
-    open override var titleEdgeInsets: UIEdgeInsets {
-        get { .zero }
-        set { }
-    }
-    @available(*, unavailable)
-    open override var imageEdgeInsets: UIEdgeInsets {
-        get { .zero }
-        set { }
-    }
-    
-    private var sizesInfo: (titleSize: CGSize, imgSize: CGSize, contentSize: CGSize, margin: CGFloat) {
-        let labelSize = titleLabel?.intrinsicContentSize
-        let imgSize = imageView?.intrinsicContentSize
-        let size1 = labelSize.filter(\.valid) ?? .zero
-        let size2 = imgSize.filter(\.valid) ?? .zero
+    static func sizesInfo<V1: UIView, V2: UIView>(for view1: V1?, view2: V2?, view1Position pos: PlacePosition, spacing: CGFloat) -> (size1: CGSize, size2: CGSize, wrapSize: CGSize, margin: CGFloat) {
+        let size1 = (view1?.intrinsicContentSize).filter(\.valid) ?? .zero
+        let size2 = (view2?.intrinsicContentSize).filter(\.valid) ?? .zero
         var size: CGSize = .zero
         let margin: CGFloat
-        switch imagePosition {
+        switch pos {
         case .left, .right:
             let w1 = size1.width
             let w2 = size2.width
@@ -125,77 +110,98 @@ open class NewButton: UIButton {
         }
         return (size1, size2, size, margin)
     }
+    
+    static func layout<V1: UIView, V2: UIView>(in rect: CGRect, for view1: V1?, view2: V2?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets, verticalAlignment: UIControl.ContentVerticalAlignment, horizontalAlignment: UIControl.ContentHorizontalAlignment) {
+        guard !rect.isEmpty else { return }
+        let (size1, size2, contentSize, margin) = sizesInfo(for: view1, view2: view2, view1Position: pos, spacing: spacing)
+        view1?.frame.size = size1
+        view2?.frame.size = size2
+        let center = rect.center 
+        switch pos {
+        case .left, .right:
+            switch verticalAlignment {
+            case .top:
+                view1?.frame.origin.y = inset.top
+                view2?.frame.origin.y = inset.top
+            case .bottom:
+                let bottom = rect.height - inset.bottom
+                view1?.frame.origin.y = bottom - size1.height
+                view2?.frame.origin.y = bottom - size2.height
+            default:
+                view1?.center.y = center.y
+                view2?.center.y = center.y
+            }
+            
+            let x = { () -> CGFloat in
+                let delta = rect.width - contentSize.width
+                switch horizontalAlignment {
+                case .left, .leading: return inset.left
+                case .right, .trailing: return delta - inset.right
+                default: return delta * 0.5
+                }
+            }()
+            if pos == .left {
+                view1?.frame.origin.x = x
+                view2?.frame.origin.x = x + size1.width + margin
+            } else {
+                view2?.frame.origin.x = x
+                view1?.frame.origin.x = x + size2.width + margin
+            }
+        case .top, .bottom:
+            switch horizontalAlignment {
+            case .left, .leading:
+                view1?.frame.origin.x = inset.left
+                view2?.frame.origin.x = inset.left
+            case .right, .trailing:
+                let right = rect.width - inset.right
+                view1?.frame.origin.x = right - size1.width
+                view2?.frame.origin.x = right - size2.width
+            default:
+                view1?.center.x = center.x
+                view2?.center.x = center.x
+            }
+            let y = { () -> CGFloat in
+                let delta = rect.height - contentSize.height
+                switch verticalAlignment {
+                case .top: return inset.top
+                case .bottom: return delta - inset.bottom
+                default: return delta * 0.5
+                }
+            }()
+            if pos == .top {
+                view1?.frame.origin.y = y
+                view2?.frame.origin.y = y + size1.height + margin
+            } else {
+                view2?.frame.origin.y = y
+                view1?.frame.origin.y = y + size2.height + margin
+            }
+        }
+    }
+}
+
+open class NewButton: UIButton {
+    public var imagePosition: UIView.PlacePosition = .left
+    public var spacing: CGFloat = 0
+    
+    @available(*, unavailable)
+    open override var titleEdgeInsets: UIEdgeInsets {
+        get { .zero }
+        set { }
+    }
+    @available(*, unavailable)
+    open override var imageEdgeInsets: UIEdgeInsets {
+        get { .zero }
+        set { }
+    }
+    
     open override var intrinsicContentSize: CGSize {
-        let size = sizesInfo.contentSize
+        let size = UIView.sizesInfo(for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing).wrapSize
         return size.inset(contentEdgeInsets)
     }
     open override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = bounds
         guard !bounds.isEmpty else { return }
-        let (titleSize, imgSize, contentSize, margin) = sizesInfo
-        imageView?.frame.size = imgSize
-        titleLabel?.frame.size = titleSize
-        let center = bounds.center
-        let inset = contentEdgeInsets
-        switch imagePosition {
-        case .left, .right:
-            switch contentVerticalAlignment {
-            case .top:
-                imageView?.frame.origin.y = inset.top
-                titleLabel?.frame.origin.y = inset.top
-            case .bottom:
-                let bottom = bounds.height - inset.bottom
-                imageView?.frame.origin.y = bottom - imgSize.height
-                titleLabel?.frame.origin.y = bottom - titleSize.height
-            default:
-                imageView?.center.y = center.y
-                titleLabel?.center.y = center.y
-            }
-            
-            let x = { () -> CGFloat in
-                let delta = bounds.width - contentSize.width
-                switch contentHorizontalAlignment {
-                case .left, .leading: return inset.left
-                case .right, .trailing: return delta - inset.right
-                default: return delta * 0.5
-                }
-            }()
-            if imagePosition == .left {
-                imageView?.frame.origin.x = x
-                titleLabel?.frame.origin.x = x + imgSize.width + margin
-            } else {
-                titleLabel?.frame.origin.x = x
-                imageView?.frame.origin.x = x + titleSize.width + margin
-            }
-        case .top, .bottom:
-            switch contentHorizontalAlignment {
-            case .left, .leading:
-                imageView?.frame.origin.x = inset.left
-                titleLabel?.frame.origin.x = inset.left
-            case .right, .trailing:
-                let right = bounds.width - inset.right
-                imageView?.frame.origin.x = right - imgSize.width
-                titleLabel?.frame.origin.x = right - titleSize.width
-            default:
-                imageView?.center.x = center.x
-                titleLabel?.center.x = center.x
-            }
-            let y = { () -> CGFloat in
-                let delta = (bounds.height - contentSize.height)
-                switch contentVerticalAlignment {
-                case .top: return inset.top
-                case .bottom: return delta - inset.bottom
-                default: return delta * 0.5
-                }
-            }()
-            if imagePosition == .top {
-                imageView?.frame.origin.y = y
-                titleLabel?.frame.origin.y = y + imgSize.height + margin
-            } else {
-                titleLabel?.frame.origin.y = y
-                imageView?.frame.origin.y = y + imgSize.height + margin
-            }
-        }
+        UIView.layout(in: bounds, for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
     }
 }

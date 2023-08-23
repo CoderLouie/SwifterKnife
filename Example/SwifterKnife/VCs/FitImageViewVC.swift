@@ -79,8 +79,8 @@ class FitImageViewVC: BaseViewController {
             $0.imageView?.addBorder(color: .orange, radius: 0, width: 1)
             $0.imagePosition = .top
             $0.spacing = 10
-//            $0.contentVerticalAlignment = .center
-//            $0.contentHorizontalAlignment = .right
+            $0.contentVerticalAlignment = .bottom
+            $0.contentHorizontalAlignment = .right
             $0.contentEdgeInsets = .inset(10)
             bgView.addSubview($0)
             $0.snp.makeConstraints { make in
@@ -88,8 +88,8 @@ class FitImageViewVC: BaseViewController {
                 make.top.equalTo(10)
 //                make.width.equalTo(200)
 //                make.height.equalTo(40)
-//                make.width.equalTo(100)
-//                make.height.equalTo(100)
+                make.width.equalTo(100)
+                make.height.equalTo(100)
             }
         }
     }
