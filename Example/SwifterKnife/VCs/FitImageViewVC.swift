@@ -21,8 +21,10 @@ class FitImageViewVC: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         flag.toggle()
         if flag {
+            newBtn.setTitle("free trial", for: .normal)
             pairView.view1.image = .fileNamed("banner_home_1aging@2x")
         } else {
+            newBtn.setTitle("3 day free trial then 28/year, cancel anytime", for: .normal)
             pairView.view1.image = .fileNamed("h2000")
         }
         Notify.post(name: .didFitImage, userInfo: ["flag": flag])
@@ -68,30 +70,32 @@ class FitImageViewVC: BaseViewController {
                 make.top.equalTo(pairView.snp.bottom).offset(10)
             }
         }
-        NewButton().do {
+        newBtn = NewButton().then {
             $0.addBorder(color: .orange, radius: 0, width: 1)
             $0.titleLabel?.font = .semibold(17).fit
-            $0.setTitle("Free Trial", for: .normal)
+            $0.setTitle("3 day free trial then 28/year, cancel anytime", for: .normal)
             $0.setImage(UIImage(named: "checkbox_sub_off"), for: .normal)
             $0.setImage(UIImage(named: "checkbox_sub_on"), for: .selected)
 //            $0.centerTextAndImage(imageAboveText: true, spacing: 10)
             $0.titleLabel?.addBorder(color: .orange, radius: 0, width: 1)
+            $0.titleLabel?.numberOfLines = 0
             $0.imageView?.addBorder(color: .orange, radius: 0, width: 1)
-            $0.imagePosition = .top
+            $0.imagePosition = .right
             $0.spacing = 10
-            $0.contentVerticalAlignment = .bottom
-            $0.contentHorizontalAlignment = .right
+//            $0.contentVerticalAlignment = .top
+            $0.contentHorizontalAlignment = .center
             $0.contentEdgeInsets = .inset(10)
             bgView.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(10)
-//                make.width.equalTo(200)
+                make.width.equalTo(200)
 //                make.height.equalTo(40)
-                make.width.equalTo(100)
-                make.height.equalTo(100)
+//                make.width.equalTo(100)
+//                make.height.equalTo(100)
             }
         }
     }
+    private unowned var newBtn: NewButton!
     private unowned var pairView: PairView<FitVImageView, UILabel>!
 }

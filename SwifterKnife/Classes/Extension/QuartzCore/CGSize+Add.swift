@@ -45,7 +45,7 @@ public extension CGSize {
     var isEmpty: Bool {
         width == 0 || height == 0
     }
-    var valid: Bool {
+    var isValid: Bool {
         width > 0 && height > 0
     }
     

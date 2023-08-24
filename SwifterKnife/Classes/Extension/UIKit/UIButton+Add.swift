@@ -87,21 +87,27 @@ public extension UIButton {
 public extension UIView {
     enum PlacePosition {
         case left, right, top, bottom
+        
+        public var isHorizontal: Bool {
+            switch self {
+            case .left, .right: return true
+            case .top, .bottom: return false
+            }
+        }
     }
     
-    static func sizesInfo(for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat) -> (size1: CGSize, size2: CGSize, wrapSize: CGSize, margin: CGFloat) {
-        let size1 = (view1?.intrinsicContentSize).filter(\.valid) ?? .zero
-        let size2 = (view2?.intrinsicContentSize).filter(\.valid) ?? .zero
+    func at_sizesInfo(for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat) -> (size1: CGSize, size2: CGSize, wrapSize: CGSize, margin: CGFloat) {
+        let size1 = (view1?.intrinsicContentSize).filter(\.isValid) ?? .zero
+        let size2 = (view2?.intrinsicContentSize).filter(\.isValid) ?? .zero
         var size: CGSize = .zero
         let margin: CGFloat
-        switch pos {
-        case .left, .right:
+        if pos.isHorizontal {
             let w1 = size1.width
             let w2 = size2.width
             margin = (w1 > 0 && w2 > 0) ? spacing : 0
             size.width = w1 + w2 + margin
             size.height = max(size1.height, size2.height)
-        case .top, .bottom:
+        } else {
             let h1 = size1.height
             let h2 = size2.height
             margin = (h1 > 0 && h2 > 0) ? spacing : 0
@@ -111,14 +117,33 @@ public extension UIView {
         return (size1, size2, size, margin)
     }
     
-    static func layout(in rect: CGRect, for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
+    func at_layout(in rect: CGRect, for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, view2Flexible: Bool, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
         guard !rect.isEmpty else { return }
-        let (size1, size2, contentSize, margin) = sizesInfo(for: view1, view2: view2, view1Position: pos, spacing: spacing)
+        var (size1, size2, contentSize, margin) = at_sizesInfo(for: view1, view2: view2, view1Position: pos, spacing: spacing)
+        let availableWidthForView2: CGFloat = {
+            let space = rect.width - inset.left - inset.right
+            if pos.isHorizontal {
+                return space - size1.width - margin
+            } else {
+                return space
+            }
+        }()
+        if size2.isValid, size2.width > availableWidthForView2,
+           let label = view2 as? UILabel,
+           label.numberOfLines != 1,
+           (label.preferredMaxLayoutWidth == 0 || view2Flexible) {
+            label.preferredMaxLayoutWidth = availableWidthForView2
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+            return
+        }
+        if view2Flexible, size2.width > availableWidthForView2 {
+            size2.width = availableWidthForView2
+        }
         view1?.frame.size = size1
         view2?.frame.size = size2
         let center = rect.center
-        switch pos {
-        case .left, .right:
+        if pos.isHorizontal {
             switch verticalAlignment {
             case .top:
                 view1?.frame.origin.y = inset.top
@@ -147,7 +172,7 @@ public extension UIView {
                 view2?.frame.origin.x = x
                 view1?.frame.origin.x = x + size2.width + margin
             }
-        case .top, .bottom:
+        } else {
             switch horizontalAlignment {
             case .left, .leading:
                 view1?.frame.origin.x = inset.left
@@ -182,6 +207,7 @@ public extension UIView {
 open class NewButton: UIButton {
     public var imagePosition: UIView.PlacePosition = .left
     public var spacing: CGFloat = 0
+    public var autosetTitleLabelMaxLayoutWidth = true
     
     @available(*, unavailable)
     open override var titleEdgeInsets: UIEdgeInsets {
@@ -195,13 +221,13 @@ open class NewButton: UIButton {
     }
     
     open override var intrinsicContentSize: CGSize {
-        let size = UIView.sizesInfo(for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing).wrapSize
+        let size = at_sizesInfo(for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing).wrapSize
         return size.inset(contentEdgeInsets)
     }
     open override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = bounds
         guard !bounds.isEmpty else { return }
-        UIView.layout(in: bounds, for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
+        at_layout(in: bounds, for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, view2Flexible: autosetTitleLabelMaxLayoutWidth, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
     }
 }
