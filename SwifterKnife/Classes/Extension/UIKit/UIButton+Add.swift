@@ -117,7 +117,8 @@ public extension UIView {
         return (size1, size2, size, margin)
     }
     
-    func at_layout(in rect: CGRect, for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
+    func at_layout(for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
+        let rect = bounds
         guard !rect.isEmpty else { return }
         var (size1, size2, contentSize, margin) = at_sizesInfo(for: view1, view2: view2, view1Position: pos, spacing: spacing)
         
@@ -259,9 +260,7 @@ public final class ToupleView<V1: UIView, V2: UIView>: UIView {
     }
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let bounds = bounds
-        guard !bounds.isEmpty else { return }
-        at_layout(in: bounds, for: view1, view2: view2, view1Position: view1Position, spacing: spacing, contentEdgeInsets: edgeInsets, verticalAlignment: verticalAlignment, horizontalAlignment: horizontalAlignment)
+        at_layout(for: view1, view2: view2, view1Position: view1Position, spacing: spacing, contentEdgeInsets: edgeInsets, verticalAlignment: verticalAlignment, horizontalAlignment: horizontalAlignment)
     }
     
     public private(set) unowned var view1: V1!
@@ -292,8 +291,6 @@ open class NewButton: UIButton {
     }
     open override func layoutSubviews() {
         super.layoutSubviews()
-        let bounds = bounds
-        guard !bounds.isEmpty else { return }
-        at_layout(in: bounds, for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
+        at_layout(for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
     }
 }

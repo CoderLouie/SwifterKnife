@@ -10,11 +10,22 @@ import UIKit
 import SnapKit
 import SwifterKnife
 
+fileprivate extension UILabel {
+    var config1: Void {
+        textColor = .black
+        font = .regular(16)
+        text = "3 day free"
+        addBorder(color: .orange, radius: 0, width: 1)
+        return ()
+    }
+}
+
 class TestUIVC: BaseViewController {
     
     override func setupViews() {
         super.setupViews()
         ATLabels().do { this in
+//            this.view1.do(\.config1)
             this.view1.do {
                 $0.textColor = .black
                 $0.font = .regular(16)
