@@ -59,7 +59,7 @@ fileprivate enum TestCase: String, CaseIterable {
     case fitImageView
     case other
     case dictation = "语音输入"
-    
+    case testUI = "Test UI"
     var token: String {
         return "\(#fileID)_\(#function)_\(#line)"
     }
@@ -182,6 +182,9 @@ fileprivate enum TestCase: String, CaseIterable {
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .fitImageView:
             let nextVc = FitImageViewVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .testUI:
+            let nextVc = TestUIVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .other:
             break

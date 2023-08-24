@@ -117,29 +117,44 @@ public extension UIView {
         return (size1, size2, size, margin)
     }
     
-    func at_layout(in rect: CGRect, for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, view2Flexible: Bool, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
+    func at_layout(in rect: CGRect, for view1: UIView?, view2: UIView?, view1Position pos: PlacePosition, spacing: CGFloat, contentEdgeInsets inset: UIEdgeInsets = .zero, verticalAlignment: UIControl.ContentVerticalAlignment = .center, horizontalAlignment: UIControl.ContentHorizontalAlignment = .center) {
         guard !rect.isEmpty else { return }
         var (size1, size2, contentSize, margin) = at_sizesInfo(for: view1, view2: view2, view1Position: pos, spacing: spacing)
-        let availableWidthForView2: CGFloat = {
-            let space = rect.width - inset.left - inset.right
-            if pos.isHorizontal {
-                return space - size1.width - margin
-            } else {
-                return space
-            }
-        }()
-        if size2.isValid, size2.width > availableWidthForView2,
+        
+        let spaceW = rect.width - inset.left - inset.right
+        guard spaceW > 0 else { return }
+        
+        let view1MaxW: CGFloat, view2MaxW: CGFloat
+        if pos.isHorizontal {
+            view1MaxW = spaceW - margin
+            view2MaxW = view1MaxW - size1.width
+        } else {
+            view1MaxW = spaceW
+            view2MaxW = spaceW
+        }
+        var needRefresh = false
+        if size1.isValid, view1MaxW > 0, size1.width > view1MaxW,
+           let label = view1 as? UILabel,
+           label.numberOfLines != 1,
+           Int(label.preferredMaxLayoutWidth) != Int(view1MaxW) {
+            label.preferredMaxLayoutWidth = view1MaxW
+            needRefresh = true
+        }
+        if size2.isValid, view2MaxW > 0, size2.width > view2MaxW,
            let label = view2 as? UILabel,
            label.numberOfLines != 1,
-           (label.preferredMaxLayoutWidth == 0 || view2Flexible) {
-            label.preferredMaxLayoutWidth = availableWidthForView2
+           Int(label.preferredMaxLayoutWidth) != Int(view2MaxW) {
+            label.preferredMaxLayoutWidth = view2MaxW
+            needRefresh = true
+        }
+        if needRefresh {
             invalidateIntrinsicContentSize()
             setNeedsLayout()
             return
         }
-        if view2Flexible, size2.width > availableWidthForView2 {
-            size2.width = availableWidthForView2
-        }
+        if size1.width > view1MaxW { size1.width = view1MaxW }
+        if size2.width > view2MaxW { size2.width = view2MaxW }
+         
         view1?.frame.size = size1
         view2?.frame.size = size2
         let center = rect.center
@@ -204,10 +219,61 @@ public extension UIView {
     }
 }
 
+public final class ToupleView<V1: UIView, V2: UIView>: UIView {
+    public var view1Position: UIView.PlacePosition = .left
+    public var verticalAlignment: UIControl.ContentVerticalAlignment = .center
+    public var horizontalAlignment: UIControl.ContentHorizontalAlignment = .center
+    public var edgeInsets: UIEdgeInsets = .zero
+    public var spacing: CGFloat = 0
+    
+    public init(v1: V1, v2: V2, frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(v1)
+        addSubview(v2)
+        view1 = v1
+        view2 = v2
+    }
+    public convenience init(config1: (V1) -> Void, config2: (V2) -> Void) {
+        self.init(v1: V1().then(config1), v2: V2().then(config2), frame: .zero)
+    }
+    public convenience init(v1: V1) {
+        self.init(v1: v1, v2: .init(), frame: .zero)
+    }
+    public convenience init(v2: V2) {
+        self.init(v1: .init(), v2: v2, frame: .zero)
+    }
+    public override convenience init(frame: CGRect) {
+        self.init(v1: .init(), v2: .init(), frame: frame)
+    }
+    public convenience init() {
+        self.init(v1: .init(), v2: .init(), frame: .zero)
+    }
+    
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override var intrinsicContentSize: CGSize {
+        let size = at_sizesInfo(for: view1, view2: view2, view1Position: view1Position, spacing: spacing).wrapSize
+        return size.inset(edgeInsets)
+    }
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        let bounds = bounds
+        guard !bounds.isEmpty else { return }
+        at_layout(in: bounds, for: view1, view2: view2, view1Position: view1Position, spacing: spacing, contentEdgeInsets: edgeInsets, verticalAlignment: verticalAlignment, horizontalAlignment: horizontalAlignment)
+    }
+    
+    public private(set) unowned var view1: V1!
+    public private(set) unowned var view2: V2!
+}
+public typealias ATImageLabel = ToupleView<UIImageView, UILabel>
+public typealias ATLabels = ToupleView<UILabel, UILabel>
+
+
 open class NewButton: UIButton {
     public var imagePosition: UIView.PlacePosition = .left
     public var spacing: CGFloat = 0
-    public var autosetTitleLabelMaxLayoutWidth = true
     
     @available(*, unavailable)
     open override var titleEdgeInsets: UIEdgeInsets {
@@ -228,6 +294,6 @@ open class NewButton: UIButton {
         super.layoutSubviews()
         let bounds = bounds
         guard !bounds.isEmpty else { return }
-        at_layout(in: bounds, for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, view2Flexible: autosetTitleLabelMaxLayoutWidth, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
+        at_layout(in: bounds, for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
     }
 }
