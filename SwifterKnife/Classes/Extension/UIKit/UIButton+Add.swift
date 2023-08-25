@@ -127,8 +127,26 @@ public extension UIView {
         
         let view1MaxW: CGFloat, view2MaxW: CGFloat
         if pos.isHorizontal {
-            view1MaxW = spaceW - margin
-            view2MaxW = view1MaxW - size1.width
+            let isView1Higher: Bool
+            if size1.isValid, size2.isValid, let v1 = view1, let v2 = view2 {
+                let c1 = v1.contentCompressionResistancePriority(for: .horizontal)
+                let c2 = v2.contentCompressionResistancePriority(for: .horizontal)
+                if c1 == c2 {
+                    switch (v1 is UILabel, v2 is UILabel) {
+                    case (true, false): isView1Higher = false
+                    default: isView1Higher = true
+                    }
+                } else {
+                    isView1Higher = c1 > c2
+                }
+            } else { isView1Higher = true }
+            if isView1Higher {
+                view1MaxW = spaceW - margin
+                view2MaxW = view1MaxW - size1.width
+            } else {
+                view2MaxW = spaceW - margin
+                view1MaxW = view2MaxW - size2.width
+            }
         } else {
             view1MaxW = spaceW
             view2MaxW = spaceW
@@ -153,13 +171,14 @@ public extension UIView {
             setNeedsLayout()
             return
         }
-        if size1.width > view1MaxW { size1.width = view1MaxW }
-        if size2.width > view2MaxW { size2.width = view2MaxW }
-         
+        if view1MaxW > 0, size1.width > view1MaxW { size1.width = view1MaxW }
+        if view2MaxW > 0, size2.width > view2MaxW { size2.width = view2MaxW }
+        
         view1?.frame.size = size1
         view2?.frame.size = size2
         let center = rect.center
         if pos.isHorizontal {
+            contentSize.width = size1.width + size2.width + margin
             switch verticalAlignment {
             case .top:
                 view1?.frame.origin.y = inset.top
@@ -178,7 +197,7 @@ public extension UIView {
                 switch horizontalAlignment {
                 case .left, .leading: return inset.left
                 case .right, .trailing: return delta - inset.right
-                default: return delta * 0.5
+                default: return max(delta * 0.5, inset.left)
                 }
             }()
             if pos == .left {
@@ -206,7 +225,7 @@ public extension UIView {
                 switch verticalAlignment {
                 case .top: return inset.top
                 case .bottom: return delta - inset.bottom
-                default: return delta * 0.5
+                default: return max(delta * 0.5, inset.top)
                 }
             }()
             if pos == .top {
@@ -267,6 +286,7 @@ public final class ToupleView<V1: UIView, V2: UIView>: UIView {
     public private(set) unowned var view2: V2!
 }
 public typealias ATImageLabel = ToupleView<UIImageView, UILabel>
+public typealias ATLabelImage = ToupleView<UILabel, UIImageView>
 public typealias ATLabels = ToupleView<UILabel, UILabel>
 
 
