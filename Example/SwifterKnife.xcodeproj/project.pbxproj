@@ -148,7 +148,6 @@
 		B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFC272BF47C001BBBE1 /* PurchaseControl.swift */; };
 		B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */; };
 		B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */; };
-		B6D834B529B0B4FB004C2BC3 /* Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834B429B0B4FB004C2BC3 /* Empty.swift */; };
 		B6D834B929B0C89B004C2BC3 /* XcodeKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */; };
 		B6D834BC29B190C5004C2BC3 /* CallbackHell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834BB29B190C5004C2BC3 /* CallbackHell.swift */; };
 		B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834C329B191B9004C2BC3 /* CallbackHell+Func.swift */; };
@@ -162,6 +161,8 @@
 		B6D834DC29B9CA69004C2BC3 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DB29B9CA69004C2BC3 /* FormViewController.swift */; };
 		B6D834E029B9F2D0004C2BC3 /* SKStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DE29B9F2D0004C2BC3 /* SKStackView.swift */; };
 		B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */; };
+		B6DC13422A9EE42C00D50A1C /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13412A9EE42C00D50A1C /* Animator.swift */; };
+		B6DC13442A9EEB6300D50A1C /* XXXX.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13432A9EEB6300D50A1C /* XXXX.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 		B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05DF292A73D00057E659 /* DebugViewController.swift */; };
 		B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05E1292A751F0057E659 /* HomeViewController.swift */; };
@@ -333,7 +334,7 @@
 		B6B5FAFC272BF47C001BBBE1 /* PurchaseControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseControl.swift; sourceTree = "<group>"; };
 		B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreControl.swift; sourceTree = "<group>"; };
 		B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
-		B6D834B429B0B4FB004C2BC3 /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Empty.swift; sourceTree = "<group>"; };
+		B6D834B429B0B4FB004C2BC3 /* Empty.txt */ = {isa = PBXFileReference; explicitFileType = text; path = Empty.txt; sourceTree = "<group>"; };
 		B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeKeys.swift; sourceTree = "<group>"; };
 		B6D834BB29B190C5004C2BC3 /* CallbackHell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackHell.swift; sourceTree = "<group>"; };
 		B6D834C329B191B9004C2BC3 /* CallbackHell+Func.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallbackHell+Func.swift"; sourceTree = "<group>"; };
@@ -347,6 +348,8 @@
 		B6D834DB29B9CA69004C2BC3 /* FormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		B6D834DE29B9F2D0004C2BC3 /* SKStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackView.swift; sourceTree = "<group>"; };
 		B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackCellType.swift; sourceTree = "<group>"; };
+		B6DC13412A9EE42C00D50A1C /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
+		B6DC13432A9EEB6300D50A1C /* XXXX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXXX.swift; sourceTree = "<group>"; };
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		B6ED86802726A1E3003103F6 /* KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKView.m; sourceTree = "<group>"; };
@@ -663,10 +666,11 @@
 			isa = PBXGroup;
 			children = (
 				B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */,
-				B6D834B429B0B4FB004C2BC3 /* Empty.swift */,
+				B6D834B429B0B4FB004C2BC3 /* Empty.txt */,
 				B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */,
 				B6ED867F2726A1E3003103F6 /* KKView.h */,
 				B6ED86802726A1E3003103F6 /* KKView.m */,
+				B6DC13432A9EEB6300D50A1C /* XXXX.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -714,6 +718,7 @@
 				B6D834CD29B1E09C004C2BC3 /* Validator.swift */,
 				B65E581129C8478600C48C3A /* TypedNotification.swift */,
 				B643461C2A937288005FA3F7 /* SortedArray.swift */,
+				B6DC13412A9EE42C00D50A1C /* Animator.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -1031,13 +1036,14 @@
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
 				B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */,
 				B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */,
+				B6DC13442A9EEB6300D50A1C /* XXXX.swift in Sources */,
 				B620B0992A8F8673007243DC /* ExCodable.swift in Sources */,
 				B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */,
-				B6D834B529B0B4FB004C2BC3 /* Empty.swift in Sources */,
 				B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */,
 				B6D834DC29B9CA69004C2BC3 /* FormViewController.swift in Sources */,
 				B6D834C829B1923F004C2BC3 /* CallbackHell+Async2.swift in Sources */,
 				B63EDC522A85DC85008B251C /* FileHelper.swift in Sources */,
+				B6DC13422A9EE42C00D50A1C /* Animator.swift in Sources */,
 				B6B5FAFB272BF3F2001BBBE1 /* PaymentQueueControl.swift in Sources */,
 				B63EDC612A860F36008B251C /* YiVideoEditorData.swift in Sources */,
 				B6D834CA29B192F4004C2BC3 /* Func.swift in Sources */,

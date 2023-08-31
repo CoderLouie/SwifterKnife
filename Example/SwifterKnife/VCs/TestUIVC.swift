@@ -19,8 +19,23 @@ fileprivate extension UILabel {
         return ()
     }
 }
-
 class TestUIVC: BaseViewController {
+    
+    private func testKeyPath<T>(_ keyPath: KeyPath<CALayer, T>) {
+//        print(#keyPath(keyPath))
+        
+        print(keyPath._kvcKeyPathString ??? "nil")
+//        print(keyPath.keyPath)
+//        let expression = NSExpression(forKeyPath: keyPath)
+//        print(expression.keyPath)
+//        print("")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        print(#keyPath(CALayer.bounds.origin.x))
+        testKeyPath(\.bounds)
+        testKeyPath(\.bounds.origin)
+    }
     
     private func testOfView(_ view: UIView) {
         let v1 = view.contentHuggingPriority(for: .vertical).rawValue
@@ -32,8 +47,8 @@ class TestUIVC: BaseViewController {
     }
     override func setupViews() {
         super.setupViews()
-        let views: [UIView] = [UILabel(), UIView(), UIImageView(), UIButton()]
-        views.forEach { testOfView($0) }
+//        let views: [UIView] = [UILabel(), UIView(), UIImageView(), UIButton()]
+//        views.forEach { testOfView($0) }
         setupImageLabel()
     }
     private func setupImageLabel() {
@@ -51,10 +66,12 @@ class TestUIVC: BaseViewController {
                 $0.addBorder(color: .orange, radius: 0, width: 1)
             }
             this.view1Position = .left
+//            this.axis = .horizontal
+//            this.distribution = .fill
 //            this.horizontalAlignment = .left
 //            this.verticalAlignment = .bottom
             this.addBorder(color: .orange, radius: 0, width: 1)
-            this.edgeInsets = .inset(10)
+//            this.edgeInsets = .inset(10)
 //            this.view1Position = .top
             this.spacing = 10
             view.addSubview(this)

@@ -448,13 +448,6 @@ public extension UIView {
         layer.maskedCorners = maskCorners
     }
     
-    
-    static func noTransaction(_ work: () -> Void) {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        work()
-        CATransaction.commit()
-    }
      
     func addBorder(color: UIColor,
                    radius: CGFloat,
