@@ -163,6 +163,8 @@
 		B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */; };
 		B6DC13422A9EE42C00D50A1C /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13412A9EE42C00D50A1C /* Animator.swift */; };
 		B6DC13442A9EEB6300D50A1C /* XXXX.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13432A9EEB6300D50A1C /* XXXX.swift */; };
+		B6DC13472AA03A0300D50A1C /* OCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13462AA03A0300D50A1C /* OCUtils.m */; };
+		B6DC13492AA03A1200D50A1C /* ExceptionCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 		B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05DF292A73D00057E659 /* DebugViewController.swift */; };
 		B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05E1292A751F0057E659 /* HomeViewController.swift */; };
@@ -350,6 +352,9 @@
 		B6D834DF29B9F2D0004C2BC3 /* SKStackCellType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKStackCellType.swift; sourceTree = "<group>"; };
 		B6DC13412A9EE42C00D50A1C /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		B6DC13432A9EEB6300D50A1C /* XXXX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXXX.swift; sourceTree = "<group>"; };
+		B6DC13452AA03A0300D50A1C /* OCUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUtils.h; sourceTree = "<group>"; };
+		B6DC13462AA03A0300D50A1C /* OCUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUtils.m; sourceTree = "<group>"; };
+		B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExceptionCatcher.swift; sourceTree = "<group>"; };
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		B6ED86802726A1E3003103F6 /* KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKView.m; sourceTree = "<group>"; };
@@ -594,6 +599,7 @@
 				B63EDC582A860F36008B251C /* YiVideoEditor */,
 				B63EDC542A85DD4A008B251C /* VideoEditor.swift */,
 				B63EDC2A2A84E13D008B251C /* PhotoManager.swift */,
+				B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */,
 				B63EDC4F2A85DC85008B251C /* LivePhoto */,
 			);
 			path = Tool;
@@ -670,6 +676,8 @@
 				B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */,
 				B6ED867F2726A1E3003103F6 /* KKView.h */,
 				B6ED86802726A1E3003103F6 /* KKView.m */,
+				B6DC13452AA03A0300D50A1C /* OCUtils.h */,
+				B6DC13462AA03A0300D50A1C /* OCUtils.m */,
 				B6DC13432A9EEB6300D50A1C /* XXXX.swift */,
 			);
 			path = Other;
@@ -1048,6 +1056,7 @@
 				B63EDC612A860F36008B251C /* YiVideoEditorData.swift in Sources */,
 				B6D834CA29B192F4004C2BC3 /* Func.swift in Sources */,
 				B691560F2A7397370037B59A /* BaseViewController.swift in Sources */,
+				B6DC13492AA03A1200D50A1C /* ExceptionCatcher.swift in Sources */,
 				B620B09D2A8F86CC007243DC /* Either.swift in Sources */,
 				B63EDC532A85DC85008B251C /* LivePhotoGenerator.swift in Sources */,
 				B6D834C629B191CB004C2BC3 /* CallbackHell+Async1.swift in Sources */,
@@ -1057,6 +1066,7 @@
 				B6D834E029B9F2D0004C2BC3 /* SKStackView.swift in Sources */,
 				B6B5FAFD272BF47C001BBBE1 /* PurchaseControl.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				B6DC13472AA03A0300D50A1C /* OCUtils.m in Sources */,
 				B620B09B2A8F86A7007243DC /* StateMachine.swift in Sources */,
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,

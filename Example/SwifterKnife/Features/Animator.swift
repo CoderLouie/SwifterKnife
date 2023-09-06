@@ -7,175 +7,122 @@
 //
 
 import Foundation
+ 
 
-public struct AnimationKeyPaths {
-    private static let shared = AnimationKeyPaths()
-    private init() {}
+public struct Amount3D {
+    public var x: CGFloat
+    public var y: CGFloat
+    public var z: CGFloat
     
-    fileprivate static func animKeyPath<T: AnimationValueType>(of keyPath: KeyPath<AnimationKeyPaths, AnimationKeyPath<T>>) -> String {
-        shared[keyPath: keyPath].rawValue
-    }
+    public static let zero = Amount3D(x: 0, y: 0, z: 0)
 }
-
-public protocol AnimationValueType {}
-
-public struct AnimationKeyPath<ValueType: AnimationValueType> {
-    let rawValue: String
-
-    init(keyPath: String) {
-        self.rawValue = keyPath
-    }
-}
-extension Array: AnimationValueType {}
-extension Bool: AnimationValueType {}
-extension CALayer: AnimationValueType {}
-extension CATransform3D: AnimationValueType {}
-extension CGColor: AnimationValueType {}
-extension CGFloat: AnimationValueType {}
-extension CGPath: AnimationValueType {}
-extension CGPoint: AnimationValueType {}
-extension CGRect: AnimationValueType {}
-extension CGSize: AnimationValueType {}
-
-extension AnimationKeyPaths {
-    public var backgroundColor: AnimationKeyPath<CGColor> {
-        .init(keyPath: #keyPath(CALayer.backgroundColor))
-    }
+extension CATransform3D {
+    public var rotation: Amount3D { .zero }
+    public var scale: Amount3D { .zero }
+    public var translation: Amount3D { .zero }
     
-    public var hidden: AnimationKeyPath<Bool> {
-        .init(keyPath: #keyPath(CALayer.isHidden))
-    }
-    public var mask: AnimationKeyPath<CALayer> {
-        .init(keyPath: #keyPath(CALayer.mask))
-    }
-    public var masksToBounds: AnimationKeyPath<Bool> {
-        .init(keyPath: #keyPath(CALayer.masksToBounds))
-    }
-    public var opacity: AnimationKeyPath<CGFloat> {
-        .init(keyPath: #keyPath(CALayer.opacity))
-    }
-    public var path: AnimationKeyPath<CGPath> {
-        .init(keyPath: #keyPath(CAShapeLayer.path))
-    }
-    public var zPosition: AnimationKeyPath<CGFloat> {
-        .init(keyPath: #keyPath(CALayer.zPosition))
-    }
+    public var _rotation: CGFloat { 0 }
+    public var _scale: CGFloat { 0 }
+    public var _translation: CGPoint { .zero }
 }
-extension AnimationKeyPaths {
-    public var borderColor: AnimationKeyPath<CGColor> {
-        .init(keyPath: #keyPath(CALayer.borderColor))
-    }
-    public var borderWidth: AnimationKeyPath<CGFloat> {
-        .init(keyPath: #keyPath(CALayer.borderWidth))
-    }
-    public var cornerRadius: AnimationKeyPath<CGFloat> {
-        .init(keyPath: #keyPath(CALayer.cornerRadius))
+
+extension PartialKeyPath where Root: CALayer {
+    public var animKeyPath: String? {
+        if let path = _kvcKeyPathString { return path }
+        switch self {
+        case \Root.anchorPoint.x: return "anchorPoint.x"
+        case \Root.anchorPoint.y: return "anchorPoint.y"
+            
+        case \Root.position.x: return "position.x"
+        case \Root.position.y: return "position.y"
+            
+        case \Root.shadowOffset.width: return "shadowOffset.width"
+        case \Root.shadowOffset.height: return "shadowOffset.height"
+          
+        /// 默认围绕z轴
+        case \Root.transform.rotation,
+            \Root.transform._rotation: return "transform.rotation"
+        /// 围绕x轴旋转的弧度
+        case \Root.transform.rotation.x: return "transform.rotation.x"
+        case \Root.transform.rotation.y: return "transform.rotation.y"
+        case \Root.transform.rotation.z: return "transform.rotation.z"
+            
+        /// 所有方向缩放
+        case \Root.transform.scale,
+            \Root.transform._scale: return "transform.scale"
+        /// x方向缩放
+        case \Root.transform.scale.x: return "transform.scale.x"
+        case \Root.transform.scale.y: return "transform.scale.y"
+        case \Root.transform.scale.z: return "transform.scale.z"
+            
+        /// x,y 坐标均发生改变
+        case \Root.transform.translation,
+            \Root.transform._translation: return "transform.translation"
+        /// x方向移动
+        case \Root.transform.translation.x: return "transform.translation.x"
+        case \Root.transform.translation.y: return "transform.translation.y"
+        case \Root.transform.translation.z: return "transform.translation.z"
+            
+        case \Root.sublayerTransform.rotation.x: return "sublayerTransform.rotation.x"
+        case \Root.sublayerTransform.rotation.y: return "sublayerTransform.rotation.y"
+        case \Root.sublayerTransform.rotation.z: return "sublayerTransform.rotation.z"
+            
+        case \Root.sublayerTransform.scale.x: return "sublayerTransform.scale.x"
+        case \Root.sublayerTransform.scale.y: return "sublayerTransform.scale.y"
+        case \Root.sublayerTransform.scale.z: return "sublayerTransform.scale.z"
+            
+        case \Root.sublayerTransform.translation.x: return "sublayerTransform.translation.x"
+        case \Root.sublayerTransform.translation.y: return "sublayerTransform.translation.y"
+        case \Root.sublayerTransform.translation.z: return "sublayerTransform.translation.z"
+            
+        case \Root.bounds.origin: return "bounds.origin"
+        case \Root.bounds.origin.x: return "bounds.origin.x"
+        case \Root.bounds.origin.y: return "bounds.origin.y"
+            
+        case \Root.bounds.size: return "bounds.size"
+        case \Root.bounds.size.width: return "bounds.size.width"
+        case \Root.bounds.size.height: return "bounds.size.height"
+            
+        case \Root.frame.origin: return "frame.origin"
+        case \Root.frame.origin.x: return "frame.origin.x"
+        case \Root.frame.origin.y: return "frame.origin.y"
+            
+        case \Root.frame.size: return "frame.size"
+        case \Root.frame.size.width: return "frame.size.width"
+        case \Root.frame.size.height: return "frame.size.height"
+        // 可视内容 参数：CGRect 值是0～1之间的小数
+        case \Root.contentsRect.origin: return "contentsRect.origin"
+        case \Root.contentsRect.origin.x: return "contentsRect.origin.x"
+        case \Root.contentsRect.origin.y: return "contentsRect.origin.y"
+            
+        case \Root.contentsRect.size: return "contentsRect.size"
+        case \Root.contentsRect.size.width: return "contentsRect.size.width"
+        case \Root.contentsRect.size.height: return "contentsRect.size.height"
+        default: return nil
+        }
     }
 }
 
-extension AnimationKeyPaths {
-    public var anchorPoint: AnimationKeyPath<CGPoint> {
-        .init(keyPath: #keyPath(CALayer.anchorPoint))
-    }
-    public var anchorPointX: AnimationKeyPath<CGPoint> {
-        .init(keyPath: "\(#keyPath(CALayer.anchorPoint)).x")
-    }
-    public var anchorPointy: AnimationKeyPath<CGPoint> {
-        .init(keyPath: "\(#keyPath(CALayer.anchorPoint)).y")
+extension CAPropertyAnimation {
+    public func setSwiftlyKeyPath<T>(_ keyPath: KeyPath<CALayer, T>) {
+        self.keyPath = keyPath.animKeyPath
     }
 }
 
-extension AnimationKeyPaths {
-    public var bounds: AnimationKeyPath<CGRect> {
-        .init(keyPath: #keyPath(CALayer.bounds))
-    }
-    public var boundsOrigin: AnimationKeyPath<CGPoint> {
-        .init(keyPath: "\(#keyPath(CALayer.bounds)).origin")
-    }
-    public var boundsOriginX: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.bounds)).origin.x")
-    }
-    public var boundsOriginY: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.bounds)).origin.y")
-    }
-    public var boundsSize: AnimationKeyPath<CGSize> {
-        .init(keyPath: "\(#keyPath(CALayer.bounds)).size")
-    }
-    public var boundsSizeWidth: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.bounds)).size.width")
-    }
-    public var boundsSizeHeight: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.bounds)).size.height")
-    }
-    
-}
-
-extension AnimationKeyPaths {
-    public var frame: AnimationKeyPath<CGRect> {
-        .init(keyPath: #keyPath(CALayer.frame))
-    }
-    public var frameOrigin: AnimationKeyPath<CGPoint> {
-        .init(keyPath: "\(#keyPath(CALayer.frame)).origin")
-    }
-    public var frameOriginX: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.frame)).origin.x")
-    }
-    public var frameOriginY: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.frame)).origin.y")
-    }
-    public var frameSize: AnimationKeyPath<CGSize> {
-        .init(keyPath: "\(#keyPath(CALayer.frame)).size")
-    }
-    public var frameSizeWidth: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.frame)).size.width")
-    }
-    public var frameSizeHeight: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.frame)).size.height")
+extension CABasicAnimation {
+    public static func animate<T>(forKeyPath keyPath: KeyPath<CALayer, T>, fromValue: T?, toValue: T?) -> Self {
+        let anim = Self(keyPath: keyPath.animKeyPath)
+        anim.fromValue = fromValue
+        anim.toValue = toValue
+        return anim
     }
 }
 
-extension AnimationKeyPaths {
-    public var position: AnimationKeyPath<CGPoint> {
-        .init(keyPath: #keyPath(CALayer.position))
-    }
-    public var positionX: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.position)).x")
-    }
-    public var positionY: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.position)).y")
-    }
-}
-
-extension AnimationKeyPaths {
-    public var transform: AnimationKeyPath<CATransform3D> {
-        .init(keyPath: #keyPath(CALayer.transform))
-    }
-    public var transformRotationX: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).rotation.x")
-    }
-    public var transformRotationY: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).rotation.y")
-    }
-    public var transformRotationZ: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).rotation.z")
-    }
-    public var transformScaleX: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).scale.x")
-    }
-    public var transformScaleY: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).scale.y")
-    }
-    public var transformScaleZ: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).scale.z")
-    }
-    public var transformTranslationX: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).translation.x")
-    }
-    public var transformTranslationY: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).translation.y")
-    }
-    public var transformTranslationZ: AnimationKeyPath<CGFloat> {
-        .init(keyPath: "\(#keyPath(CALayer.transform)).translation.z")
+extension CAKeyframeAnimation {
+    public static func animate<T>(forKeyPath keyPath: KeyPath<CALayer, T>, values: [T]?) -> Self {
+        let anim = Self(keyPath: keyPath.animKeyPath)
+        anim.values = values
+        return anim
     }
 }
 
@@ -206,6 +153,26 @@ public extension CAMediaTimingFunction {
         .init(name: CAMediaTimingFunctionName.easeInEaseOut)
     }
 }
+extension CATransitionType {
+    public var cube: CATransitionType {
+        .init(rawValue: "cube")
+    }
+    public var suckEffect: CATransitionType {
+        .init(rawValue: "suckEffect")
+    }
+    public var oglFlip: CATransitionType {
+        .init(rawValue: "oglFlip")
+    }
+    public var rippleEffect: CATransitionType {
+        .init(rawValue: "rippleEffect")
+    }
+    public var pageCurl: CATransitionType {
+        .init(rawValue: "pageCurl")
+    }
+    public var pageUnCurl: CATransitionType {
+        .init(rawValue: "pageUnCurl")
+    } 
+}
 
 public final class Animator {
     
@@ -218,7 +185,6 @@ public final class Animator {
     }
 
     private weak var layer: CALayer?
-    private var group = CAAnimationGroup()
     private var animations = [CAAnimation]()
     public private(set) var isCompleted: Bool = false
 
@@ -248,25 +214,9 @@ public final class Animator {
         }
     }
 
-    public func delay(_ delay: Double) -> Self {
-        if isCompleted { return self }
-        let beginTime = delay < 0.0 ? 0.0 : delay
-        group.beginTime = CACurrentMediaTime() + beginTime
-        return self
-    }
-
-    public func forever(autoreverses: Bool = true) -> Self {
-        if isCompleted { return self }
-        group.repeatCount = Float.greatestFiniteMagnitude
-        group.autoreverses = autoreverses
-        return self
-    }
-
     public func removeAll() -> Self {
         layer?.removeAllAnimations()
-        group = CAAnimationGroup()
         animations = []
-        isCompleted = false
         return self
     }
 
@@ -274,16 +224,24 @@ public final class Animator {
         layer?.removeAnimation(forKey: key)
     }
 
-    public func run(type: AnimationPlayType, fillMode: CAMediaTimingFillMode = .forwards, isRemovedOnCompletion: Bool = false, completion: (() -> Void)? = nil) {
-
+    /*
+     group.fillMode = fillMode
+     group.isRemovedOnCompletion = removedOnCompletion
+     group.repeatCount = repeatCount
+     group.autoreverses = autoreverses
+     */
+    public func run(type: AnimationPlayType,
+                    delay: Double = 0,
+                    config: (CAAnimationGroup) -> Void,
+                    completion: (() -> Void)? = nil) {
         if case .sequence = type {
             calculateBeginTime()
         }
+        let group = CAAnimationGroup()
+        group.beginTime = CACurrentMediaTime() + max(delay, 0)
         group.animations = animations
         group.duration = totalDuration(type: type)
-        group.fillMode = fillMode
-        group.isRemovedOnCompletion = isRemovedOnCompletion
-
+        config(group)
         if let completion = completion {
             CATransaction.begin()
             CATransaction.setCompletionBlock {
@@ -302,9 +260,9 @@ public final class Animator {
         animations.append(anim)
         return self
     }
-    public func addBasicAnimation<T: AnimationValueType>(keyPath: KeyPath<AnimationKeyPaths, AnimationKeyPath<T>>, from: T, to: T, duration: Double, delay: Double = 0, timingFunction: CAMediaTimingFunction = .default) -> Self {
+    public func addBasicAnimation<T>(keyPath: KeyPath<CALayer, T>, from: T?, to: T?, duration: Double, delay: Double = 0, timingFunction: CAMediaTimingFunction = .default) -> Self {
         if isCompleted { return self }
-        let path = AnimationKeyPaths.animKeyPath(of: keyPath)
+        guard let path = keyPath.animKeyPath else { return self }
         let basicAnimation = CABasicAnimation(keyPath: path)
         basicAnimation.fromValue = from
         basicAnimation.toValue = to
@@ -314,10 +272,10 @@ public final class Animator {
         return self
     }
 
-    @available(iOS 9, tvOS 10.0, macOS 10.11, *)
-    public func addSpringAnimation<T: AnimationValueType>(keyPath: KeyPath<AnimationKeyPaths, AnimationKeyPath<T>>, from: T, to: T, damping: CGFloat, mass: CGFloat, stiffness: CGFloat, initialVelocity: CGFloat, duration: Double, delay: Double = 0, timingFunction: CAMediaTimingFunction = .default) -> Self {
+
+    public func addSpringAnimation<T>(keyPath: KeyPath<CALayer, T>, from: T?, to: T?, damping: CGFloat, mass: CGFloat, stiffness: CGFloat, initialVelocity: CGFloat, duration: Double, delay: Double = 0, timingFunction: CAMediaTimingFunction = .default) -> Self {
         if isCompleted { return self }
-        let path = AnimationKeyPaths.animKeyPath(of: keyPath)
+        guard let path = keyPath.animKeyPath else { return self }
         let springAnimation = CASpringAnimation(keyPath: path)
         springAnimation.fromValue = from
         springAnimation.toValue = to

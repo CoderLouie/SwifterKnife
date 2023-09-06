@@ -23,8 +23,8 @@ class TestUIVC: BaseViewController {
     
     private func testKeyPath<T>(_ keyPath: KeyPath<CALayer, T>) {
 //        print(#keyPath(keyPath))
-        
-        print(keyPath._kvcKeyPathString ??? "nil")
+//        print(keyPath._kvcKeyPathString ??? "nil") 
+        print(keyPath.animKeyPath ??? "exten nil")
 //        print(keyPath.keyPath)
 //        let expression = NSExpression(forKeyPath: keyPath)
 //        print(expression.keyPath)
@@ -35,6 +35,7 @@ class TestUIVC: BaseViewController {
 //        print(#keyPath(CALayer.bounds.origin.x))
         testKeyPath(\.bounds)
         testKeyPath(\.bounds.origin)
+        testKeyPath(\.bounds.origin.x)
     }
     
     private func testOfView(_ view: UIView) {

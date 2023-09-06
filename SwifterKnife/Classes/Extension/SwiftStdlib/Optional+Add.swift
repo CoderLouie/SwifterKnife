@@ -134,6 +134,10 @@ public extension Optional where Wrapped: Collection {
         return self?.isEmpty ?? true
     }
 
+    var isValid: Bool {
+        if let c = self, !c.isEmpty { return true }
+        return false
+    }
     /// Returns the collection only if it is not nil and not empty.
     var nonEmpty: Wrapped? {
         return (self?.isEmpty ?? true) ? nil : self
