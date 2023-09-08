@@ -71,8 +71,8 @@ public extension Dictionary {
     ///
     /// - Returns: A new dictionary that contains the specified keys only. If none of the keys exist, an empty dictionary will be returned.
     func pick(keys: [Key]) -> [Key: Value] {
-        keys.reduce(into: [Key: Value]()) { result, item in
-            result[item] = self[item]
+        keys.reduce(into: [Key: Value]()) { result, key in
+            result[key] = self[key]
         }
     }
 }
@@ -243,6 +243,18 @@ public extension Dictionary {
         }
         return result
     }
+    
+    func filter(keys: Key...) -> [Key: Value] {
+        filter(keys: keys)
+    }
+    func filter(keys: [Key]) -> [Key: Value] {
+        var res = self
+        for key in keys {
+            res.removeValue(forKey: key)
+        }
+        return res
+    }
+    
 }
 /*
  哈希不变原则

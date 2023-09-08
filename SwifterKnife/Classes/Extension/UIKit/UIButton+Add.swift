@@ -262,6 +262,9 @@ public final class ToupleView<V1: UIView, V2: UIView>: UIView {
     public convenience init(v2: V2) {
         self.init(v1: .init(), v2: v2, frame: .zero)
     }
+    public convenience init(v1: V1, v2: V2) {
+        self.init(v1: v1, v2: v2, frame: .zero)
+    }
     public override convenience init(frame: CGRect) {
         self.init(v1: .init(), v2: .init(), frame: frame)
     }
@@ -291,6 +294,17 @@ public typealias ATLabels = ToupleView<UILabel, UILabel>
 
 
 open class NewButton: UIButton {
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    open func setup() { }
+    
     public var imagePosition: UIView.PlacePosition = .left
     public var spacing: CGFloat = 0
     

@@ -133,6 +133,21 @@ import UIKit
 }
 
 
+weak var _curFirstResponder: UIResponder? = nil
+private extension UIResponder {
+    @objc func at_findFirstResponder(_ sender: UIResponder) {
+        _curFirstResponder = self
+    }
+}
+
+extension Screen {
+    public static var firstResponder: UIView? {
+        _curFirstResponder = nil
+        UIApplication.shared.sendAction(#selector(UIView.at_findFirstResponder(_:)), to: nil, from: nil, for: nil)
+        return _curFirstResponder as? UIView
+    }
+}
+
 // MARK:- OC
 public extension Screen {
     /// 像素化对齐

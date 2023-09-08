@@ -31,6 +31,26 @@ public extension Collection {
         }
     }
 
+    subscript(indices: Index...) -> [Element] {
+        self[indices]
+    }
+    subscript(indices: [Index]) -> [Element] {
+        guard !indices.isEmpty else { return [] }
+        var res: [Element] = []
+        res.reserveCapacity(indices.count)
+        for index in indices {
+            res.append(self[index])
+        }
+        return res
+    }
+    subscript(safe indices: Index...) -> [Element] {
+        self[safe: indices]
+    }
+    subscript(safe indices: [Index]) -> [Element] {
+        var safeIndices = indices.filter { self.indices.contains($0) }
+        return self[safeIndices]
+    }
+    
     /// Safe protects the array from out of bounds by use of optional.
     ///
     ///        let arr = [1, 2, 3, 4, 5]
