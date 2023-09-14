@@ -16,17 +16,23 @@ import Foundation
  *  - seealso: [Usage](https://github.com/iwill/ExCodable#usage) from GitGub
  *  - seealso: `ExCodableTests.swift` form the source code
  */
-public protocol ExCodable: Codable {
-    associatedtype Root = Self where Root: ExCodable
-    static var keyMapping: [KeyMap<Root>] { get }
-    
-    init()
-}
 
-public extension ExCodable {
+public protocol CodingKeyMap {
+    associatedtype Root = Self where Root: CodingKeyMap
+    static var keyMapping: [KeyMap<Root>] { get }
+}
+ 
+public extension Encodable where Self: CodingKeyMap {
     func encode(to encoder: Encoder, with keyMapping: [KeyMap<Self>], nonnull: Bool = false, throws: Bool = false) throws {
         try keyMapping.forEach { try $0.encode(self, encoder, nonnull, `throws`) }
     }
+}
+public extension Encodable where Self: CodingKeyMap, Self.Root == Self {
+    func encode(to encoder: Encoder) throws {
+        try encode(to: encoder, with: Self.keyMapping)
+    }
+}
+public extension Decodable where Self: CodingKeyMap {
     mutating func decode(from decoder: Decoder, with keyMapping: [KeyMap<Self>], nonnull: Bool = false, throws: Bool = false) throws {
         try keyMapping.forEach { try $0.decode?(&self, decoder, nonnull, `throws`) }
     }
@@ -34,19 +40,19 @@ public extension ExCodable {
         try keyMapping.forEach { try $0.decodeReference?(self, decoder, nonnull, `throws`) }
     }
 }
-public extension ExCodable where Root == Self {
-    func encode(to encoder: Encoder) throws {
-        try encode(to: encoder, with: Self.keyMapping)
-    }
-    init(from decoder: Decoder) throws {
-        self.init()
-        try decode(from: decoder, with: Self.keyMapping)
-    }
-}
+//public extension ExCodable where Root == Self {
+//    func encode(to encoder: Encoder) throws {
+//        try encode(to: encoder, with: Self.keyMapping)
+//    }
+////    init(from decoder: Decoder) throws {
+////        self.init()
+////        try decode(from: decoder, with: Self.keyMapping)
+////    }
+//}
 
 // MARK: -
 
-public final class KeyMap<Root: Codable> {
+public final class KeyMap<Root> {
     fileprivate typealias EncodeClosure = (_ root: Root, _ encoder: Encoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void
     fileprivate let encode: EncodeClosure
     
@@ -442,5 +448,5 @@ public protocol ExCodableDecodingTypeConverter {
     func decode<T: Decodable, K: CodingKey>(_ container: KeyedDecodingContainer<K>, codingKey: K, as type: T.Type) throws -> T?
 }
 
-public typealias Modelable = ExCodable & DataCodable
+//public typealias Modelable = ExCodable & DataCodable
  

@@ -17,6 +17,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		B61749562AB1CAD700A115C5 /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61749552AB1CAD700A115C5 /* PropertyWrapper.swift */; };
 		B61749582AB2A3B800A115C5 /* InputSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61749572AB2A3B800A115C5 /* InputSemaphore.swift */; };
+		B617495A2AB2D4E500A115C5 /* CodableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61749592AB2D4E500A115C5 /* CodableVC.swift */; };
 		B620AFBA2A8B7932007243DC /* DictationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620AFB92A8B7932007243DC /* DictationVC.swift */; };
 		B620B0192A8C6DC7007243DC /* inputResources.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B620AFBC2A8C6DC6007243DC /* inputResources.mp4 */; };
 		B620B01A2A8C6DC7007243DC /* 青蛙.json in Resources */ = {isa = PBXBuildFile; fileRef = B620AFBD2A8C6DC6007243DC /* 青蛙.json */; };
@@ -204,6 +205,7 @@
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B61749552AB1CAD700A115C5 /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 		B61749572AB2A3B800A115C5 /* InputSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputSemaphore.swift; sourceTree = "<group>"; };
+		B61749592AB2D4E500A115C5 /* CodableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableVC.swift; sourceTree = "<group>"; };
 		B620AFB92A8B7932007243DC /* DictationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationVC.swift; sourceTree = "<group>"; };
 		B620AFBC2A8C6DC6007243DC /* inputResources.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = inputResources.mp4; sourceTree = "<group>"; };
 		B620AFBD2A8C6DC6007243DC /* 青蛙.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "青蛙.json"; sourceTree = "<group>"; };
@@ -668,6 +670,7 @@
 				B69156132A7398510037B59A /* FitImageViewVC.swift */,
 				B620AFB92A8B7932007243DC /* DictationVC.swift */,
 				B64346932A9701B1005FA3F7 /* TestUIVC.swift */,
+				B61749592AB2D4E500A115C5 /* CodableVC.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -1081,6 +1084,7 @@
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B63EDC652A860F36008B251C /* YiAddAudioCommand.swift in Sources */,
 				B63EDC552A85DD4A008B251C /* VideoEditor.swift in Sources */,
+				B617495A2AB2D4E500A115C5 /* CodableVC.swift in Sources */,
 				B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */,
 				B6D834C429B191B9004C2BC3 /* CallbackHell+Func.swift in Sources */,
 				B640CA5E2A7CA28500769B08 /* Notify.swift in Sources */,
