@@ -38,6 +38,14 @@ open class TextField: UITextField {
 
 
 open class Input: UITextField {
+    override open var text: String? {
+        didSet {
+            if oldValue != text {
+                onTextDidChange?(self)
+            }
+        }
+    }
+    
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0
     
@@ -66,6 +74,7 @@ open class Input: UITextField {
             let endIndex = text.index(text.startIndex, offsetBy: maxLength)
             self.text = String(text[..<endIndex])
             undoManager?.removeAllActions()
+            return
         }
         onTextDidChange?(self)
     }

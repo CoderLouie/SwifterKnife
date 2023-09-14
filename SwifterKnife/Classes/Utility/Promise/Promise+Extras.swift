@@ -272,6 +272,16 @@ extension Promise {
             onComplete()
         }
     }
+    @discardableResult
+    public func finallyRes(
+        on queue: ExecutionContext = DispatchQueue.main,
+        onComplete: @escaping (Bool) -> Void) -> Promise<Value> {
+        return then(on: queue) { _ in
+            onComplete(true)
+        } onRejected: { _ in
+            onComplete(false)
+        }
+    }
 
     public func recover(
         _ recovery: @escaping (Error) throws -> Promise<Value>) -> Promise<Value> {

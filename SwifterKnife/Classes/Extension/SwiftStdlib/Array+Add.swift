@@ -29,6 +29,15 @@ public extension Array {
 
 public extension Array {
 
+    @discardableResult
+    mutating func tryAppend(_ element: Element?) -> Bool {
+        if let e = element {
+            append(e)
+            return true
+        }
+        return false
+    }
+    
     /// Safely swap values at given index positions.
     ///
     ///        [1, 2, 3, 4, 5].safeSwap(from: 3, to: 0) -> [4, 2, 3, 1, 5]

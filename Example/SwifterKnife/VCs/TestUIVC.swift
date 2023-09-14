@@ -50,7 +50,23 @@ class TestUIVC: BaseViewController {
         super.setupViews()
 //        let views: [UIView] = [UILabel(), UIView(), UIImageView(), UIButton()]
 //        views.forEach { testOfView($0) }
-        setupImageLabel()
+//        setupImageLabel()
+        setupTextView()
+    }
+    private func setupTextView() {
+        PlaceholderTextView().do {
+            $0.maxLength = 3
+            $0.onTextDidChange = { 
+                print($0.text ?? "nil")
+            }
+            view.addSubview($0)
+            $0.addBorder(color: .orange, radius: 0, width: 1)
+            $0.snp.makeConstraints { make in
+                make.horizontalSpace(30)
+                make.height.equalTo(100)
+                make.centerY.equalToSuperview()
+            }
+        }
     }
     private func setupImageLabel() {
         view.backgroundColor = UIColor(gray: 40)

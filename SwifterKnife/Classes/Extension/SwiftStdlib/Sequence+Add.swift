@@ -7,7 +7,7 @@
 
 public extension Sequence { 
     
-    func first<T>(ofType type: T) -> T? {
+    func theFirst<T>(ofType type: T.Type = T.self) -> T? {
         first { $0 is T } as? T
     }
 

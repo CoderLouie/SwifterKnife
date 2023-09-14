@@ -121,6 +121,7 @@ open class PlaceholderTextView: UITextView {
             let endIndex = text.index(text.startIndex, offsetBy: maxLength)
             self.text = String(text[..<endIndex])
             undoManager?.removeAllActions()
+            return
         }
         setNeedsDisplay()
         onTextDidChange?(self)

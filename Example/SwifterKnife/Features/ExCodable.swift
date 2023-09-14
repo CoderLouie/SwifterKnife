@@ -19,6 +19,8 @@ import Foundation
 public protocol ExCodable: Codable {
     associatedtype Root = Self where Root: ExCodable
     static var keyMapping: [KeyMap<Root>] { get }
+    
+    init()
 }
 
 public extension ExCodable {
@@ -35,6 +37,10 @@ public extension ExCodable {
 public extension ExCodable where Root == Self {
     func encode(to encoder: Encoder) throws {
         try encode(to: encoder, with: Self.keyMapping)
+    }
+    init(from decoder: Decoder) throws {
+        self.init()
+        try decode(from: decoder, with: Self.keyMapping)
     }
 }
 
@@ -265,14 +271,12 @@ fileprivate extension KeyedDecodingContainer {
         }
         catch { firstError = error }
         
-        let codingKeys = Array(codingKeys.dropFirst())
-        if !codingKeys.isEmpty,
-           let value = try? decodeForAlternativeKeys(codingKeys, as: type, nonnull: nonnull, throws: `throws`) {
-            return value
+        let leftKeys = Array(codingKeys.dropFirst())
+        guard !leftKeys.isEmpty else {
+            if (`throws` || nonnull), let err = firstError { throw err }
+            return nil
         }
-        
-        if (`throws` || nonnull) && firstError != nil { throw firstError! }
-        return nil
+        return try? decodeForAlternativeKeys(leftKeys, as: type, nonnull: nonnull, throws: `throws`)
     }
     
     func decodeForNestedKeys<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self, nonnull: Bool, throws: Bool) throws -> T? {
@@ -333,7 +337,6 @@ fileprivate extension KeyedDecodingContainer {
     }
     
     func decodeForTypeConversion<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
-        
         if type is Bool.Type {
             if let int = try? decodeIfPresent(Int.self, forKey: codingKey) {
                 return (int != 0) as? T
@@ -415,6 +418,13 @@ fileprivate extension KeyedDecodingContainer {
             else if let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return String(describing: int64) as? T } // include all Int types
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T } // include Float
         }
+        
+        for conversion in _decodingTypeConverters {
+            if let value = try? conversion.decode(self, codingKey: codingKey, as: type) {
+                return value
+            }
+        }
+        
         if let custom = self as? ExCodableDecodingTypeConverter,
            let value = try? custom.decode(self, codingKey: codingKey, as: type) {
             return value
@@ -424,6 +434,10 @@ fileprivate extension KeyedDecodingContainer {
     }
 }
 
+private var _decodingTypeConverters: [ExCodableDecodingTypeConverter] = []
+public func excodable_register(_ decodingTypeConverter: ExCodableDecodingTypeConverter) {
+    _decodingTypeConverters.append(decodingTypeConverter)
+}
 public protocol ExCodableDecodingTypeConverter {
     func decode<T: Decodable, K: CodingKey>(_ container: KeyedDecodingContainer<K>, codingKey: K, as type: T.Type) throws -> T?
 }

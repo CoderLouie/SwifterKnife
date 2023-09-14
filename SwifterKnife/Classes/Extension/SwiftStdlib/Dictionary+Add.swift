@@ -255,6 +255,14 @@ public extension Dictionary {
         return res
     }
     
+    mutating func remove(keys: Key...) {
+        remove(keys: keys)
+    }
+    mutating func remove(keys: [Key]) {
+        for key in keys {
+            removeValue(forKey: key)
+        }
+    }
 }
 /*
  哈希不变原则
