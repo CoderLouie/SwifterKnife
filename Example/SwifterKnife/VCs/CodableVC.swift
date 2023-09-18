@@ -34,9 +34,13 @@ class CodableVC: BaseViewController {
     
     override func setupViews() {
         super.setupViews()
-        let stu = ZStudent()
         
-        let jsonStr = stu.toJSON().jsonString()
-        print(jsonStr ?? "nil")
+        observeDeinit(for: self) { vc in
+            print("observeDeinit for \(type(of: vc))")
+        }
+//        let stu = ZStudent()
+//
+//        let jsonStr = stu.toJSON().jsonString()
+//        print(jsonStr ?? "nil")
     }
 }

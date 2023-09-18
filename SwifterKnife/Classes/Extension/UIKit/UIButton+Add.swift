@@ -290,7 +290,8 @@ public final class ToupleView<V1: UIView, V2: UIView>: UIView {
 }
 public typealias ATImageLabel = ToupleView<UIImageView, UILabel>
 public typealias ATLabelImage = ToupleView<UILabel, UIImageView>
-public typealias ATLabels = ToupleView<UILabel, UILabel>
+public typealias ATDupleView<V: UIView> = ToupleView<V, V>
+public typealias ATLabels = ATDupleView<UILabel>
 
 
 open class NewButton: UIButton {

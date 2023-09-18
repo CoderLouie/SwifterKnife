@@ -209,7 +209,8 @@ public final class PairView<V1: UIView, V2: UIView>: UIStackView {
 }
 public typealias ImageLabel = PairView<UIImageView, UILabel>
 public typealias LabelImage = PairView<UILabel, UIImageView>
-public typealias Labels = PairView<UILabel, UILabel>
+public typealias DupleView<V: UIView> = PairView<V, V>
+public typealias Labels = DupleView<UILabel>
 
 
 @resultBuilder
