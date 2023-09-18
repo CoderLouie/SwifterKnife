@@ -35,8 +35,11 @@ class CodableVC: BaseViewController {
     override func setupViews() {
         super.setupViews()
         
-        observeDeinit(for: self) { vc in
-            print("observeDeinit for \(type(of: vc))")
+        observeDeinit(for: self) {
+            print("observeDeinit1 for")
+        }
+        observeDeinit(for: self) {
+            print("observeDeinit2 for")
         }
 //        let stu = ZStudent()
 //
