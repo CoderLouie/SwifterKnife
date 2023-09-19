@@ -8,7 +8,7 @@
 /*
  https://github.com/nmdias/DefaultsKit
  */
-
+/*
 import Foundation
 
 public struct DefaultsKeys {
@@ -230,3 +230,4 @@ public extension DefaultsAdapter {
     }
 }
 
+*/

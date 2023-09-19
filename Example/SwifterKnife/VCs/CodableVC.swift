@@ -36,20 +36,31 @@ class CodableVC: BaseViewController {
     @ATDefaults(key: "iso_date_runtimeRef")
     private var age: Int?
     
+    enum Gender: Int, DefaultsSerializable {
+        case man, woman
+    }
+    
+    @SwiftyDefaults(key: "at_gender")
+    private var gender: Gender?
+    
     override func setupViews() {
         super.setupViews()
         
-        self.age = nil
-        print(self.age ??? "nil")
-        self.age = 10
-        print(self.age ??? "nil")
+//        self.age = nil
+//        print(self.age ??? "nil")
+//        self.age = 10
+//        print(self.age ??? "nil")
         
-        observeDeinit(for: self) {
-            print("observeDeinit1 for")
-        }
-        observeDeinit(for: self) {
-            print("observeDeinit2 for")
-        }
+        print("gender", gender ??? "nil")
+//        self.gender = .man
+//        print("gender", gender ??? "nil")
+        
+//        observeDeinit(for: self) {
+//            print("observeDeinit1 for")
+//        }
+//        observeDeinit(for: self) {
+//            print("observeDeinit2 for")
+//        }
 //        let stu = ZStudent()
 //
 //        let jsonStr = stu.toJSON().jsonString()

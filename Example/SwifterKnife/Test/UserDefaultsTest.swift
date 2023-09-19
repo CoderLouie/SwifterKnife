@@ -8,10 +8,10 @@
 
 import Foundation
 
-fileprivate enum Gender: String, Codable {
+enum Gender: String, DefaultsSerializable {
     case man, woman
 }
-fileprivate struct Tag: RawRepresentable, Codable {
+struct Tag: RawRepresentable, DefaultsSerializable {
     init(rawValue: Int) {
         self.rawValue = rawValue
     }

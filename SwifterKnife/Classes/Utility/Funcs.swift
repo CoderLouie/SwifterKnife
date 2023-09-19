@@ -32,13 +32,29 @@ public struct ATDefaults<T> {
                optional.at_isNil {
                 UserDefaults.standard.removeObject(forKey: key)
             } else {
-                UserDefaults.standard.set(newValue, forKey: key)
+                Self.save(key: key, value: newValue, userDefaults: .standard)
             }
         }
     }
     public init(defaultValue: T, key: String) {
-        rawValue = UserDefaults.standard.value(forKey: key) as? T ?? defaultValue
+        rawValue = Self.load(key: key, userDefaults: .standard) ?? defaultValue
         self.key = key
+    }
+    
+    fileprivate static func load(key: String, userDefaults: UserDefaults) -> T? {
+        userDefaults.value(forKey: key) as? T
+    }
+    fileprivate static func save(key: String, value: T, userDefaults: UserDefaults) {
+        userDefaults.set(value, forKey: key)
+    }
+    fileprivate static func load(key: String, userDefaults: UserDefaults) -> T? where T: RawRepresentable {
+        if let rawVal = userDefaults.value(forKey: key) as? T.RawValue {
+            return T(rawValue: rawVal)
+        }
+        return nil
+    }
+    fileprivate static func save(key: String, value: T, userDefaults: UserDefaults) where T: RawRepresentable  {
+        userDefaults.set(value.rawValue, forKey: key)
     }
 }
 extension ATDefaults where T: ExpressibleByNilLiteral {
@@ -46,6 +62,17 @@ extension ATDefaults where T: ExpressibleByNilLiteral {
         self.init(defaultValue: nil, key: key)
     }
 }
+//extension ATDefaults where T: RawRepresentable {
+//    fileprivate static func load(key: String, userDefaults: UserDefaults) -> T? {
+//        if let rawVal = UserDefaults.standard.value(forKey: key) as? T.RawValue {
+//            return T(rawValue: rawVal)
+//        }
+//        return nil
+//    }
+//    fileprivate static func save(key: String, value: T, userDefaults: UserDefaults) {
+//        userDefaults.set(value.rawValue, forKey: key)
+//    }
+//}
 
 // https://github.com/vincent-pradeilles/swift-tips
 public func resultOf<T>(_ code: () -> T) -> T {
