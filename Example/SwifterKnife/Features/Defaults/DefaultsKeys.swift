@@ -35,7 +35,7 @@ public struct DefaultsKeys: DefaultsKeyStore {
 
 /// Specialize with value type
 /// and pass key name to the initializer to create a key.
-public struct DefaultsKey<ValueType: DefaultsSerializable> where ValueType.T == ValueType {
+public struct DefaultsKey<ValueType: DefaultsSerializable> {
 
     public let _key: String
     public let defaultValue: ValueType.T
@@ -46,7 +46,7 @@ public struct DefaultsKey<ValueType: DefaultsSerializable> where ValueType.T == 
     }
 }
 
-public extension DefaultsKey where ValueType.T == ValueType, ValueType: ExpressibleByNilLiteral, ValueType: DefaultsSerializable {
+public extension DefaultsKey where ValueType: DefaultsSerializable, ValueType.T == ValueType, ValueType: ExpressibleByNilLiteral {
 
     init(_ key: String) {
         self.init(key, defaultValue: nil)

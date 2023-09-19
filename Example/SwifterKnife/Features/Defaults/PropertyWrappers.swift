@@ -43,7 +43,7 @@ public struct SwiftyDefaults<T: DefaultsSerializable> where T.T == T {
         _value = T._defaults.get(key: key, userDefaults: .standard) ?? value
     }
 }
-extension SwiftyDefaults where T: OptionalType, T.Wrapped: DefaultsSerializable, T: ExpressibleByNilLiteral {
+extension SwiftyDefaults where T.T == T, T: OptionalType, T.Wrapped: DefaultsSerializable, T: ExpressibleByNilLiteral {
     public init(key: String) {
         self.init(key: key, defaultValue: nil)
     }
