@@ -129,6 +129,22 @@ extension Timer {
     }
 }
 
+extension Timer {
+    @discardableResult
+    public func at_pause() -> Bool {
+        guard isValid else { return false }
+        fireDate = .distantFuture
+        return true
+    }
+    
+    @discardableResult
+    public func at_resume(after seconds: TimeInterval = 0) -> Bool {
+        guard isValid else { return false }
+        fireDate = Date(timeIntervalSinceNow: seconds)
+        return true
+    }
+}
+
 // MARK: - Time extensions
 
 extension TimeInterval {
@@ -148,3 +164,4 @@ extension TimeInterval {
     public var day: TimeInterval { return self * 3600 * 24 }
     public var days: TimeInterval { return self * 3600 * 24 }
 }
+ 

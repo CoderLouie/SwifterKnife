@@ -42,10 +42,7 @@ public func + (lhs: NSAttributedString, rhs: String) -> NSAttributedString {
 public extension String {
     var build: NSMutableAttributedString {
         NSMutableAttributedString(string: self)
-    }
-    var rich: Attributes {
-        .init(self)
-    }
+    } 
     func build(with attributes: Attributes) -> NSAttributedString {
         NSAttributedString(string: self, attributes: attributes.dictionary)
     }
@@ -58,17 +55,9 @@ public extension String {
 
 public final class Attributes {
     public private(set) var dictionary: [NSAttributedString.Key: Any]
-     
-    private let target: String
     
     public init() {
         dictionary = [:]
-        target = ""
-    }
-    
-    fileprivate init(_ target: String) {
-        dictionary = [:]
-        self.target = target
     }
         
     public static var one: Attributes {
@@ -76,17 +65,13 @@ public final class Attributes {
     }
     
     public var copied: Attributes {
-        let copied = Attributes(target)
+        let copied = Attributes()
         copied.dictionary = dictionary
         return copied
     }
     
     public func apply(_ string: String) -> NSAttributedString {
         NSAttributedString(string: string, attributes: dictionary)
-    }
-    
-    public var build: NSAttributedString {
-        NSAttributedString(string: target, attributes: dictionary)
     }
 }
 

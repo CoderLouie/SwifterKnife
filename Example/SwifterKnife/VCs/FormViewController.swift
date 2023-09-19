@@ -91,7 +91,7 @@ class FormViewController: BaseViewController {
         }
         
         let val: NSAttributedString = attributed {
-            "Hello".rich.fgColor(.red).font(.bold(20)).build
+            "Hello".build(with: .one.fgColor(.red).font(.bold(20)))
             "\n"
             "word".build
         }

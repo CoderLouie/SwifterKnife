@@ -123,6 +123,21 @@ public enum App {
         return nil
     }
     
+    public static var iconPaths: [String]? {
+        guard let info = Bundle.main.infoDictionary,
+              let icons = info["CFBundleIcons"] as? [String: Any],
+              let primaryIcon = icons["CFBundlePrimaryIcon"] as? [String: Any],
+              let iconFiles = primaryIcon["CFBundleIconFiles"] as? [String],
+              !iconFiles.isEmpty else {
+            return nil
+        }
+        return iconFiles
+    }
+    public static var icon: UIImage? {
+        guard let path = iconPaths?.first else { return nil }
+        return UIImage(named: path)
+    }
+    
     private static func string(for key: String) -> String? {
         guard let value = Bundle.main.infoDictionary?[key] as? String else {
                 return nil

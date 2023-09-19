@@ -32,8 +32,17 @@ fileprivate class ZStudent: ZPerson {
 
 class CodableVC: BaseViewController {
     
+    
+    @ATDefaults(key: "iso_date_runtimeRef")
+    private var age: Int?
+    
     override func setupViews() {
         super.setupViews()
+        
+        self.age = nil
+        print(self.age ??? "nil")
+        self.age = 10
+        print(self.age ??? "nil")
         
         observeDeinit(for: self) {
             print("observeDeinit1 for")
