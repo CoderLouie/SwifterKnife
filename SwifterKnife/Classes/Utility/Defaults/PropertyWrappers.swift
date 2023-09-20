@@ -56,16 +56,16 @@ public struct SwiftyCachedDefaults<T: DefaultsSerializable> where T.T == T {
     }
     public init(keyPath: KeyPath<DefaultsKeys, DefaultsKey<T>>) {
         let key = Defaults.keyStore[keyPath: keyPath]
-        self.init(key: key._key, defaultValue: key.defaultValue)
+        self.init(wrappedValue: key.defaultValue, key: key._key)
     }
-    public init(key: String, defaultValue value: T) {
+    public init(wrappedValue value: T, key: String) {
         _key = key
         _value = Defaults[key] ?? value
     }
 }
 extension SwiftyCachedDefaults where T.T == T, T: OptionalType, T.Wrapped: DefaultsSerializable {
     public init(key: String) {
-        self.init(key: key, defaultValue: nil)
+        self.init(wrappedValue: nil, key: key)
     }
 }
 #endif

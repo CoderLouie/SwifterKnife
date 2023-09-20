@@ -33,7 +33,7 @@ fileprivate class ZStudent: ZPerson {
 class CodableVC: BaseViewController {
     
     
-    @ATDefaults(key: "iso_date_runtimeRef")
+    @SwiftyCachedDefaults(key: "iso_date_runtimeRef")
     private var age: Int?
     
     enum Gender: Int, DefaultsSerializable {

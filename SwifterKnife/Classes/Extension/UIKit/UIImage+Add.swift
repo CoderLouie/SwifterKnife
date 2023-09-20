@@ -109,7 +109,7 @@ public extension UIImage {
                 rect.origin = CGPoint(x: center.x - size.width * 0.5, y: center.y - size.height * 0.5)
             }
             rect.size = size
-            return .zero
+            return rect
         }()
         draw(in: drawRect)
         return UIGraphicsGetImageFromCurrentImageContext()

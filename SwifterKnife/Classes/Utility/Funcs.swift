@@ -5,74 +5,7 @@
 //  Created by liyang on 2023/2/28.
 //
 
-import Foundation
-
-fileprivate protocol AnyOptional {
-    var at_isNil: Bool { get }
-}
-extension Optional: AnyOptional {
-    var at_isNil: Bool {
-        switch self {
-        case .none: return true
-        case .some: return false
-        }
-    }
-}
-
-@propertyWrapper
-public struct ATDefaults<T> {
-    private var rawValue: T
-    private let key: String
-    
-    public var wrappedValue: T {
-        get { rawValue }
-        set {
-            rawValue = newValue
-            if let optional = newValue as? AnyOptional,
-               optional.at_isNil {
-                UserDefaults.standard.removeObject(forKey: key)
-            } else {
-                Self.save(key: key, value: newValue, userDefaults: .standard)
-            }
-        }
-    }
-    public init(defaultValue: T, key: String) {
-        rawValue = Self.load(key: key, userDefaults: .standard) ?? defaultValue
-        self.key = key
-    }
-    
-    fileprivate static func load(key: String, userDefaults: UserDefaults) -> T? {
-        userDefaults.value(forKey: key) as? T
-    }
-    fileprivate static func save(key: String, value: T, userDefaults: UserDefaults) {
-        userDefaults.set(value, forKey: key)
-    }
-    fileprivate static func load(key: String, userDefaults: UserDefaults) -> T? where T: RawRepresentable {
-        if let rawVal = userDefaults.value(forKey: key) as? T.RawValue {
-            return T(rawValue: rawVal)
-        }
-        return nil
-    }
-    fileprivate static func save(key: String, value: T, userDefaults: UserDefaults) where T: RawRepresentable  {
-        userDefaults.set(value.rawValue, forKey: key)
-    }
-}
-extension ATDefaults where T: ExpressibleByNilLiteral {
-    public init(key: String) {
-        self.init(defaultValue: nil, key: key)
-    }
-}
-//extension ATDefaults where T: RawRepresentable {
-//    fileprivate static func load(key: String, userDefaults: UserDefaults) -> T? {
-//        if let rawVal = UserDefaults.standard.value(forKey: key) as? T.RawValue {
-//            return T(rawValue: rawVal)
-//        }
-//        return nil
-//    }
-//    fileprivate static func save(key: String, value: T, userDefaults: UserDefaults) {
-//        userDefaults.set(value.rawValue, forKey: key)
-//    }
-//}
+import Foundation  
 
 // https://github.com/vincent-pradeilles/swift-tips
 public func resultOf<T>(_ code: () -> T) -> T {

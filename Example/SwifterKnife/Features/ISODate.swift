@@ -11,14 +11,14 @@ import SwifterKnife
 
 public enum ISODate {
     
-    @ATDefaults(defaultValue: 0, key: "iso_date_runtimeRef")
-    private static var runtime: TimeInterval
+    @SwiftyCachedDefaults(key: "iso_date_runtimeRef")
+    private static var runtime: TimeInterval = 0
     
-    @ATDefaults(defaultValue: 0, key: "iso_date_serverTimeRef")
-    private static var servertime: TimeInterval
+    @SwiftyCachedDefaults(key: "iso_date_serverTimeRef")
+    private static var servertime: TimeInterval = 0
     
-    @ATDefaults(defaultValue: 0, key: "iso_date_systemUptimeRef")
-    private static var systemUptime: TimeInterval
+    @SwiftyCachedDefaults(key: "iso_date_systemUptimeRef")
+    private static var systemUptime: TimeInterval = 0
     
     public static var isValid: Bool {
         let uptimeDelta = ProcessInfo.processInfo.systemUptime - systemUptime
