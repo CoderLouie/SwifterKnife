@@ -29,6 +29,25 @@ fileprivate class ZStudent: ZPerson {
     }
 }
 
+class CheckoutBox: NewButton {
+    override func setup() {
+        super.setup()
+        setImage(UIImage(named: "checkbox_sub_off"), for: .normal)
+        setImage(UIImage(named: "checkbox_sub_on"), for: .selected)
+        backgroundColor = .orange
+        imagePosition = .right
+        spacing = 4
+        setTitleColor(.black, for: .normal)
+        contentEdgeInsets = UIEdgeInsets(horizontal: 10, vertical: 6)
+        addTarget(self, action: #selector(onClick), for: .touchUpInside)
+    }
+    @objc private func onClick() {
+        isSelected.toggle()
+    }
+    deinit {
+        print("checkbox with", title(for: .normal) ?? "empty title", "deinit")
+    }
+}
 
 class CodableVC: BaseViewController {
     
@@ -43,8 +62,8 @@ class CodableVC: BaseViewController {
     @SwiftyDefaults(key: "at_gender")
     private var gender: Gender?
     
-    override func setupViews() {
-        super.setupViews()
+    private func test_codable() {
+        
         let a = self.gender
 //        self.age = nil
 //        print(self.age ??? "nil")
@@ -65,5 +84,30 @@ class CodableVC: BaseViewController {
 //
 //        let jsonStr = stu.toJSON().jsonString()
 //        print(jsonStr ?? "nil")
+    }
+    private let group1 = "group1"
+    override func setupViews() {
+        super.setupViews()
+        
+        UIStackView.vertical(spacing: 15, alignment: .trailing) {
+            ["Apple", "Banana", "Origin", "Fruit"].map { title in
+                CheckoutBox().then {
+                    $0.setTitle(title, for: .normal)
+                    RatioGroup.addControl($0, for: group1)
+                }
+            }
+        }.do {
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let button = RatioGroup.selectedControl(for: group1) as? UIButton else {
+            print("selected nil")
+            return
+        }
+        print("selected", button.title(for: .normal) ?? "empty title")
     }
 }
