@@ -39,11 +39,11 @@ class CheckoutBox: NewButton {
         spacing = 4
         setTitleColor(.black, for: .normal)
         contentEdgeInsets = UIEdgeInsets(horizontal: 10, vertical: 6)
-        addTarget(self, action: #selector(onClick), for: .touchUpInside)
+//        addTarget(self, action: #selector(onClick), for: .touchUpInside)
     }
-    @objc private func onClick() {
-        isSelected.toggle()
-    }
+//    @objc private func onClick() {
+//        isSelected.toggle()
+//    }
     deinit {
         print("checkbox with", title(for: .normal) ?? "empty title", "deinit")
     }
@@ -93,7 +93,7 @@ class CodableVC: BaseViewController {
             ["Apple", "Banana", "Origin", "Fruit"].map { title in
                 CheckoutBox().then {
                     $0.setTitle(title, for: .normal)
-                    RatioGroup.addControl($0, for: group1)
+                    RadioGroup.addControl($0)
                 }
             }
         }.do {
@@ -104,7 +104,7 @@ class CodableVC: BaseViewController {
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let button = RatioGroup.selectedControl(for: group1) as? UIButton else {
+        guard let button = RadioGroup.selectedControl as? UIButton else {
             print("selected nil")
             return
         }
