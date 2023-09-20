@@ -67,7 +67,7 @@ public struct DefaultsAdapter<KeyStore: DefaultsKeyStore> {
 }
 
 extension DefaultsAdapter {
-    public subscript<T: DefaultsSerializable>(key key: DefaultsKey<T>) -> T.T where T.T == T {
+    public subscript<T: DefaultsSerializable>(key key: DefaultsKey<T>) -> T where T.T == T {
         get {
             return defaults[key]
         }
@@ -76,7 +76,7 @@ extension DefaultsAdapter {
         }
     }
 
-    public subscript<T: DefaultsSerializable>(keyPath: KeyPath<KeyStore, DefaultsKey<T>>) -> T.T where T.T == T {
+    public subscript<T: DefaultsSerializable>(keyPath: KeyPath<KeyStore, DefaultsKey<T>>) -> T where T.T == T {
         get {
             return defaults[keyStore[keyPath: keyPath]]
         }
@@ -85,7 +85,7 @@ extension DefaultsAdapter {
         }
     }
 
-    public subscript<T: DefaultsSerializable>(dynamicMember keyPath: KeyPath<KeyStore, DefaultsKey<T>>) -> T.T where T.T == T {
+    public subscript<T: DefaultsSerializable>(dynamicMember keyPath: KeyPath<KeyStore, DefaultsKey<T>>) -> T where T.T == T {
         get {
             return self[keyPath]
         }
@@ -93,11 +93,17 @@ extension DefaultsAdapter {
             self[keyPath] = newValue
         }
     }
+    public subscript<T: DefaultsSerializable>(key: String) -> T? where T.T == T {
+        get { return defaults[key] } 
+        nonmutating set {
+            defaults[key] = newValue
+        }
+    }
 }
 
 public extension UserDefaults {
 
-    subscript<T: DefaultsSerializable>(key: DefaultsKey<T>) -> T.T where T.T == T {
+    subscript<T: DefaultsSerializable>(key: DefaultsKey<T>) -> T where T.T == T {
         get {
             if let value = T._defaults.get(key: key._key, userDefaults: self) {
                 return value
@@ -107,6 +113,14 @@ public extension UserDefaults {
         }
         set {
             T._defaults.save(key: key._key, value: newValue, userDefaults: self)
+        }
+    }
+    subscript<T: DefaultsSerializable>(key: String) -> T? where T.T == T {
+        get {
+            T._defaults.get(key: key, userDefaults: self)
+        }
+        set {
+            T._defaults.save(key: key, value: newValue, userDefaults: self)
         }
     }
 }

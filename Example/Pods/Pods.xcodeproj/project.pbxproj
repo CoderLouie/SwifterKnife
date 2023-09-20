@@ -290,6 +290,12 @@
 		B3BC0707606EB261FB6AA761951C6B0A /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5990111B6A296CEE06FFA0F66530999D /* ConstraintAttributes.swift */; };
 		B4C54C45B887AFFE5DCC3FDA18E17901 /* DefaultAnimationCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5FF1F3ACFA3AC4881020ABF53C7FF6 /* DefaultAnimationCache.swift */; };
 		B4FE80C58C3FD1D517FD74E8BF8C5C60 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42225DD181F0180D5837A7F9043767D7 /* Queue.swift */; };
+		B6112A462ABA95B000C44AD2 /* DefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A402ABA95AF00C44AD2 /* DefaultsKeys.swift */; };
+		B6112A472ABA95B000C44AD2 /* DefaultsBridges.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A412ABA95AF00C44AD2 /* DefaultsBridges.swift */; };
+		B6112A482ABA95B000C44AD2 /* DefaultsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A422ABA95AF00C44AD2 /* DefaultsAdapter.swift */; };
+		B6112A492ABA95B000C44AD2 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A432ABA95AF00C44AD2 /* PropertyWrappers.swift */; };
+		B6112A4A2ABA95B000C44AD2 /* OptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A442ABA95AF00C44AD2 /* OptionalType.swift */; };
+		B6112A4B2ABA95B000C44AD2 /* DefaultsSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */; };
 		B620B0972A8F2212007243DC /* JSONStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B0962A8F2212007243DC /* JSONStringConvertible.swift */; };
 		B68A138373CD14D346C4DFF23D063A77 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56704CF70A00F501482C6EEC5A3EF8F /* Foundation.framework */; };
 		B7D40C4FD026DB9606B03D236DD7659F /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF09A7F0AEBF3CF429B795E4C72F650 /* Limiter.swift */; };
@@ -734,6 +740,12 @@
 		B5730D016CB16B2AB4AD338C78999AC2 /* GradientFill.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GradientFill.swift; path = Sources/Private/Model/ShapeItems/GradientFill.swift; sourceTree = "<group>"; };
 		B5F8A51D5400CB9A58CDA50C3732E7AC /* NSObject+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSObject+Add.swift"; sourceTree = "<group>"; };
 		B601D5B1FB6BA38A202C443BF4CBF644 /* InvertedMatteLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InvertedMatteLayer.swift; path = Sources/Private/MainThread/LayerContainers/Utility/InvertedMatteLayer.swift; sourceTree = "<group>"; };
+		B6112A402ABA95AF00C44AD2 /* DefaultsKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsKeys.swift; sourceTree = "<group>"; };
+		B6112A412ABA95AF00C44AD2 /* DefaultsBridges.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsBridges.swift; sourceTree = "<group>"; };
+		B6112A422ABA95AF00C44AD2 /* DefaultsAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsAdapter.swift; sourceTree = "<group>"; };
+		B6112A432ABA95AF00C44AD2 /* PropertyWrappers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
+		B6112A442ABA95AF00C44AD2 /* OptionalType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalType.swift; sourceTree = "<group>"; };
+		B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsSerializable.swift; sourceTree = "<group>"; };
 		B620B0962A8F2212007243DC /* JSONStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStringConvertible.swift; sourceTree = "<group>"; };
 		B774B4FC03ABF3BF5A1EE2475A8161F3 /* Alamofire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.release.xcconfig; sourceTree = "<group>"; };
 		B7754AC5D29464E1D9F7763ABAA0D0C1 /* LayerFontProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayerFontProvider.swift; path = Sources/Private/MainThread/LayerContainers/Utility/LayerFontProvider.swift; sourceTree = "<group>"; };
@@ -1001,6 +1013,7 @@
 				495BF91A1983B98BE2B7DF2750A0892A /* SwiftyAdaptable.swift */,
 				5D91069A01D923231ADA695357531E29 /* SwiftyJSON.swift */,
 				B439F0E29C5A0C2BF2B732B2125B1713 /* SwiftyTimer.swift */,
+				B6112A3F2ABA95AF00C44AD2 /* Defaults */,
 				6D4CBBEE02992030D6D07E43F4169728 /* Builtlns */,
 				83DD5942A271DFEF9F1EB25E99C99141 /* Localize */,
 				A7F17240857B49EC24BE3EE7153C7F3E /* Promise */,
@@ -1269,6 +1282,19 @@
 				03AD71742EECAD3764242949894D7FB2 /* Support Files */,
 			);
 			path = Alamofire;
+			sourceTree = "<group>";
+		};
+		B6112A3F2ABA95AF00C44AD2 /* Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				B6112A402ABA95AF00C44AD2 /* DefaultsKeys.swift */,
+				B6112A412ABA95AF00C44AD2 /* DefaultsBridges.swift */,
+				B6112A422ABA95AF00C44AD2 /* DefaultsAdapter.swift */,
+				B6112A432ABA95AF00C44AD2 /* PropertyWrappers.swift */,
+				B6112A442ABA95AF00C44AD2 /* OptionalType.swift */,
+				B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */,
+			);
+			path = Defaults;
 			sourceTree = "<group>";
 		};
 		B94D7768568A9992200DB461E8CF687F /* Frameworks */ = {
@@ -2191,6 +2217,7 @@
 				A1F81BF7A70A1183D78F6A4ADAE0A807 /* BinaryFloatingPoint+Add.swift in Sources */,
 				D99671213EE575DB259FBEB9C217B7CA /* Bool+Add.swift in Sources */,
 				1EEBE0B2FA93C8FCEF2986F16EC64CBE /* CAAnimation+Add.swift in Sources */,
+				B6112A472ABA95B000C44AD2 /* DefaultsBridges.swift in Sources */,
 				E56B2BBF372DBD075EE9DE551A3F81B5 /* CALayer+Add.swift in Sources */,
 				AF7DFC06E6F02F0D2898ACE6CD068943 /* CarouselView.swift in Sources */,
 				21E5F0D48616EC7B4559F1E3952EEDF8 /* CATransform3D+Add.swift in Sources */,
@@ -2202,10 +2229,12 @@
 				E745B18ECF1DBB6442B94B068D3E044A /* Comparable+Add.swift in Sources */,
 				065A3A372ABD4146C42782C8598EECAA /* Console.swift in Sources */,
 				D594DF14D4B97E0D743D9485EDF5615F /* CustomTextView.swift in Sources */,
+				B6112A4B2ABA95B000C44AD2 /* DefaultsSerializable.swift in Sources */,
 				74C9E40D9F97014E5BD4C5E19E1D3836 /* Data+Add.swift in Sources */,
 				3FB74816E7FBF82F107DFB86826E1BB7 /* DataCodable.swift in Sources */,
 				F3FFA35176AACCBEAD6CD12025BCAB35 /* Date+Add.swift in Sources */,
 				282EF1C411F54431F5223B13DCCF7A85 /* Deque.swift in Sources */,
+				B6112A462ABA95B000C44AD2 /* DefaultsKeys.swift in Sources */,
 				341A32894D8FD03B4EEBF4029A989515 /* Dictionary+Add.swift in Sources */,
 				B620B0972A8F2212007243DC /* JSONStringConvertible.swift in Sources */,
 				1EAA6B9010CA34B9A91FF0736076C957 /* DispatchQueue+Add.swift in Sources */,
@@ -2223,6 +2252,7 @@
 				955A16218E670550ED0987CEC2F4DAFD /* LocalizedKeyRepresentable.swift in Sources */,
 				0677041AC6B7E69DCED46485A3DF45C1 /* MutableCollection+Add.swift in Sources */,
 				D070E664C1565A98E3B2CBB0D329EE6F /* NSObject+Add.swift in Sources */,
+				B6112A492ABA95B000C44AD2 /* PropertyWrappers.swift in Sources */,
 				A703A35B16B8AD0E9F87FF9F228578A9 /* Optional+Add.swift in Sources */,
 				70C393028B47A2222C5C9F77FD1D4255 /* PaddingButton.swift in Sources */,
 				0969C92DB99714EF1AF584A960AD0F96 /* PaddingLabel.swift in Sources */,
@@ -2242,9 +2272,11 @@
 				F046E758149A3C9A02749CD98A104BFB /* ScrollStackView.swift in Sources */,
 				2578E10087BA99728E754B75423B27FC /* SeparatorView.swift in Sources */,
 				B2C8E3F37FE116B9195CA9F1E6734815 /* Sequence+Add.swift in Sources */,
+				B6112A482ABA95B000C44AD2 /* DefaultsAdapter.swift in Sources */,
 				5BC3E88E6C6EB589D12A12558969E5F6 /* SignedInteger+Add.swift in Sources */,
 				F08E09F60D32B715F7FE997E86C1A218 /* Stack.swift in Sources */,
 				36BAF5D269FFDE1F34A50A4AC176DDCB /* String+Add.swift in Sources */,
+				B6112A4A2ABA95B000C44AD2 /* OptionalType.swift in Sources */,
 				2D03B7AB0BE2BC286B65A3998E7D01A1 /* SwifterKnife-dummy.m in Sources */,
 				020F24BF005C3E083680984ED4828BB4 /* SwiftyAdaptable.swift in Sources */,
 				D01D537FDEA441F9B4D1A923B742B8F6 /* SwiftyJSON.swift in Sources */,

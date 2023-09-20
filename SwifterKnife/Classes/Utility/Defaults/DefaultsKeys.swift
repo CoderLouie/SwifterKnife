@@ -35,18 +35,18 @@ public struct DefaultsKeys: DefaultsKeyStore {
 
 /// Specialize with value type
 /// and pass key name to the initializer to create a key.
-public struct DefaultsKey<ValueType: DefaultsSerializable> {
+public struct DefaultsKey<Value: DefaultsSerializable> where Value.T == Value {
 
     public let _key: String
-    public let defaultValue: ValueType.T
+    public let defaultValue: Value
 
-    public init(_ key: String, defaultValue: ValueType.T) {
+    public init(_ key: String, defaultValue: Value) {
         self._key = key
         self.defaultValue = defaultValue
     }
 }
 
-public extension DefaultsKey where ValueType: DefaultsSerializable, ValueType.T == ValueType, ValueType: ExpressibleByNilLiteral {
+public extension DefaultsKey where Value.T == Value, Value: OptionalType, Value.Wrapped: DefaultsSerializable {
 
     init(_ key: String) {
         self.init(key, defaultValue: nil)

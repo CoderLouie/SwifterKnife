@@ -45,7 +45,7 @@ class CodableVC: BaseViewController {
     
     override func setupViews() {
         super.setupViews()
-        
+        let a = self.gender
 //        self.age = nil
 //        print(self.age ??? "nil")
 //        self.age = 10

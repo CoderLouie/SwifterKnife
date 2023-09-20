@@ -48,9 +48,13 @@ fileprivate extension DefaultsKeys {
 }
 
 private func peekus() {
+    // DefaultsOptionalBridge<DefaultsBoolBridge>.T
     let r = Defaults[\.reviewed]
+    // Int
     let n = Defaults[\.reviewCount]
+    /// DefaultsOptionalBridge<DefaultsRawRepresentableBridge<Gender>>.T
     let g = Defaults[\.gender]
+    // Tag
     let t = Defaults[\.tag]
     let nilt = Defaults[\.niltag]
     let gs = Defaults[\.genders]
@@ -61,13 +65,13 @@ private func peekus() {
 func userdefault_test_entry() {
     
     peekus()
-    Defaults[\.reviewed] = true
-    Defaults[\.reviewCount] = 5
-    Defaults[\.gender] = .man
-    Defaults[\.tag] = Tag(20)
-    Defaults[\.niltag] = Tag(8)
-    Defaults[\.genders] = [.woman, .man]
-    Defaults[\.nilgenders] = [.man]
-    
-    peekus()
+//    Defaults[\.reviewed] = true
+//    Defaults[\.reviewCount] = 5
+//    Defaults[\.gender] = .man
+//    Defaults[\.tag] = Tag(20)
+//    Defaults[\.niltag] = Tag(8)
+//    Defaults[\.genders] = [.woman, .man]
+//    Defaults[\.nilgenders] = [.man]
+//    
+//    peekus()
 }
