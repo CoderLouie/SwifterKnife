@@ -191,21 +191,30 @@ public extension UIView {
                 view1?.center.y = center.y
                 view2?.center.y = center.y
             }
-            
-            let x = { () -> CGFloat in
-                let delta = rect.width - contentSize.width
-                switch horizontalAlignment {
-                case .left, .leading: return inset.left
-                case .right, .trailing: return delta - inset.right
-                default: return max(delta * 0.5, inset.left)
+            if case .fill = horizontalAlignment {
+                if pos == .left {
+                    view1?.frame.origin.x = inset.left
+                    view2?.frame.origin.x = rect.width - size2.width - inset.right
+                } else {
+                    view2?.frame.origin.x = inset.left
+                    view1?.frame.origin.x = rect.width - size1.width - inset.right
                 }
-            }()
-            if pos == .left {
-                view1?.frame.origin.x = x
-                view2?.frame.origin.x = x + size1.width + margin
             } else {
-                view2?.frame.origin.x = x
-                view1?.frame.origin.x = x + size2.width + margin
+                let x = { () -> CGFloat in
+                    let delta = rect.width - contentSize.width
+                    switch horizontalAlignment {
+                    case .left, .leading: return inset.left
+                    case .right, .trailing: return delta - inset.right
+                    default: return max(delta * 0.5, inset.left)
+                    }
+                }()
+                if pos == .left {
+                    view1?.frame.origin.x = x
+                    view2?.frame.origin.x = x + size1.width + margin
+                } else {
+                    view2?.frame.origin.x = x
+                    view1?.frame.origin.x = x + size2.width + margin
+                }
             }
         } else {
             switch horizontalAlignment {
@@ -220,20 +229,30 @@ public extension UIView {
                 view1?.center.x = center.x
                 view2?.center.x = center.x
             }
-            let y = { () -> CGFloat in
-                let delta = rect.height - contentSize.height
-                switch verticalAlignment {
-                case .top: return inset.top
-                case .bottom: return delta - inset.bottom
-                default: return max(delta * 0.5, inset.top)
+            if case .fill = verticalAlignment {
+                if pos == .top {
+                    view1?.frame.origin.y = inset.top
+                    view2?.frame.origin.y = rect.height - size2.height - inset.bottom
+                } else {
+                    view2?.frame.origin.y = inset.top
+                    view1?.frame.origin.y = rect.height - size1.height - inset.bottom
                 }
-            }()
-            if pos == .top {
-                view1?.frame.origin.y = y
-                view2?.frame.origin.y = y + size1.height + margin
             } else {
-                view2?.frame.origin.y = y
-                view1?.frame.origin.y = y + size2.height + margin
+                let y = { () -> CGFloat in
+                    let delta = rect.height - contentSize.height
+                    switch verticalAlignment {
+                    case .top: return inset.top
+                    case .bottom: return delta - inset.bottom
+                    default: return max(delta * 0.5, inset.top)
+                    }
+                }()
+                if pos == .top {
+                    view1?.frame.origin.y = y
+                    view2?.frame.origin.y = y + size1.height + margin
+                } else {
+                    view2?.frame.origin.y = y
+                    view1?.frame.origin.y = y + size2.height + margin
+                }
             }
         }
     }

@@ -16,9 +16,7 @@ fileprivate final class DeinitObserver {
         onDeinit.append(closure)
     }
     deinit {
-        for c in onDeinit {
-            c()
-        }
+        onDeinit.forEach { $0() }
     }
     init() { }
 }

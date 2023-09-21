@@ -296,6 +296,7 @@
 		B6112A492ABA95B000C44AD2 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A432ABA95AF00C44AD2 /* PropertyWrappers.swift */; };
 		B6112A4A2ABA95B000C44AD2 /* OptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A442ABA95AF00C44AD2 /* OptionalType.swift */; };
 		B6112A4B2ABA95B000C44AD2 /* DefaultsSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */; };
+		B6112A502ABBDCD900C44AD2 /* DeinitObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A4F2ABBDCD900C44AD2 /* DeinitObserver.swift */; };
 		B620B0972A8F2212007243DC /* JSONStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B0962A8F2212007243DC /* JSONStringConvertible.swift */; };
 		B68A138373CD14D346C4DFF23D063A77 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56704CF70A00F501482C6EEC5A3EF8F /* Foundation.framework */; };
 		B7D40C4FD026DB9606B03D236DD7659F /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF09A7F0AEBF3CF429B795E4C72F650 /* Limiter.swift */; };
@@ -746,6 +747,7 @@
 		B6112A432ABA95AF00C44AD2 /* PropertyWrappers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		B6112A442ABA95AF00C44AD2 /* OptionalType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalType.swift; sourceTree = "<group>"; };
 		B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsSerializable.swift; sourceTree = "<group>"; };
+		B6112A4F2ABBDCD900C44AD2 /* DeinitObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObserver.swift; sourceTree = "<group>"; };
 		B620B0962A8F2212007243DC /* JSONStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStringConvertible.swift; sourceTree = "<group>"; };
 		B774B4FC03ABF3BF5A1EE2475A8161F3 /* Alamofire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.release.xcconfig; sourceTree = "<group>"; };
 		B7754AC5D29464E1D9F7763ABAA0D0C1 /* LayerFontProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayerFontProvider.swift; path = Sources/Private/MainThread/LayerContainers/Utility/LayerFontProvider.swift; sourceTree = "<group>"; };
@@ -1001,11 +1003,17 @@
 			children = (
 				CF340D0135A7B6DCE295F5628F78F10D /* App.swift */,
 				E34D886497389CD4E188373DACA9E3EE /* AttributedString.swift */,
+				6D4CBBEE02992030D6D07E43F4169728 /* Builtlns */,
 				E4E1B19E3FC80AF12C3EA2DAAEB16302 /* Console.swift */,
+				B6112A3F2ABA95AF00C44AD2 /* Defaults */,
+				B6112A4F2ABBDCD900C44AD2 /* DeinitObserver.swift */,
 				AB05ABF442FBEF4A39D92851F9AA4207 /* Funcs.swift */,
 				BB0CB2C49005753B597599B41D9D265C /* Haptic.swift */,
 				F75753E08B80B0A71D0E77247F931BE3 /* KeyboardObserver.swift */,
 				6EF09A7F0AEBF3CF429B795E4C72F650 /* Limiter.swift */,
+				83DD5942A271DFEF9F1EB25E99C99141 /* Localize */,
+				A7F17240857B49EC24BE3EE7153C7F3E /* Promise */,
+				A1ABC8231B08565BF1900E696B1429B7 /* Protocol */,
 				B4622065C18BEA8DC2EDE26B2A7A1113 /* Random.swift */,
 				164AFAF205302B317854A323A3B56486 /* Regex.swift */,
 				36AE0545660305808F55D46BD58178E0 /* SandBox.swift */,
@@ -1013,11 +1021,6 @@
 				495BF91A1983B98BE2B7DF2750A0892A /* SwiftyAdaptable.swift */,
 				5D91069A01D923231ADA695357531E29 /* SwiftyJSON.swift */,
 				B439F0E29C5A0C2BF2B732B2125B1713 /* SwiftyTimer.swift */,
-				B6112A3F2ABA95AF00C44AD2 /* Defaults */,
-				6D4CBBEE02992030D6D07E43F4169728 /* Builtlns */,
-				83DD5942A271DFEF9F1EB25E99C99141 /* Localize */,
-				A7F17240857B49EC24BE3EE7153C7F3E /* Promise */,
-				A1ABC8231B08565BF1900E696B1429B7 /* Protocol */,
 			);
 			name = Utility;
 			path = SwifterKnife/Classes/Utility;
@@ -2260,6 +2263,7 @@
 				E6D0B1959712EBC591DB4D244316038C /* Promise.swift in Sources */,
 				D769FB8A50DAB237237A9858C7964385 /* Promise+Extras.swift in Sources */,
 				B4FE80C58C3FD1D517FD74E8BF8C5C60 /* Queue.swift in Sources */,
+				B6112A502ABBDCD900C44AD2 /* DeinitObserver.swift in Sources */,
 				C713DC8DA67A7BD9254CDDF04018E041 /* Random.swift in Sources */,
 				926152B5ACD5D6887CD21F330BBFA847 /* Range+Add.swift in Sources */,
 				FD87058158341D8044E33D4D707B795B /* RangeReplaceableCollection+Add.swift in Sources */,

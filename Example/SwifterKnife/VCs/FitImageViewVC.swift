@@ -71,19 +71,23 @@ class FitImageViewVC: BaseViewController {
             }
         }
         newBtn = NewButton().then {
-            $0.addBorder(color: .orange, radius: 0, width: 1)
+//            $0.setTitle("3 day free trial then 28/year, cancel anytime", for: .normal)
+            $0.setTitle("3 day", for: .normal)
             $0.titleLabel?.font = .semibold(17).fit
-            $0.setTitle("3 day free trial then 28/year, cancel anytime", for: .normal)
+            $0.titleLabel?.addBorder(color: .orange, radius: 0, width: 1)
+//            $0.titleLabel?.numberOfLines = 0
+            
             $0.setImage(UIImage(named: "checkbox_sub_off"), for: .normal)
             $0.setImage(UIImage(named: "checkbox_sub_on"), for: .selected)
 //            $0.centerTextAndImage(imageAboveText: true, spacing: 10)
-            $0.titleLabel?.addBorder(color: .orange, radius: 0, width: 1)
-            $0.titleLabel?.numberOfLines = 0
+
             $0.imageView?.addBorder(color: .orange, radius: 0, width: 1)
-            $0.imagePosition = .right
+            $0.imagePosition = .top
+            
+            $0.addBorder(color: .orange, radius: 0, width: 1)
             $0.spacing = 10
-//            $0.contentVerticalAlignment = .top
-            $0.contentHorizontalAlignment = .center
+            $0.contentVerticalAlignment = .fill
+            $0.contentHorizontalAlignment = .fill
             $0.contentEdgeInsets = .inset(10)
             bgView.addSubview($0)
             $0.snp.makeConstraints { make in
@@ -92,7 +96,7 @@ class FitImageViewVC: BaseViewController {
                 make.width.equalTo(200)
 //                make.height.equalTo(40)
 //                make.width.equalTo(100)
-//                make.height.equalTo(100)
+                make.height.equalTo(100)
             }
         }
     }
