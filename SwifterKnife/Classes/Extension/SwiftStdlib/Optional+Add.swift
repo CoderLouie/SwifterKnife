@@ -47,11 +47,11 @@ public extension Optional {
         }
     }
     
-    static func ?<<(lhs: inout Optional, rhs: @autoclosure () -> Wrapped) -> Wrapped {
+    static func ?<<(lhs: inout Optional, rhs: @autoclosure () throws -> Wrapped) rethrows -> Wrapped {
         switch lhs {
         case let .some(value): return value
         case .none:
-            let value = rhs()
+            let value = try rhs()
             lhs = .some(value)
             return value
         }

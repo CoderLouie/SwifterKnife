@@ -37,8 +37,9 @@ class CheckoutBox: NewButton {
         backgroundColor = .orange
         imagePosition = .right
         spacing = 4
+        contentHorizontalAlignment = .fill
         setTitleColor(.black, for: .normal)
-        contentEdgeInsets = UIEdgeInsets(horizontal: 10, vertical: 6)
+        contentEdgeInsets = UIEdgeInsets(horizontal: 18, vertical: 10)
 //        addTarget(self, action: #selector(onClick), for: .touchUpInside)
     }
 //    @objc private func onClick() {
@@ -89,22 +90,23 @@ class CodableVC: BaseViewController {
     override func setupViews() {
         super.setupViews()
         
-        UIStackView.vertical(spacing: 15, alignment: .trailing) {
+        UIStackView.vertical(spacing: 15, alignment: .fill) {
             ["Apple", "Banana", "Origin", "Fruit"].map { title in
                 CheckoutBox().then {
                     $0.setTitle(title, for: .normal)
-                    RadioGroup.addControl($0)
+                    RadioGroup.shared.addControl($0)
                 }
             }
         }.do {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
+                make.width.equalTo(200)
             }
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let button = RadioGroup.selectedControl as? UIButton else {
+        guard let button = RadioGroup.shared.selectedControl as? UIButton else {
             print("selected nil")
             return
         }
