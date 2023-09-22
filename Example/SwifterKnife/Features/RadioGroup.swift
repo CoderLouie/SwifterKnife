@@ -68,7 +68,17 @@ public final class RadioGroup {
         }
     }
     
-    public func addControl(_ control: UIControl) {
+    @discardableResult
+    public func addControl(_ control: UIControl) -> Bool {
+        let success = observeDeinit(for: control, recepit: self) { [weak self] in
+            guard let this = self else { return }
+            this.refCount -= 1
+            if this.refCount == 0 {
+                RadioGroup.remove(this)
+            }
+        }
+        /// 防止对同一个control多次调用
+        if !success { return false }
         if autoSetControlsTag {
             control.tag = refCount
         }
@@ -83,13 +93,7 @@ public final class RadioGroup {
         DispatchQueue.main.async {
             control.addTarget(self, action: #selector(self.onControlTouchUpInside(_:)), for: .touchUpInside)
         }
-        observeDeinit(for: control) { [weak self] in
-            guard let this = self else { return }
-            this.refCount -= 1
-            if this.refCount == 0 {
-                RadioGroup.remove(this)
-            }
-        }
+        return true
     }
     @objc private func onControlTouchUpInside(_ sender: UIControl) {
         guard let control = selectedControl else {
@@ -113,7 +117,7 @@ public final class RadioGroup {
         sender.sendActions(for: .valueChanged)
     }
     deinit {
-        print("RadioGroup deinit")
+        print("RadioGroup with \(name.rawValue) deinit")
     }
 }
 //enum RadioGroup {

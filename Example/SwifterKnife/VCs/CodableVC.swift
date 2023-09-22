@@ -50,6 +50,13 @@ class CheckoutBox: NewButton {
     }
 }
 
+
+fileprivate extension RadioGroup.Name {
+    static var codable: Self {
+        .init(rawValue: "codable")
+    }
+}
+
 class CodableVC: BaseViewController {
     
     
@@ -86,6 +93,9 @@ class CodableVC: BaseViewController {
 //        let jsonStr = stu.toJSON().jsonString()
 //        print(jsonStr ?? "nil")
     }
+    private var radioGroup: RadioGroup {
+        RadioGroup[.codable]
+    }
     private let group1 = "group1"
     override func setupViews() {
         super.setupViews()
@@ -94,7 +104,9 @@ class CodableVC: BaseViewController {
             ["Apple", "Banana", "Origin", "Fruit"].map { title in
                 CheckoutBox().then {
                     $0.setTitle(title, for: .normal)
-                    RadioGroup.shared.addControl($0)
+                    let suc1 = radioGroup.addControl($0)
+                    let suc2 = radioGroup.addControl($0)
+                    print("addcontrol \(title)", suc1, suc2)
                 }
             }
         }.do {
@@ -106,10 +118,10 @@ class CodableVC: BaseViewController {
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let button = RadioGroup.shared.selectedControl as? UIButton else {
+        guard let button = radioGroup.selectedControl as? UIButton else {
             print("selected nil")
             return
         }
-        print("selected", button.title(for: .normal) ?? "empty title")
+        print("selected", button.title(for: .normal) ?? "empty title", button.tag)
     }
 }

@@ -12,6 +12,13 @@ public func resultOf<T>(_ code: () -> T) -> T {
     return code()
 }
 
+/*
+ var array: [Object] = []
+ array.removeAll(where: refPredicate(of: obj))
+ */
+public func refPredicate<T: AnyObject>(of obj: T) -> (T) -> Bool {
+    { $0 === obj }
+}
 
 @resultBuilder
 public enum ResultBuilder<T> {
