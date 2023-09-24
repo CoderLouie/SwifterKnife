@@ -692,7 +692,7 @@ public extension String {
     }
 }
 extension UIFont {
-    var singleLineHeight: CGFloat {
+    public var singleLineHeight: CGFloat {
         "Hello".aspectFitHeight(for: self,
                                 maxWidth: .greatestFiniteMagnitude)
     }

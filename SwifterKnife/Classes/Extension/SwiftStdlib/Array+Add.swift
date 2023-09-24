@@ -28,15 +28,6 @@ public extension Array {
 // MARK: - Methods
 
 public extension Array {
-
-    @discardableResult
-    mutating func tryAppend(_ element: Element?) -> Bool {
-        if let e = element {
-            append(e)
-            return true
-        }
-        return false
-    }
     
     /// Safely swap values at given index positions.
     ///

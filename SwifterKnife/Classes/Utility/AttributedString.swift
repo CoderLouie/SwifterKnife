@@ -7,6 +7,45 @@
 
 import Foundation
 
+public extension NSString { 
+    func allRange(of searchString: String) -> [NSRange] {
+        let length = self.length
+        guard length > 0 else { return [] }
+        var range = NSRange(location: 0, length: length)
+        var res: [NSRange] = []
+        while range.location != NSNotFound {
+            range = self.range(of: searchString, range: range)
+            if range.location != NSNotFound {
+                res.append(NSRange(location: range.location, length: range.length))
+                let total = range.location + range.length
+                range.location = total
+                range.length = length - total
+            }
+        }
+        return res
+    }
+}
+
+public extension NSAttributedString {
+    func aspectFitSize(with limitSize: CGSize) -> CGSize {
+        let rect = boundingRect(with: limitSize, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
+        let res = rect.size.adaptive(tramsform: \.pixCeil)
+        return res
+    }
+    func aspectFitSize(for maxWidth: CGFloat) -> CGSize {
+        aspectFitSize(with: CGSize(width: maxWidth, height: .greatestFiniteMagnitude))
+    }
+    func aspectFitHeight(for maxWidth: CGFloat) -> CGFloat {
+        aspectFitSize(for: maxWidth).height
+    }
+    func aspectFitWidth(for font: UIFont) -> CGFloat {
+        let size = CGSize(width: CGFloat.greatestFiniteMagnitude,
+                          height: CGFloat.greatestFiniteMagnitude)
+        return aspectFitSize(with: size).width
+    }
+    
+}
+
 // https://github.com/Nirma/Attributed.git
 
 public extension NSAttributedString {

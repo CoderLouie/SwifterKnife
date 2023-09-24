@@ -193,3 +193,25 @@ public func synchronizd<T>(_ lock: AnyObject, closure: () -> T) -> T {
     objc_sync_exit(lock)
     return result
 }
+
+
+//extension NSObject {
+//    @discardableResult
+//    public static func at_swizzleInstanceMethod(_ originalSelector: Selector, with swizzledSelector: Selector) -> Bool {
+//        guard let originalMethod = class_getInstanceMethod(self, originalSelector),
+//              let swizzledMethod = class_getInstanceMethod(self, swizzledSelector) else { return false }
+//        // swizzledMethod (用来替换原始方法)，有可能没在本类中实现，而是在其父类中实现，此时，就需要将其加入到本类中。
+//        let didAddMethod = class_addMethod(self, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))
+//        // 添加 originalSelector 对应的方法
+//        // 注意代码实现的效果是：originalSelector -> swizzledMethod
+//        // 若是方法已经存在，则 didAddMethod 为 NO
+//        if didAddMethod {
+//            // originalMethod 在上面添加成功了
+//            // 下面代码实现： swizzledSelector -> originalMethod
+//           class_replaceMethod(self, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+//        } else {
+//           method_exchangeImplementations(originalMethod, swizzledMethod)
+//        }
+//        return true
+//    }
+//}

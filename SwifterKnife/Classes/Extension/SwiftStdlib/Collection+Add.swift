@@ -47,7 +47,7 @@ public extension Collection {
         self[safe: indices]
     }
     subscript(safe indices: [Index]) -> [Element] {
-        var safeIndices = indices.filter { self.indices.contains($0) }
+        let safeIndices = indices.filter { self.indices.contains($0) }
         return self[safeIndices]
     }
     
@@ -202,5 +202,21 @@ public extension Collection {
             lefts -= 1
         }
         return result
+    }
+}
+
+extension Collection where Index == Int, Element: Collection, Element.Index == Int {
+    public subscript(_ indexPath: IndexPath) -> Element.Element {
+        return self[indexPath.section][indexPath.row]
+    }
+}
+
+extension MutableCollection where Index == Int, Element: MutableCollection, Element.Index == Int {
+    public subscript(_ indexPath: IndexPath) -> Element.Element {
+        get {
+            return self[indexPath.section][indexPath.row]
+        } set {
+            self[indexPath.section][indexPath.row] = newValue
+        }
     }
 }

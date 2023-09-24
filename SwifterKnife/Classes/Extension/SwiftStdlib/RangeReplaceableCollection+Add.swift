@@ -108,9 +108,11 @@ public extension RangeReplaceableCollection {
      Adds a new element at the end of the array, mutates the array in place
      - Parameter newElement: The optional element to append to the array
      */
-    mutating func appendIfNonNil(_ newElement: Element?) {
-        guard let newElement = newElement else { return }
+    @discardableResult
+    mutating func appendIfNonNil(_ newElement: Element?) -> Bool {
+        guard let newElement = newElement else { return false }
         self.append(newElement)
+        return true
     }
     
     /**
@@ -120,5 +122,39 @@ public extension RangeReplaceableCollection {
     mutating func appendIfNonNil<S>(contentsOf newElements: S?) where Element == S.Element, S : Sequence {
         guard let newElements = newElements else { return }
         self.append(contentsOf: newElements)
+    }
+}
+
+public extension RangeReplaceableCollection {
+    @inlinable
+    init(capacity: Int) {
+        self.init()
+        reserveCapacity(capacity)
+    }
+}
+public extension RangeReplaceableCollection where Self: BidirectionalCollection & MutableCollection {
+    var theFirst: Element? {
+        get { first }
+        set {
+            if let val = newValue {
+                self[startIndex] = val
+            } else {
+                removeFirst()
+            }
+        }
+    }
+    var theLast: Element? {
+        get { last }
+        set {
+            if let val = newValue {
+                if let lastIdx = lastIndex {
+                    self[lastIdx] = val
+                } else {
+                    append(val)
+                }
+            } else {
+                _ = popLast()
+            }
+        }
     }
 }

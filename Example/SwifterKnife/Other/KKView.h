@@ -10,6 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface UIView (DesginSize)
+@property (nonatomic, assign) CGSize desginSize;
+@end
+
 @interface KKView : UIView
 
 @end

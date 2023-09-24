@@ -12,6 +12,53 @@
 @import SwifterKnife;
 
 
+@implementation UIView (DesginSize)
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class class = [self class];
+        
+        SEL originalSelector = @selector(intrinsicContentSize);
+        SEL swizzledSelector = @selector(at_intrinsicContentSize);
+        
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+        
+        BOOL didAddMethod =
+        class_addMethod(class,
+                        originalSelector,
+                        method_getImplementation(swizzledMethod),
+                        method_getTypeEncoding(swizzledMethod));
+        
+        if (didAddMethod) {
+            class_replaceMethod(class,
+                                swizzledSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+}
+- (CGSize)at_intrinsicContentSize {
+    CGSize ret = [self at_intrinsicContentSize];
+    CGSize insSize = self.desginSize;
+    if (insSize.width > 0) { ret.width = insSize.width; }
+    if (insSize.height > 0) { ret.height = insSize.height; }
+    return ret;
+}
+
+- (CGSize)desginSize {
+    NSValue *value = objc_getAssociatedObject(self, _cmd);
+    return value.CGSizeValue;
+}
+- (void)setDesginSize:(CGSize)desginSize {
+    objc_setAssociatedObject(self, @selector(desginSize), [NSValue valueWithCGSize:desginSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
 @implementation NSObject (Add)
 
 + (void)printAllMethods {

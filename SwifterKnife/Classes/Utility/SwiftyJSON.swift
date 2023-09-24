@@ -306,6 +306,7 @@ public typealias JSONIndex = Index<JSON>
 public typealias JSONRawIndex = Index<Any>
 
 extension JSON: Swift.Collection {
+    public typealias Element = (String, JSON)
     
     public typealias Index = JSONRawIndex
     

@@ -50,8 +50,37 @@ class CheckoutBox: NewButton {
     }
 }
 
+//private var designSizeKey: Int8 = 0
+//extension UIView {
+//    open override class func load() {
+//        DispatchQueue.once {
+//            self.at_swizzleInstanceMethod(#selector(getter: intrinsicContentSize), with: <#T##Selector#>)
+//        }
+//    }
+//    var designSize: CGSize {
+//        get {
+//           objc_getAssociatedObject(self, &designSizeKey) as? CGSize ?? CGSize(width: -1, height: -1)
+//        }
+//        set {
+//            objc_setAssociatedObject(self, &designSizeKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
+//        }
+//    }
+//    
+////    @_dynamicReplacement(for: intrinsicContentSize)
+//    var at_intrinsicContentSize: CGSize {
+//        var size = self.intrinsicContentSize
+//        let insSize = designSize
+//        if insSize.width > 0 {
+//            size.width = insSize.width
+//        }
+//        if insSize.height > 0 {
+//            size.height = insSize.height
+//        }
+//        return size
+//    }
+//}
 
-fileprivate extension RadioGroup.Name {
+fileprivate extension RadioCross.Name {
     static var codable: Self {
         .init(rawValue: "codable")
     }
@@ -93,14 +122,16 @@ class CodableVC: BaseViewController {
 //        let jsonStr = stu.toJSON().jsonString()
 //        print(jsonStr ?? "nil")
     }
-    private var radioGroup: RadioGroup {
-        RadioGroup[.codable]
-    }
+//    private var radioGroup: RadioGroup {
+//        RadioGroup[.codable]
+//    }
+    private var radioGroup = RadioGroup()
     private let group1 = "group1"
     override func setupViews() {
         super.setupViews()
         
-        UIStackView.vertical(spacing: 15, alignment: .fill) {
+        
+        let stackView = UIStackView.vertical(spacing: 15, alignment: .fill) {
             ["Apple", "Banana", "Origin", "Fruit"].map { title in
                 CheckoutBox().then {
                     $0.setTitle(title, for: .normal)
@@ -109,19 +140,53 @@ class CodableVC: BaseViewController {
                     print("addcontrol \(title)", suc1, suc2)
                 }
             }
-        }.do {
+        }.then {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
                 make.width.equalTo(200)
             }
         }
+        
+        
+        UIView().do {
+            $0.backgroundColor = .cyan
+            $0.desginSize = CGSize(width: 100, height: 50)
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalTo(stackView.snp.top).offset(-30)
+            }
+        }
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
+    private func peekSelectedControl() {
         guard let button = radioGroup.selectedControl as? UIButton else {
             print("selected nil")
             return
         }
         print("selected", button.title(for: .normal) ?? "empty title", button.tag)
     }
+//    dynamic func run(a: String) {
+//        print("run", a)
+//    }
+//    dynamic var a = 1
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        run_new(a: "param")
+//        run(a: "param")
+    }
 }
+//extension CodableVC {
+//    @_dynamicReplacement(for: run(a:))
+//    func run_new(a: String) {
+//        print("run_new", a)
+//        print(self.a)
+//        run(a: a)
+//    }
+//
+//    @_dynamicReplacement(for: a)
+//    var b: Int {
+//        a = a * 10
+//        return a
+//    }
+//}
