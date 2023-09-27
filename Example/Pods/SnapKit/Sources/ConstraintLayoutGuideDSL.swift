@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -52,14 +52,22 @@ public struct ConstraintLayoutGuideDSL: ConstraintAttributesDSL {
         ConstraintMaker.removeConstraints(item: guide)
     }
     
-    public var target: AnyObject? {
-        return guide
-    }
+    public var target: AnyObject? { return guide }
     
     internal let guide: ConstraintLayoutGuide
     
     internal init(guide: ConstraintLayoutGuide) {
-        self.guide = guide 
+        self.guide = guide
+    }
+}
+
+
+
+@available(iOS 9.0, OSX 10.11, *)
+public extension ConstraintLayoutGuide {
+    
+    var snp: ConstraintLayoutGuideDSL {
+        return ConstraintLayoutGuideDSL(guide: self)
     }
     
 }

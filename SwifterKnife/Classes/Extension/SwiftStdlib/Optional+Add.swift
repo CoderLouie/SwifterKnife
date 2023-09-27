@@ -47,11 +47,11 @@ public extension Optional {
         }
     }
     
-    static func ?<<(lhs: inout Optional, rhs: @autoclosure () -> Wrapped) -> Wrapped {
+    static func ?<<(lhs: inout Optional, rhs: @autoclosure () throws -> Wrapped) rethrows -> Wrapped {
         switch lhs {
         case let .some(value): return value
         case .none:
-            let value = rhs()
+            let value = try rhs()
             lhs = .some(value)
             return value
         }
@@ -63,13 +63,6 @@ public extension Optional {
         case .none: return nilDescribing()
         }
     }
-    
-    
-//    static func !!(optional: Optional, failureText: @autoclosure () -> String) -> Wrapped {
-//        if let x = optional { return x }
-//        // "Expecting integer, bug got \"\(s)\""
-//        fatalError(failureText())
-//    }
     
     /*
      断言
@@ -131,36 +124,23 @@ public extension Optional {
         if let value = self { work(value) }
         return self
     }
-    
-    func map<U>(_ transform: (Wrapped) throws -> U, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
-        switch self {
-        case .some(let x): return try transform(x)
-        case .none: return try defaultValue()
-        }
-    }
-    func flatMap<U>(_ transform: (Wrapped) throws -> U?, or defaultValue: @autoclosure () throws -> U) rethrows -> U {
-        switch self {
-        case .some(let x): return try transform(x) ?? defaultValue()
-        case .none: return try defaultValue()
-        }
-    }
 }
-
 
 // MARK: - Methods (Collection)
 
 public extension Optional where Wrapped: Collection {
     /// Check if optional is nil or empty collection.
     var isNilOrEmpty: Bool {
-        guard let collection = self else { return true }
-        return collection.isEmpty
+        return self?.isEmpty ?? true
     }
 
+    var isValid: Bool {
+        if let c = self, !c.isEmpty { return true }
+        return false
+    }
     /// Returns the collection only if it is not nil and not empty.
     var nonEmpty: Wrapped? {
-        guard let collection = self else { return nil }
-        guard !collection.isEmpty else { return nil }
-        return collection
+        return (self?.isEmpty ?? true) ? nil : self
     }
 }
 

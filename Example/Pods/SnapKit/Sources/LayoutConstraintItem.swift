@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -32,10 +32,10 @@ public protocol LayoutConstraintItem: AnyObject {
 }
 
 @available(iOS 9.0, OSX 10.11, *)
-extension ConstraintLayoutGuide : LayoutConstraintItem {
+extension ConstraintLayoutGuide: LayoutConstraintItem {
 }
 
-extension ConstraintView : LayoutConstraintItem {
+extension ConstraintView: LayoutConstraintItem {
 }
 
 
@@ -47,7 +47,7 @@ extension LayoutConstraintItem {
         }
     }
     
-    internal var _snp: ConstraintBasicAttributesDSL? {
+    internal var _snp: ConstraintAttributesDSL? {
         if let view = self as? ConstraintView {
             return view.snp
         }
@@ -98,7 +98,6 @@ extension LayoutConstraintItem {
             objc_setAssociatedObject(self, &constraintsKey, constraintsSet, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return constraintsSet
-        
     }
     
 }

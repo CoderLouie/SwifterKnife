@@ -88,6 +88,7 @@ public extension UIView {
     }
 }
 
+// MARK: - Utils
 
 public extension UIView {
     /// Recursively find the first responder.
@@ -104,6 +105,30 @@ public extension UIView {
         } while index < views.count
         return nil
     }
+    
+    /// Remove all subviews in view.
+    func removeSubviews() {
+        while let lastView = subviews.last {
+            lastView.removeFromSuperview()
+        }
+    }
+    
+    /// Remove all gesture recognizers from view.
+    func removeGestureRecognizers() {
+        gestureRecognizers?.forEach(removeGestureRecognizer)
+    }
+    
+    
+    @discardableResult
+    func enqueueSubview<View: UIView>(_ view: View, config: (View) -> Void) -> View {
+        addSubview(view)
+        config(view)
+        return view
+    }
+}
+
+// MARK: - Animation
+public extension UIView {
     
     /// Fade in view.
     ///
@@ -131,18 +156,6 @@ public extension UIView {
         UIView.animate(withDuration: duration, animations: {
             self.alpha = 0
         }, completion: completion)
-    }
-    
-    /// Remove all subviews in view.
-    func removeSubviews() {
-        while let lastView = subviews.last {
-            lastView.removeFromSuperview()
-        }
-    }
-    
-    /// Remove all gesture recognizers from view.
-    func removeGestureRecognizers() {
-        gestureRecognizers?.forEach(removeGestureRecognizer)
     }
     
     /// Rotate view by angle on relative axis.
@@ -247,21 +260,107 @@ public extension UIView {
             CATransaction.commit()
         }
     
+    enum PresentToward {
+        case up, down, left, right
+        fileprivate var isHorizontal: Bool {
+            switch self {
+            case .left, .right: return true
+            case .up, .down: return false
+            }
+        }
+    }
+    func present(toward: PresentToward,
+                 distance: CGFloat? = nil,
+                 duration: TimeInterval = 0.25,
+                 completion: ((Bool) -> Void)? = nil) {
+        guard let view = superview else { return }
+        let delta = distance ?? {
+            var frame = self.frame
+            if frame.isEmpty {
+                view.layoutIfNeeded()
+                frame = self.frame
+            }
+            return toward.isHorizontal ? frame.width : frame.height
+        }()
+        let animation = {
+            let x: CGFloat, y: CGFloat
+            switch toward {
+            case .up: x = 0; y = -abs(delta)
+            case .down: x = 0; y = abs(delta)
+            case .left: y = 0; x = -abs(delta)
+            case .right: y = 0; x = abs(delta)
+            }
+            self.transform = CGAffineTransform(translationX: x, y: y)
+        }
+        guard duration > 0 else {
+            animation()
+            completion?(true)
+            return
+        }
+        UIView.animate(withDuration: duration, animations: animation, completion: completion)
+    }
+    func depresent(duration: TimeInterval = 0.25,
+                   completion: ((Bool) -> Void)? = nil) {
+        let animation = {
+            self.transform = CGAffineTransform(translationX: 0, y: 0)
+        }
+        guard duration > 0 else {
+            animation()
+            completion?(true)
+            return
+        }
+        UIView.animate(withDuration: duration, animations: animation, completion: completion)
+    }
+}
+
+// MARK: - Search
+
+public extension UIView {
+    
     /// Search all superviews until a view with the condition is found.
     ///
     /// - Parameter predicate: predicate to evaluate on superviews.
-    func ancestorView(where predicate: (UIView?) -> Bool) -> UIView? {
-        if predicate(superview) {
-            return superview
+    func ancestorView<T: UIView>(where predicate: (T) -> Bool) -> T? {
+        for view in sequence(first: self, next: \.superview) {
+            if let typeView = view as? T,
+               predicate(typeView) {
+                return typeView
+            }
         }
-        return superview?.ancestorView(where: predicate)
+        return nil
     }
     
-    /// Search all superviews until a view with this class is found.
-    ///
-    /// - Parameter name: class of the view to search.
-    func ancestorView<T: UIView>(withClass _: T.Type) -> T? {
-        return ancestorView(where: { $0 is T }) as? T
+    /**
+     let effectView: UIImageView? = view.searchSubview(reversed: false) {
+     $0.bounds.size.height < 2
+     }
+     */
+    func searchSubview<T: UIView>(
+        reversed: Bool = true,
+        where cond: (T) -> Bool) -> T? {
+        var views = [self]
+        var index = 0
+        repeat {
+            let view = views[index]
+            if let type = view as? T, cond(type) { return type }
+            index += 1
+            views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
+        } while index < views.count
+        return nil
+    }
+    
+    func firstSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
+        subviews.first {
+            guard let v = $0 as? T else { return false }
+            return cond?(v) ?? true
+        } as? T
+    }
+    
+    func lastSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
+        subviews.last {
+            guard let v = $0 as? T else { return false }
+            return cond?(v) ?? true
+        } as? T
     }
     
     /// Returns all the subviews of a given type recursively in the
@@ -318,43 +417,17 @@ public extension UIView {
             withHorizontalFittingPriority: .fittingSizeLevel,
             verticalFittingPriority: .required)
     }
-    var fittingSize: CGSize {
+    /// layoutFittingCompressedSize(尽可能小)
+    var compressedSize: CGSize {
         systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
-    
-    /**
-     let effectView: UIImageView? = view.searchSubview(reversed: false) {
-     $0.bounds.size.height < 2
-     }
-     */
-    func searchSubview<T: UIView>(
-        reversed: Bool = true,
-        where cond: (T) -> Bool) -> T? {
-        var views = [self]
-        var index = 0
-        repeat {
-            let view = views[index]
-            if let type = view as? T, cond(type) { return type }
-            index += 1
-            views.insert(contentsOf: reversed ? view.subviews.reversed() : view.subviews, at: index)
-        } while index < views.count
-        return nil
-    }
-    func firstSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
-        subviews.first {
-            guard let v = $0 as? T else { return false }
-            return cond?(v) ?? true
-        } as? T
-    }
-    func lastSubview<T>(_ cond: ((T) -> Bool)? = nil) -> T? {
-        subviews.last {
-            guard let v = $0 as? T else { return false }
-            return cond?(v) ?? true
-        } as? T
+    /// layoutFittingExpandedSize(尽可能大)
+    var expandedSize: CGSize {
+        systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
     }
     
     @available(iOS 11.0, *)
-    func roundingCorners(_ radius: CGFloat,
+    func roundCorners(_ radius: CGFloat,
                          corners: UIRectCorner = .allCorners) {
         guard radius > 0 else { return }
         layer.masksToBounds = true
@@ -375,82 +448,43 @@ public extension UIView {
         layer.maskedCorners = maskCorners
     }
     
-    /// Set some or all corners radiuses of view.
-    ///
-    /// - Parameters:
-    ///   - radius: radius for selected corners.
-    ///   - corners: array of corners to change (example: [.bottomLeft, .topRight]).
-    ///   - fillColor: fillColor
-    ///   - borderWidth: borderWidth
-    ///   - borderColor: borderColor
-    func roundCorners(_ radius: CGFloat,
-                      corners: UIRectCorner,
-                      fillColor: UIColor? = nil,
-                      borderWidth: CGFloat? = nil,
-                      borderColor: UIColor? = nil) {
-        onDidLayout { this in
-            let path = UIBezierPath(roundedRect: this.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-            let maskLayer = CAShapeLayer()
-            var needAdd = false
-            if let width = borderWidth {
-                needAdd = true
-                maskLayer.lineWidth = width
-            }
-            if let color = borderColor {
-                needAdd = true
-                maskLayer.strokeColor = color.cgColor
-            }
-            maskLayer.path = path.cgPath
-            if !needAdd {
-                if let bg = fillColor {
-                    this.backgroundColor = bg
-                }
-                this.layer.mask = maskLayer
-            } else {
-                let bgColor = fillColor ?? this.backgroundColor
-                maskLayer.fillColor = bgColor?.cgColor
-                this.backgroundColor = .clear
-                this.layer.addSublayer(maskLayer)
-            }
-        }
-    }
-    
-    
-    static func noTransaction(_ work: () -> Void) {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        work()
-        CATransaction.commit()
-    }
      
-    
-    var contentHorCompressionResistanceLevel: Float {
-        get { contentCompressionResistancePriority(for: .horizontal).rawValue }
-        set {
-            setContentCompressionResistancePriority(UILayoutPriority(rawValue: newValue), for: .horizontal)
-        }
+    func addBorder(color: UIColor,
+                   radius: CGFloat,
+                   width: CGFloat) {
+        addCorner(radius: radius)
+        layer.borderColor = color.cgColor
+        layer.borderWidth = width
     }
-    var contentVerCompressionResistanceLevel: Float {
-        get { contentCompressionResistancePriority(for: .vertical).rawValue }
-        set {
-            setContentCompressionResistancePriority(UILayoutPriority(rawValue: newValue), for: .vertical)
-        }
+    func addCorner(radius: CGFloat) {
+        layer.masksToBounds = true
+        layer.cornerRadius = radius
     }
     
-    var contentHorHuggingLevel: Float {
-        get { contentHuggingPriority(for: .horizontal).rawValue }
-        set {
-            setContentHuggingPriority(UILayoutPriority(rawValue: newValue), for: .horizontal)
-        }
+    func setNeedsAutoLayout() {
+        invalidateIntrinsicContentSize()
+        setNeedsLayout()
     }
-    var contentVerHuggingLevel: Float {
-        get { contentHuggingPriority(for: .vertical).rawValue }
-        set {
-            setContentHuggingPriority(UILayoutPriority(rawValue: newValue), for: .vertical)
-        }
-    } 
+    func makeFlexibleSize() {
+//        translatesAutoresizingMaskIntoConstraints = true
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    /*
+     amount < 0 会变得更容易被拉伸或压缩
+     amount > 0 会变得更不容易被拉伸或压缩
+     */
+    func increasePriority(_ amount: Float, for axis: NSLayoutConstraint.Axis) {
+        let val1 = contentHuggingPriority(for: axis).rawValue
+        setContentHuggingPriority(.init(rawValue: val1 + amount), for: axis)
+        let val2 = contentCompressionResistancePriority(for: axis).rawValue
+        setContentCompressionResistancePriority(.init(rawValue: val2 + amount), for: axis)
+    }
 }
+
+
 /*
+ 一句话总结“Intrinsic冲突”：两个或多个可以使用Intrinsic Content Size的组件，因为组件中添加的其他约束，而无法同时使用 intrinsic Content Size了。
+ 
  Content Hugging Priority
  抗拉伸 值(默认250)越小 越容易被拉伸，
  当子视图不足以填充满父视图的空间时，优先满足此属性值较大的子视图的内容展示，而拉伸属性值较低的子视图。
@@ -463,44 +497,34 @@ public extension UIView {
  $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
  */
 
-
-public protocol ViewAddition {}
-extension UIView: ViewAddition {}
-public extension ViewAddition where Self: UIView {
-    /// 在程序启动页面中不太建议调用此方法，
-    func onDidLayout(_ closure: @escaping (Self) -> Void) {
-        onDidLayout(closure, n: 0)
-    }
-    private func onDidLayout(_ closure: @escaping (Self) -> Void, n: Int) {
-        // 防止试图本身没有设置约束及frame
-        if n > 4 {
-            closure(self)
-            return
+ 
+public extension UIVisualEffectView {
+    var bgColor: UIColor? {
+        get {
+            guard subviews.count > 1 else { return nil }
+            return subviews[1].backgroundColor
         }
-        if !bounds.isEmpty { 
-            closure(self)
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                guard let this = self else { return }
-                if let vc = this.parentViewController {
-                    vc.view.setNeedsLayout()
-                    vc.view.layoutIfNeeded()
-                } else {
-                    if var view = this.superview {
-                        var n = 2
-                        while let superV = view.superview,
-                              !superV.isKind(of: UIWindow.self),
-                              n > 0 {
-                            view = superV
-                            n -= 1
-                        }
-                        view.setNeedsLayout()
-                        view.layoutIfNeeded()
-                    }
-                }
-                this.onDidLayout(closure, n: n + 1)
-            }
+        set {
+            guard subviews.count > 1 else { return }
+            subviews[1].backgroundColor = newValue
         }
     }
 }
 
+/*
+class XXView: UIView {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let point = touch.location(in: self)
+        switch (self, point, event) {
+        case .deleteView:
+            print("touch deleteView")
+        default: break
+        }
+    }
+}
+*/
+public func ~=(pattern: UIView, value: (superview: UIView, point: CGPoint, event: UIEvent?)) -> Bool {
+    let point = value.superview.convert(value.point, to: pattern)
+    return pattern.point(inside: point, with: value.event)
+}

@@ -10,7 +10,10 @@ import CoreGraphics
 
 // MARK: - Methods
 
-public extension BinaryFloatingPoint { 
+public extension BinaryFloatingPoint {
+    var isInteger: Bool {
+        return Darwin.floor(self) == self
+    }
     /// Returns a rounded value with the specified number of decimal places and rounding rule. If `numberOfDecimalPlaces` is negative, `0` will be used.
     ///
     ///     let num = 3.1415927

@@ -25,7 +25,8 @@ import UIKit
     @objc public static let scale = UIScreen.main.scale
     
     @objc public static var isIPad: Bool {
-        UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
+//        UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
+        UIDevice.current.userInterfaceIdiom == .pad
     }
     @objc public static let isIPhoneXSeries: Bool = {
         var bottomSafeInset: CGFloat = 0
@@ -122,15 +123,30 @@ import UIKit
         return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
     }
     
-    @objc public static var frontViewController: UIViewController {
+    @objc public static var frontViewController: UIViewController? {
         guard let window = currentWindow,
               let rootVC = window.rootViewController else {
-            fatalError()
+            return nil
         }
         return rootVC.front()
     }
 }
 
+
+weak var _curFirstResponder: UIResponder? = nil
+private extension UIResponder {
+    @objc func at_findFirstResponder(_ sender: UIResponder) {
+        _curFirstResponder = self
+    }
+}
+
+extension Screen {
+    public static var firstResponder: UIView? {
+        _curFirstResponder = nil
+        UIApplication.shared.sendAction(#selector(UIView.at_findFirstResponder(_:)), to: nil, from: nil, for: nil)
+        return _curFirstResponder as? UIView
+    }
+}
 
 // MARK:- OC
 public extension Screen {
@@ -176,6 +192,10 @@ extension UIViewController {
         } else if let tab = self as? UITabBarController,
                   let selected = tab.selectedViewController {
             return selected.front()
+        } else if let page = self as? UIPageViewController,
+                  let vcs = page.viewControllers,
+                  vcs.count == 1 {
+            return vcs[0].front()
         } else {
             for vc in children.reversed() {
                 if vc.view.window != nil {

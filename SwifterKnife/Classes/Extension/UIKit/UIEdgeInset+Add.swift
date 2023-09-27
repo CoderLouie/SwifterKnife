@@ -31,6 +31,9 @@ public extension SFEdgeInsets {
 // MARK: - Methods
 
 public extension SFEdgeInsets {
+    static func inset(_ side: CGFloat) -> UIEdgeInsets {
+        UIEdgeInsets(top: side, left: side, bottom: side, right: side)
+    }
     /// Creates an `EdgeInsets` with the inset value applied to all (top, bottom, right, left).
     ///
     /// - Parameter inset: Inset to be applied in all the edges.

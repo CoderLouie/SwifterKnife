@@ -23,10 +23,22 @@ public extension UIScrollView {
             UIGraphicsEndImageContext()
         }
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        let previousFrame = frame
-        frame = CGRect(origin: frame.origin, size: contentSize)
+        let prevFrame = frame
+        let prevOffset = contentOffset
+        let prevBounds = layer.bounds
+        
+        let contentSize = contentSize
+        if #available(iOS 13, *) {
+            layer.bounds = CGRect(origin: .zero, size: contentSize)
+        }
+        contentOffset = .zero
+        frame = CGRect(origin: .zero, size: contentSize)
         layer.render(in: context)
-        frame = previousFrame
+        frame = prevFrame
+        contentOffset = prevOffset
+        if #available(iOS 13, *) {
+            layer.bounds = prevBounds
+        }
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 
@@ -59,17 +71,27 @@ public extension UIScrollView {
     /// Scroll to the bottom-most content offset.
     /// - Parameter animated: `true` to animate the transition at a constant velocity to the new offset, `false` to make the transition immediate.
     func scrollToBottom(animated: Bool = true) {
-        setContentOffset(
-            CGPoint(x: contentOffset.x, y: max(0, contentSize.height - bounds.height) + contentInset.bottom),
-            animated: animated)
+        let inset = contentInset
+        let bounds = bounds
+        let contentS = contentSize
+        if bounds.height > contentS.height + inset.bottom { return }
+        
+        var off = contentOffset
+        off.y = max(0, contentS.height - bounds.height) + inset.bottom
+        setContentOffset(off, animated: animated)
     }
 
     /// Scroll to the right-most content offset.
     /// - Parameter animated: `true` to animate the transition at a constant velocity to the new offset, `false` to make the transition immediate.
-    func scrollToRight(animated: Bool = true) {
-        setContentOffset(
-            CGPoint(x: max(0, contentSize.width - bounds.width) + contentInset.right, y: contentOffset.y),
-            animated: animated)
+    func scrollToRight(animated: Bool = true) {  
+        let inset = contentInset
+        let bounds = bounds
+        let contentS = contentSize
+        if bounds.width > contentS.width + inset.right { return }
+        
+        var off = contentOffset
+        off.y = max(0, contentS.width - bounds.width) + inset.right
+        setContentOffset(off, animated: animated)
     }
 
     /// Scroll up one page of the scroll view.
@@ -298,5 +320,38 @@ public extension UIScrollView {
             directions.formUnion(.right)
         }
         return directions
+    }
+}
+
+@available(iOS 11.0, *)
+public protocol BatchUpdatable {
+    func performBatchUpdates(_ updates: (() -> Void)?, completion: ((Bool) -> Void)?)
+}
+extension UITableView: BatchUpdatable {}
+extension UICollectionView: BatchUpdatable {}
+
+@available(iOS 11.0, *)
+extension BatchUpdatable {
+    public func batchUpdates(withDuration duration: TimeInterval, _ updates: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
+        if duration > 0 {
+            UIView.animate(
+                withDuration: duration,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 0,
+                options: [
+                    .beginFromCurrentState,
+                    .allowUserInteraction,
+                    .overrideInheritedCurve,
+                    .overrideInheritedOptions,
+                    .overrideInheritedDuration
+                ]) {
+                    self.performBatchUpdates(updates, completion: completion)
+                }
+        } else {
+            UIView.performWithoutAnimation {
+                self.performBatchUpdates(updates, completion: completion)
+            }
+        }
     }
 }

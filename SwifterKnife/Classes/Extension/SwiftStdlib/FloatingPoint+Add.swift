@@ -46,3 +46,10 @@ public extension FloatingPoint {
 
 infix operator ~= : ComparisonPrecedence
 infix operator !~= : ComparisonPrecedence
+
+
+extension CFTimeInterval {
+    public var coseTime: CFTimeInterval {
+        CACurrentMediaTime() - self
+    }
+}

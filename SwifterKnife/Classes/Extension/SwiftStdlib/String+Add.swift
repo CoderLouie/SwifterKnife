@@ -126,8 +126,10 @@ public extension String {
     ///
     var isValidEmail: Bool {
         // http://emailregex.com/
-        let regex =
-            "^(?:[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\p{L}0-9](?:[a-z0-9-]*[\\p{L}0-9])?\\.)+[\\p{L}0-9](?:[\\p{L}0-9-]*[\\p{L}0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[\\p{L}0-9-]*[\\p{L}0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
+//        let regex =
+//            "^(?:[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\p{L}0-9](?:[a-z0-9-]*[\\p{L}0-9])?\\.)+[\\p{L}0-9](?:[\\p{L}0-9-]*[\\p{L}0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[\\p{L}0-9-]*[\\p{L}0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
+        // http://stackoverflow.com/questions/25471114/how-to-validate-an-e-mail-address-in-swift
+        let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         return range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
     }
  
@@ -248,8 +250,8 @@ public extension String {
     /// - Returns: The words contained in a string.
     func words() -> [String] {
         // https://stackoverflow.com/questions/42822838
-        let chararacterSet = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
-        let comps = components(separatedBy: chararacterSet)
+        let characterSet = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        let comps = components(separatedBy: characterSet)
         return comps.filter { !$0.isEmpty }
     }
  
@@ -348,6 +350,22 @@ public extension String {
         }
         return components(separatedBy: string).count - 1
     }
+    
+    /// Check if string starts with substring.
+    ///
+    ///        "hello World".starts(with: "h") -> true
+    ///        "hello World".starts(with: "H", caseSensitive: false) -> true
+    ///
+    /// - Parameters:
+    ///   - suffix: substring to search if string starts with.
+    ///   - caseSensitive: set true for case sensitive search (default is true).
+    /// - Returns: true if string starts with substring.
+    func starts(with prefix: String, caseSensitive: Bool = true) -> Bool {
+        if !caseSensitive {
+            return lowercased().hasPrefix(prefix.lowercased())
+        }
+        return hasPrefix(prefix)
+    }
 
     /// Check if string ends with substring.
     ///
@@ -405,22 +423,6 @@ public extension String {
             self = String(str)
         }
         return self
-    }
-
-    /// Check if string starts with substring.
-    ///
-    ///        "hello World".starts(with: "h") -> true
-    ///        "hello World".starts(with: "H", caseSensitive: false) -> true
-    ///
-    /// - Parameters:
-    ///   - suffix: substring to search if string starts with.
-    ///   - caseSensitive: set true for case sensitive search (default is true).
-    /// - Returns: true if string starts with substring.
-    func starts(with prefix: String, caseSensitive: Bool = true) -> Bool {
-        if !caseSensitive {
-            return lowercased().hasPrefix(prefix.lowercased())
-        }
-        return hasPrefix(prefix)
     }
  
     /// Date object from string of date format.
@@ -639,33 +641,61 @@ public extension String {
     func appendingPathExtension(_ str: String) -> String? {
         return (self as NSString).appendingPathExtension(str)
     }
-
-    /// Accesses a contiguous subrange of the collection’s elements.
-    /// - Parameter nsRange: A range of the collection’s indices. The bounds of the range must be valid indices of the collection.
-    /// - Returns: A slice of the receiving string.
-    subscript(bounds: NSRange) -> Substring {
-        guard let range = Range(bounds, in: self) else { fatalError("Failed to find range \(bounds) in \(self)") }
-        return self[range]
-    }
 }
 
 public extension String {
     func compareVersion(_ version: String) -> ComparisonResult {
         guard !version.isEmpty else { return .orderedDescending }
         let set = CharacterSet.decimalDigits.inverted
-        let nums1 = components(separatedBy: set)
-        let nums2 = version.components(separatedBy: set)
-        for i in 0..<min(nums1.count, nums2.count) {
-            guard let num1 = Int(nums1[i]) else { return .orderedAscending }
-            guard let num2 = Int(nums2[i]) else { return .orderedDescending }
-            guard num1 != num2 else { continue }
-            return num1 < num2 ? .orderedAscending : .orderedDescending
+        var nums1 = components(separatedBy: set)
+        var nums2 = version.components(separatedBy: set)
+        let n1 = nums1.count
+        let n2 = nums2.count
+        if n1 != n2 {
+            let remain = Array(repeating: "0", count: abs(n1 - n2))
+            if n1 > n2 {
+                nums2.append(contentsOf: remain)
+            } else {
+                nums1.append(contentsOf: remain)
+            }
         }
-        if nums1.count == nums2.count { return .orderedSame }
-        return nums1.count < nums2.count ? .orderedAscending : .orderedDescending
+        return nums1.joined().compare(nums2.joined())
     }
     
     func splitBy(charactersIn string: String) -> [String] {
         components(separatedBy: CharacterSet(charactersIn: string))
     }
 }
+
+public extension String {
+    func aspectFitSize(for font: UIFont, limitSize: CGSize, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
+        var attr: [NSAttributedString.Key: Any] = [.font: font]
+        if model != .byWordWrapping {
+            let style = NSMutableParagraphStyle()
+            style.lineBreakMode = model
+            attr[.paragraphStyle] = style
+        }
+        let rect = (self as NSString).boundingRect(with: limitSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: attr, context: nil)
+        let res = rect.size.adaptive(tramsform: \.pixCeil)
+        return res
+    }
+    func aspectFitSize(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
+        aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model)
+    }
+    func aspectFitHeight(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
+        aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model).height
+    }
+    func aspectFitWidth(for font: UIFont, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
+        let size = CGSize(width: CGFloat.greatestFiniteMagnitude,
+                          height: CGFloat.greatestFiniteMagnitude)
+        return aspectFitSize(for: font, limitSize: size, model: model).width
+    }
+}
+extension UIFont {
+    public var singleLineHeight: CGFloat {
+        "Hello".aspectFitHeight(for: self,
+                                maxWidth: .greatestFiniteMagnitude)
+    }
+}
+
+//https://www.jianshu.com/p/17fab783bfad

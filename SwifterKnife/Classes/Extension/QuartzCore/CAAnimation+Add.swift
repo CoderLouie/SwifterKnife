@@ -56,3 +56,21 @@ extension CAAnimation {
     }
 }
  
+
+extension CATransaction {
+    public static func animate(withDuration duration: CFTimeInterval = 0.25, timingFunction: CAMediaTimingFunction? = nil, _ animations: () -> Void, completion: (() -> Void)? = nil) {
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(duration)
+        CATransaction.setAnimationTimingFunction(timingFunction)
+        CATransaction.setCompletionBlock(completion)
+        animations()
+        CATransaction.commit()
+    }
+    
+    public static func performWithoutAnimation(_ work: () -> Void) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        work()
+        CATransaction.commit()
+    }
+}

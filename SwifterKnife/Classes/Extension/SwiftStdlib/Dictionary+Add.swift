@@ -34,9 +34,6 @@ public extension Dictionary {
     /// - Parameter keys: keys to be removed.
     mutating func removeAll<S: Sequence>(keys: S) where S.Element == Key {
         keys.forEach { removeValue(forKey: $0) }
-//        keys.reduce(into: [:]) {
-//            $0[$1] = removeValue(forKey: $1)
-//        }
     }
 
     /// Remove a value for a random key from the dictionary.
@@ -45,51 +42,7 @@ public extension Dictionary {
         guard let key = keys.randomElement(),
               let value = removeValue(forKey: key) else { return nil }
         return (key, value)
-    }
-
-    /// JSON Data from dictionary.
-    ///
-    /// - Parameter prettify: set true to prettify data (default is false).
-    /// - Returns: optional JSON Data (if applicable).
-    func jsonData(prettify: Bool = false) -> Data? {
-        guard JSONSerialization.isValidJSONObject(self) else {
-            return nil
-        }
-        let options = (prettify == true) ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization
-            .WritingOptions()
-        return try? JSONSerialization.data(withJSONObject: self, options: options)
-    }
- 
-    /// JSON String from dictionary.
-    ///
-    ///        dict.jsonString() -> "{"testKey":"testValue","testArrayKey":[1,2,3,4,5]}"
-    ///
-    ///        dict.jsonString(prettify: true)
-    ///        /*
-    ///        returns the following string:
-    ///
-    ///        "{
-    ///        "testKey" : "testValue",
-    ///        "testArrayKey" : [
-    ///            1,
-    ///            2,
-    ///            3,
-    ///            4,
-    ///            5
-    ///        ]
-    ///        }"
-    ///
-    ///        */
-    ///
-    /// - Parameter prettify: set true to prettify string (default is false).
-    /// - Returns: optional JSON String (if applicable).
-    func jsonString(prettify: Bool = false) -> String? {
-        guard JSONSerialization.isValidJSONObject(self) else { return nil }
-        let options = (prettify == true) ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization
-            .WritingOptions()
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: self, options: options) else { return nil }
-        return String(data: jsonData, encoding: .utf8)
-    }
+    } 
 
     /// Returns a dictionary containing the results of mapping the given closure over the sequence’s elements.
     /// - Parameter transform: A mapping closure. `transform` accepts an element of this sequence as its parameter and returns a transformed value of the same or of a different type.
@@ -118,8 +71,8 @@ public extension Dictionary {
     ///
     /// - Returns: A new dictionary that contains the specified keys only. If none of the keys exist, an empty dictionary will be returned.
     func pick(keys: [Key]) -> [Key: Value] {
-        keys.reduce(into: [Key: Value]()) { result, item in
-            result[item] = self[item]
+        keys.reduce(into: [Key: Value]()) { result, key in
+            result[key] = self[key]
         }
     }
 }
@@ -163,42 +116,25 @@ public extension Dictionary where Key: StringProtocol {
 // MARK: - Subscripts
 
 public extension Dictionary {
-    /// Deep fetch or set a value from nested dictionaries.
-    ///
-    ///        var dict =  ["key": ["key1": ["key2": "value"]]]
-    ///        dict[path: ["key", "key1", "key2"]] = "newValue"
-    ///        dict[path: ["key", "key1", "key2"]] -> "newValue"
-    ///
-    /// - Note: Value fetching is iterative, while setting is recursive.
-    ///
-    /// - Complexity: O(N), _N_ being the length of the path passed in.
-    ///
-    /// - Parameter path: An array of keys to the desired value.
-    ///
-    /// - Returns: The value for the key-path passed in. `nil` if no value is found.
-    subscript(path path: [Key]) -> Any? {
-        get {
-            guard !path.isEmpty else { return nil }
-            var result: Any? = self
-            for key in path {
-                if let element = (result as? [Key: Any])?[key] {
-                    result = element
-                } else {
-                    return nil
-                }
+    /*
+     final class AABox {
+         var nums: [Int] = []
+     }
+     struct AABox {
+         var nums: [Int] = []
+     }
+     var box: [String: AABox] = [:]
+     box["xiaohua", default: AABox()].nums.append(3)
+     如果是struct，可以存入box，class则不行
+     */ 
+    subscript(ref key: Key, or build: @autoclosure () -> Value) -> Value where Value: AnyObject {
+        mutating get {
+            if let val = self[key] {
+                return val
             }
-            return result
-        }
-        set {
-            if let first = path.first {
-                if path.count == 1, let new = newValue as? Value {
-                    return self[first] = new
-                }
-                if var nested = self[first] as? [Key: Any] {
-                    nested[path: Array(path.dropFirst())] = newValue
-                    return self[first] = nested as? Value
-                }
-            }
+            let val = build()
+            self[key] = val
+            return val
         }
     }
 }
@@ -289,6 +225,26 @@ public extension Dictionary {
             result[newKey] = item.value
         }
         return result
+    }
+    
+    func filter(keys: Key...) -> [Key: Value] {
+        filter(keys: keys)
+    }
+    func filter(keys: [Key]) -> [Key: Value] {
+        var res = self
+        for key in keys {
+            res.removeValue(forKey: key)
+        }
+        return res
+    }
+    
+    mutating func remove(keys: Key...) {
+        remove(keys: keys)
+    }
+    mutating func remove(keys: [Key]) {
+        for key in keys {
+            removeValue(forKey: key)
+        }
     }
 }
 /*

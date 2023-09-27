@@ -18,4 +18,14 @@ public extension BidirectionalCollection {
         return self[indices.index(index, offsetBy: distance)]
     }
  
+    func theLast<T>(ofType type: T.Type = T.self) -> T? {
+        last { $0 is T } as? T
+    }
+    
+    
+    @inlinable
+    var lastIndex: Index? {
+        guard !isEmpty else { return nil }
+        return index(before: endIndex)
+    }
 }

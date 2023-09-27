@@ -1,19 +1,28 @@
 PODS:
+  - Alamofire (5.7.1)
+  - lottie-ios (4.2.0)
   - SnapKit (5.6.0)
-  - SwifterKnife (0.1.4):
-    - SwifterKnife/Base (= 0.1.4)
-    - SwifterKnife/Extension (= 0.1.4)
-    - SwifterKnife/Utility (= 0.1.4)
-    - SwifterKnife/Views (= 0.1.4)
-  - SwifterKnife/Base (0.1.4)
-  - SwifterKnife/Extension (0.1.4)
-  - SwifterKnife/Utility (0.1.4)
-  - SwifterKnife/Views (0.1.4):
+  - SwifterKnife (0.2.0):
+    - SwifterKnife/Base (= 0.2.0)
+    - SwifterKnife/Extension (= 0.2.0)
+    - SwifterKnife/Utility (= 0.2.0)
+    - SwifterKnife/Views (= 0.2.0)
+  - SwifterKnife/Base (0.2.0)
+  - SwifterKnife/Extension (0.2.0)
+  - SwifterKnife/Utility (0.2.0)
+  - SwifterKnife/Views (0.2.0):
     - SnapKit
 
 DEPENDENCIES:
+  - Alamofire
+  - lottie-ios
   - SnapKit (from `https://github.com/CoderLouie/SnapKit.git`, branch `my_source`)
   - SwifterKnife (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - lottie-ios
 
 EXTERNAL SOURCES:
   SnapKit:
@@ -24,13 +33,15 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SnapKit:
-    :commit: d3d78c138a9b17eb2e147e2bf18ba6769cf0a017
+    :commit: 4bc045ba6657053c6fa8a87111a2a653a63943af
     :git: https://github.com/CoderLouie/SnapKit.git
 
 SPEC CHECKSUMS:
+  Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
+  lottie-ios: 809ecf2d460ed650a6aed7aa88b2ec45fab4779c
   SnapKit: 9eedce9d0d01ad07c7c75194ee7d39b42c04bb1f
-  SwifterKnife: 9d70b8a06b4380d457d71ccd64a878f6634a419a
+  SwifterKnife: a0c637fd230e8b1ab25ac047ea2b56b231abbd7e
 
-PODFILE CHECKSUM: 27317dacbd1ec00de52544c0154674b0cfb82d37
+PODFILE CHECKSUM: bd9382508b09f5362660d80a9760f4d9f5638986
 
 COCOAPODS: 1.11.2

@@ -28,7 +28,7 @@ public extension Array {
 // MARK: - Methods
 
 public extension Array {
-
+    
     /// Safely swap values at given index positions.
     ///
     ///        [1, 2, 3, 4, 5].safeSwap(from: 3, to: 0) -> [4, 2, 3, 1, 5]

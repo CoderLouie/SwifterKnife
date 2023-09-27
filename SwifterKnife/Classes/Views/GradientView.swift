@@ -2,7 +2,7 @@
 //  GradientView.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/7/4.
+//  Created by liyang on 2022/7/4.
 //
 
 import UIKit
@@ -145,21 +145,12 @@ open class GradientControl: UIControl {
     public enum GradientComponent: Equatable {
         /// 背景渐变
         case background
-        /// 文字渐变
+        /// 边框渐变
         case border(_ width: CGFloat)
         
         public var isBorder: Bool {
             if case .border = self { return true }
             return false
-        }
-        
-        public static func == (lhs: GradientComponent, rhs: GradientComponent) -> Bool {
-            switch (lhs, rhs) {
-            case (.background, .background): return true
-            case let (.border(lw), .border(rw)):
-                return lw == rw
-            default: return false
-            }
         }
     }
     public enum RoundedDirection {
@@ -191,7 +182,6 @@ open class GradientControl: UIControl {
     }
     public var gradientComponent: GradientComponent = .background {
         didSet {
-            guard gradientComponent != oldValue else { return }
             setNeedsLayout()
         }
     }
@@ -251,6 +241,6 @@ open class GradientControl: UIControl {
             gradientLayer.mask = maskLayer
         }
     }
-    private unowned var gradientLayer: CAGradientLayer!
+    public private(set) unowned var gradientLayer: CAGradientLayer!
 }
 

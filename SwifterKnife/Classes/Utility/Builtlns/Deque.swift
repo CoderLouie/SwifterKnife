@@ -21,6 +21,7 @@ public final class Deque<Element> {
     }
     
     private var size = 0
+    /// next 指向头节点，prev指向尾节点
     fileprivate let root = Node()
     
     public init() {}

@@ -53,6 +53,28 @@ public enum Console {
         file: NSString,
         line: Int,
         fn: String) -> String {
+        if let format = items.first as? String, format.contains("%") {
+            let regex: Regex = #"(%@)|(%c)|(%s)|(%\d*l{0,2}[d|D|i|u|U])|(%\d*\.*\d*[f|g])"#
+            let count = regex.matchesCount(in: format)
+            if count > 0 {
+                guard items.count > count else {
+                    fatalError("the format string \(format) must has \(count) params")
+                }
+                let str = String(format: format, arguments: items[1...count].compactMap { $0 as? CVarArg })
+                return _buildLog([str] + items[(count+1)...], blendTime: blendTime, whose: whose, tag: tag, separator: separator, file: file, line: line, fn: fn)
+            }
+        }
+        return _buildLog(items, blendTime: blendTime, whose: whose, tag: tag, separator: separator, file: file, line: line, fn: fn)
+    }
+    private static func _buildLog<Whose>(
+        _ items: [Any],
+        blendTime: Bool,
+        whose: Whose?,
+        tag: Tag,
+        separator: String,
+        file: NSString,
+        line: Int,
+        fn: String) -> String {
         
         let caller = whose.map { "\(type(of: $0))." } ?? ""
         let method = "\(caller)\(fn)"
@@ -115,7 +137,26 @@ public enum Console {
         NSLog("\n\(content)")
     }
     
-    
+    /*
+     
+     let values: [String: Any] = [
+         "age": 10,
+         "score": [10, 20, 30],
+         "name": "xiaohuang"
+     ]
+     let num = 10
+     let val = 3.1415926
+     Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
+     喝了咯 hello {
+        age = 10;
+        name = xiaohuang;
+        score = (
+            10,
+            20,
+            30
+        );
+     } 00010, 3.142, 10 3.1415926
+     */
     public static func trace(
         _ items: Any...,
         tag: Tag = .none,

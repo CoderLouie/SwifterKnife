@@ -72,6 +72,48 @@ public extension UIImage {
         return UIImage(data: data)
     }
 
+    func aspectFillToSize(_ size: CGSize, model: UIView.ContentMode = .center) -> UIImage? {
+        if size.width < 0.01 || size.height < 0.01 { return nil }
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        let drawRect: CGRect = {
+            var rect = CGRect(origin: .zero, size: size)
+            let center = rect.center
+            let scale: CGFloat
+            var size = self.size
+            if (size.width / size.height < rect.width / rect.height) {
+                scale = rect.width / size.width;
+            } else {
+                scale = rect.height / size.height;
+            }
+            size.width *= scale
+            size.height *= scale
+            switch model {
+            case .top:
+                rect.origin = CGPoint(x: center.x - size.width * 0.5, y: 0)
+            case .bottom:
+                rect.origin = CGPoint(x: center.x - size.width * 0.5, y: rect.height - size.height)
+            case .left:
+                rect.origin = CGPoint(x: 0, y: center.y - size.height * 0.5)
+            case .right:
+                rect.origin = CGPoint(x: rect.width - size.width, y: center.y - size.height * 0.5)
+            case .topLeft:
+                rect.origin = CGPoint(x: 0, y: 0)
+            case .topRight:
+                rect.origin = CGPoint(x: rect.width - size.width, y: 0)
+            case .bottomLeft:
+                rect.origin = CGPoint(x: 0, y: rect.height - size.height)
+            case .bottomRight:
+                rect.origin = CGPoint(x: rect.width - size.width, y: rect.height - size.height)
+            default:
+                rect.origin = CGPoint(x: center.x - size.width * 0.5, y: center.y - size.height * 0.5)
+            }
+            rect.size = size
+            return rect
+        }()
+        draw(in: drawRect)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
     /// Compressed UIImage data from original UIImage.
     ///
     /// - Parameter quality: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality), (default is 0.5).
@@ -331,9 +373,13 @@ public extension UIImage {
         let tmp = size
         return stretchableImage(withLeftCapWidth: Int(tmp.width * x), topCapHeight: Int(tmp.height * y))
     }
+    static func fileNamed(_ fileName: String,
+                          in bundleClass: AnyClass? = nil) -> UIImage? {
+        UIImage(fileNamed: fileName, in: bundleClass)
+    }
     
     convenience init?(fileNamed name: String,
-                             in bundleClass: AnyClass? = nil) {
+                      in bundleClass: AnyClass? = nil) {
         guard !name.hasSuffix("/") else { return nil }
         let nspath = name as NSString
         

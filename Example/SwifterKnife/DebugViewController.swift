@@ -8,6 +8,28 @@
 
 import UIKit
 import SwifterKnife
+extension String {
+    var negativeWord: String? {
+        let path = "censorship.txt".filePath(under: .bundle)
+        return SandBox.readLines(path) {
+            contains($0)
+        }
+    }
+}
+
+
+import Lottie
+
+extension LottieAnimationView {
+    static var frog: LottieAnimationView {
+        LottieAnimationView(name: "青蛙").then {
+            $0.contentMode = .scaleAspectFill
+            $0.backgroundColor = .clear
+            $0.loopMode = .loop
+            $0.backgroundBehavior = .pauseAndRestore
+        }
+    }
+}
 
 fileprivate class TestCaseCell: UITableViewCell, Reusable {
     
@@ -22,210 +44,165 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
     func setup() {
     }
 }
-
-enum Gender: String, Codable {
-    case man, woman
-}
-struct Tag: RawRepresentable, Codable {
-    init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    init(_ rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    let rawValue: Int
-}
-fileprivate extension DefaultsKeys {
-    var reviewed: DefaultsKey<Bool?> {
-        .init("reviewed")
-    }
-    var pCount: DefaultsKey<Int?> {
-        .init("pCount")
-    }
-    var reviewCount: DefaultsKey<Int> {
-        .init("reviewCount", defaultValue: 100)
-    }
-    var gender: DefaultsKey<Gender?> {
-        .init("gender")
-    }
-    var niltag: DefaultsKey<Tag?> {
-        .init("niltag")
-    }
-    var tag: DefaultsKey<Tag> {
-        .init("tag", defaultValue: Tag(10))
-    }
-    var genders: DefaultsKey<[Gender]> {
-        .init("genders", defaultValue: [])
-    }
-    var nilgenders: DefaultsKey<[Gender]?> {
-        .init("nilgenders")
-    }
-}
-
+ 
 fileprivate enum TestCase: String, CaseIterable {
-    case promise1 = "Promise1"
-    case promise2 = "Promise2"
-    case promise3 = "Promise Retry"
-    case lazy2 = "Lazy2"
-    case throttle = "throttle"
+    case negative = "敏感词汇"
+    case shuffled
+    case watermark
+    case overlay
+    case overlay1
+    case overlay2
     case defaults = "UserDefaults"
     
-    private func peekus() {
-        let r = Defaults[\.reviewed]
-        let n = Defaults[\.reviewCount]
-        let g = Defaults[\.gender]
-        let t = Defaults[\.tag]
-        let nilt = Defaults[\.niltag]
-        let gs = Defaults[\.genders]
-        let nilgs = Defaults[\.nilgenders]
-        print(r, n, g, t, nilt, gs, nilgs)
+    case statement = "Statement"
+    case home = "Home"
+    case fitImageView
+    case other
+    case dictation = "语音输入"
+    case testUI = "Test UI"
+    case codable = "Codable"
+    var token: String {
+        return "\(#fileID)_\(#function)_\(#line)"
     }
+    
     func perform(from vc: DebugViewController) {
         switch self {
+        case .shuffled:
+//            let nums = [0, 2, 4, 7, 6]
+//            nums.forEach(slice: 2) { print($0) }
+            print(AssociationKey.current())
+            print(AssociationKey.current())
+            print(token)
+//            let nums = Array(0...5)
+//            print(nums.shuffledOfLength(8))
+//            print(nums.shuffledOfLength(7))
+//            print(nums.shuffledOfLength(6))
+//            print(nums.shuffledOfLength(4))
+//            print(nums.shuffledOfLength(3))
+//            print(nums.shuffledOfLength(1))
+//            print(nums.shuffledOfLength(0))
+        case .negative:
+            let word = "(1man), (male:1.2), youthful face, finely detailed eyes and face, unique and captivating look, exudes an air of sophistication, sienna skin, ombre spiky hair, silver eyes, Style-GravityMagic, focus on character, portrait, looking down, solo, ((upper body)), detailed background, ( (DarkFantasy:0.8), dark fantasy theme:1.1), privateer, rich Musket Brown pirate sailor outfit, bandana, evil grin, high seas, jolly roger flag, flintlock pistol, whirlpool, dark storm, rum, sunrise, pirate fantasy atmosphere, finely detailed background, Depth of Field, VFX',10:'Portrait photo of muscular bearded guy in a worn mech suit, ((light bokeh)), intricate, (steel metal [rust]), elegant, sharp focus, photo by greg rutkowski, soft lighting, vibrant colors, (masterpiece), ((streets)), (detailed face:1.2), (glowing blue eyes:1.1)"
+            print("[negativeWord]", word.negativeWord ?? "nil")
+        case .dictation:
+            let nextVc = DictationVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .overlay2:
+            let videoPath = "inputResources.mp4".filePath(under: .bundle)
+            let destPath = "watermark.mp4".filePath(under: .temporary)
+//            LottieConfiguration.shared.renderingEngine = .mainThread
+            let mark = LottieAnimationView.frog.then {
+                $0.animationSpeed = 5
+                $0.frame = CGRect(x: 150, y: 340, width: 80, height: 80)
+                $0.play { _ in
+                    print("lottie play finish")
+                }
+            }
+            let begin = CACurrentMediaTime()
+            let editor = YiVideoEditor(videoURL: .init(fileURLWithPath: videoPath))
+            editor.addOverlay { _ in mark.layer }
+            let destUrl = URL(fileURLWithPath: destPath)
+            editor.export(at: destUrl) { session in
+                let error = session.error
+                print("[export finish]", begin.coseTime, error ??? "nil")
+                if error == nil {
+                    PhotoManager.saveVideoToAlbum(url: destUrl) { success in
+                        print("[Save finish]", success.opDescription, begin.coseTime)
+                    }
+                }
+            }
+        case .overlay1:
+            let videoPath = "inputResources.mp4".filePath(under: .bundle)
+            let destPath = "watermark.mp4".filePath(under: .temporary)
+//            LottieConfiguration.shared.renderingEngine = .mainThread
+            let mark = LottieAnimationView.frog.then {
+                $0.animationSpeed = 5
+                $0.frame = CGRect(x: 150, y: 340, width: 80, height: 80)
+                $0.play { _ in
+                    print("lottie play finish")
+                }
+            }
+            let begin = CACurrentMediaTime()
+            let flag = VideoEditor.addOverlay(mark.layer, to: videoPath, exportAt: destPath) { error in
+                print("[export finish]", begin.coseTime, error ??? "nil", mark.frame)
+                if error == nil {
+                    PhotoManager.saveVideoToAlbum(url: URL(fileURLWithPath: destPath)) { success in
+                        print("[Save finish]", success.opDescription, begin.coseTime)
+                    }
+                }
+            }
+            print("[Add Overlay]", flag.opDescription)
+        case .overlay:
+            let videoPath = "apple.mp4".filePath(under: .bundle)
+            let destPath = "watermarkapple3.mp4".filePath(under: .document)
+            let begin = CACurrentMediaTime()
+            let flag = VideoEditor.addOverlay({ bounds in
+                let layer = CALayer().then {
+                    $0.backgroundColor = UIColor.red.cgColor
+                    $0.frame = CGRect(x: 10, y: 10, width: 60, height: 30)
+                }
+                return [layer]
+            }, to: videoPath, exportAt: destPath) { error in
+                print("[export finish]", begin.coseTime, error ??? "nil")
+                if error == nil {
+                    PhotoManager.saveVideoToAlbum(url: URL(fileURLWithPath: destPath)) { success in
+                        print("[Save finish]", success.opDescription, begin.coseTime)
+                    }
+                }
+            }
+            print("[Add Overlay]", flag.opDescription)
+        case .watermark:
+            let filename = "apple.mp4"
+//            let filename = "IMG_4396.MOV"
+            let tmpUrl = URL(fileURLWithPath: filename.filePath(under: .bundle))
+            let videoEditor = YiVideoEditor(videoURL: tmpUrl)
+            videoEditor.addOverlay { _ in
+                CALayer().then {
+                    $0.backgroundColor = UIColor.red.cgColor
+                    $0.frame = CGRect(x: 10, y: 10, width: 40, height: 20)
+                }
+            }
+            let destPath = "watermarkapple1.mp4".filePath(under: .document)
+            let destUrl = URL(fileURLWithPath: destPath)
+            videoEditor.export(at: destUrl) { session in
+                print("[AIDream] export finished", session.status.rawValue, session.error ??? "nil")
+                if session.status == .completed {
+                    PhotoManager.saveVideoToAlbum(url: destUrl) { success in
+                        if success {
+                            print("save success")
+                        }
+                    }
+                }
+            }
+        case .statement:
+            statement_test_entry()
         case .defaults:
-            peekus()
-            Defaults[\.reviewed] = true
-            Defaults[\.reviewCount] = 5
-            Defaults[\.gender] = .man
-            Defaults[\.tag] = Tag(20)
-            Defaults[\.niltag] = Tag(8)
-            Defaults[\.genders] = [.woman, .man]
-            Defaults[\.nilgenders] = [.man]
-            
-            peekus()
+            userdefault_test_entry()
+        case .home:
+            let nextVc = HomeViewController()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .fitImageView:
+            let nextVc = FitImageViewVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .testUI:
+            let nextVc = TestUIVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .codable:
+            let nextVc = CodableVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .other:
             break
-        case .throttle:
-//            vc.mapPresentAd()
-            break
-        case .lazy2:
-//            let nums: [Int]? = [1, 2]
-//            if !nums.map(\.isEmpty, or: true) {
-//
-//            }
-//            break
-            print(vc._res?.age)
-            print(vc.res.age)
-            print(vc._res?.age)
-            print(vc.res.age)
-            
-//            print(vc.res.nullable ??? "nil")
-//            print(vc.res.isBuilt)
-//            vc.res.nonull(or: Resource(age:  110))
-//            print(vc.res.nonull.age)
-//            print(vc.res.isBuilt)
-        case .promise3:
-            Console.trace("bengin retry")
-            Promises.retry(delay: 2) { n, error -> Promise<Int>? in
-                if n > 4 { return nil }
-                Console.trace("第 \(n) 次生成 promise, \(error) \(Thread.current)")
-                return Promise<Int>.create { fulfill, reject in
-                    DispatchQueue.main.after(1) {
-                        reject(StepError(step: n))
-                    }
-                }
-            }.then { val in
-                Console.trace("reolve", val)
-            } onRejected: { err in
-                Console.trace("reject", err)
-            }
-
-        case .promise1:
-            vc.promise.then { val in
-                print("reolve", val)
-            } onRejected: { err in
-                print("reject", err)
-            }.catchs { err in
-                print("catch", err)
-            }
-        case .promise2:
-            Promise<Int>.create { fulfill, reject in
-                DispatchQueue.main.after(1) {
-//                    fulfill(100)
-//                    reject(PromiseError.missed)
-                    reject(StepError(step: 10, error: StepError(step: 9, error: PromiseError.missed)))
-                }
-            }.step(1).flatMap { val in
-                return Promise<String>.create { fulfill, reject in
-                    DispatchQueue.main.after(1) {
-                        fulfill("\(val + 10)")
-//                        reject(PromiseError.missed)
-                    }
-                }.step(2)
-            }.step(5).then { val in
-                print("reolve", val)
-            } onRejected: { err in
-                print("reject", err)
-            }.catchs(as: StepError.self) { err in
-                print("catch", err)
-            }
         }
     }
 }
-
-class Resource: CustomStringConvertible {
-    let age: Int
-    init(age: Int) {
-        print("create res with \(age)")
-        self.age = age
-    }
-    var description: String {
-        return "an res with \(age)"
-    }
-    deinit {
-        print("res with \(age) deinit")
-    }
-}
-extension Resource: Then {}
-
+ 
+enum NetError: Swift.Error {}
 class DebugViewController: BaseViewController {
-//    lazy var mapPresentAd = Knife.throttle(presentAd(_:))
-    func presentAd(_ completion: @escaping () -> Void) {
-        print("enter presentAd")
-        DispatchQueue.main.after(2) {
-            completion()
-            print("exit presentAd")
-        }
-    }
     
     override func setupViews() {
         super.setupViews()
         title = "Debug"
-        setupBody()
-    }
-//    lazy var res = Lazy(Resource(age:  110).then { [unowned self] _ in
-//        print("execute lazy", self.n)
-////        print("execute lazy")
-//    })
-//    lazy var res = Lazy {
-//        Resource(age:  110).then { _ in
-//            print("execute lazy", self.n)
-//        }
-//    }
-//    lazy var res = Lazy { [unowned self] in
-//        Resource(age:  110).then { _ in
-//            print("execute lazy", self.n)
-//        }
-//    }
-//    lazy var res = Lazy<Resource>()
-    
-    var _res: Resource?
-    var res: Resource {
-        _res ?<< Resource(age: 10).then {
-            print("execute lazy", self.n, $0.age)
-        }
-    }
-    
-//    lazy var res = Lazy(Resource(age: 10)).then { [unowned self] r in
-//        print("execute lazy", self.n, r.age)
-//    }
-    // 不会循环引用，但是会等promise完成后，self才会释放
-    private let n = 100
-    lazy var promise = Promise<Int>.create { fulfill, reject in
-        DispatchQueue.main.after(3) {
-            fulfill(self.n)
-        }
-    }.then { val in
-        print("reolve0000", val, self.n)
+        setupBody() 
     }
     private unowned var tableView: UITableView!
     private lazy var items: [TestCase] = TestCase.allCases

@@ -28,6 +28,12 @@ public extension ClosedRange where Bound: BinaryFloatingPoint {
 }
 
 extension NSRange {
+    public static var zero: NSRange {
+        NSRange(location: 0, length: 0)
+    }
+    public var isValid: Bool {
+        location != NSNotFound && length > 0
+    }
     public var isNotFound: Bool {
         location == NSNotFound
     }

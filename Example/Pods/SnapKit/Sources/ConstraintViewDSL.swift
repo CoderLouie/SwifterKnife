@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -52,8 +52,7 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
     }
     
     public var contentHuggingHorizontalPriority: Float {
-        get {
-            return view.contentHuggingPriority(for: .horizontal).rawValue
+        get { view.contentHuggingPriority(for: .horizontal).rawValue
         }
         nonmutating set {
             view.setContentHuggingPriority(LayoutPriority(rawValue: newValue), for: .horizontal)
@@ -61,8 +60,7 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
     }
     
     public var contentHuggingVerticalPriority: Float {
-        get {
-            return view.contentHuggingPriority(for: .vertical).rawValue
+        get { view.contentHuggingPriority(for: .vertical).rawValue
         }
         nonmutating set {
             view.setContentHuggingPriority(LayoutPriority(rawValue: newValue), for: .vertical)
@@ -70,8 +68,7 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
     }
     
     public var contentCompressionResistanceHorizontalPriority: Float {
-        get {
-            return view.contentCompressionResistancePriority(for: .horizontal).rawValue
+        get { view.contentCompressionResistancePriority(for: .horizontal).rawValue
         }
         nonmutating set {
             view.setContentCompressionResistancePriority(LayoutPriority(rawValue: newValue), for: .horizontal)
@@ -79,22 +76,26 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
     }
     
     public var contentCompressionResistanceVerticalPriority: Float {
-        get {
-            return view.contentCompressionResistancePriority(for: .vertical).rawValue
+        get { view.contentCompressionResistancePriority(for: .vertical).rawValue
         }
         nonmutating set {
             view.setContentCompressionResistancePriority(LayoutPriority(rawValue: newValue), for: .vertical)
         }
     }
     
-    public var target: AnyObject? {
-        return view
-    }
+    public var target: AnyObject? { view }
     
     internal let view: ConstraintView
     
     internal init(view: ConstraintView) {
         self.view = view
+    }
+}
+
+public extension ConstraintView {
+    
+    var snp: ConstraintViewDSL {
+        return ConstraintViewDSL(view: self)
     }
     
 }

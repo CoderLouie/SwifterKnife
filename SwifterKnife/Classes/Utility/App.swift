@@ -9,7 +9,18 @@ import UIKit
  
 public enum App {
     
-    public var isIdleTimerEnable: Bool {
+    public static func exit() {
+        Darwin.exit(0)
+    }
+    public static func exitAnimated(with view: UIView? = nil, duration: TimeInterval = 0.5) {
+        UIView.animate(withDuration: duration) {
+            (view ?? window)?.alpha = 0
+        } completion: { _ in
+            Darwin.exit(0)
+        }
+    }
+    
+    public static var isIdleTimerEnable: Bool {
         get { !UIApplication.shared.isIdleTimerDisabled }
         set {
             UIApplication.shared.isIdleTimerDisabled = !newValue
@@ -32,6 +43,21 @@ public enum App {
     }
     public static var window: UIWindow? {
         UIApplication.shared.delegate?.window ?? nil
+    }
+    
+
+    public static var keyWindow: UIWindow? {
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            return UIApplication.shared.connectedScenes.filter {
+                $0.activationState == .foregroundActive
+            }.first {
+                $0 is UIWindowScene
+            }.flatMap {
+                $0 as? UIWindowScene
+            }?.windows.first(where: \.isKeyWindow)
+        } else {
+            return UIApplication.shared.keyWindow
+        }
     }
     
     /// 是否处于debug模式
@@ -97,6 +123,21 @@ public enum App {
         return nil
     }
     
+    public static var iconPaths: [String]? {
+        guard let info = Bundle.main.infoDictionary,
+              let icons = info["CFBundleIcons"] as? [String: Any],
+              let primaryIcon = icons["CFBundlePrimaryIcon"] as? [String: Any],
+              let iconFiles = primaryIcon["CFBundleIconFiles"] as? [String],
+              !iconFiles.isEmpty else {
+            return nil
+        }
+        return iconFiles
+    }
+    public static var icon: UIImage? {
+        guard let path = iconPaths?.first else { return nil }
+        return UIImage(named: path)
+    }
+    
     private static func string(for key: String) -> String? {
         guard let value = Bundle.main.infoDictionary?[key] as? String else {
                 return nil
@@ -109,14 +150,12 @@ public enum App {
         openURL(url)
     }
     
+    public static func openURLString(_ urlString: String?, completion: ((Bool) -> Void)? = nil) {
+        openURL(urlString.flatMap(URL.init(string:)), completion: completion)
+    }
     public static func openURL(_ url: URL?, completion: ((Bool) -> Void)? = nil) {
         guard let url = url else { completion?(false); return }
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: completion)
-        } else {
-            UIApplication.shared.openURL(url)
-            completion?(true)
-        }
+        UIApplication.shared.open(url, options: [:], completionHandler: completion)
     }
      
 //    public static var appID: String = ""

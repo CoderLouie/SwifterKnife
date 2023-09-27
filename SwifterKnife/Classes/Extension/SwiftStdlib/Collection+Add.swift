@@ -31,6 +31,26 @@ public extension Collection {
         }
     }
 
+    subscript(indices: Index...) -> [Element] {
+        self[indices]
+    }
+    subscript(indices: [Index]) -> [Element] {
+        guard !indices.isEmpty else { return [] }
+        var res: [Element] = []
+        res.reserveCapacity(indices.count)
+        for index in indices {
+            res.append(self[index])
+        }
+        return res
+    }
+    subscript(safe indices: Index...) -> [Element] {
+        self[safe: indices]
+    }
+    subscript(safe indices: [Index]) -> [Element] {
+        let safeIndices = indices.filter { self.indices.contains($0) }
+        return self[safeIndices]
+    }
+    
     /// Safe protects the array from out of bounds by use of optional.
     ///
     ///        let arr = [1, 2, 3, 4, 5]
@@ -89,6 +109,39 @@ public extension Collection {
             start = end
         }
     }
+    /// Unique pair of elements in a collection.
+    ///
+    ///        let array = [1, 2, 3]
+    ///        for (first, second) in array.adjacentPairs() {
+    ///            print(first, second) // print: (1, 2) (1, 3) (2, 3)
+    ///        }
+    ///
+    ///
+    /// - Returns: a sequence of adjacent pairs of elements from this collection.
+    func adjacentPairs() -> AnySequence<(Element, Element)> {
+        guard var index1 = index(startIndex, offsetBy: 0, limitedBy: endIndex),
+              var index2 = index(index1, offsetBy: 1, limitedBy: endIndex) else {
+            return AnySequence {
+                EmptyCollection.Iterator()
+            }
+        }
+        return AnySequence {
+            AnyIterator {
+                if index1 >= endIndex || index2 >= endIndex {
+                    return nil
+                }
+                defer {
+                    index2 = self.index(after: index2)
+                    if index2 >= endIndex {
+                        index1 = self.index(after: index1)
+                        index2 = self.index(after: index1)
+                    }
+                }
+                return (self[index1], self[index2])
+            }
+        }
+    }
+
 }
 
 // MARK: - Methods (Equatable)
@@ -138,3 +191,32 @@ public extension Collection where Element: FloatingPoint {
     }
 }
 
+
+public extension Collection {
+    func shuffledOfLength(_ length: Int) -> [Element] {
+        guard length > 0, !isEmpty else { return [] }
+        var result = shuffled()
+        var lefts = count - length
+        while lefts > 0 {
+            result.removeLast()
+            lefts -= 1
+        }
+        return result
+    }
+}
+
+extension Collection where Index == Int, Element: Collection, Element.Index == Int {
+    public subscript(_ indexPath: IndexPath) -> Element.Element {
+        return self[indexPath.section][indexPath.row]
+    }
+}
+
+extension MutableCollection where Index == Int, Element: MutableCollection, Element.Index == Int {
+    public subscript(_ indexPath: IndexPath) -> Element.Element {
+        get {
+            return self[indexPath.section][indexPath.row]
+        } set {
+            self[indexPath.section][indexPath.row] = newValue
+        }
+    }
+}

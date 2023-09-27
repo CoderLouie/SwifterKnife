@@ -2,14 +2,7 @@
 //  Random.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2023/1/4.
-//
-
-//
-//  SwiftRandom.swift
-//
-//  Created by Furkan Yilmaz on 7/10/15.
-//  Copyright (c) 2015 Furkan Yilmaz. All rights reserved.
+//  Created by liyang on 2023/1/4.
 //
 
 import UIKit
@@ -36,13 +29,13 @@ extension CGFloat: Randomizable {}
 
 extension Date: Randomizable {
     
-    static func randomWithinDaysBeforeToday(_ days: Int) -> Date {
+    public static func randomWithinDaysBeforeToday(_ days: Int) -> Date {
         let today = Date()
         let earliest = today.addingTimeInterval(TimeInterval(-days*24*60*60))
         return Date.random(in: earliest...today)
     }
 
-    static func random() -> Date {
+    public static var random: Date {
         let randomTime = TimeInterval(arc4random_uniform(UInt32.max))
         return Date(timeIntervalSince1970: randomTime)
     }
@@ -101,11 +94,14 @@ public extension String {
 public extension UIColor {
     
     /// Random color.
-    static func random(_ randomAlpha: Bool = false) -> UIColor {
+    static func random(_ randomAlpha: Bool) -> UIColor {
         UIColor(red: .random(in: 0...1),
                 green: .random(in: 0...1),
                 blue: .random(in: 0...1),
                 alpha: randomAlpha ? CGFloat.random(in: 0...1) : 1.0)
+    }
+    static var random: UIColor {
+        random(false)
     }
 }
 
@@ -114,10 +110,6 @@ public enum Random {}
 public extension Random {
     static var bool: Bool {
         Bool.random()
-    }
-    
-    static func one<T: Randomizable>(_ lower: T, _ upper: T) -> T {
-        T.random(in: lower..<upper)
     }
     
     static var int: Int {
@@ -146,14 +138,14 @@ public extension Random {
     }
     
     static var color: UIColor {
-        UIColor.random()
+        UIColor.random(false)
     }
     static var alphaColor: UIColor {
         UIColor.random(true)
     }
     
     static var date: Date {
-        Date.random()
+        Date.random
     }
     
     static func date(from past: TimeInterval, to future: TimeInterval) -> Date {

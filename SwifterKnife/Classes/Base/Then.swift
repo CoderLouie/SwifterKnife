@@ -89,3 +89,46 @@ extension Set: Then {}
 extension UIEdgeInsets: Then {}
 extension UIRectEdge: Then {}
 #endif
+
+
+
+@dynamicMemberLookup
+/// 用于实现链式调用
+public struct Chain<Object: AnyObject> {
+    public let object: Object
+    
+    public init(_ object: Object) {
+        self.object = object
+    }
+    
+    public subscript<Value>(dynamicMember keyPath: ReferenceWritableKeyPath<Object, Value>) -> (Value) -> Chain<Object> {
+        return {
+            self.object[keyPath: keyPath] = $0
+            return self
+        }
+    }
+    public subscript<Value>(dynamicMember keyPath: WritableKeyPath<Object, Value>) -> (Value) -> Chain<Object> {
+        var object = self.object
+        return {
+            object[keyPath: keyPath] = $0
+            return Chain(object)
+        }
+    }
+    
+    @inlinable
+    public func then(_ block: (Object) throws -> Void) rethrows -> Object {
+        try block(object)
+        return object
+    }
+    
+    @inlinable
+    public func `do`(_ block: (Object) throws -> Void) rethrows {
+        try block(object)
+    }
+}
+
+extension Then where Self: AnyObject {
+    public var chain: Chain<Self> {
+        .init(self)
+    }
+}

@@ -2,164 +2,159 @@
 //  AspectImageView.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/8/23.
+//  Created by liyang on 2022/8/23.
 //
 
 import UIKit
 
-/*
-/*
- 适用场景：
- 适用于使用图片作为背景，在背景图的标注位置上创建其他视图
- */
-public class AspectImageView: UIImageView {
-    private lazy var aspectSize: CGSize = .zero
-    
-    public private(set) var ratio: CGFloat = 1
-    
-    private func _min(_ x: CGFloat, _ y: CGFloat) -> (CGFloat, Bool) {
-        if x < y { return (x, true) }
-        return (y, false)
-    }
-    private func _max(_ x: CGFloat, _ y: CGFloat) -> (CGFloat, Bool) {
-        if x > y { return (x, true) }
-        return (y, false)
-    }
-    
-    public enum LimitDirection {
-        case horizontal
-        case vertical
-    }
-    /// 返回值表示受限制的方向
-    @discardableResult
-    public func aspectFit(_ image: UIImage, boundingSize: CGSize) -> LimitDirection {
-        contentMode = .scaleAspectFit
-        self.image = image
-        let imgS = image.size
-        let info = _min(boundingSize.width / imgS.width, boundingSize.height / imgS.height)
-        let minRatio = info.0
-        ratio = minRatio
-        aspectSize = CGSize(width: imgS.width * minRatio, height: imgS.height * minRatio)
-        invalidateIntrinsicContentSize()
-        return info.1 ? .horizontal : .vertical
-    }
-    @discardableResult
-    public func aspectFill(_ image: UIImage, boundingSize: CGSize) -> LimitDirection {
-        contentMode = .scaleAspectFill
-        self.image = image
-        let imgS = image.size
-        let info = _max(boundingSize.width / imgS.width, boundingSize.height / imgS.height)
-        let minRatio = info.0
-        ratio = minRatio
-        
-        let aWidth = min(imgS.width * minRatio, boundingSize.width)
-        let aHeight = min(imgS.height * minRatio, boundingSize.height)
-        aspectSize = CGSize(width: aWidth, height: aHeight)
-        invalidateIntrinsicContentSize()
-        return info.1 ? .vertical : .horizontal
-    }
-    public override var intrinsicContentSize: CGSize {
-        if aspectSize.width > 0,
-           aspectSize.height > 0 {
-            return aspectSize
-        }
-        return super.intrinsicContentSize
+fileprivate extension CGRect {
+    var pixelate: CGRect {
+        CGRect(x: origin.x.pixFloor, y: origin.y.pixFloor, width: size.width.pixCeil, height: size.height.pixCeil)
     }
 }
-*/
-open class BaseImageView: UIImageView {
+
+open class AspectFitView: UIView {
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
-    public convenience init() {
-        self.init(frame: .zero)
-    }
-    open func setup() {
-        contentMode = .scaleAspectFit
-    }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    open override var image: UIImage? {
+    
+    open var contentInset: UIEdgeInsets = .zero {
         didSet {
-            if firstLayout { return }
-            invalidateIntrinsicContentSize()
+            guard oldValue != contentInset else { return }
+            setNeedsLayout()
         }
     }
-    private var firstLayout = true
+    public var image: UIImage? {
+        get { imgView.image }
+        set {
+            imgView.image = newValue
+            setNeedsLayout()
+        }
+    }
+    open func setup() {
+        imgView = UIImageView().then {
+            $0.contentMode = .scaleAspectFit
+            addSubview($0)
+        }
+    }
+    open var imageContentModel: UIView.ContentMode = .top
     open override func layoutSubviews() {
         super.layoutSubviews()
-        if firstLayout, !bounds.isEmpty {
-            invalidateIntrinsicContentSize()
-            firstLayout = false
+        let bounds = bounds
+        let inset = contentInset
+        let rect = bounds.inset(by: inset)
+        guard let ratio = imgView.image?.size.whRatio else { return }
+        let size: CGSize
+        if ratio < 1 {
+            size = CGSize(width: rect.height * ratio, height: rect.height)
+        } else {
+            size = CGSize(width: rect.width, height: rect.width / ratio)
+        }
+        imgView.contentMode = .scaleAspectFit
+        var frame = rect.resizing(to: size, model: .scaleAspectFit).pixelate
+        switch imageContentModel {
+        case .top:
+            frame.origin.y = inset.top
+        case .left:
+            frame.origin.x = inset.left
+        case .right:
+            frame.origin.x = rect.maxX - frame.size.width
+        case .bottom:
+            frame.origin.y = rect.maxY - frame.size.height
+        default: break
+        }
+        imgView.frame = frame
+    }
+    private(set) public unowned var imgView: UIImageView!
+}
+
+
+open class FitVImageView: UIImageView {
+    open override var image: UIImage? {
+        didSet {
+            if bounds.width > 0 {
+                invalidateIntrinsicContentSize()
+            }
         }
     }
-}
-open class HImageView: BaseImageView {
-    open var maxHeight: CGFloat = -1
-    open override func setup() {
-        super.setup()
-        // 水平方向可以拉伸
-        setContentHuggingPriority(UILayoutPriority(rawValue: 249), for: .horizontal)
-        // 垂直方向尽量不要拉伸
-        setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .vertical)
-        
-        // 水平方向可以压缩
-        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 749), for: .horizontal)
-        // 垂直方向尽量不要压缩
-        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 751), for: .vertical)
-    }
+    public var ratioMap: ((CGFloat, CGFloat, UIImage) -> CGFloat)?
     open override var intrinsicContentSize: CGSize {
-        let bounds = bounds
-        guard !bounds.isEmpty,
-            let imgS = image?.size,
-            !imgS.isEmpty else {
+        guard let img = image else {
             return super.intrinsicContentSize
         }
-        var size = bounds.size
-        var aspectH = (size.width * imgS.height / imgS.width)
-        if maxHeight > 0 {
-            aspectH = min(aspectH, maxHeight)
+        let imgSize = img.size
+        if imgSize.width == 0 {
+            return super.intrinsicContentSize
         }
-        size.height = aspectH.pix
-        return size
-    }
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        intrinsicContentSize
-    }
-}
-open class VImageView: BaseImageView {
-    open var maxWidth: CGFloat = -1
-    open override func setup() {
-        super.setup()
-        // 垂直方向可以拉伸
-        setContentHuggingPriority(UILayoutPriority(rawValue: 249), for: .vertical)
-        // 水平方向尽量不要拉伸
-        setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .horizontal)
-        
-        // 垂直方向可以压缩
-        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 749), for: .vertical)
-        // 水平方向尽量不要压缩
-        setContentCompressionResistancePriority(UILayoutPriority(rawValue: 751), for: .horizontal)
+        let size = bounds.size
+        if size.width == 0 {
+            return super.intrinsicContentSize
+        }
+        let w = size.width
+        let imgRatio = imgSize.width / imgSize.height
+        let ratio = ratioMap?(imgRatio, w, img) ?? imgRatio
+        let h = w / ratio
+        return CGSize(width: w, height: h.pixCeil)
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let img = image else { return }
+        let size = bounds.size
+        let imgS = img.size
+        if Int(imgS.width) == Int(size.width) {
+            return // 没有设置宽约束
+        }
+        if size.width > 0,
+            Int(imgS.height) == Int(size.height) {
+            invalidateIntrinsicContentSize()
+        }
+    }
+}
+open class FitHImageView: UIImageView {
+    open override var image: UIImage? {
+        didSet {
+            if bounds.height > 0 {
+                invalidateIntrinsicContentSize()
+            }
+        }
+    }
+    public var ratioMap: ((CGFloat, CGFloat, UIImage) -> CGFloat)?
     open override var intrinsicContentSize: CGSize {
-        let bounds = bounds
-        guard !bounds.isEmpty,
-            let imgS = image?.size,
-            !imgS.isEmpty else {
+        guard let img = image else {
             return super.intrinsicContentSize
         }
-        var size = bounds.size
-        var aspectW = (size.height * imgS.width / imgS.height)
-        if maxWidth > 0 {
-            aspectW = min(aspectW, maxWidth)
+        let imgSize = img.size
+        if imgSize.height == 0 {
+            return super.intrinsicContentSize
         }
-        size.width = aspectW.pix
-        return size
+        let size = bounds.size
+        if size.height == 0 {
+            return super.intrinsicContentSize
+        }
+        let h = size.height
+        let imgRatio = imgSize.width / imgSize.height
+        let ratio = ratioMap?(imgRatio, h, img) ?? imgRatio
+        let w = h * ratio
+        return CGSize(width: w.pixCeil, height: h)
     }
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        intrinsicContentSize
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let img = image else { return }
+        let size = bounds.size
+        let imgS = img.size
+        if Int(imgS.height) == Int(size.height) {
+            return // 没有设置高度约束
+        }
+        if size.height > 0,
+           Int(imgS.width) == Int(size.width) {// 第一次进入此方法
+            invalidateIntrinsicContentSize()
+        }
     }
 }

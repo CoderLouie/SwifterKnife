@@ -69,6 +69,12 @@ public enum SandBox {
             try manager.createDirectory(atPath: mapPath, withIntermediateDirectories: true, attributes: nil)
         }
     }
+    public static func createDirectory(atPath path: String) throws {
+        try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+    }
+    public static func createDirectory(at fileUrl: URL) throws {
+        try FileManager.default.createDirectory(at: fileUrl, withIntermediateDirectories: true, attributes: nil)
+    }
     
     public static func moveItem(atPath: String, toPath: String) throws {
         try FileManager.default.moveItem(atPath: atPath, toPath: toPath)
@@ -81,6 +87,31 @@ public enum SandBox {
     /// 如果path不存在会抛出错误
     public static func readData(from path: String) throws -> Data {
         return try Data(contentsOf: URL(fileURLWithPath: path))
+    }
+    
+    /// 逐行读取文本文件
+    public static func readLines(_ path: String, filter: (String) -> Bool) -> String? {
+        guard let handle = FileHandle(forReadingAtPath: path) else {
+            return nil
+        }
+        let newLineData = "\n".data(using: .utf8)
+        var data = Data()
+        let length = handle.seekToEndOfFile()
+        var offset: UInt64 = 0
+        handle.seek(toFileOffset: offset)
+        
+        while offset < length {
+            let chunk = handle.readData(ofLength: 1)
+            offset += 1
+            if chunk == newLineData {
+                if let str = String(data: data, encoding: .utf8),
+                   filter(str) { return str }
+                data = Data()
+            } else {
+                data += chunk
+            }
+        }
+        return nil
     }
     
     public static func diskSpaceFree() -> Int? {
@@ -142,6 +173,25 @@ public enum SandBox {
             if let res = passMap(fileURL) { return (fileURL, res) }
         }
         return nil
+    }
+    
+    public static func allFiles(in directory: String, isInclude: (_ fileURL: URL) -> Bool) -> [URL] {
+        let keys: [URLResourceKey] = [.isDirectoryKey]
+        guard let enumerator = FileManager.default.enumerator(at: URL(fileURLWithPath: directory), includingPropertiesForKeys: keys, options: .skipsHiddenFiles, errorHandler: nil) else {
+            return []
+        }
+        var res: [URL] = []
+        while let next = enumerator.nextObject() {
+            guard let fileURL = next as? URL,
+            let values = try? fileURL.resourceValues(forKeys: Set(keys)) else { continue }
+            guard let v = values.allValues[.isDirectoryKey] as? Bool, !v else {
+                continue
+            }
+            if isInclude(fileURL) {
+                res.append(fileURL)
+            }
+        }
+        return res
     }
     
     public static func moveDirectory(atPath srcPath: String, toPath dstPath: String) throws {

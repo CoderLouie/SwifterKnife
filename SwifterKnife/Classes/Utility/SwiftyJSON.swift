@@ -306,6 +306,7 @@ public typealias JSONIndex = Index<JSON>
 public typealias JSONRawIndex = Index<Any>
 
 extension JSON: Swift.Collection {
+    public typealias Element = (String, JSON)
     
     public typealias Index = JSONRawIndex
     
@@ -614,117 +615,31 @@ extension JSON: Swift.RawRepresentable {
         object
     }
     
-    public func rawData(options opt: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Data {
+    public func rawData(options opt: JSONSerialization.WritingOptions = []) throws -> Data {
         guard JSONSerialization.isValidJSONObject(object) else {
             throw JSONError.invalidJSON
         }
         
         return try JSONSerialization.data(withJSONObject: object, options: opt)
-    }
-    
-    public func rawString(_ encoding: String.Encoding = .utf8, options opt: JSONSerialization.WritingOptions = .prettyPrinted) -> String? {
-        do {
-            return try _rawString(encoding, options: [.jsonSerialization: opt])
-        } catch {
-            print("Could not serialize object to JSON because:", error.localizedDescription)
-            return nil
-        }
-    }
-    
-    public func rawString(_ options: [WritingOptionsKeys: Any]) -> String? {
-        let encoding = options[.encoding] as? String.Encoding ?? String.Encoding.utf8
-        let maxObjectDepth = options[.maxObjextDepth] as? Int ?? 10
-        do {
-            return try _rawString(encoding, options: options, maxObjectDepth: maxObjectDepth)
-        } catch {
-            print("Could not serialize object to JSON because:", error.localizedDescription)
-            return nil
-        }
-    }
-    
-    fileprivate func _rawString(_ encoding: String.Encoding = .utf8, options: [WritingOptionsKeys: Any], maxObjectDepth: Int = 10) throws -> String? {
-        guard maxObjectDepth > 0 else { throw JSONError.invalidJSON }
-        switch self {
-        case .dictionary:
-            do {
-                if !(options[.castNilToNSNull] as? Bool ?? false) {
-                    let jsonOption = options[.jsonSerialization] as? JSONSerialization.WritingOptions ?? JSONSerialization.WritingOptions.prettyPrinted
-                    let data = try rawData(options: jsonOption)
-                    return String(data: data, encoding: encoding)
-                }
-                
-                guard let dict = object as? [String: Any?] else {
-                    return nil
-                }
-                let body = try dict.keys.map { key throws -> String in
-                    guard let value = dict[key] else {
-                        return "\"\(key)\": null"
-                    }
-                    guard let unwrappedValue = value else {
-                        return "\"\(key)\": null"
-                    }
-                    
-                    let nestedValue = JSON(unwrappedValue)
-                    guard let nestedString = try nestedValue._rawString(encoding, options: options, maxObjectDepth: maxObjectDepth - 1) else {
-                        throw JSONError.elementTooDeep
-                    }
-                    if case .string = nestedValue {
-                        return "\"\(key)\": \"\(nestedString.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\""
-                    } else {
-                        return "\"\(key)\": \(nestedString)"
-                    }
-                }
-                
-                return "{\(body.joined(separator: ","))}"
-            } catch _ {
-                return nil
-            }
-        case .array:
-            do {
-                if !(options[.castNilToNSNull] as? Bool ?? false) {
-                    let jsonOption = options[.jsonSerialization] as? JSONSerialization.WritingOptions ?? JSONSerialization.WritingOptions.prettyPrinted
-                    let data = try rawData(options: jsonOption)
-                    return String(data: data, encoding: encoding)
-                }
-                
-                guard let array = object as? [Any?] else {
-                    return nil
-                }
-                let body = try array.map { value throws -> String in
-                    guard let unwrappedValue = value else {
-                        return "null"
-                    }
-                    
-                    let nestedValue = JSON(unwrappedValue)
-                    guard let nestedString = try nestedValue._rawString(encoding, options: options, maxObjectDepth: maxObjectDepth - 1) else {
-                        throw JSONError.invalidJSON
-                    }
-                    if case .string = nestedValue {
-                        return "\"\(nestedString.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\""
-                    } else {
-                        return nestedString
-                    }
-                }
-                
-                return "[\(body.joined(separator: ","))]"
-            } catch _ {
-                return nil
-            }
-        case .string(let string): return string
-        case .number(let num): return num.stringValue
-        case .bool(let bool): return bool.description
-        case .null:   return "null"
-        case .error(let error): return "\(error)"
-        }
-    }
+    } 
 }
 
 // MARK: - Printable, DebugPrintable
 
 extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
     
+    public var formatJSONString: String? {
+        var options: JSONSerialization.WritingOptions = [.sortedKeys]
+        if #available(iOS 13.0, *) {
+            options.insert(.withoutEscapingSlashes)
+        }
+        guard let data = try? rawData(options: options),
+              let raw = String(data: data, encoding: .utf8) else { return nil }
+        return raw
+    }
+
     public var description: String {
-        return rawString(options: .prettyPrinted) ?? "unknown"
+        return formatJSONString ?? "unknown"
     }
     
     public var debugDescription: String {
@@ -1321,13 +1236,6 @@ func >= (lhs: NSNumber, rhs: NSNumber) -> Bool {
     case (true, false): return false
     default: return lhs.compare(rhs) != .orderedAscending
     }
-}
-
-public enum WritingOptionsKeys {
-    case jsonSerialization
-    case castNilToNSNull
-    case maxObjextDepth
-    case encoding
 }
 
 // MARK: - JSON: Codable

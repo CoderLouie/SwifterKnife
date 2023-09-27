@@ -5,29 +5,10 @@
 //  Created by liyang on 2021/10/19.
 //
 
-public extension Sequence {
-    /// Check if all elements in collection match a condition.
-    ///
-    ///        [2, 2, 4].all(matching: {$0 % 2 == 0}) -> true
-    ///        [1,2, 2, 4].all(matching: {$0 % 2 == 0}) -> false
-    ///
-    /// - Parameter condition: condition to evaluate each element against.
-    /// - Returns: true when all elements in the array match the specified condition.
-    func all(matching condition: (Element) throws -> Bool) rethrows -> Bool {
-        // 如果没有元素不满足它的话，那意味着所有元素都满足它
-        return try !contains { try !condition($0) }
-    }
-
-    /// Check if no elements in collection match a condition.
-    ///
-    ///        [2, 2, 4].none(matching: {$0 % 2 == 0}) -> false
-    ///        [1, 3, 5, 7].none(matching: {$0 % 2 == 0}) -> true
-    ///
-    /// - Parameter condition: condition to evaluate each element against.
-    /// - Returns: true when no elements in the array match the specified condition.
-    func none(matching condition: (Element) throws -> Bool) rethrows -> Bool {
-        // 如果没有元素满足它的话，那意味着所有元素都不满足它
-        return try !contains { try condition($0) }
+public extension Sequence { 
+    
+    func theFirst<T>(ofType type: T.Type = T.self) -> T? {
+        first { $0 is T } as? T
     }
 
     /// Get element count based on condition.
@@ -138,7 +119,7 @@ public extension Sequence {
     /// Return a sorted array based on a key path and a compare function.
     ///
     /// - Parameter keyPath: Key path to sort by.
-    /// - Parameter compare: Comparation function that will determine the ordering.
+    /// - Parameter compare: Comparison function that will determine the ordering.
     /// - Returns: The sorted array.
     func sorted<T>(by keyPath: KeyPath<Element, T>, with compare: (T, T) -> Bool) -> [Element] {
         return sorted { compare($0[keyPath: keyPath], $1[keyPath: keyPath]) }
@@ -217,7 +198,7 @@ public extension Sequence where Element: Hashable {
 }
 
 public extension Sequence where Element: Hashable {
-    var frequencies: [Element:Int] {
+    var frequencies: [Element: Int] {
         let frequencyPairs = self.map { ($0, 1) }
         return Dictionary(frequencyPairs, uniquingKeysWith: +)
     }
@@ -236,10 +217,10 @@ public extension Sequence where Element: AdditiveArithmetic {
     }
 }
 
-@inlinable public func indexSequence<T>(first: T, next: @escaping (Int, T) -> T?) -> [T] {
+@inlinable public func indexSequence<T>(first: T, next: @escaping (Int, T) -> T?) -> UnfoldFirstSequence<T> {
     var index = 0
     return sequence(first: first) {
         index += 1
         return next(index, $0)
-    }.compactMap { $0 }
+    }
 }

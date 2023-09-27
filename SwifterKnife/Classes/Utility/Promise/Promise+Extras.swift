@@ -199,13 +199,11 @@ public struct IndexError: Swift.Error {
     }
 }
 extension Promises {
-    public static func asyncMap
-    <Element, Value, Failure: Swift.Error>(
+    public static func asyncMap<Element, Value>(
         of array: [Element],
         on queue: DispatchQueue = .global(qos: .userInitiated),
         using closure: @escaping (_ element: Element,
-                         _ index: Int,
-                         _ completion: @escaping (Result<Value, Failure>) -> Void) -> Void) -> Promise<[Value]> {
+                                  _ index: Int) -> Promise<Value>) -> Promise<[Value]> {
         let promise = Promise<[Value]>()
         var iterator = array.enumerated().makeIterator()
         guard let first = iterator.next() else {
@@ -218,17 +216,14 @@ extension Promises {
                 promise.fulfill(res)
                 return
             }
-            closure(pair.element, pair.offset) { result in
-                switch result {
-                case .success(let val):
-                    queue.async {
-                        res.append(val)
-                        work(pair: iterator.next())
-                    }
-                case .failure(let err):
-                    queue.async {
-                        promise.reject(IndexError(index: pair.offset, error: err))
-                    }
+            closure(pair.element, pair.offset).then { val in
+                queue.async {
+                    res.append(val)
+                    work(pair: iterator.next())
+                }
+            } onRejected: { err in
+                queue.async {
+                    promise.reject(IndexError(index: pair.offset, error: err))
                 }
             }
         }
@@ -238,6 +233,22 @@ extension Promises {
 }
 
 extension Promise {
+    public func chain<T1>(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Value) throws -> Promise<T1>) -> Promise<(Value, T1)> {
+        return Promise<(Value, T1)> { fulfill, reject in
+            self.then(on: queue, onFulfilled: { value in
+                do {
+                    try transform(value).then(on: queue, onFulfilled: {
+                        fulfill((value, $0))
+                    }, onRejected: reject)
+                } catch {
+                    reject(error)
+                }
+            }, onRejected: reject)
+        }
+    }
+    
     public func addTimeout(_ timeout: TimeInterval) -> Promise<Value> {
         let promise = Promise<Value>()
         then {
@@ -261,6 +272,16 @@ extension Promise {
             onComplete()
         }
     }
+    @discardableResult
+    public func finallyRes(
+        on queue: ExecutionContext = DispatchQueue.main,
+        onComplete: @escaping (Result<Value, Swift.Error>) -> Void) -> Promise<Value> {
+        return then(on: queue) {
+            onComplete(.success($0))
+        } onRejected: {
+            onComplete(.failure($0))
+        }
+    }
 
     public func recover(
         _ recovery: @escaping (Error) throws -> Promise<Value>) -> Promise<Value> {
@@ -274,14 +295,14 @@ extension Promise {
             }
         }
     }
-    public func replace(replacerOnFulfilled: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
+    public func replace(replacerOnFulfill: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
         if replacerOnReject == nil,
-            replacerOnFulfilled == nil {
+           replacerOnFulfill == nil {
             return self
         }
         return Promise { fulfill, reject in
             self.then { val in
-                guard let tranform = replacerOnFulfilled else {
+                guard let tranform = replacerOnFulfill else {
                     fulfill(val)
                     return
                 }

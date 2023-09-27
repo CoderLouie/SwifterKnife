@@ -7,82 +7,11 @@
 
 import UIKit
 
-/*
-fileprivate class StarView: UIView {
-    var count: Int = 5
-    var _starSize: CGSize?
-    var margin: CGFloat = 15
-    var image: UIImage?
-    var starsView: [UIImageView] = []
-    
-    var starSize: CGSize {
-        _starSize ?? image?.size ?? CGSize(width: 36, height: 36)
-    }
-    
-}
-
-class RatingView: UIView {
-    var count: Int {
-        get { backView.count }
-        set {
-            guard backView.count != newValue else {
-                return
-            }
-            frontView.count = newValue
-            backView.count = newValue
-            setNeedsLayout()
-            invalidateIntrinsicContentSize()
-        }
-    }
-    var margin: CGFloat {
-        get { backView.margin }
-        set {
-            guard backView.margin != newValue else {
-                return
-            }
-            frontView.margin = newValue
-            backView.margin = newValue
-            setNeedsLayout()
-            invalidateIntrinsicContentSize()
-        }
-    }
-    var starSize: CGSize {
-        frontView.starSize
-    }
-    func setStarSize(_ size: CGSize?) {
-        if size == nil, backView._starSize == nil {
-            return
-        }
-        if let s = size, s == backView.starSize {
-            return
-        }
-        frontView._starSize = size
-        backView._starSize = size
-        setNeedsLayout()
-        invalidateIntrinsicContentSize()
-    }
-    var panEnable = false
-    
-    var score: Double = 0
-    
-    var highlightedImage: UIImage? {
-        set { frontView.image = newValue }
-        get { frontView.starsView.first?.image }
-    }
-    var normalImage: UIImage? {
-        set { backView.image = newValue }
-        get { backView.starsView.first?.image }
-    }
-    
-    private unowned var backView: StarView!
-    private unowned var frontView: StarView!
-}
-*/
 
 fileprivate class StarsView: UIView {
     private var aspectSize: CGSize = .zero
     
-    public init(count: Int,
+    fileprivate init(count: Int,
          image: UIImage?,
          margin: CGFloat,
          size: CGSize) {
@@ -154,7 +83,8 @@ public class RatingView: UIView {
         
         backView = StarsView(count: count, image: normalImage, margin: margin, size: starSize)
         frontView = StarsView(count: count, image: highlightedImage, margin: margin, size: starSize)
-
+        frontView.frame.size.width = 0
+        
         super.init(frame: .zero)
         addSubview(backView)
         addSubview(frontView)
@@ -186,7 +116,7 @@ public class RatingView: UIView {
     /// 一个完整的星星代表多少分，权重
     public var weight: Double = 1
     
-    /// 最低评分值 默认一颗完整星星表示的分数
+    /// 最低评分值 默认0分
     public var minGrade: Double {
         get { _minProgress * weight }
         set {
@@ -213,7 +143,7 @@ public class RatingView: UIView {
             }
         }
     }
-    /// 默认满分
+    /// 默认0分
     public var grade: Double {
         get { _progress * weight }
         set {
@@ -234,11 +164,11 @@ public class RatingView: UIView {
         }
     }
     
-    private lazy var _progress = _maxProgress
+    private lazy var _progress: Double = 0
     private var _maxProgress: Double {
         Double(count)
     }
-    private var _minProgress: Double = 1
+    private var _minProgress: Double = 0
     
     private func widthForProgress(_ progress: Double) -> CGFloat {
         var left: Double = 0

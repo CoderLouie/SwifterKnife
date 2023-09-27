@@ -2,7 +2,7 @@
 //  Regex.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/12/28.
+//  Created by liyang on 2022/12/28.
 //  Originally from: https://github.com/sharplet/Regex (modified to remove some weight).
 //
 
@@ -107,6 +107,11 @@ public struct Regex {
         nsRegex
             .matches(in: string, options: options, range: string.nsrange)
             .map { Match(result: $0, in: string) }
+    }
+    public func matchesCount(in string: String,
+                        options: MatchingOptions = []) -> Int {
+        nsRegex
+            .matches(in: string, options: options, range: string.nsrange).count
     }
     
     public func split(_ string: String,
@@ -279,7 +284,7 @@ extension Regex {
             public let intRange: Range<Int>
             
             fileprivate init?(baseString: String, range: NSRange) {
-                if range.location == NSNotFound,
+                if range.location == NSNotFound ||
                    range.length > 0 { return nil }
                 self.range = baseString.rangeBetter(from: range)
                 self.value = String(baseString[self.range])
@@ -359,4 +364,10 @@ extension Regex {
             "Match<\"\(value)\" \(intRange)>"
         }
     }
+}
+
+// https://juejin.cn/post/6844903773077258254
+public extension Regex {
+    static var mobile: Regex { Regex(#"^(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$"#)
+    } 
 }

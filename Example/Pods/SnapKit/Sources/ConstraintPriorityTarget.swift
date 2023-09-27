@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
@@ -76,10 +76,10 @@ extension CGFloat: ConstraintPriorityTarget {
 
 #if os(iOS) || os(tvOS)
 extension UILayoutPriority: ConstraintPriorityTarget {
-
+    
     public var constraintPriorityTargetValue: Float {
         return self.rawValue
     }
-
+    
 }
 #endif

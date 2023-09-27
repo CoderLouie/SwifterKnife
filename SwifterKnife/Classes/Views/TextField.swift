@@ -2,7 +2,7 @@
 //  TextField.swift
 //  SwifterKnife
 //
-//  Created by 李阳 on 2022/6/29.
+//  Created by liyang on 2022/6/29.
 //
 
 import UIKit
@@ -38,8 +38,20 @@ open class TextField: UITextField {
 
 
 open class Input: UITextField {
+    override open var text: String? {
+        didSet {
+            if oldValue != text {
+                onTextDidChange?(self)
+            }
+        }
+    }
+    
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0
+    
+    public var onReturnKeyPressed: ((Input) -> Void)?
+    public var onTextDidChange: ((Input) -> Void)?
+    
     override public init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -49,18 +61,35 @@ open class Input: UITextField {
         fatalError("init(coder:) has not been implemented")
     }
     open func setup() {
+        delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextField.textDidChangeNotification, object: self)
     }
     // Limit the length of text
     @objc private func textDidChange(notification: Notification) {
-        if let sender = notification.object as? Input, sender == self {
-            if maxLength > 0,
-               let text = text,
-               text.count > maxLength {
-                let endIndex = text.index(text.startIndex, offsetBy: maxLength)
-                self.text = String(text[..<endIndex])
-                undoManager?.removeAllActions()
-            }
+        guard let sender = notification.object as? Input, sender === self else { return }
+        if maxLength > 0,
+              let text = text,
+              markedTextRange == nil,
+              text.count > maxLength {
+            let endIndex = text.index(text.startIndex, offsetBy: maxLength)
+            self.text = String(text[..<endIndex])
+            undoManager?.removeAllActions()
+            return
         }
+        onTextDidChange?(self)
+    }
+}
+extension Input: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let type = textField.returnKeyType
+        if type == .done ||
+            type == .go ||
+            type == .search ||
+            type == .send ||
+            type == .next {
+            textField.resignFirstResponder()
+            onReturnKeyPressed?(self)
+        }
+        return true
     }
 }

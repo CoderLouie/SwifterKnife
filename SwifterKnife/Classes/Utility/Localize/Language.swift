@@ -22,18 +22,12 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         return languages.map(Language.init(rawValue:))
     }
     
-    public static var customized: ((_ code: String) -> Language)?
-    = { code in
-        let availables = Set(Bundle.main.localizations)
-        guard availables.contains(code) else {
-            return .default
-        }
-//        if code.hasPrefix("zh-") {
-//            // zh-Hant\zh-HK\zh-TW
-//            return code.contains("Hans") ? .zhHans : .zhHant
-//        }
-        return Language(rawValue: code)
+    public static func availableCodes(for bundle: Bundle = .main) -> Set<String> {
+        Set(bundle.localizations)
     }
+    
+    public static var customized: ((_ code: String) -> Language?)?
+    
     public static var `default`: Language = .en
     
     public static func reset() {
@@ -49,13 +43,16 @@ public struct Language: RawRepresentable, Equatable, Hashable {
             }
             return Language(rawValue: code)
         }
-        guard let code = Locale.preferredLanguages.first else { return nil }
-        if let transform = customized {
-            return transform(code)
+        guard let code = Locale.preferredLanguages.first else {
+                  return nil
+              }
+        if let closure = customized {
+            return closure(code)
         }
-        
-        let preferedLan = Language(rawValue: code)
-        return preferedLan
+        guard Set(Bundle.main.localizations).contains(code) else {
+            return nil
+        }
+        return Language(rawValue: code)
     }
     private static var _current: Language?
     public static var current: Language {
