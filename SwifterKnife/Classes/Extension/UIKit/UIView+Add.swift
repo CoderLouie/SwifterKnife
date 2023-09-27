@@ -465,6 +465,20 @@ public extension UIView {
         invalidateIntrinsicContentSize()
         setNeedsLayout()
     }
+    func makeFlexibleSize() {
+//        translatesAutoresizingMaskIntoConstraints = true
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    /*
+     amount < 0 会变得更容易被拉伸或压缩
+     amount > 0 会变得更不容易被拉伸或压缩
+     */
+    func increasePriority(_ amount: Float, for axis: NSLayoutConstraint.Axis) {
+        let val1 = contentHuggingPriority(for: axis).rawValue
+        setContentHuggingPriority(.init(rawValue: val1 + amount), for: axis)
+        let val2 = contentCompressionResistancePriority(for: axis).rawValue
+        setContentCompressionResistancePriority(.init(rawValue: val2 + amount), for: axis)
+    }
 }
 
 
