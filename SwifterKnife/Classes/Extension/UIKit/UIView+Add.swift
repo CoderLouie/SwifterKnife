@@ -460,6 +460,11 @@ public extension UIView {
         layer.masksToBounds = true
         layer.cornerRadius = radius
     }
+    
+    func setNeedsAutoLayout() {
+        invalidateIntrinsicContentSize()
+        setNeedsLayout()
+    }
 }
 
 

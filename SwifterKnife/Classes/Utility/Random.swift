@@ -112,10 +112,6 @@ public extension Random {
         Bool.random()
     }
     
-    static func one<T: Randomizable>(_ lower: T, _ upper: T) -> T {
-        T.random(in: lower..<upper)
-    }
-    
     static var int: Int {
         .random(in: 0..<100)
     }

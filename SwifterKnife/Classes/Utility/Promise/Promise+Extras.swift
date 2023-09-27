@@ -275,11 +275,11 @@ extension Promise {
     @discardableResult
     public func finallyRes(
         on queue: ExecutionContext = DispatchQueue.main,
-        onComplete: @escaping (Bool) -> Void) -> Promise<Value> {
-        return then(on: queue) { _ in
-            onComplete(true)
-        } onRejected: { _ in
-            onComplete(false)
+        onComplete: @escaping (Result<Value, Swift.Error>) -> Void) -> Promise<Value> {
+        return then(on: queue) {
+            onComplete(.success($0))
+        } onRejected: {
+            onComplete(.failure($0))
         }
     }
 

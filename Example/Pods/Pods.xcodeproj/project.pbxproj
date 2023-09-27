@@ -298,6 +298,7 @@
 		B6112A4B2ABA95B000C44AD2 /* DefaultsSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */; };
 		B6112A502ABBDCD900C44AD2 /* DeinitObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A4F2ABBDCD900C44AD2 /* DeinitObserver.swift */; };
 		B620B0972A8F2212007243DC /* JSONStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B0962A8F2212007243DC /* JSONStringConvertible.swift */; };
+		B68759DE2AC1218D0017950D /* PropertyValuesConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68759DD2AC1218D0017950D /* PropertyValuesConvertible.swift */; };
 		B68A138373CD14D346C4DFF23D063A77 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56704CF70A00F501482C6EEC5A3EF8F /* Foundation.framework */; };
 		B7D40C4FD026DB9606B03D236DD7659F /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF09A7F0AEBF3CF429B795E4C72F650 /* Limiter.swift */; };
 		BAA7F28F8FD0E5F644FCCD3176464FCA /* Funcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB05ABF442FBEF4A39D92851F9AA4207 /* Funcs.swift */; };
@@ -749,6 +750,7 @@
 		B6112A452ABA95AF00C44AD2 /* DefaultsSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsSerializable.swift; sourceTree = "<group>"; };
 		B6112A4F2ABBDCD900C44AD2 /* DeinitObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObserver.swift; sourceTree = "<group>"; };
 		B620B0962A8F2212007243DC /* JSONStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStringConvertible.swift; sourceTree = "<group>"; };
+		B68759DD2AC1218D0017950D /* PropertyValuesConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyValuesConvertible.swift; sourceTree = "<group>"; };
 		B774B4FC03ABF3BF5A1EE2475A8161F3 /* Alamofire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.release.xcconfig; sourceTree = "<group>"; };
 		B7754AC5D29464E1D9F7763ABAA0D0C1 /* LayerFontProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayerFontProvider.swift; path = Sources/Private/MainThread/LayerContainers/Utility/LayerFontProvider.swift; sourceTree = "<group>"; };
 		B821B15236068E9ECE929612D6A8965E /* StrokeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrokeNode.swift; path = Sources/Private/MainThread/NodeRenderSystem/Nodes/RenderNodes/StrokeNode.swift; sourceTree = "<group>"; };
@@ -1229,6 +1231,7 @@
 			isa = PBXGroup;
 			children = (
 				CC044280E764C8079C4AB7B425039193 /* DataCodable.swift */,
+				B68759DD2AC1218D0017950D /* PropertyValuesConvertible.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -2224,6 +2227,7 @@
 				E56B2BBF372DBD075EE9DE551A3F81B5 /* CALayer+Add.swift in Sources */,
 				AF7DFC06E6F02F0D2898ACE6CD068943 /* CarouselView.swift in Sources */,
 				21E5F0D48616EC7B4559F1E3952EEDF8 /* CATransform3D+Add.swift in Sources */,
+				B68759DE2AC1218D0017950D /* PropertyValuesConvertible.swift in Sources */,
 				567B143E2094582933648AB80F2E7225 /* CGAffineTransform+Add.swift in Sources */,
 				61602C6FEA594CF684168A81DDF76764 /* CGPoint+Add.swift in Sources */,
 				7CACE03B32715538E89483BF869FA938 /* CGRect+Add.swift in Sources */,
