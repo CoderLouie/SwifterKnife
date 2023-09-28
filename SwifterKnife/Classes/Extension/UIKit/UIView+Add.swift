@@ -473,7 +473,7 @@ public extension UIView {
      amount < 0 会变得更容易被拉伸或压缩
      amount > 0 会变得更不容易被拉伸或压缩
      */
-    func increasePriority(_ amount: Float, for axis: NSLayoutConstraint.Axis) {
+    func increaseContentPriority(_ amount: Float, for axis: NSLayoutConstraint.Axis) {
         let val1 = contentHuggingPriority(for: axis).rawValue
         setContentHuggingPriority(.init(rawValue: val1 + amount), for: axis)
         let val2 = contentCompressionResistancePriority(for: axis).rawValue

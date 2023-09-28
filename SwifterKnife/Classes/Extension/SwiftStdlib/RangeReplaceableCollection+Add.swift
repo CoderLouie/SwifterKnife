@@ -51,7 +51,7 @@ public extension RangeReplaceableCollection {
     /// - Parameter condition: condition to evaluate each element against.
     /// - Returns: All elements up until condition evaluates to false.
     func take(while condition: (Element) throws -> Bool) rethrows -> Self {
-        return Self(try prefix(while: condition))
+        return try Self(prefix(while: condition))
     }
 
     /// Skip elements of Array while condition is true.
@@ -111,7 +111,7 @@ public extension RangeReplaceableCollection {
     @discardableResult
     mutating func appendIfNonNil(_ newElement: Element?) -> Bool {
         guard let newElement = newElement else { return false }
-        self.append(newElement)
+        append(newElement)
         return true
     }
     
@@ -121,7 +121,7 @@ public extension RangeReplaceableCollection {
      */
     mutating func appendIfNonNil<S>(contentsOf newElements: S?) where Element == S.Element, S : Sequence {
         guard let newElements = newElements else { return }
-        self.append(contentsOf: newElements)
+        append(contentsOf: newElements)
     }
 }
 

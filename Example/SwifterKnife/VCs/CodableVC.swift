@@ -141,6 +141,7 @@ class CodableVC: BaseViewController {
                 }
             }
         }.then {
+            
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
