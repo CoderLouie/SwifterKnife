@@ -42,6 +42,10 @@ public extension CGSize {
         self = CGSize(width: dimension, height: dimension)
     }
     
+    var rect: CGRect {
+        CGRect(origin: .zero, size: self)
+    }
+    
     var isEmpty: Bool {
         width == 0 || height == 0
     }

@@ -8,6 +8,51 @@
 
 import UIKit
 
+
+extension CAAnimation {
+    private final class ATPrivateDelegate: NSObject, CAAnimationDelegate {
+        var didStart: ((CAAnimation, Bool) -> Void)?
+        var didStop: ((CAAnimation, Bool) -> Void)?
+        func animationDidStart(_ anim: CAAnimation) {
+            didStart?(anim, true)
+        }
+        func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+            didStop?(anim, flag)
+        }
+    }
+    public var didStart: ((CAAnimation, Bool) -> Void)? {
+        get { op_at_pri_delegate?.didStart }
+        set {
+            guard let closure = newValue else {
+                op_at_pri_delegate?.didStart = nil
+                return
+            }
+            at_pri_delegate?.didStart = closure
+        }
+    }
+    public var didStop: ((CAAnimation, Bool) -> Void)? {
+        get { op_at_pri_delegate?.didStop }
+        set {
+            guard let closure = newValue else {
+                op_at_pri_delegate?.didStop = nil
+                return
+            }
+            at_pri_delegate?.didStop = closure
+        }
+    }
+    
+    private var op_at_pri_delegate: ATPrivateDelegate? {
+        delegate as? ATPrivateDelegate
+    }
+    private var at_pri_delegate: ATPrivateDelegate? {
+        if let del = op_at_pri_delegate { return del }
+        guard delegate == nil else { return nil }
+        let del = ATPrivateDelegate()
+        delegate = del
+        return del
+    }
+}
+
 extension CAAnimation {
     public static var spring: CAKeyframeAnimation {
         let animate = CAKeyframeAnimation(keyPath: "transform")
