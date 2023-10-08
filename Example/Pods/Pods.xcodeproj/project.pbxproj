@@ -299,6 +299,7 @@
 		B620B0972A8F2212007243DC /* JSONStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B0962A8F2212007243DC /* JSONStringConvertible.swift */; };
 		B68759DE2AC1218D0017950D /* PropertyValuesConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68759DD2AC1218D0017950D /* PropertyValuesConvertible.swift */; };
 		B68A138373CD14D346C4DFF23D063A77 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56704CF70A00F501482C6EEC5A3EF8F /* Foundation.framework */; };
+		B6ED94F72AD2818700AA990D /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ED94F62AD2818700AA990D /* PropertyWrapper.swift */; };
 		B7D40C4FD026DB9606B03D236DD7659F /* Limiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF09A7F0AEBF3CF429B795E4C72F650 /* Limiter.swift */; };
 		BAA7F28F8FD0E5F644FCCD3176464FCA /* Funcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB05ABF442FBEF4A39D92851F9AA4207 /* Funcs.swift */; };
 		BAB17A1C6CAD14B3788973EAF8466C93 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D44F6C18AE7E655033D0E5BC3B684CC /* NetworkReachabilityManager.swift */; };
@@ -749,6 +750,7 @@
 		B6112A4F2ABBDCD900C44AD2 /* DeinitObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObserver.swift; sourceTree = "<group>"; };
 		B620B0962A8F2212007243DC /* JSONStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStringConvertible.swift; sourceTree = "<group>"; };
 		B68759DD2AC1218D0017950D /* PropertyValuesConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyValuesConvertible.swift; sourceTree = "<group>"; };
+		B6ED94F62AD2818700AA990D /* PropertyWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 		B774B4FC03ABF3BF5A1EE2475A8161F3 /* Alamofire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.release.xcconfig; sourceTree = "<group>"; };
 		B7754AC5D29464E1D9F7763ABAA0D0C1 /* LayerFontProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayerFontProvider.swift; path = Sources/Private/MainThread/LayerContainers/Utility/LayerFontProvider.swift; sourceTree = "<group>"; };
 		B821B15236068E9ECE929612D6A8965E /* StrokeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrokeNode.swift; path = Sources/Private/MainThread/NodeRenderSystem/Nodes/RenderNodes/StrokeNode.swift; sourceTree = "<group>"; };
@@ -1010,6 +1012,7 @@
 				BB0CB2C49005753B597599B41D9D265C /* Haptic.swift */,
 				F75753E08B80B0A71D0E77247F931BE3 /* KeyboardObserver.swift */,
 				6EF09A7F0AEBF3CF429B795E4C72F650 /* Limiter.swift */,
+				B6ED94F62AD2818700AA990D /* PropertyWrapper.swift */,
 				83DD5942A271DFEF9F1EB25E99C99141 /* Localize */,
 				A7F17240857B49EC24BE3EE7153C7F3E /* Promise */,
 				A1ABC8231B08565BF1900E696B1429B7 /* Protocol */,
@@ -2298,6 +2301,7 @@
 				80BF086233E6E2F857CBE631CE99AD7C /* UINavigationBar+Add.swift in Sources */,
 				5301B378A48F3BA94D548CB33F23EBD4 /* UINavigationController+Add.swift in Sources */,
 				51E7C7A12BC187C01BD895402BB656C9 /* UIScrollView+Add.swift in Sources */,
+				B6ED94F72AD2818700AA990D /* PropertyWrapper.swift in Sources */,
 				24BC24A1479E912C9A61E81000B59C1C /* UIStackView+Add.swift in Sources */,
 				7CF3659070E523DDD91E0A4397E1717A /* UITableView+Add.swift in Sources */,
 				A678BB5E803360C269700738CCFE59DD /* UITableView+Reusable.swift in Sources */,

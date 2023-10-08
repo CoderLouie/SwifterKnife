@@ -99,6 +99,8 @@ class CodableVC: BaseViewController {
     @SwiftyDefaults(key: "at_gender")
     private var gender: Gender?
     
+    @VoidClosure
+    private var closure: (() -> Void)?
     private func test_codable() {
         
         let a = self.gender
@@ -130,7 +132,60 @@ class CodableVC: BaseViewController {
     override func setupViews() {
         super.setupViews()
         
+        setupColorView()
         
+    }
+    @objc private func tapBlueView() {
+//        let pair = (1, "")
+//        print(type(of: pair))
+        closure?()
+//        $closure.reset()
+        _closure.reset()
+        guard let v = blueView else { return }
+        DispatchQueue.main.async(execute: weakify {
+            print($0)
+        })
+        v.bounds.origin.assign {
+            if $0.x == 50 { $0.x = 0; $0.y = 0 }
+            else { $0.x = 50; $0.y = 50 }
+        }
+        /*
+         https://juejin.cn/post/7285290243297689652
+         https://www.jianshu.com/p/7e3ed50b39a1
+         更改蓝色视图的bounds对自身没有影响，只是改变了蓝色视图的坐标系
+         (50, 50)则是以前原点的坐上50距离处，所以黄色视图变成在以前原点处
+         */
+//        v.bounds.origin.assign {
+//            if $0.x == 50 { return .zero }
+//            return CGPoint(x: 50, y: 50)
+//        }
+//        v.isHidden.toggle()
+    }
+    private var blueView: UIView?
+    private func setupColorView() {
+        closure = {
+            print("callback 1")
+        }
+        closure = {
+            print("callback 2")
+        }
+        closure = {
+            print("callback 3")
+        }
+        
+        blueView = UIView().then {
+            $0.frame = CGRect(x: 100, y: 100, width: 200, height: 200)
+            $0.backgroundColor = .blue
+            view.addSubview($0)
+            $0.addTap(target: self, action: #selector(tapBlueView))
+        }
+        UIView().do {
+            $0.backgroundColor = .yellow
+            $0.frame = CGRect(x: 50, y: 50, width: 100, height: 100)
+            blueView?.addSubview($0)
+        }
+    }
+    private func setRadioGroupView() {
         let stackView = UIStackView.vertical(spacing: 15, alignment: .fill) {
             ["Apple", "Banana", "Origin", "Fruit"].map { title in
                 CheckoutBox().then {

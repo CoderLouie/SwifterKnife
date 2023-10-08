@@ -77,26 +77,26 @@ public func parallel<T, U>(
 }
  
 
-public func until(_ condition: @autoclosure () -> Bool, statements: () -> Void) {
-    while !condition() {
-        statements()
-    }
-}
-public func until(_ cond1: @autoclosure () -> Bool,
-                  _ cond2: @autoclosure () -> Bool,
-                  statements: () -> Void) {
-    while !cond1(), !cond2() {
-        statements()
-    }
-}
-public func until(_ cond1: @autoclosure () -> Bool,
-                  _ cond2: @autoclosure () -> Bool,
-                  _ cond3: @autoclosure () -> Bool,
-                  statements: () -> Void) {
-    while !cond1(), !cond2(), !cond3() {
-        statements()
-    }
-}
+//public func until(_ condition: @autoclosure () -> Bool, statements: () -> Void) {
+//    while !condition() {
+//        statements()
+//    }
+//}
+//public func until(_ cond1: @autoclosure () -> Bool,
+//                  _ cond2: @autoclosure () -> Bool,
+//                  statements: () -> Void) {
+//    while !cond1(), !cond2() {
+//        statements()
+//    }
+//}
+//public func until(_ cond1: @autoclosure () -> Bool,
+//                  _ cond2: @autoclosure () -> Bool,
+//                  _ cond3: @autoclosure () -> Bool,
+//                  statements: () -> Void) {
+//    while !cond1(), !cond2(), !cond3() {
+//        statements()
+//    }
+//}
 
 
 public typealias Provider<T> = () -> T
@@ -113,3 +113,7 @@ public func ~=<T>(pattern: (T) -> Bool, value: T) -> Bool {
     pattern(value)
 }
 
+/*
+ rax、rdx常作为函数返回值使用
+ register read/d rax 方便查看方法调用返回值 /d是10进制 /x是16进制
+ */

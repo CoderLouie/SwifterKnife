@@ -29,6 +29,18 @@ public protocol Then {}
 
 extension Then where Self: Any {
     
+    @inlinable
+    public mutating func assign(_ block: (inout Self) throws -> Void) rethrows {
+        var copy = self
+        try block(&copy)
+        self = copy
+    }
+    
+    @inlinable
+    public mutating func assign(_ block: (Self) throws -> Self) rethrows {
+        self = try block(self)
+    }
+    
     /// Makes it available to set properties with closures just after initializing and copying the value types.
     ///
     ///     let frame = CGRect().with {
@@ -71,6 +83,28 @@ extension Then where Self: AnyObject {
         return self
     }
     
+    public func weakify(_ code: @escaping (Self) -> Void) -> () -> Void {
+        { [weak self] in
+            guard let this = self else { return }
+            code(this)
+        }
+    }
+    public func weakify<T>(_ code: @escaping (Self, T) -> Void) -> (T) -> Void {
+        { [weak self] arg in
+            guard let this = self else { return }
+            code(this, arg)
+        }
+    }
+    public func unownify(_ code: @escaping (Self) -> Void) -> () -> Void {
+        { [unowned self] in
+            code(self)
+        }
+    }
+    public func unownify<T>(_ code: @escaping (Self, T) -> Void) -> (T) -> Void {
+        { [unowned self] arg in
+            code(self, arg)
+        }
+    }
 }
 
 extension NSObject: Then {}

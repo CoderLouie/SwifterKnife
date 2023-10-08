@@ -244,7 +244,7 @@ open class GradientControl: UIControl {
     public private(set) unowned var gradientLayer: CAGradientLayer!
 }
 
-open class PathView: UIView {
+open class ShapeView: UIView {
     
     public var path: CGPath? {
         get { shapeLayer.path }
