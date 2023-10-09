@@ -110,11 +110,23 @@ public extension UIStackView {
     @discardableResult
     func customSpacing(_ spacing: CGFloat, at index: Int) -> UIStackView {
         let subviews = arrangedSubviews
-        if subviews.count >= index, index > 0 {
-            setCustomSpacing(spacing, after: subviews[index - 1])
-        }
+        guard (0..<subviews.count).contains(index) else { return self }
+        setCustomSpacing(spacing, after: subviews[index]) 
         return self
     }
+    subscript(spacingIndex index: Int) -> CGFloat {
+        get {
+            let subviews = arrangedSubviews
+            guard (0..<subviews.count).contains(index) else { return 0 }
+            return customSpacing(after: subviews[index])
+        }
+        set {
+            let subviews = arrangedSubviews
+            guard (0..<subviews.count).contains(index) else { return }
+            setCustomSpacing(newValue, after: subviews[index])
+        }
+    }
+    
     @discardableResult
     func margin(_ margins: UIEdgeInsets) -> UIStackView {
         layoutMargins = margins

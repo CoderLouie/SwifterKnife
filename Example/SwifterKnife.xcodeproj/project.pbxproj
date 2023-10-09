@@ -18,7 +18,6 @@
 		B6112A2F2AB9488D00C44AD2 /* TagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A2E2AB9488D00C44AD2 /* TagLabel.swift */; };
 		B6112A312AB9492300C44AD2 /* FoldButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A302AB9492300C44AD2 /* FoldButton.swift */; };
 		B6112A4D2ABAE9D800C44AD2 /* RadioGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6112A4C2ABAE9D800C44AD2 /* RadioGroup.swift */; };
-		B61749562AB1CAD700A115C5 /* PropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61749552AB1CAD700A115C5 /* PropertyWrapper.swift */; };
 		B61749582AB2A3B800A115C5 /* InputSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61749572AB2A3B800A115C5 /* InputSemaphore.swift */; };
 		B617495A2AB2D4E500A115C5 /* CodableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61749592AB2D4E500A115C5 /* CodableVC.swift */; };
 		B620AFBA2A8B7932007243DC /* DictationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620AFB92A8B7932007243DC /* DictationVC.swift */; };
@@ -209,7 +208,6 @@
 		B6112A2E2AB9488D00C44AD2 /* TagLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagLabel.swift; sourceTree = "<group>"; };
 		B6112A302AB9492300C44AD2 /* FoldButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldButton.swift; sourceTree = "<group>"; };
 		B6112A4C2ABAE9D800C44AD2 /* RadioGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioGroup.swift; sourceTree = "<group>"; };
-		B61749552AB1CAD700A115C5 /* PropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrapper.swift; sourceTree = "<group>"; };
 		B61749572AB2A3B800A115C5 /* InputSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputSemaphore.swift; sourceTree = "<group>"; };
 		B61749592AB2D4E500A115C5 /* CodableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableVC.swift; sourceTree = "<group>"; };
 		B620AFB92A8B7932007243DC /* DictationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationVC.swift; sourceTree = "<group>"; };
@@ -744,7 +742,6 @@
 				B6A2B12529FBAF900009ACFA /* Mems.swift */,
 				B640CA5D2A7CA28500769B08 /* Notify.swift */,
 				B650CC9F282374E8003170BB /* Permission.swift */,
-				B61749552AB1CAD700A115C5 /* PropertyWrapper.swift */,
 				B6112A4C2ABAE9D800C44AD2 /* RadioGroup.swift */,
 				B643461C2A937288005FA3F7 /* SortedArray.swift */,
 				B6D834DD29B9F2AE004C2BC3 /* StackView */,
@@ -1066,7 +1063,6 @@
 			files = (
 				B64346942A9701B1005FA3F7 /* TestUIVC.swift in Sources */,
 				B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */,
-				B61749562AB1CAD700A115C5 /* PropertyWrapper.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
 				B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */,

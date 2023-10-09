@@ -11,7 +11,7 @@
 
 
 ## Requirements
-- **iOS** 10.0+ 
+- **iOS** 11.0+ 
 - Swift 5.0+
 
 
@@ -50,11 +50,13 @@ Special thanks to:
 
 [AliSoftware/Reusable: A Swift mixin for reusing views easily and in a type-safe way (UITableViewCells, UICollectionViewCells, custom UIViews, ViewControllers, Storyboards…)](https://github.com/AliSoftware/Reusable)
 
+[sunshinejr/SwiftyUserDefaults: Modern Swift API for NSUserDefaults](https://github.com/sunshinejr/SwiftyUserDefaults)
+
+[SwiftyJSON/SwiftyJSON: The better way to deal with JSON data in Swift.](https://github.com/SwiftyJSON/SwiftyJSON)
+
 [LinXunFeng/SwiftyFitsize: 📱 Swifty screen adaptation solution (Support Objective-C and Swift)](https://github.com/LinXunFeng/SwiftyFitsize)
 
 [iwill/ExCodable: Key-Mapping Extensions for Swift Codable](https://github.com/iwill/ExCodable)
-
-[SwiftyJSON/Alamofire-SwiftyJSON: Alamofire extension for serialize NSData to SwiftyJSON](https://github.com/SwiftyJSON/Alamofire-SwiftyJSON)
 
 
 ## License

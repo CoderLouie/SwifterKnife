@@ -26,22 +26,31 @@ public extension UIViewController {
     /// - Parameters:
     ///   - child: the view controller to add as a child.
     ///   - containerView: the containerView for the child viewController's root view.
-    func embedViewController(_ child: UIViewController, into containerView: UIView) {
+    func embedViewController(_ child: UIViewController, into containerView: UIView, animated: Bool = false) {
         addChild(child)
+        child.beginAppearanceTransition(true, animated: animated)
         containerView.addSubview(child.view)
         child.view.translatesAutoresizingMaskIntoConstraints = false
         child.didMove(toParent: self)
+        if !animated {
+            child.endAppearanceTransition()
+        }
     }
 
     /// Helper method to remove a UIViewController from its parent.
-    func unembed() {
+    func unembed(animated: Bool = false) {
         guard parent != nil else { return }
 
         willMove(toParent: nil)
-        if isViewLoaded {
+        let hasLoaded = isViewLoaded
+        if hasLoaded {
             view.removeFromSuperview()
+            beginAppearanceTransition(false, animated: animated)
         }
         removeFromParent()
+        if hasLoaded, !animated {
+            endAppearanceTransition()
+        }
     }
     
     /// Helper method to present a UIViewController as a popover.

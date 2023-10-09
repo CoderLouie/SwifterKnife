@@ -244,3 +244,24 @@ open class GradientControl: UIControl {
     public private(set) unowned var gradientLayer: CAGradientLayer!
 }
 
+open class ShapeView: UIView {
+    
+    public var path: CGPath? {
+        get { shapeLayer.path }
+        set { shapeLayer.path = newValue }
+    }
+    public var color: UIColor? {
+        get {
+            shapeLayer.fillColor.map { UIColor(cgColor: $0) }
+        }
+        set { shapeLayer.fillColor = newValue?.cgColor }
+    }
+    
+    public var shapeLayer: CAShapeLayer {
+        layer as! CAShapeLayer
+    }
+    
+    override open class var layerClass: AnyClass {
+        return CAShapeLayer.self
+    }
+}

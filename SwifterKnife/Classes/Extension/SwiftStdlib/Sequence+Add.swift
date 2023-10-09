@@ -95,7 +95,7 @@ public extension Sequence {
     /// - Complexity: O(*n*), where *n* is the length of the sequence.
     func withoutDuplicates<T: Hashable>(transform: (Element) throws -> T) rethrows -> [Element] {
         var set = Set<T>()
-        return try filter { set.insert(try transform($0)).inserted }
+        return try filter { try set.insert(transform($0)).inserted }
     }
 
     ///  Separates all items into 2 lists based on a given predicate. The first list contains all items for which the specified condition evaluates to true. The second list contains those that don't.
