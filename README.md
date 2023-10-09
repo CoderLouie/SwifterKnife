@@ -50,6 +50,8 @@ Special thanks to:
 
 [AliSoftware/Reusable: A Swift mixin for reusing views easily and in a type-safe way (UITableViewCells, UICollectionViewCells, custom UIViews, ViewControllers, Storyboards…)](https://github.com/AliSoftware/Reusable)
 
+[sunshinejr/SwiftyUserDefaults: Modern Swift API for NSUserDefaults](https://github.com/sunshinejr/SwiftyUserDefaults)
+
 [SwiftyJSON/SwiftyJSON: The better way to deal with JSON data in Swift.](https://github.com/SwiftyJSON/SwiftyJSON)
 
 [LinXunFeng/SwiftyFitsize: 📱 Swifty screen adaptation solution (Support Objective-C and Swift)](https://github.com/LinXunFeng/SwiftyFitsize)
