@@ -10,6 +10,19 @@ import UIKit
 // MARK: - Methods
 
 public extension UIScrollView {
+    var rawSnapshot: UIImage? {
+        let size = contentSize
+        guard size != .zero else { return nil }
+
+        // Original Source: https://gist.github.com/thestoics/1204051
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let previousFrame = frame
+            frame = CGRect(origin: frame.origin, size: size)
+            layer.render(in: context.cgContext)
+            frame = previousFrame
+        }
+    }
+    
     /// Takes a snapshot of an entire ScrollView.
     ///
     ///    AnySubclassOfUIScrollView().snapshot

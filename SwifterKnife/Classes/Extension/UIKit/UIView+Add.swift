@@ -60,13 +60,11 @@ public extension UIView {
 public extension UIView {
     /// Take screenshot of view (if applicable).
     var screenshot: UIImage? {
-        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
-        defer {
-            UIGraphicsEndImageContext()
+        let size = layer.frame.size
+        guard size != .zero else { return nil }
+        return UIGraphicsImageRenderer(size: size).image { context in
+            layer.render(in: context.cgContext)
         }
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        layer.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
     }
     var screenshotView: UIImageView? {
         guard let snapshot = screenshot else { return nil }
