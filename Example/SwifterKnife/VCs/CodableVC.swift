@@ -99,7 +99,7 @@ class CodableVC: BaseViewController {
     @SwiftyDefaults(key: "at_gender")
     private var gender: Gender?
     
-    @VoidClosure
+    @StashClosure
     private var closure: (() -> Void)?
     private func test_codable() {
         
