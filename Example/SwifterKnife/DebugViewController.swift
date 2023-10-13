@@ -61,6 +61,7 @@ fileprivate enum TestCase: String, CaseIterable {
     case dictation = "语音输入"
     case testUI = "Test UI"
     case codable = "Codable"
+    case excodable = "ExCodable"
     var token: String {
         return "\(#fileID)_\(#function)_\(#line)"
     }
@@ -189,6 +190,9 @@ fileprivate enum TestCase: String, CaseIterable {
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .codable:
             let nextVc = CodableVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .excodable:
+            let nextVc = ExCodableVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .other:
             break

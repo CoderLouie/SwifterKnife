@@ -10,24 +10,7 @@ import UIKit
 import SnapKit
 import SwifterKnife
 
-fileprivate class ZPerson: Encodable, CodingKeyMap, DataEncodable {
-    private(set) var age = 20
-    private(set) var name = "xiaohua"
-    static var keyMapping: [KeyMap<ZPerson>] {
-        [KeyMap(ref: \.age, to: "age"),
-         KeyMap(ref: \.name, to: "name")]
-    }
-}
-fileprivate class ZStudent: ZPerson {
-    private(set) var score = 80
-    static var selfKeyMapping: [KeyMap<ZStudent>] {
-        [KeyMap(ref: \.score, to: "score")]
-    }
-    override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        try encode(to: encoder, with: Self.selfKeyMapping)
-    }
-}
+
 
 class CheckoutBox: NewButton {
     override func setup() {
@@ -119,10 +102,7 @@ class CodableVC: BaseViewController {
 //        observeDeinit(for: self) {
 //            print("observeDeinit2 for")
 //        }
-//        let stu = ZStudent()
-//
-//        let jsonStr = stu.toJSON().jsonString()
-//        print(jsonStr ?? "nil")
+
     }
 //    private var radioGroup: RadioGroup {
 //        RadioGroup[.codable]

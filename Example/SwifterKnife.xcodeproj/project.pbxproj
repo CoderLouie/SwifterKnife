@@ -138,6 +138,7 @@
 		B66414742988C7970071C0FA /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66414732988C7970071C0FA /* TimerViewController.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
+		B68F99E22AD91B1B002431B0 /* ExCodableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68F99E12AD91B1B002431B0 /* ExCodableVC.swift */; };
 		B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560A2A73950A0037B59A /* UserDefaultsTest.swift */; };
 		B691560D2A7395D90037B59A /* StatementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560C2A7395D90037B59A /* StatementTest.swift */; };
 		B691560F2A7397370037B59A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560E2A7397370037B59A /* BaseViewController.swift */; };
@@ -331,6 +332,7 @@
 		B67F61E428A34A57008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B67F61E528A34A60008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "banner_home_1aging@2x.jpg"; sourceTree = "<group>"; };
+		B68F99E12AD91B1B002431B0 /* ExCodableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExCodableVC.swift; sourceTree = "<group>"; };
 		B691560A2A73950A0037B59A /* UserDefaultsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsTest.swift; sourceTree = "<group>"; };
 		B691560C2A7395D90037B59A /* StatementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementTest.swift; sourceTree = "<group>"; };
 		B691560E2A7397370037B59A /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -684,6 +686,7 @@
 				B620AFB92A8B7932007243DC /* DictationVC.swift */,
 				B64346932A9701B1005FA3F7 /* TestUIVC.swift */,
 				B61749592AB2D4E500A115C5 /* CodableVC.swift */,
+				B68F99E12AD91B1B002431B0 /* ExCodableVC.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -1112,6 +1115,7 @@
 				B63EDC2B2A84E13D008B251C /* PhotoManager.swift in Sources */,
 				B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */,
 				B63EDC622A860F36008B251C /* YiRotateCommand.swift in Sources */,
+				B68F99E22AD91B1B002431B0 /* ExCodableVC.swift in Sources */,
 				B6112A312AB9492300C44AD2 /* FoldButton.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
 				B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */,

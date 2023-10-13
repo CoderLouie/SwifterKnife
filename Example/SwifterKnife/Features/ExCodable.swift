@@ -24,7 +24,7 @@ public protocol CodingKeyMap {
  
 public extension Encodable where Self: CodingKeyMap {
     func encode(to encoder: Encoder, with keyMapping: [KeyMap<Self>], nonnull: Bool = false, throws: Bool = false) throws {
-        try keyMapping.forEach { try $0.encode(self, encoder, nonnull, `throws`) }
+        try keyMapping.forEach { try $0.encode?(self, encoder, nonnull, `throws`) }
     }
 }
 public extension Encodable where Self: CodingKeyMap, Self.Root == Self {
@@ -40,21 +40,11 @@ public extension Decodable where Self: CodingKeyMap {
         try keyMapping.forEach { try $0.decodeReference?(self, decoder, nonnull, `throws`) }
     }
 }
-//public extension ExCodable where Root == Self {
-//    func encode(to encoder: Encoder) throws {
-//        try encode(to: encoder, with: Self.keyMapping)
-//    }
-////    init(from decoder: Decoder) throws {
-////        self.init()
-////        try decode(from: decoder, with: Self.keyMapping)
-////    }
-//}
 
 // MARK: -
-
 public final class KeyMap<Root> {
     fileprivate typealias EncodeClosure = (_ root: Root, _ encoder: Encoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void
-    fileprivate let encode: EncodeClosure
+    fileprivate let encode: EncodeClosure?
     
     fileprivate typealias DecodeValClosure = (_ root: inout Root, _ decoder: Decoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void
     fileprivate let decode: DecodeValClosure?
@@ -62,10 +52,36 @@ public final class KeyMap<Root> {
     fileprivate typealias DecodeRefClosure = (_ root: Root, _ decoder: Decoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void
     fileprivate let decodeReference: DecodeRefClosure?
     
-    fileprivate init(encode: @escaping EncodeClosure,
+    fileprivate init(encode: EncodeClosure?,
                      decode: DecodeValClosure?,
                      decodeReference: DecodeRefClosure?) {
         (self.encode, self.decode, self.decodeReference) = (encode, decode, decodeReference)
+    }
+}
+
+
+public extension KeyMap {
+    convenience init<Value: Decodable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: nil, decode: { (root, decoder, nonnullAll, throwsAll) in
+            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        }, decodeReference: nil)
+    }
+    convenience init<Value: Encodable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { (root, encoder, nonnullAll, throwsAll) in
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: nil, decodeReference: nil)
+    }
+}
+
+public extension KeyMap {
+    convenience init<Value: Decodable>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: nil, decode: nil, decodeReference: { (root, decoder, nonnullAll, throwsAll) in
+            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        })
     }
 }
 
@@ -107,40 +123,13 @@ public extension KeyMap {
         })
     }
 }
-
-// MARK: - subscript
-// abortIfNull nonnull: Bool = false, abortOnError throws: Bool = false
-public extension Encoder {
-    subscript<T: Encodable>(stringKey: String) -> T? {
-        get { return nil }
-        nonmutating set { encode(newValue, for: stringKey) }
-    }
-    subscript<T: Encodable, K: CodingKey>(codingKey: K) -> T? {
-        get { return nil }
-        nonmutating set { encode(newValue, for: codingKey) }
-    }
-}
-// abortIfNull nonnull: Bool = false, abortOnError throws: Bool = false
-public extension Decoder {
-    subscript<T: Decodable>(stringKeys: [String]) -> T? {
-        return decode(stringKeys, as: T.self)
-    }
-    subscript<T: Decodable>(stringKeys: String...) -> T? {
-        return decode(stringKeys, as: T.self)
-    }
-    subscript<T: Decodable, K: CodingKey>(codingKeys: [K]) -> T? {
-        return decode(codingKeys, as: T.self)
-    }
-    subscript<T: Decodable, K: CodingKey>(codingKeys: K...) -> T? {
-        return decode(codingKeys, as: T.self)
-    }
-}
+ 
 
 // MARK: -
 
 public extension Encoder {
     
-    func encodeNonnullThrows<T: Encodable>(_ value: T, for stringKey: String) throws {
+    func encodeNonnullThrows<T: Encodable>(_ value: T?, for stringKey: String) throws {
         try encode(value, for: stringKey, nonnull: true, throws: true)
     }
     func encodeThrows<T: Encodable>(_ value: T?, for stringKey: String) throws {
@@ -242,23 +231,67 @@ public extension Decoder {
     }
 }
 
-fileprivate struct ExCodingKey: CodingKey {
-    let stringValue: String
-    let intValue: Int?
-    init(_ stringValue: String) {
+public struct ExCodingKey: CodingKey {
+    public let stringValue: String
+    public let intValue: Int?
+    
+    public init(_ stringValue: String) {
         (self.stringValue, self.intValue) = (stringValue, nil)
     }
-    init(_ stringValue: Substring) {
+    public init(_ stringValue: Substring) {
         self.init(String(stringValue))
     }
-    init?(stringValue: String) {
+    public init?(stringValue: String) {
         self.init(stringValue)
     }
-    init(_ intValue: Int) {
+    public init(_ intValue: Int) {
         (self.intValue, self.stringValue) = (intValue, String(intValue))
     }
-    init?(intValue: Int) {
+    public init?(intValue: Int) {
         self.init(intValue)
+    }
+    static let `super` = ExCodingKey("super")
+}
+extension ExCodingKey: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.init(value)
+    }
+}
+extension ExCodingKey: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self.init(value)
+    }
+}
+
+public extension Decoder {
+    func nestedContainer(forKey key: String) throws -> KeyedDecodingContainer<ExCodingKey> {
+        try container(keyedBy: ExCodingKey.self).nestedContainer(forKey: key)
+    }
+}
+public extension KeyedDecodingContainer where Key == ExCodingKey {
+    func nestedContainer(forKey key: String) throws -> Self {
+        var container = self
+        let keys = key.split(separator: ".")
+        guard keys.count > 1 else { return container }
+        for key in keys {
+            container = try container.nestedContainer(keyedBy: ExCodingKey.self, forKey: ExCodingKey(key))
+        }
+        return container
+    }
+    func nestedContainer(forKey key: Key) throws -> Self {
+        try nestedContainer(keyedBy: ExCodingKey.self, forKey: key)
+    }
+    func decode<T: Decodable>(forKey key: Key) throws -> T {
+        try decode(T.self, forKey: key)
+    }
+    func decodeIfPresent<T: Decodable>(forKey key: Key) throws -> T? {
+        try decodeIfPresent(T.self, forKey: key)
+    }
+    func decode<T: Decodable>(forKey key: String) throws -> T {
+        try decode(T.self, forKey: Key(key))
+    }
+    func decodeIfPresent<T: Decodable>(forKey key: String) throws -> T? {
+        try decodeIfPresent(T.self, forKey: Key(key))
     }
 }
 
@@ -308,15 +341,16 @@ fileprivate extension KeyedDecodingContainer {
             }
         }
         
-        if firstError != nil && (`throws` || nonnull) { throw firstError! }
+        if (`throws` || nonnull), let err = firstError { throw err }
         return nil
     }
     
     private func nestedContainer(with keys: [ExCodingKey]) -> Self? {
-        var container: Self? = self
+        var container: Self = self
         for key in keys {
-            container = try? container?.nestedContainer(keyedBy: Self.Key, forKey: key as! Self.Key)
-            if container == nil { return nil }
+            guard let exKey = key as? Self.Key else { return nil }
+            guard let nestCon = try? container.nestedContainer(keyedBy: Self.Key, forKey: exKey) else { return nil }
+            container = nestCon
         }
         return container
     }
@@ -338,7 +372,7 @@ fileprivate extension KeyedDecodingContainer {
             return value
         }
         
-        if firstError != nil && (`throws` || nonnull) { throw firstError! }
+        if (`throws` || nonnull), let err = firstError { throw err }
         return nil
     }
     
