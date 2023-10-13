@@ -64,11 +64,6 @@ public final class KeyMap<Root> {
             try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
         }
     }
-    fileprivate func setEncode<Value: Codable, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: [Key], nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.encode = { (root, encoder, nonnullAll, throwsAll) in
-            try encoder.encode(root[keyPath: keyPath], for: codingKeys[0], nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
-        }
-    }
     
     fileprivate func setDecode<Value: Decodable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: [String], nonnull: Bool? = nil, throws: Bool? = nil) {
         self.decode = { (root, decoder, nonnullAll, throwsAll) in
@@ -77,22 +72,8 @@ public final class KeyMap<Root> {
             }
         }
     }
-    fileprivate func setDecode<Value: Codable, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: [Key], nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.decode = { (root, decoder, nonnullAll, throwsAll) in
-            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
-                root[keyPath: keyPath] = value
-            }
-        }
-    }
     
     fileprivate func setDecode<Value: Decodable>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: [String], nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.decodeReference = { (root, decoder, nonnullAll, throwsAll) in
-            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
-                root[keyPath: keyPath] = value
-            }
-        }
-    }
-    fileprivate func setDecode<Value: Codable, Key: CodingKey>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: [Key], nonnull: Bool? = nil, throws: Bool? = nil) {
         self.decodeReference = { (root, decoder, nonnullAll, throwsAll) in
             if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
                 root[keyPath: keyPath] = value
@@ -119,7 +100,6 @@ public extension KeyMap {
             root[keyPath: keyPath] = try [Value](from: deco)
         }
     }
-    
     
     convenience init<Value: Codable & ExCodingKeyMap>(refmodel keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
         self.init()
@@ -160,17 +140,7 @@ public extension KeyMap {
         setEncode(keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
         setDecode(keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
     }
-    convenience init<Value: Codable, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: Key..., nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        setEncode(keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
-        setDecode(keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
-    }
     convenience init<Value: Codable>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        setEncode(keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
-        setDecode(ref: keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
-    }
-    convenience init<Value: Codable, Key: CodingKey>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: Key..., nonnull: Bool? = nil, throws: Bool? = nil) {
         self.init()
         setEncode(keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
         setDecode(ref: keyPath, to: codingKeys, nonnull: nonnull, throws: `throws`)
