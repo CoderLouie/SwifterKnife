@@ -18,7 +18,13 @@ public extension PropertyValuesConvertible {
         let childs = sequence(first: mirror, next: \.superclassMirror).flatMap(\.children)
         return childs.reduce(into: [String: Any]()) {
             guard case let (label?, value) = $1 else { return }
-            $0[label] = value
+            if let convertible = value as? PropertyValuesConvertible {
+                $0[label] = convertible.propertyValues
+            } else if let conv = value as? [PropertyValuesConvertible] {
+                $0[label] = conv.map(\.propertyValues)
+            } else {
+                $0[label] = value
+            }
         }
     }
 }
