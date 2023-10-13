@@ -12,8 +12,126 @@ import SwifterKnife
 class ExCodableVC: BaseViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        test_codable3()
+        test_codable4()
     }
+    
+    
+    private func test_codable5() {
+        struct Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible {
+            static var keyMapping: [KeyMap<Remark>] {
+                [KeyMap(\.judge, to: "r_judge"),
+                 KeyMap(\.content, to: "r_content")]
+            }
+            var judge: String = ""
+            var content: String = ""
+            
+            var debugDescription: String {
+                "(judge: \(judge), content: \(content))"
+            }
+            init() {}
+            init(from decoder: Decoder) throws {
+                try decode(from: decoder, with: Self.keyMapping)
+            }
+        }
+
+        struct Player: Codable, ExCodingKeyMap, DataCodable {
+            static var keyMapping: [KeyMap<Player>] {
+                [
+                    KeyMap(model: \.remark, to: "scoreInfo.remarks")]
+            }
+            
+            init(from decoder: Decoder) throws {
+                try decode(from: decoder, with: Self.keyMapping)
+            }
+            var remark: Remark = .init()
+        }
+        
+        let str = """
+        {
+            "scoreInfo": {
+                "remarks": {
+                        "r_judge": "judgeOne",
+                        "r_content": "good"
+                    }
+            }
+        }
+        """
+        do {
+            let player = try Player.decode(from: str)
+            print(player)
+            
+            print(player.toString())
+        } catch {
+            print(error)
+        }
+    }
+    
+    private func test_codable4() {
+        struct Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible {
+            static var keyMapping: [KeyMap<Remark>] {
+                [KeyMap(\.judge, to: "r_judge"),
+                 KeyMap(\.content, to: "r_content")]
+            }
+            var judge: String = ""
+            var content: String = ""
+            
+            var debugDescription: String {
+                "(judge: \(judge), content: \(content))"
+            }
+            init(from decoder: Decoder) throws {
+                try decode(from: decoder, with: Self.keyMapping)
+            }
+        }
+
+        struct Player: Codable, ExCodingKeyMap, DataCodable {
+            static var keyMapping: [KeyMap<Player>] {
+                [
+                KeyMap(\.name, to: "player_name"),
+                 KeyMap(\.age, to: "age"),
+                KeyMap(models: \.remarks, to: "scoreInfo.remarks")]
+            }
+            
+            init(from decoder: Decoder) throws {
+                try decode(from: decoder, with: Self.keyMapping)
+            }
+            
+            var name: String = ""
+            var age: Int = 0
+            var remarks: [Remark] = []
+        }
+        
+        let str = """
+        {
+            "player_name": "balabala Team",
+            "age": 20,
+            "scoreInfo": {
+                "remarks": [
+                    {
+                        "r_judge": "judgeOne",
+                        "r_content": "good"
+                    },
+                    {
+                        "r_judge": "judgeTwo",
+                        "r_content": "very good"
+                    },
+                    {
+                        "r_judge": "judgeThree",
+                        "r_content": "bad"
+                    }
+                ]
+            }
+        }
+        """
+        do {
+            let player = try Player.decode(from: str)
+            print(player)
+            
+            print(player.toString())
+        } catch {
+            print(error)
+        }
+    }
+    
     private func test_codable3() {
         struct Remark: Decodable, CustomDebugStringConvertible {
             var judge: String = ""
@@ -23,7 +141,7 @@ class ExCodableVC: BaseViewController {
             }
         }
 
-        struct Player: Decodable, CodingKeyMap, DataDecodable {
+        struct Player: Decodable, ExCodingKeyMap, DataDecodable {
             static var keyMapping: [KeyMap<Player>] {
                 [KeyMap(\.name, to: "player_name"),
                  KeyMap(\.age, to: "age"),
@@ -78,7 +196,7 @@ class ExCodableVC: BaseViewController {
             }
         }
 
-        struct Player: Decodable, CodingKeyMap, DataDecodable {
+        struct Player: Decodable, ExCodingKeyMap, DataDecodable {
             static var keyMapping: [KeyMap<Player>] {
                 [KeyMap(\.name, to: "player_name"),
                  KeyMap(\.age, to: "age"),
@@ -142,7 +260,7 @@ class ExCodableVC: BaseViewController {
     }
     
     private func test_codable1() {
-        class ZPerson: Codable, CodingKeyMap, DataCodable {
+        class ZPerson: Codable, ExCodingKeyMap, DataCodable {
             private(set) var age = 20
             private(set) var name = "xiaohua"
             static var keyMapping: [KeyMap<ZPerson>] {
