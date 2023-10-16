@@ -29,11 +29,7 @@ extension _AnyDecodable {
         let container = try decoder.singleValueContainer()
 
         if container.decodeNil() {
-            #if canImport(Foundation)
-                self.init(NSNull())
-            #else
-                self.init(Self?.none)
-            #endif
+            self.init(NSNull())
         } else if let bool = try? container.decode(Bool.self) {
             self.init(bool)
         } else if let int = try? container.decode(Int.self) {

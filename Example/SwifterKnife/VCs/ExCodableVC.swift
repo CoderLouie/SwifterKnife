@@ -16,7 +16,7 @@ class ExCodableVC: BaseViewController {
     }
     
     private func test_codable7() {
-        class Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible, PropertyValuesConvertible {
+        class Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible {
             static var keyMapping: [KeyMap<Remark>] {
                 [KeyMap(\.judge, to: "r_judge"),
                  KeyMap(\.content, to: "r_content")]
@@ -47,7 +47,7 @@ class ExCodableVC: BaseViewController {
             var name: String = ""
             var age: Int = 0
             var isMale: Bool = false
-            var remarks: [Remark] = []
+            var remarks: [Int: Remark] = [:]
             
             var debugDescription: String {
                 "name: \(name), age: \(age), isMale: \(isMale), remarks: \(remarks)"
@@ -57,23 +57,23 @@ class ExCodableVC: BaseViewController {
         let str = """
         {
             "player_name": "balabala Team",
-            "age": 20,
+            "age": "30",
             "is_male": "10",
             "scoreInfo": {
-                "remarks": [
-                    {
+                "remarks": {
+                    "1": {
                         "r_judge": "judgeOne",
                         "r_content": "good"
                     },
-                    {
+                    "2": {
                         "r_judge": "judgeTwo",
                         "r_content": "very good"
                     },
-                    {
+                    "3": {
                         "r_judge": "judgeThree",
                         "r_content": "bad"
                     }
-                ]
+                }
             }
         }
         """

@@ -118,25 +118,14 @@ public extension Decoder {
     func nestedContainer(forKey key: String) throws -> KeyedDecodingContainer<ExCodingKey> {
         try container(keyedBy: ExCodingKey.self).nestedContainer(forKey: key)
     }
-    
-    fileprivate func subDecoder(forKey key: String) throws -> Decoder {
-        var container = try container(keyedBy: ExCodingKey.self)
-        var keys = key.split(separator: ".")
-        guard keys.count > 1 else {
-            return try container.superDecoder(forKey: ExCodingKey(key))
-        }
-        let last = keys.popLast()!
-        for key in keys {
-            container = try container.nestedContainer(keyedBy: ExCodingKey.self, forKey: ExCodingKey(key))
-        }
-        return try container.superDecoder(forKey: ExCodingKey(last))
-    }
 }
 public extension KeyedDecodingContainer where Key == ExCodingKey {
     func nestedContainer(forKey key: String) throws -> Self {
         var container = self
         let keys = key.split(separator: ".")
-        guard keys.count > 1 else { return container }
+        guard keys.count > 1 else {
+            return try nestedContainer(keyedBy: ExCodingKey.self, forKey: ExCodingKey(key))
+        }
         for key in keys {
             container = try container.nestedContainer(keyedBy: ExCodingKey.self, forKey: ExCodingKey(key))
         }
@@ -161,12 +150,8 @@ public extension KeyedDecodingContainer where Key == ExCodingKey {
 
 private struct ExDecodeError: CustomStringConvertible, Error {
     let text: String
-    init(_ text: String) {
-        self.text = text
-    }
-    var description: String {
-        text
-    }
+    init(_ text: String) { self.text = text }
+    var description: String { text }
 }
 public extension Decoder {
     func decode<T: Decodable>(_ stringKeys: String..., as type: T.Type = T.self) throws -> T {
@@ -181,7 +166,7 @@ public extension Decoder {
         }
         if let valueType = T.self as? ExpressibleByNilLiteral.Type {
             return valueType.init(nilLiteral: ()) as! T
-        }
+        } 
         throw ExDecodeError("decode failure: keys: \(keys)")
     }
 }
