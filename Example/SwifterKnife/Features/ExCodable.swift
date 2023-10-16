@@ -18,7 +18,6 @@ import Foundation
  */
 
 public protocol ExCodingKeyMap {
-    init()
     associatedtype Root = Self where Root: ExCodingKeyMap
     static var keyMapping: [KeyMap<Root>] { get }
 }
@@ -33,11 +32,7 @@ public extension Encodable where Self: ExCodingKeyMap, Self.Root == Self {
         try encode(to: encoder, with: Self.keyMapping)
     }
 }
-public extension Decodable where Self: ExCodingKeyMap, Self.Root == Self {
-    init(from decoder: Decoder) throws {
-        self.init()
-        try decode(from: decoder, with: Self.keyMapping)
-    }
+public extension Decodable where Self: ExCodingKeyMap {
     mutating func decode(from decoder: Decoder, with keyMapping: [KeyMap<Self>], nonnull: Bool = false, throws: Bool = false) throws {
         try keyMapping.forEach { try $0.decode?(&self, decoder, nonnull, `throws`) }
     }
@@ -71,65 +66,65 @@ public final class KeyMap<Root> {
     
     fileprivate func setDecode<Value: Decodable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: [String], nonnull: Bool? = nil, throws: Bool? = nil) {
         self.decode = { (root, decoder, nonnullAll, throwsAll) in
-            if Value.self is any ExCodingKeyMap.Type ||
-                Value.self is [any ExCodingKeyMap].Type {
-                let deco = try decoder.subDecoder(forKey: codingKeys[0])
-                root[keyPath: keyPath] = try Value(from: deco)
-                return
-            } 
+//            if Value.self is any ExCodingKeyMap.Type ||
+//                Value.self is [any ExCodingKeyMap].Type {
+//                let deco = try decoder.subDecoder(forKey: codingKeys[0])
+//                root[keyPath: keyPath] = try Value(from: deco)
+//                return
+//            } 
             if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
                 root[keyPath: keyPath] = value
             }
         }
     }
 }
- 
-/// 嵌套模型
-public extension KeyMap {
-    convenience init<Value: Encodable & ExCodingKeyMap>(model keyPath: WritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
-    }
-    convenience init<Value: Decodable & ExCodingKeyMap>(model keyPath: WritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        decode = { (root, decoder, nonnullAll, throwsAll) in
-            let deco = try decoder.subDecoder(forKey: codingKey)
-            root[keyPath: keyPath] = try Value(from: deco)
-        }
-    }
-    convenience init<Value: Codable & ExCodingKeyMap>(model keyPath: WritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
-        decode = { (root, decoder, nonnullAll, throwsAll) in
-            let deco = try decoder.subDecoder(forKey: codingKey)
-            root[keyPath: keyPath] = try Value(from: deco)
-        }
-    }
-}
-
-/// 嵌套模型数组
-public extension KeyMap {
-    convenience init<Value: Encodable & ExCodingKeyMap>(models keyPath: WritableKeyPath<Root, [Value]>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
-    }
-    
-    convenience init<Value: Decodable & ExCodingKeyMap>(models keyPath: WritableKeyPath<Root, [Value]>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        decode = { (root, decoder, nonnullAll, throwsAll) in
-            let deco = try decoder.subDecoder(forKey: codingKey)
-            root[keyPath: keyPath] = try [Value](from: deco)
-        }
-    }
-    convenience init<Value: Codable & ExCodingKeyMap>(models keyPath: WritableKeyPath<Root, [Value]>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
-        self.init()
-        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
-        decode = { (root, decoder, nonnullAll, throwsAll) in
-            let deco = try decoder.subDecoder(forKey: codingKey)
-            root[keyPath: keyPath] = try [Value](from: deco)
-        }
-    }
-}
+// 
+///// 嵌套模型
+//public extension KeyMap {
+//    convenience init<Value: Encodable & ExCodingKeyMap>(model keyPath: WritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
+//        self.init()
+//        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
+//    }
+//    convenience init<Value: Decodable & ExCodingKeyMap>(model keyPath: WritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
+//        self.init()
+//        decode = { (root, decoder, nonnullAll, throwsAll) in
+//            let deco = try decoder.subDecoder(forKey: codingKey)
+//            root[keyPath: keyPath] = try Value(from: deco)
+//        }
+//    }
+//    convenience init<Value: Codable & ExCodingKeyMap>(model keyPath: WritableKeyPath<Root, Value>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
+//        self.init()
+//        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
+//        decode = { (root, decoder, nonnullAll, throwsAll) in
+//            let deco = try decoder.subDecoder(forKey: codingKey)
+//            root[keyPath: keyPath] = try Value(from: deco)
+//        }
+//    }
+//}
+//
+///// 嵌套模型数组
+//public extension KeyMap {
+//    convenience init<Value: Encodable & ExCodingKeyMap>(models keyPath: WritableKeyPath<Root, [Value]>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
+//        self.init()
+//        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
+//    }
+//    
+//    convenience init<Value: Decodable & ExCodingKeyMap>(models keyPath: WritableKeyPath<Root, [Value]>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
+//        self.init()
+//        decode = { (root, decoder, nonnullAll, throwsAll) in
+//            let deco = try decoder.subDecoder(forKey: codingKey)
+//            root[keyPath: keyPath] = try [Value](from: deco)
+//        }
+//    }
+//    convenience init<Value: Codable & ExCodingKeyMap>(models keyPath: WritableKeyPath<Root, [Value]>, to codingKey: String, nonnull: Bool? = nil, throws: Bool? = nil) {
+//        self.init()
+//        setEncode(keyPath, to: [codingKey], nonnull: nonnull, throws: `throws`)
+//        decode = { (root, decoder, nonnullAll, throwsAll) in
+//            let deco = try decoder.subDecoder(forKey: codingKey)
+//            root[keyPath: keyPath] = try [Value](from: deco)
+//        }
+//    }
+//}
 
 public extension KeyMap {
     convenience init<Value: Decodable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil) {
