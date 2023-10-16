@@ -12,11 +12,81 @@ import SwifterKnife
 class ExCodableVC: BaseViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        test_codable6()
-        print("-----------")
-        test_codable5()
-        print("-----------")
-        test_codable4()
+        test_codable7()
+    }
+    
+    private func test_codable7() {
+        class Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible, PropertyValuesConvertible {
+            static var keyMapping: [KeyMap<Remark>] {
+                [KeyMap(\.judge, to: "r_judge"),
+                 KeyMap(\.content, to: "r_content")]
+            }
+            var judge: String = ""
+            var content: String = ""
+            
+            var debugDescription: String {
+                "(judge: \(judge), content: \(content))"
+            }
+            required init(from decoder: Decoder) throws {
+                decode(from: decoder, with: Self.keyMapping)
+            }
+        }
+        
+        class Player: Codable, ExCodingKeyMap, DataCodable, CustomDebugStringConvertible, PropertyValuesConvertible {
+            static var keyMapping: [KeyMap<Player>] {
+                [KeyMap(\.name, to: "player_name"),
+                 KeyMap(\.age, to: "age"),
+                 KeyMap(\.isMale, to: "is_male"),
+                 KeyMap(\.remarks, to: "scoreInfo.remarks")]
+            }
+            
+            required init(from decoder: Decoder) throws {
+                decode(from: decoder, with: Self.keyMapping)
+            }
+            
+            var name: String = ""
+            var age: Int = 0
+            var isMale: Bool = false
+            var remarks: [Remark] = []
+            
+            var debugDescription: String {
+                "name: \(name), age: \(age), isMale: \(isMale), remarks: \(remarks)"
+            }
+        }
+        
+        let str = """
+        {
+            "player_name": "balabala Team",
+            "age": 20,
+            "is_male": "10",
+            "scoreInfo": {
+                "remarks": [
+                    {
+                        "r_judge": "judgeOne",
+                        "r_content": "good"
+                    },
+                    {
+                        "r_judge": "judgeTwo",
+                        "r_content": "very good"
+                    },
+                    {
+                        "r_judge": "judgeThree",
+                        "r_content": "bad"
+                    }
+                ]
+            }
+        }
+        """
+        do {
+            let player = try Player.decode(from: str)
+            print(player)
+            
+            print(player.propertyValues.jsonString() ?? "nil")
+            
+            print(player.toString())
+        } catch {
+            print(error)
+        }
     }
     
     private func test_codable6() {
@@ -32,7 +102,7 @@ class ExCodableVC: BaseViewController {
                 "(judge: \(judge), content: \(content))"
             }
             required init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
         }
         
@@ -44,7 +114,7 @@ class ExCodableVC: BaseViewController {
             }
             
             required init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
             
             var name: String = ""
@@ -104,7 +174,7 @@ class ExCodableVC: BaseViewController {
             }
             init() {}
             init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
         }
         
@@ -114,7 +184,7 @@ class ExCodableVC: BaseViewController {
             }
             
             init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
             var remark: Remark = .init()
         }
@@ -152,7 +222,7 @@ class ExCodableVC: BaseViewController {
                 "(judge: \(judge), content: \(content))"
             }
             init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
         }
         
@@ -165,7 +235,7 @@ class ExCodableVC: BaseViewController {
             }
             
             init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
             
             var name: String = ""
@@ -222,7 +292,7 @@ class ExCodableVC: BaseViewController {
             }
             
             init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
             
             var name: String = ""
@@ -279,7 +349,7 @@ class ExCodableVC: BaseViewController {
             }
             
             init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
                 let remarksContainer = try decoder.nestedContainer(forKey: "scoreInfo.remarks")
                 //                var remarks: [Remark] = []
                 for key in remarksContainer.allKeys {
@@ -342,7 +412,7 @@ class ExCodableVC: BaseViewController {
             }
             init() {}
             required init(from decoder: Decoder) throws {
-                try decode(from: decoder, with: Self.keyMapping)
+                decode(from: decoder, with: Self.keyMapping)
             }
         }
         class ZStudent: ZPerson {
@@ -353,11 +423,11 @@ class ExCodableVC: BaseViewController {
             override init() { super.init() }
             required init(from decoder: Decoder) throws {
                 try super.init(from: decoder)
-                try decode(from: decoder, with: Self.selfKeyMapping)
+                decode(from: decoder, with: Self.selfKeyMapping)
             }
             override func encode(to encoder: Encoder) throws {
                 try super.encode(to: encoder)
-                try encode(to: encoder, with: Self.selfKeyMapping)
+                encode(to: encoder, with: Self.selfKeyMapping)
             }
         }
         let stu = ZStudent()

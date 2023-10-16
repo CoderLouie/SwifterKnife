@@ -146,6 +146,9 @@
 		B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12529FBAF900009ACFA /* Mems.swift */; };
 		B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */; };
 		B6B038F4290B71840091B31D /* Watchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B038F3290B71830091B31D /* Watchdog.swift */; };
+		B6B2FF3A2ADCE48D00270DBE /* AnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2FF392ADCE48D00270DBE /* AnyDecodable.swift */; };
+		B6B2FF3C2ADCE4E900270DBE /* BuiltInBridgeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2FF3B2ADCE4E900270DBE /* BuiltInBridgeType.swift */; };
+		B6B2FF3E2ADCEACA00270DBE /* ExCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2FF3D2ADCEACA00270DBE /* ExCodingKey.swift */; };
 		B6B5FAF1272BDC34001BBBE1 /* IAP.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF0272BDC34001BBBE1 /* IAP.swift */; };
 		B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF3272BE66E001BBBE1 /* Query.swift */; };
 		B6B5FAF6272BEC69001BBBE1 /* IAPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */; };
@@ -340,6 +343,9 @@
 		B6A2B12529FBAF900009ACFA /* Mems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Mems.swift; path = SwifterKnife/Features/Mems.swift; sourceTree = SOURCE_ROOT; };
 		B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyOnWrite.swift; sourceTree = "<group>"; };
 		B6B038F3290B71830091B31D /* Watchdog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watchdog.swift; sourceTree = "<group>"; };
+		B6B2FF392ADCE48D00270DBE /* AnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyDecodable.swift; sourceTree = "<group>"; };
+		B6B2FF3B2ADCE4E900270DBE /* BuiltInBridgeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuiltInBridgeType.swift; sourceTree = "<group>"; };
+		B6B2FF3D2ADCEACA00270DBE /* ExCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExCodingKey.swift; sourceTree = "<group>"; };
 		B6B5FAF0272BDC34001BBBE1 /* IAP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAP.swift; sourceTree = "<group>"; };
 		B6B5FAF3272BE66E001BBBE1 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		B6B5FAF5272BEC69001BBBE1 /* IAPRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPRequest.swift; sourceTree = "<group>"; };
@@ -706,6 +712,17 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
+		B6B2FF382ADCE46800270DBE /* ExCodable */ = {
+			isa = PBXGroup;
+			children = (
+				B620B0982A8F8673007243DC /* ExCodable.swift */,
+				B6B2FF392ADCE48D00270DBE /* AnyDecodable.swift */,
+				B6B2FF3B2ADCE4E900270DBE /* BuiltInBridgeType.swift */,
+				B6B2FF3D2ADCEACA00270DBE /* ExCodingKey.swift */,
+			);
+			path = ExCodable;
+			sourceTree = "<group>";
+		};
 		B6D834BD29B19111004C2BC3 /* IAP */ = {
 			isa = PBXGroup;
 			children = (
@@ -731,12 +748,12 @@
 		B6D834C129B19168004C2BC3 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B6B2FF382ADCE46800270DBE /* ExCodable */,
 				B6DC13412A9EE42C00D50A1C /* Animator.swift */,
 				B6D834C229B19192004C2BC3 /* CallbackHell */,
 				B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */,
 				B648D67F29418287004FFDCE /* Defaults.swift */,
 				B620B09C2A8F86CC007243DC /* Either.swift */,
-				B620B0982A8F8673007243DC /* ExCodable.swift */,
 				B6D834D429B82BE0004C2BC3 /* FormView */,
 				B6D834C929B192F4004C2BC3 /* Func.swift */,
 				B6D834CB29B19308004C2BC3 /* if_.swift */,
@@ -1066,6 +1083,7 @@
 			files = (
 				B64346942A9701B1005FA3F7 /* TestUIVC.swift in Sources */,
 				B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */,
+				B6B2FF3E2ADCEACA00270DBE /* ExCodingKey.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				B6D834D829B82C0B004C2BC3 /* FormViewCell.swift in Sources */,
 				B640CA5A2A7BB4DC00769B08 /* ISODate.swift in Sources */,
@@ -1095,6 +1113,7 @@
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				B6DC13472AA03A0300D50A1C /* OCUtils.m in Sources */,
 				B620B09B2A8F86A7007243DC /* StateMachine.swift in Sources */,
+				B6B2FF3C2ADCE4E900270DBE /* BuiltInBridgeType.swift in Sources */,
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
@@ -1118,6 +1137,7 @@
 				B68F99E22AD91B1B002431B0 /* ExCodableVC.swift in Sources */,
 				B6112A312AB9492300C44AD2 /* FoldButton.swift in Sources */,
 				B6B5FAF4272BE66E001BBBE1 /* Query.swift in Sources */,
+				B6B2FF3A2ADCE48D00270DBE /* AnyDecodable.swift in Sources */,
 				B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */,
 				B650CCA0282374E8003170BB /* Permission.swift in Sources */,
 				B6112A4D2ABAE9D800C44AD2 /* RadioGroup.swift in Sources */,
