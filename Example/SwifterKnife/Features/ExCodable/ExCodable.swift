@@ -44,6 +44,31 @@ public extension Decodable where Self: ExCodingKeyMap, Self: AnyObject {
     }
 }
 
+public protocol ExDecodable: Decodable {
+    init()
+}
+extension ExDecodable where Self: ExCodingKeyMap, Self.Root == Self {
+    public init(from decoder: Decoder) throws {
+        self.init(with: decoder, using: Self.keyMapping)
+    }
+    public init(with decoder: Decoder, using keyMapping: [KeyMap<Self>]) {
+        self.init()
+        decode(from: decoder, with: keyMapping)
+    }
+}
+/// class 类型得用final修饰才能调用到这里来
+extension ExDecodable where Self: ExCodingKeyMap, Self.Root == Self, Self: AnyObject {
+    public init(from decoder: Decoder) throws {
+        self.init(with: decoder, using: Self.keyMapping)
+    }
+    public init(with decoder: Decoder, using keyMapping: [KeyMap<Self>]) {
+        self.init()
+        decode(from: decoder, with: keyMapping)
+    }
+}
+
+public typealias ExCodable = ExDecodable & Encodable
+
 // MARK: -
 public final class KeyMap<Root> {
     fileprivate typealias EncodeClosure = (_ root: Root, _ encoder: Encoder) -> Void

@@ -46,24 +46,12 @@ extension UInt64: IntegerPropertyProtocol {}
 extension Bool: _BuiltInBridgeType {
     static func _transform(from object: Any) -> Bool? {
         switch object {
-        case let str as NSString:
-            let lowerCase = str.lowercased
-            if ["0", "false"].contains(lowerCase) {
-                return false
-            }
-            if ["1", "true"].contains(lowerCase) {
-                return true
-            }
-            if let ptr = str.utf8String {
-                if str.contains(".") {
-                    let num = atof(ptr)
-                    if num.isNaN || num.isInfinite { return nil }
-                    return num != 0
-                } else {
-                    return atoll(ptr) != 0
-                }
-            }
-            return nil
+        case let string as String:
+            let target = string.lowercased()
+            if ["true", "t", "y", "yes", "1"].contains(target) { return true }
+            if ["false", "f", "n", "no", "0"].contains(target) { return false }
+            let num = NSDecimalNumber(string: string)
+            return num == .notANumber ? nil : num.boolValue
         case let num as NSNumber:
             return num.boolValue
         default:

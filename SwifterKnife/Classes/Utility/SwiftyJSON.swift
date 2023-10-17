@@ -723,9 +723,10 @@ extension JSON { // : Swift.Bool
             case .number(let num): return num.boolValue
             case .string(let string):
                 let target = string.lowercased()
-                if ["true", "y", "t", "yes", "1"].contains(target) { return true }
-                if ["false", "n", "f", "no", "0"].contains(target) { return false }
-                return nil
+                if ["true", "t", "y", "yes", "1"].contains(target) { return true }
+                if ["false", "f", "n", "no", "0"].contains(target) { return false }
+                let num = NSDecimalNumber(string: string)
+                return num == .notANumber ? nil : num.boolValue
             default: return nil
             }
         }
