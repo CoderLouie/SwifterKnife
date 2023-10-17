@@ -1,9 +1,8 @@
 //
 //  DeinitObserver.swift
-//  SwifterKnife_Example
+//  SwifterKnife
 //
-//  Created by 李阳 on 2023/9/18.
-//  Copyright © 2023 CocoaPods. All rights reserved.
+//  Created by liyang on 2023/9/18. 
 //
 
 import Foundation
