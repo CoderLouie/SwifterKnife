@@ -17,6 +17,103 @@ import Foundation
  *  - seealso: `ExCodableTests.swift` form the source code
  */
 
+// MARK: -
+@propertyWrapper
+public final class ExCodableMap<Value> {
+    public var wrappedValue: Value
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+}
+extension ExCodableMap: PropertyValuesConvertible {
+    public var propertyValues: Any { wrappedValue }
+}
+@propertyWrapper
+public final class ExCodableKeyMap<Value> {
+    fileprivate let keys: [String]
+    public var wrappedValue: Value
+    public init(wrappedValue: Value, _ keys: String...) {
+        self.wrappedValue = wrappedValue
+        self.keys = keys
+    }
+}
+extension ExCodableKeyMap: PropertyValuesConvertible {
+    public var propertyValues: Any { wrappedValue }
+}
+fileprivate protocol EncodablePropertyWrapper {
+    func encode(to encoder: Encoder, label: String) throws
+}
+extension ExCodableMap: EncodablePropertyWrapper where Value: Encodable {
+    func encode(to encoder: Encoder, label: String) throws {
+        try encoder.encode(wrappedValue, for: label)
+    }
+}
+extension ExCodableKeyMap: EncodablePropertyWrapper where Value: Encodable {
+    func encode(to encoder: Encoder, label: String) throws {
+        try encoder.encode(wrappedValue, for: keys.first ?? label)
+    }
+}
+
+fileprivate protocol DecodablePropertyWrapper {
+    func decode(from decoder: Decoder, label: String) throws
+}
+extension ExCodableMap: DecodablePropertyWrapper where Value: Decodable {
+    func decode(from decoder: Decoder, label: String) throws {
+        if let value: Value = try decoder.decode(label) {
+            wrappedValue = value
+        }
+    }
+}
+extension ExCodableKeyMap: DecodablePropertyWrapper where Value: Decodable {
+    func decode(from decoder: Decoder, label: String) throws {
+        let keys = keys.isEmpty ? [label] : keys
+        if let value: Value = try decoder.decode(keys) {
+            wrappedValue = value
+        }
+    }
+}
+public protocol ExAutoEncodable: Encodable {}
+public extension ExAutoEncodable {
+    func encode(to encoder: Encoder) throws {
+        try ex_encode(to: encoder)
+    }
+}
+
+public protocol ExAutoDecodable: Decodable { init() }
+public extension ExAutoDecodable {
+    init(from decoder: Decoder) throws {
+        self.init()
+        try ex_decode(from: decoder)
+    }
+}
+fileprivate extension Encodable {
+    func ex_encode(to encoder: Encoder) throws {
+        var opMirror: Mirror? = Mirror(reflecting: self)
+        while let mirror = opMirror {
+            for case let (label?, value) in mirror.children {
+                try (value as? EncodablePropertyWrapper)?.encode(to: encoder, label: String(label.dropFirst()))
+            }
+            opMirror = mirror.superclassMirror
+        }
+    }
+}
+
+fileprivate extension Decodable {
+    func ex_decode(from decoder: Decoder) throws {
+        var opMirror: Mirror? = Mirror(reflecting: self)
+        while let mirror = opMirror {
+            for case let (label?, value) in mirror.children {
+                try (value as? DecodablePropertyWrapper)?.decode(from: decoder, label: String(label.dropFirst()))
+            }
+            opMirror = mirror.superclassMirror
+        }
+    }
+}
+public typealias ExAutoCodable = ExAutoEncodable & ExAutoDecodable
+
+
+// MARK: -
+
 public protocol ExCodingKeyMap {
     associatedtype Root = Self where Root: ExCodingKeyMap
     static var keyMapping: [KeyMap<Root>] { get }
@@ -59,6 +156,7 @@ extension ExDecodable where Self: ExCodingKeyMap, Self.Root == Self {
 /// class 类型得用final修饰才能调用到这里来
 extension ExDecodable where Self: ExCodingKeyMap, Self.Root == Self, Self: AnyObject {
     public init(from decoder: Decoder) throws {
+        print("my init(from:)")
         self.init(with: decoder, using: Self.keyMapping)
     }
     public init(with decoder: Decoder, using keyMapping: [KeyMap<Self>]) {
@@ -68,6 +166,22 @@ extension ExDecodable where Self: ExCodingKeyMap, Self.Root == Self, Self: AnyOb
 }
 
 public typealias ExCodable = ExDecodable & Encodable
+
+/*
+ 这样定义的话 class 类型 不用final修饰也可以
+ public protocol ExDecodable: Decodable, ExCodingKeyMap where Self.Root == Self {
+     init()
+ }
+ extension ExDecodable {
+     public init(from decoder: Decoder) throws {
+         self.init(with: decoder, using: Self.keyMapping)
+     }
+     public init(with decoder: Decoder, using keyMapping: [KeyMap<Self>]) {
+         self.init()
+         decode(from: decoder, with: keyMapping)
+     }
+ }
+ */
 
 // MARK: -
 public final class KeyMap<Root> {

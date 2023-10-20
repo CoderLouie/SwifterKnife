@@ -9,14 +9,203 @@
 import UIKit
 import SwifterKnife
 
+//public protocol ExDecodable: Decodable, ExCodingKeyMap where Self.Root == Self {
+//    init()
+//}
+//extension ExDecodable {
+//    public init(from decoder: Decoder) throws {
+////        self.init()
+////        print("my init(from:)")
+//        self.init(with: decoder, using: Self.keyMapping)
+//    }
+//    public init(with decoder: Decoder, using keyMapping: [KeyMap<Self>]) {
+//        self.init()
+//        decode(from: decoder, with: keyMapping)
+//    }
+//}
+/// class 类型得用final修饰才能调用到这里来
+//extension ExDecodable where Self: ExCodingKeyMap, Self.Root == Self, Self: AnyObject {
+//    public init(from decoder: Decoder) throws {
+//        print("my init(from:)")
+//        self.init(with: decoder, using: Self.keyMapping)
+//    }
+//    public init(with decoder: Decoder, using keyMapping: [KeyMap<Self>]) {
+//        self.init()
+//        decode(from: decoder, with: keyMapping)
+//    }
+//}
+
+//public typealias ExCodable = ExDecodable & Encodable
+
 class ExCodableVC: BaseViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        test_codable5()
 //        test_codable52()
-        test_codable7()
+        test_codable72()
+    }
+    private func test_codable8() {
+        struct Tag: RawRepresentable {
+            let rawValue: String
+            init(rawValue: String) {
+                self.rawValue = rawValue
+            }
+        }
+        enum Gender {
+            case man, woman
+        }
+        enum Country: String {
+            case china, america
+        }
+        class LYPerson {
+            var tag: Tag = .init(rawValue: "person")
+            var name = "xiaohua"
+            var age = 20
+            var country: Country = .china
+        }
+        final class LYClass {
+            var name = "三年级(5)班"
+        }
+        final class LYStudent: LYPerson, PropertyValuesConvertible {
+            var theClass = LYClass()
+            var score = 90
+        }
+        let stu = LYStudent()
+        let map = stu.propertyMap
+        print(map.jsonString() ?? "nil")
+        let dict = map as NSDictionary
+        NSLog("%@", dict)
     }
     
+    private func test_codable72() {
+        class Remark: ExAutoCodable, CustomDebugStringConvertible {
+            @ExCodableKeyMap("r_judge")
+            var judge: String = ""
+            @ExCodableKeyMap("r_content")
+            var content: String = ""
+            
+            var debugDescription: String {
+                "(judge: \(judge), content: \(content))"
+            }
+            required init() {}
+        }
+        
+        class Player: ExAutoCodable, DataCodable, PropertyValuesConvertible, CustomDebugStringConvertible {
+            @ExCodableKeyMap("player_name")
+            var name: String = ""
+            @ExCodableMap
+            var age: Int = 0
+            @ExCodableKeyMap("is_male")
+            var isMale: Bool = false
+            @ExCodableKeyMap("scoreInfo.remarks")
+            var remarks: [Int: Remark] = [:]
+            
+            var debugDescription: String {
+                "name: \(name), age: \(age), isMale: \(isMale), remarks: \(remarks)"
+            }
+            required init() {}
+        }
+        
+        let str = """
+        {
+            "player_name": "balabala Team",
+            "age": "30",
+            "is_male": "10",
+            "scoreInfo": {
+                "remarks": {
+                    "1": {
+                        "r_judge": "judgeOne",
+                        "r_content": "good"
+                    },
+                    "2": {
+                        "r_judge": "judgeTwo",
+                        "r_content": "very good"
+                    },
+                    "3": {
+                        "r_judge": "judgeThree",
+                        "r_content": "bad"
+                    }
+                }
+            }
+        }
+        """
+        do {
+            let player = try Player.decode(from: str)
+            print(player)
+            
+            print(player.propertyMap.jsonString() ?? "nil")
+            
+            print(player.toString())
+        } catch {
+            print(error)
+        }
+    }
+    private func test_codable71() {
+        class Remark: ExDecodable, ExCodingKeyMap, CustomDebugStringConvertible {
+            static var keyMapping: [KeyMap<Remark>] {
+                [KeyMap(\.judge, to: "r_judge"),
+                 KeyMap(\.content, to: "r_content")]
+            }
+            var judge: String = ""
+            var content: String = ""
+            
+            var debugDescription: String {
+                "(judge: \(judge), content: \(content))"
+            }
+            required init() {}
+        }
+        
+        class Player: ExDecodable, ExCodingKeyMap, DataDecodable, CustomDebugStringConvertible {
+            static var keyMapping: [KeyMap<Player>] {
+                [KeyMap(\.name, to: "player_name"),
+                 KeyMap(\.age, to: "age"),
+                 KeyMap(\.isMale, to: "is_male"),
+                 KeyMap(\.remarks, to: "scoreInfo.remarks")]
+            }
+            required init() {}
+            
+            var name: String = ""
+            var age: Int = 0
+            var isMale: Bool = false
+            var remarks: [Int: Remark] = [:]
+            
+            var debugDescription: String {
+                "name: \(name), age: \(age), isMale: \(isMale), remarks: \(remarks)"
+            }
+        }
+        
+        let str = """
+        {
+            "player_name": "balabala Team",
+            "age": "30",
+            "is_male": "10",
+            "scoreInfo": {
+                "remarks": {
+                    "1": {
+                        "r_judge": "judgeOne",
+                        "r_content": "good"
+                    },
+                    "2": {
+                        "r_judge": "judgeTwo",
+                        "r_content": "very good"
+                    },
+                    "3": {
+                        "r_judge": "judgeThree",
+                        "r_content": "bad"
+                    }
+                }
+            }
+        }
+        """
+        do {
+            let data = Data(str.utf8)
+//            let player = try Player.decode(from: str)
+            let player = try JSONDecoder().decode(Player.self, from: data)
+            print(player)
+        } catch {
+            print(error)
+        }
+    }
     private func test_codable7() {
         final class Remark: ExCodable, ExCodingKeyMap, CustomDebugStringConvertible {
             static var keyMapping: [KeyMap<Remark>] {
@@ -83,7 +272,7 @@ class ExCodableVC: BaseViewController {
             let player = try Player.decode(from: str)
             print(player)
             
-            print(player.propertyValues.jsonString() ?? "nil")
+            print(player.propertyMap.jsonString() ?? "nil")
             
             print(player.toString())
         } catch {
@@ -154,7 +343,7 @@ class ExCodableVC: BaseViewController {
             let player = try Player.decode(from: str)
             print(player)
             
-            print(player.propertyValues.jsonString() ?? "nil")
+            print(player.propertyMap.jsonString() ?? "nil")
             
             print(player.toString())
         } catch {
