@@ -42,7 +42,8 @@ class ExCodableVC: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        test_codable5()
 //        test_codable52()
-        test_codable72()
+//        test_codable72()
+        test_unkeyed_codable()
     }
     private func test_codable8() {
         struct Tag: RawRepresentable {
@@ -684,6 +685,98 @@ class ExCodableVC: BaseViewController {
         do {
             let stu1 = try ZStudent.decode(from: str)
             print(stu1.name, stu1.age, stu1.score)
+        } catch {
+            print(error)
+        }
+    }
+}
+
+
+extension ExCodableVC {
+    private func test_unkeyed_codable() {
+        struct Person: Codable {
+            var age = 10
+            var name = "xiaohua"
+        }
+        struct Team: Codable {
+            var name = ""
+            var person: Person
+            
+            enum CodingKeys: CodingKey {
+                case name
+                case persons
+                case classes
+            }
+            /*
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.name = try container.decode(String.self, forKey: .name)
+                var unkeyedC = try container.nestedUnkeyedContainer(forKey: .persons)
+                let _ = try unkeyedC.decode(Person.self)
+                self.person = try unkeyedC.decode(Person.self)
+            }
+            func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                try container.encode(name, forKey: .name)
+                var unkeyedC = container.nestedUnkeyedContainer(forKey: .persons)
+                let dict: [String: String] = [:]
+                try unkeyedC.encode(dict)
+                try unkeyedC.encode(person)
+            }
+             */
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.name = try container.decode(String.self, forKey: .name)
+                var unkeyedC = try container.nestedUnkeyedContainer(forKey: .persons)
+                let _ = try unkeyedC.decode(AnyDecodable.self)
+                let _ = try unkeyedC.decode(AnyDecodable.self)
+                let _ = try unkeyedC.decode(AnyDecodable.self)
+                var con = try unkeyedC.nestedContainer(keyedBy: CodingKeys.self)
+                unkeyedC = try con.nestedUnkeyedContainer(forKey: .classes)
+                let _ = try unkeyedC.decode(AnyDecodable.self)
+                self.person = try unkeyedC.decode(Person.self)
+            }
+            func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                try container.encode(name, forKey: .name)
+                var unkeyedC = container.nestedUnkeyedContainer(forKey: .persons)
+                let dict: [String: String] = [:]
+                try unkeyedC.encode(dict)
+                try unkeyedC.encode(dict)
+                try unkeyedC.encode(dict)
+                var con = unkeyedC.nestedContainer(keyedBy: CodingKeys.self)
+                unkeyedC = con.nestedUnkeyedContainer(forKey: .classes)
+                try unkeyedC.encode(dict)
+                try unkeyedC.encode(person)
+            }
+        }
+        
+        let str = """
+        {
+            "name": "zhongsanxiaoxue",
+            "persons": [
+                {"age": 20, "name": "zhangsan1"},
+                {"age": 30, "name": "zhangsan2"},
+                {"age": 40, "name": "zhangsan3"},
+                {"classes": [
+                    {"age": 50, "name": "zhangsan4"},
+                    {"age": 60, "name": "zhangsan5"}
+                ]}
+            ]
+        }
+        """
+        let data = Data(str.utf8)
+        do {
+            let t = try JSONDecoder().decode(Team.self, from: data)
+            print(t.name, t.person.name, t.person.age)
+            
+            let data = try JSONEncoder().encode(t)
+            let str1 = String(data: data, encoding: .utf8) ?? "nil"
+            print(str1)
+            
+            let data1 = Data(str1.utf8)
+            let t2 = try JSONDecoder().decode(Team.self, from: data)
+            print(t2.name, t2.person.name, t2.person.age)
         } catch {
             print(error)
         }

@@ -147,7 +147,7 @@ public enum JSON {
             }
         case _ as NSNull:
             self = .null
-        case nil:
+        case Optional<Any>.none:
             self = .null
         case let array as [Any]:
             self = .array(array)
@@ -465,7 +465,7 @@ extension JSON {
      Example:
      
      ```
-     let json = JSON[data]
+     let json = JSON(data)
      let path = [9,"list","person","name"]
      let name = json[path]
      ```
@@ -486,11 +486,11 @@ extension JSON {
             case 1: self[sub: path[0]].object = newValue.object
             default:
                 var aPath = path
-                aPath.remove(at: 0)
-                var nextJSON = self[sub: path[0]]
+                let first = aPath.removeFirst()
+                var nextJSON = self[sub: first]
                 /// 产生递归调用
                 nextJSON[aPath] = newValue
-                self[sub: path[0]] = nextJSON
+                self[sub: first] = nextJSON
             }
         }
     }
@@ -525,6 +525,11 @@ extension JSON {
         }
         set {
             if case .dictionary(var dict) = self {
+                for k in dict.keys {
+                    if k.compare(key, options: [.caseInsensitive]) == .orderedSame {
+                        dict.removeValue(forKey: k)
+                    }
+                }
                 dict[key] = newValue.object
                 self = .dictionary(dict)
             }

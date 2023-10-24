@@ -224,25 +224,91 @@ public extension KeyMap {
 }
  
 
+fileprivate extension String {
+    var keyComponent: (String, Int?) {
+        let str = trimmed
+        guard str.hasSuffix("]") else { return (str, nil) }
+        guard let end = str.index(str.endIndex, offsetBy: -2, limitedBy: str.startIndex) else { return (str, nil) }
+        var index = end
+        while index != str.startIndex {
+            let c = str[index]
+            if c == "[" { break }
+            guard c.isNumber else { return (str, nil) }
+            index = str.index(before: index)
+        }
+        if index == str.startIndex { return (str, nil) }
+        if index == end { return (String(str[..<index]), 0) }
+        guard let num = Int(str[str.index(after: index)...end]) else { return (str, nil) }
+        return (String(str[..<index]), num)
+    }
+}
 // MARK: -
+fileprivate typealias ExKeyedEncodingContainer = KeyedEncodingContainer<ExCodingKey>
 
 public extension Encoder {
     func encode<T: Encodable>(_ value: T, for stringKey: String) throws {
         if case Optional<Any>.none = (value as Any) {
             return
         }
-        var keys = stringKey.split(separator: ".").map { ExCodingKey($0) }
+        var keys = stringKey.split(separator: ".")
         var container = container(keyedBy: ExCodingKey.self)
+
         guard keys.count > 1 else {
-            try container.encode(value, forKey: keys[0])
+            try ex_encode(value, forSingleKey: String(keys[0]), using: container)
             return
         }
         let lastKey = keys.removeLast()
         
         for key in keys {
-            container = container.nestedContainer(keyedBy: ExCodingKey.self, forKey: key)
+//            container = container.nestedContainer(keyedBy: ExCodingKey.self, forKey: key)
         }
-        try container.encode(value, forKey: lastKey)
+//        try container.encode(value, forKey: String(lastKey), )
+        try ex_encode(value, forSingleKey: String(lastKey), using: container)
+    }
+    
+    private func ex_encode<T: Encodable>(_ value: T, forSingleKey key: String, using container: Any) throws {
+        let info = key.keyComponent
+        let newKey = ExCodingKey(info.0)
+        if var keyedCon = container as? ExKeyedEncodingContainer {
+            if var num = info.1 {
+                var con = keyedCon.nestedUnkeyedContainer(forKey: newKey)
+                while num > 0 {
+                    if value is (any ExpressibleByIntegerLiteral) {
+                        try con.encode(0)
+                    } else if value is (any ExpressibleByBooleanLiteral) {
+                        try con.encode(false)
+                    } else if value is (any ExpressibleByStringLiteral) {
+                        try con.encode("")
+                    } else if value is (any ExpressibleByFloatLiteral) {
+                        try con.encode(0.0)
+                    } else if value is (any ExpressibleByArrayLiteral) {
+                        try con.encode(Array<Int>())
+                    } else {
+                        let val: [String: String] = [:]
+                        try con.encode(val)
+                    }
+                    num -= 1
+                }
+                try con.encode(value)
+            } else {
+                try keyedCon.encode(value, forKey: newKey)
+            }
+        } else if var con = container as? UnkeyedEncodingContainer {
+//            var keyedCon = con.nestedUnkeyedContainer(forKey: newKey)
+//            try keyedCon.encode(value, forKey: newKey)
+//            var keyedCon = con.nestedContainer(keyedBy: ExCodingKey.self, forKey: newKey)
+            var keyedCon = con.nestedContainer(keyedBy: ExCodingKey.self)
+            keyedCon = keyedCon.nestedContainer(keyedBy: ExCodingKey.self, forKey: newKey)
+            if let num = info.1 {
+//                con.nestedUnkeyedContainer(forKey: newKey)
+//                con = con.nestedUnkeyedContainer()
+                keyedCon.nestedUnkeyedContainer(forKey: <#T##KeyedEncodingContainer<ExCodingKey>.Key#>)
+            } else {
+                var keyedCon = con.nestedContainer(keyedBy: ExCodingKey.self, forKey: newKey)
+//                try con.encode(value, forKey: newKey)
+                
+            }
+        }
     }
 }
 
