@@ -5,12 +5,14 @@
 //  Created by liyang on 2021/10/19.
 //
 
-public extension Sequence { 
-    
-    func theFirst<T>(ofType type: T.Type = T.self) -> T? {
-        first { $0 is T } as? T
-    }
+public extension Sequence {
 
+    func firstMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
+        try first {
+            try predicate($0) != nil
+        } as? T
+    }
+    
     /// Get element count based on condition.
     ///
     ///        [2, 2, 4, 7].count(where: {$0 % 2 == 0}) -> 3

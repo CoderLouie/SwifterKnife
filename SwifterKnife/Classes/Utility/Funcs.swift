@@ -113,6 +113,17 @@ public func ~=<T>(pattern: (T) -> Bool, value: T) -> Bool {
     pattern(value)
 }
 
+
+infix operator &&->: LogicalConjunctionPrecedence
+@discardableResult @inlinable
+public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T) rethrows -> T? {
+    return lhs ? try rhs() : nil
+}
+@discardableResult @inlinable
+public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T?) rethrows -> T? {
+    return lhs ? try rhs() : nil
+}
+
 /*
  rax、rdx常作为函数返回值使用
  register read/d rax 方便查看方法调用返回值 /d是10进制 /x是16进制

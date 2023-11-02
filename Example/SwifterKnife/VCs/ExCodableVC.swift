@@ -731,7 +731,7 @@ extension ExCodableVC {
                 let _ = try unkeyedC.decode(AnyDecodable.self)
                 let _ = try unkeyedC.decode(AnyDecodable.self)
                 let _ = try unkeyedC.decode(AnyDecodable.self)
-                var con = try unkeyedC.nestedContainer(keyedBy: CodingKeys.self)
+                let con = try unkeyedC.nestedContainer(keyedBy: CodingKeys.self)
                 unkeyedC = try con.nestedUnkeyedContainer(forKey: .classes)
                 let _ = try unkeyedC.decode(AnyDecodable.self)
                 self.person = try unkeyedC.decode(Person.self)
