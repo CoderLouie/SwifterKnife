@@ -19,6 +19,24 @@ fileprivate extension UILabel {
         return ()
     }
 }
+
+
+public extension PartialKeyPath {
+    /// The name of the key path.
+    var stringValue: String {
+        if let string = self._kvcKeyPathString {
+            return string
+        }
+        let mirr = Mirror(reflecting: self)
+        let me = String(describing: self)
+        let rootName = String(describing: Root.self)
+        let removingRootName = me.components(separatedBy: rootName)
+        var keyPathValue = removingRootName.last ?? ""
+        if keyPathValue.first == "." { keyPathValue.removeFirst() }
+        return keyPathValue
+    }
+}
+
 class TestUIVC: BaseViewController {
     
     private func testKeyPath<T>(_ keyPath: KeyPath<CALayer, T>) {
@@ -30,12 +48,19 @@ class TestUIVC: BaseViewController {
 //        print(expression.keyPath)
 //        print("")
     }
+    private func testNormalKeyPath<T>(_ keyPath: KeyPath<CGRect, T>) {
+        print(keyPath.stringValue)
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        print(#keyPath(CALayer.bounds.origin.x))
-        testKeyPath(\.bounds)
-        testKeyPath(\.bounds.origin)
-        testKeyPath(\.bounds.origin.x)
+        testNormalKeyPath(\.origin)
+        testNormalKeyPath(\.size)
+        testNormalKeyPath(\.origin.x)
+        testNormalKeyPath(\.size.width)
+//        testKeyPath(\.bounds)
+//        testKeyPath(\.bounds.origin)
+//        testKeyPath(\.bounds.origin.x)
     }
     
     private func testOfView(_ view: UIView) {

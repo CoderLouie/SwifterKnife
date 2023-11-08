@@ -110,12 +110,16 @@ import UIKit
             return UIApplication.shared.keyWindow
         }
     }
-//    @objc public static var fontWindow: UIWindow? {
+//    public static func fontWindow(maxLevel: CGFloat? = nil) -> UIWindow? {
 //        for window in UIApplication.shared.windows.reversed() {
 //            if window.isKeyWindow,
 //               window.screen === UIScreen.main,
 //               (!window.isHidden && window.alpha > 0),
 //               window.windowLevel >= .normal {
+//                if let level = maxLevel,
+//                   window.windowLevel.rawValue > level {
+//                    return nil
+//                }
 //                return window
 //            }
 //        }

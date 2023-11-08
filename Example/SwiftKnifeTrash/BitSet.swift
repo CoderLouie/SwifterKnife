@@ -7,6 +7,29 @@
 
 import Foundation
 
+/*
+ & 与 两位都是1时结果为1，否则为0
+ 
+ | 或 两位中有1时结果为1，否则为0
+ 
+ ^ 异或 两位不同时结果为1，否则为0
+ 
+ ~ 取反 位为0结果为1，位为1结果为0
+ 
+ 应用：
+ num & 1 == 1 ? 奇数 : 偶数
+
+ num >> 1 == num / 2
+ num >> 2 == num / 4
+ num >> 3 == num / 8
+ 
+ num << 1 == num * 2
+ num << 2 == num * 4
+ num << 3 == num * 8
+ 
+ n & (n-1) 作用是消除数字 n 的二进制表示中的最后一个 1。
+ */
+
 //public typealias Word = UInt8
 public typealias Word = UInt64
 fileprivate extension Word {
@@ -62,7 +85,6 @@ fileprivate extension Word {
     /// 2进制位中1的个数
     var cardinality: Int {
         var count = 0, n = self
-//        each { count += $0 ? 1 : 0 }
         while n != 0 {
             count += 1
             n &= n - 1
@@ -128,10 +150,36 @@ fileprivate extension Word {
 }
 
 fileprivate extension Word {
+    func first(_ work: (Bool, Int) -> Bool) {
+        var i = 0, n = self
+        while n != 0 {
+            if work(n & 1 != 0, i) { break }
+            i += 1
+            n >>= 1
+        }
+    }
+    func firstMap<T>(_ work: (Bool, Int) -> T?) -> T? {
+        var i = 0, n = self
+        while n != 0 {
+            if let v = work(n & 1 != 0, i) { return v }
+            i += 1
+            n >>= 1
+        }
+        return nil
+    }
     func each(_ work: (Bool) -> Void) {
         var n = self
         while n != 0 {
             work(n & 1 != 0)
+            n >>= 1
+        }
+    }
+    func each(_ work: (Bool, inout Bool) -> Void) {
+        var n = self
+        var stop = false
+        while n != 0 {
+            work(n & 1 != 0, &stop)
+            if stop { break }
             n >>= 1
         }
     }

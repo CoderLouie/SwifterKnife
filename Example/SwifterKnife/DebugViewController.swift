@@ -8,6 +8,7 @@
 
 import UIKit
 import SwifterKnife
+import Photos
 extension String {
     var negativeWord: String? {
         let path = "censorship.txt".filePath(under: .bundle)
@@ -62,6 +63,7 @@ fileprivate enum TestCase: String, CaseIterable {
     case testUI = "Test UI"
     case codable = "Codable"
     case excodable = "ExCodable"
+    case permission = "Permission"
     var token: String {
         return "\(#fileID)_\(#function)_\(#line)"
     }
@@ -196,6 +198,18 @@ fileprivate enum TestCase: String, CaseIterable {
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .other:
             break
+        case .permission:
+            print("permission")
+//            let status: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+//            var i = 0
+//            Permission.request(exis: status, map: \.myStatus) { status, isFirst in
+//                Console.trace(status, isFirst)
+//            } work: { finish in
+//                Console.trace("start request", i)
+//                if i == 3 { finish(.authorized) }
+//                else { finish(.notDetermined) }
+//                i += 1
+//            }
         }
     }
 }
