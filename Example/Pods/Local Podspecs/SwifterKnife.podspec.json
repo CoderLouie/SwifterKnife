@@ -20,7 +20,6 @@
     "git": "https://github.com/CoderLouie/SwifterKnife.git",
     "tag": "0.2.0"
   },
-  "source_files": "SwifterKnife/Classes/**/*",
   "subspecs": [
     {
       "name": "Base",
@@ -28,10 +27,12 @@
     },
     {
       "name": "Extension",
-      "source_files": [
-        "SwifterKnife/Classes/Base/*.swift",
-        "SwifterKnife/Classes/Extension/**/*.swift"
-      ]
+      "dependencies": {
+        "SwifterKnife/Base": [
+
+        ]
+      },
+      "source_files": "SwifterKnife/Classes/Extension/**/*.swift"
     },
     {
       "name": "Utility",
@@ -39,15 +40,18 @@
     },
     {
       "name": "Views",
-      "source_files": [
-        "SwifterKnife/Classes/Base/*.swift",
-        "SwifterKnife/Classes/Extension/**/*.swift"
-      ],
       "dependencies": {
+        "SwifterKnife/Extension": [
+
+        ],
+        "SwifterKnife/Utility": [
+
+        ],
         "SnapKit": [
 
         ]
-      }
+      },
+      "source_files": "SwifterKnife/Classes/Views/**/*.swift"
     }
   ],
   "swift_version": "5.3"

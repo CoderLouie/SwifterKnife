@@ -665,35 +665,4 @@ public extension String {
     }
 }
 
-public extension String {
-    func aspectFitSize(for font: UIFont, limitSize: CGSize, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
-        var attr: [NSAttributedString.Key: Any] = [.font: font]
-        if model != .byWordWrapping {
-            let style = NSMutableParagraphStyle()
-            style.lineBreakMode = model
-            attr[.paragraphStyle] = style
-        }
-        let rect = (self as NSString).boundingRect(with: limitSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: attr, context: nil)
-        let res = rect.size.adaptive(tramsform: \.pixCeil)
-        return res
-    }
-    func aspectFitSize(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
-        aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model)
-    }
-    func aspectFitHeight(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
-        aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model).height
-    }
-    func aspectFitWidth(for font: UIFont, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
-        let size = CGSize(width: CGFloat.greatestFiniteMagnitude,
-                          height: CGFloat.greatestFiniteMagnitude)
-        return aspectFitSize(for: font, limitSize: size, model: model).width
-    }
-}
-extension UIFont {
-    public var singleLineHeight: CGFloat {
-        "Hello".aspectFitHeight(for: self,
-                                maxWidth: .greatestFiniteMagnitude)
-    }
-}
-
 //https://www.jianshu.com/p/17fab783bfad

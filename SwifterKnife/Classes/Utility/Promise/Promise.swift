@@ -213,6 +213,32 @@ public final class Promise<Value> {
         }
     }
     
+    public enum AsyncResult {
+        case fulfill(_ val: Value)
+        case reject(_ error: Swift.Error)
+        case retry(after: TimeInterval)
+    }
+    public static func repeatWhile(_ asyncCond: @escaping (_ index: Int, _ finish: @escaping (AsyncResult) -> Void) -> Void) -> Promise<Value> {
+        let promise = Promise()
+        var continuation: ((AsyncResult) -> Void)!
+        var index = 0
+        continuation = { result in
+            switch result {
+            case .fulfill(let val):
+                promise.fulfill(val)
+            case .reject(let err):
+                promise.reject(err)
+            case let .retry(after: interval):
+                DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
+                    index += 1
+                    asyncCond(index, continuation)
+                }
+            }
+        }
+        asyncCond(index, continuation)
+        return promise
+    }
+    
     public static func create(
         queue: DispatchQueue = .global(qos: .userInitiated),
         work: @escaping (

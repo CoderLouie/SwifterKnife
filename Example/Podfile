@@ -6,11 +6,11 @@ target 'SwifterKnife_Example' do
   pod 'SwifterKnife', :path => '../'
   pod 'SnapKit', :git => 'https://github.com/CoderLouie/SnapKit.git', :branch => 'my_source'
   pod 'lottie-ios'
-#  pod 'SnapKit'
+  
   pod 'Alamofire'
   target 'SwifterKnife_Tests' do
     inherit! :search_paths
-
+    
   end
 end
 

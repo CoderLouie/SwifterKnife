@@ -169,10 +169,7 @@ private var keyboardAvoidingSpaceKey: UInt8 = 0
 private var keyboardKeepSpaceKey: UInt8 = 0
 extension UIView {
     private var theInputView: UIView? {
-        searchInLevelOrder { view, _ in
-            view.isFirstResponder
-//            && (view is UITextInput)
-        }
+        Screen.firstResponder
     }
     /// 输入视图需要和键盘保持的距离
     public var keyboardKeepSpaceClosure: ((UIView) -> CGFloat)? {

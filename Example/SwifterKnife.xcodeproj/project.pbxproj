@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		14E8F158AE2CB98C31731294 /* Pods_SwifterKnife_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */; };
-		3A3F139B4D90ABF154A74FB7 /* Pods_SwifterKnife_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C170EFC09F20ABB9E5F3CC /* Pods_SwifterKnife_Example.framework */; };
+		0AC6254B88CA5CEF2A1A0F2B /* Pods_SwifterKnife_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1226DD0532D240151FAB402F /* Pods_SwifterKnife_Example.framework */; };
+		4E999E2549C4619CE52BC07B /* Pods_SwifterKnife_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97BB44AD8C6DE2EF14966F22 /* Pods_SwifterKnife_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -192,9 +192,9 @@
 
 /* Begin PBXFileReference section */
 		092A8AAE46A75A17D47028CA /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		1226DD0532D240151FAB402F /* Pods_SwifterKnife_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		275D5B6800E08DFDD4A8BE0C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		3DA8143BEADB95168233F238 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SwifterKnife.podspec; path = ../SwifterKnife.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		40C170EFC09F20ABB9E5F3CC /* Pods_SwifterKnife_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DA8143BEADB95168233F238 /* SwifterKnife.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = SwifterKnife.podspec; path = ../SwifterKnife.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* SwifterKnife_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwifterKnife_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -207,7 +207,7 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		667088BE18E822BD32A859FD /* Pods-SwifterKnife_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Example.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		97BB44AD8C6DE2EF14966F22 /* Pods_SwifterKnife_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwifterKnife_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwifterKnife_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwifterKnife_Tests/Pods-SwifterKnife_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B6112A2E2AB9488D00C44AD2 /* TagLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagLabel.swift; sourceTree = "<group>"; };
 		B6112A302AB9492300C44AD2 /* FoldButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldButton.swift; sourceTree = "<group>"; };
@@ -387,7 +387,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A3F139B4D90ABF154A74FB7 /* Pods_SwifterKnife_Example.framework in Frameworks */,
+				0AC6254B88CA5CEF2A1A0F2B /* Pods_SwifterKnife_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,7 +395,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14E8F158AE2CB98C31731294 /* Pods_SwifterKnife_Tests.framework in Frameworks */,
+				4E999E2549C4619CE52BC07B /* Pods_SwifterKnife_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,8 +405,8 @@
 		389FD70F9A2DE84EB2B28F69 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				40C170EFC09F20ABB9E5F3CC /* Pods_SwifterKnife_Example.framework */,
-				7197377EDECEEF858EE5A150 /* Pods_SwifterKnife_Tests.framework */,
+				1226DD0532D240151FAB402F /* Pods_SwifterKnife_Example.framework */,
+				97BB44AD8C6DE2EF14966F22 /* Pods_SwifterKnife_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -814,7 +814,7 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				2B0FD8C34AB36DD596AA2B89 /* [CP] Embed Pods Frameworks */,
+				EB6A0C9BAC39A620C2D38730 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1006,30 +1006,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2B0FD8C34AB36DD596AA2B89 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SwifterKnife/SwifterKnife.framework",
-				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwifterKnife.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		7647E5CA9D6E2CCEDA83FBD2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1072,6 +1048,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EB6A0C9BAC39A620C2D38730 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SwifterKnife/SwifterKnife.framework",
+				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwifterKnife.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwifterKnife_Example/Pods-SwifterKnife_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

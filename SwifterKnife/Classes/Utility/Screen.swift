@@ -89,23 +89,13 @@ import UIKit
     
     @available(iOS 13.0, *)
     public static var activeWindowScene: UIWindowScene? {
-        return UIApplication.shared.connectedScenes.firstMap {
-            guard $0.activationState == .foregroundActive,
-                  let scene = $0 as? UIWindowScene else {
-                return nil
-            }
-            return scene
-        }
+        return UIApplication.shared.connectedScenes.first {
+            $0.activationState == .foregroundActive && $0 is UIWindowScene
+        } as? UIWindowScene
     }
     @objc public static var keyWindow: UIWindow? {
         if #available(iOS 13.0, *) {
-            return UIApplication.shared.connectedScenes.firstMap {
-                guard $0.activationState == .foregroundActive,
-                      let scene = $0 as? UIWindowScene else {
-                    return nil
-                }
-                return scene.windows.first(where: \.isKeyWindow)
-            }
+            return activeWindowScene?.windows.first(where: \.isKeyWindow)
         } else {
             return UIApplication.shared.keyWindow
         }
