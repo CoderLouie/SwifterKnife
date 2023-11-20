@@ -351,3 +351,73 @@ extension Promise {
     }
 }
  
+extension Promises {
+    static func downloadImage(from urlString: String) -> Promise<UIImage> {
+        Promise.create { fulfill, reject in
+            guard let url = URL(string: urlString) else {
+                reject(PromiseError.missed)
+                return
+            }
+            do {
+                let data = try Data(contentsOf: url)
+                if let img = UIImage(data: data) {
+                    fulfill(img)
+                } else {
+                    reject(PromiseError.missed)
+                }
+            } catch {
+                reject(error)
+            }
+        }
+    }
+    static func downloadImage(from url: URL) -> Promise<UIImage> {
+        Promise.create { fulfill, reject in
+            do {
+                let data = try Data(contentsOf: url)
+                if let img = UIImage(data: data) {
+                    fulfill(img)
+                } else {
+                    reject(PromiseError.missed)
+                }
+            } catch {
+                reject(error)
+            }
+        }
+    }
+    
+    static func download(from urlString: String, destination: @escaping (URL) -> String) -> Promise<URL> {
+        return Promise.create { fulfill, reject in
+            guard let url = URL(string: urlString) else {
+                reject(PromiseError.missed)
+                return
+            }
+            URLSession.shared.downloadTask(with: url) { fileUrl, response, error in
+                if let err = error {
+                    reject(err)
+                    return
+                }
+                guard let cacheUrl = fileUrl else {
+                    reject(PromiseError.missed)
+                    return
+                }
+                let path = destination(cacheUrl)
+                let destURL = URL(fileURLWithPath: path)
+                let mgr = FileManager.default
+                guard destURL.isFileURL else {
+                    reject(PromiseError.missed)
+                    try? mgr.removeItem(at: cacheUrl)
+                    return
+                }
+                do {
+                    try SandBox.reset(path: path)
+                    try mgr.moveItem(at: cacheUrl, to: destURL)
+                    fulfill(destURL)
+                } catch {
+                    try? mgr.removeItem(at: cacheUrl)
+                    reject(error)
+                }
+            }.resume()
+        }
+    }
+}
+ 

@@ -218,7 +218,9 @@ public final class Promise<Value> {
         case reject(_ error: Swift.Error)
         case retry(after: TimeInterval)
     }
-    public static func repeatWhile(_ asyncCond: @escaping (_ index: Int, _ finish: @escaping (AsyncResult) -> Void) -> Void) -> Promise<Value> {
+    public static func repeatWhile(
+        on queue: DispatchQueue = .global(qos: .userInitiated),
+        _ asyncCond: @escaping (_ index: Int, _ finish: @escaping (AsyncResult) -> Void) -> Void) -> Promise<Value> {
         let promise = Promise()
         var continuation: ((AsyncResult) -> Void)!
         var index = 0
@@ -229,13 +231,15 @@ public final class Promise<Value> {
             case .reject(let err):
                 promise.reject(err)
             case let .retry(after: interval):
-                DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
+                queue.asyncAfter(deadline: .now() + interval) {
                     index += 1
                     asyncCond(index, continuation)
                 }
             }
         }
-        asyncCond(index, continuation)
+        queue.async {
+            asyncCond(index, continuation)
+        }
         return promise
     }
     
