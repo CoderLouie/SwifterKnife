@@ -76,7 +76,37 @@ class TestUIVC: BaseViewController {
 //        let views: [UIView] = [UILabel(), UIView(), UIImageView(), UIButton()]
 //        views.forEach { testOfView($0) }
 //        setupImageLabel()
-        setupTextView()
+//        setupTextView()
+        setupButton()
+    }
+    
+    private func setupButton() {
+        NewButton().do { this in
+            this.backgroundColor = UIColor(gray: 40)
+            this.setTitle("Click Me", for: .normal)
+            this.setImage(UIImage(named: "checkbox_sub_off"), for: .normal)
+            this.setImage(UIImage(named: "checkbox_sub_on"), for: .selected)
+            this.imagePosition = .left
+            this.addBorder(color: .orange, radius: 0, width: 1)
+            this.contentEdgeInsets = .inset(10)
+            this.spacing = 10
+            
+            this.addTouchUpInsideClosure { sender, event in
+                print("1")
+            }
+            this.addTouchUpInsideClosure { sender, event in
+                print("2")
+            }
+            this.setTouchUpInsideClosure { sender, event in
+                print("3", event.touchPosition)
+                sender.isSelected.toggle()
+            }
+            
+            view.addSubview(this)
+            this.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }
     }
     private func setupTextView() {
         PlaceholderTextView().do {

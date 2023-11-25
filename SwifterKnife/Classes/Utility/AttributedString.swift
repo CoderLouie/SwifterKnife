@@ -65,6 +65,18 @@ public extension NSAttributedString {
         return modified(with: attributes, for: nsrange)
     }
 }
+public extension NSMutableAttributedString {
+    func modified(for substring: String, using closure: (Attributes) -> Void) -> NSMutableAttributedString {
+        guard let range = string.range(of: substring) else {
+            return self
+        }
+        let nsrange = NSRange(range, in: string)
+        let attr = Attributes()
+        closure(attr)
+        addAttributes(attr.dictionary, range: nsrange)
+        return self
+    }
+}
 
 public func + (lhs: NSAttributedString, rhs: NSAttributedString) -> NSAttributedString {
     let result = NSMutableAttributedString()

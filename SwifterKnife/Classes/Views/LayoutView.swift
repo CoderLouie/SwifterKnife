@@ -39,6 +39,8 @@ public final class SudokuView: VirtualView {
     public var marginX: CGFloat = 8
     public var marginY: CGFloat = 8
     
+    public var cellHeight: ((_ view: UIView, _ index: Int, _ width: CGFloat) -> CGFloat)?
+    
     public enum Alignment {
         case top, center, bottom
     }
@@ -101,11 +103,16 @@ public final class SudokuView: VirtualView {
                     rowMaxH = 0
                 }
                 rowViews.append(subview)
-                let subVH = subview.frame.height
-                let h = subVH > 0 ? subVH : subview.systemLayoutSizeFitting(
-                    CGSize(width: w, height: 0),
-                    withHorizontalFittingPriority: .required,
-                    verticalFittingPriority: .fittingSizeLevel).height.pixCeil
+                let h: CGFloat
+                if let closure = cellHeight {
+                    h = closure(subview, i, w)
+                } else {
+                    let subVH = subview.frame.height
+                    h = subVH > 0 ? subVH : subview.systemLayoutSizeFitting(
+                        CGSize(width: w, height: 0),
+                        withHorizontalFittingPriority: .required,
+                        verticalFittingPriority: .fittingSizeLevel).height.pixCeil
+                }
                 rowMaxH = max(rowMaxH, h)
                 rowHeights.append(h)
             }

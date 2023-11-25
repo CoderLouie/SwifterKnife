@@ -7,15 +7,28 @@
 
 import UIKit
 
-public struct TouchPosition: OptionSet {
+public struct TouchPosition: OptionSet, CustomStringConvertible {
     public let rawValue: Int
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
+    // 1
     public static var left: TouchPosition { .init(rawValue: 1 << 0) }
+    // 2
     public static var right: TouchPosition { .init(rawValue: 1 << 1) }
+    // 4
     public static var top: TouchPosition { .init(rawValue: 1 << 2) }
+    // 8
     public static var bottom: TouchPosition { .init(rawValue: 1 << 3) }
+    public var description: String {
+        if isEmpty { return "None" }
+        var desc: [String] = []
+        if contains(.left) { desc.append("left") }
+        if contains(.right) { desc.append("right") }
+        if contains(.top) { desc.append("top") }
+        if contains(.bottom) { desc.append("bottom") }
+        return desc.joined(separator: ", ")
+    }
 }
 
 extension UITouch {
@@ -59,8 +72,80 @@ extension UIEvent {
     }
 }
 
-public extension UIControl {
+fileprivate final class ClosureTarget {
+    fileprivate let closure: (UIControl, UIEvent) -> Void
+    fileprivate var event: UIControl.Event
     
+    fileprivate init(event: UIControl.Event, closure: @escaping (UIControl, UIEvent) -> Void) {
+        self.closure = closure
+        self.event = event
+    }
+    @objc fileprivate func onDidClick(_ sender: UIControl, _ event: UIEvent) {
+        closure(sender, event)
+    }
+}
+public protocol TargetAction: AnyObject {
+    func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event)
+    func removeTarget(_ target: Any?, action: Selector?, for controlEvents: UIControl.Event)
+}
+
+private var controlClosureTargetKey: UInt8 = 0
+extension TargetAction {
+    public func addClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        if event.isEmpty { return }
+        let wrap = ClosureTarget(event: event) { control, event in
+            guard let sender = control as? Self else { return }
+            closure(sender, event)
+        }
+        addTarget(wrap, action: #selector(ClosureTarget.onDidClick(_:_:)), for: event)
+        closureTargets.add(wrap)
+    }
+
+    public func removeClosures(for event: UIControl.Event) {
+        if event.isEmpty { return }
+        let targets = self.closureTargets
+        for obj in targets {
+            guard let target = obj as? ClosureTarget,
+                  target.event.contains(event) else { continue }
+            let newEvent = target.event.intersection(event.symmetricDifference(.allEvents))
+            let action = #selector(ClosureTarget.onDidClick(_:_:))
+            removeTarget(target, action: action, for: target.event)
+            if newEvent.isEmpty {
+                targets.remove(target)
+            } else {
+                target.event = newEvent
+                addTarget(target, action: action, for: newEvent)
+            }
+        }
+    }
+    
+    private var closureTargets: NSMutableArray {
+        if let array = objc_getAssociatedObject(self, &controlClosureTargetKey) as? NSMutableArray {
+            return array
+        }
+        let array = NSMutableArray()
+        objc_setAssociatedObject(self, &controlClosureTargetKey, array, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return array
+    }
+}
+extension TargetAction {
+    
+    public func setClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        removeClosures(for: event)
+        addClosure(for: event, closure: closure)
+    }
+    
+    public func addTouchUpInsideClosure(_ closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        addClosure(for: .touchUpInside, closure: closure)
+    }
+    public func setTouchUpInsideClosure(_ closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        setClosure(for: .touchUpInside, closure: closure)
+    }
+}
+
+extension UIControl: TargetAction {}
+
+public extension UIControl {
     func addTouchUpInside(_ target: Any?, _ action: Selector) {
         addTarget(target, action: action, for: .touchUpInside)
     }
