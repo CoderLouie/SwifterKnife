@@ -52,3 +52,42 @@ public extension Int {
         self / value * value + (value / 2) / (value / 2) * value
     }
 }
+
+
+infix operator &~ : AdditionPrecedence
+infix operator &? : AdditionPrecedence
+public extension OptionSet where RawValue: FixedWidthInteger {
+    static func & (
+        lhs: Self,
+        rhs: Self
+    ) -> Self {
+        .init(rawValue: lhs.rawValue & rhs.rawValue)
+    }
+    
+    static func | (
+        lhs: Self,
+        rhs: Self
+    ) -> Self {
+        .init(rawValue: lhs.rawValue | rhs.rawValue)
+    }
+    
+    static prefix func ~ (
+        lhs: Self
+    ) -> Self {
+        .init(rawValue: ~lhs.rawValue)
+    }
+    
+    static func &~ (
+        lhs: Self,
+        rhs: Self
+    ) -> Self {
+        .init(rawValue: lhs.rawValue & ~rhs.rawValue)
+    }
+    
+    static func &? (
+        lhs: Self,
+        rhs: Self
+    ) -> Bool {
+        return lhs.rawValue & rhs.rawValue != 0
+    }
+}

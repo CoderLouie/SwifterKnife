@@ -104,19 +104,22 @@ extension TargetAction {
     public func removeClosures(for event: UIControl.Event) {
         if event.isEmpty { return }
         let targets = self.closureTargets
+        var removes: [ClosureTarget] = []
         for obj in targets {
             guard let target = obj as? ClosureTarget,
                   target.event.contains(event) else { continue }
-            let newEvent = target.event.intersection(event.symmetricDifference(.allEvents))
+            let newEvent = target.event & (~event)
+            
             let action = #selector(ClosureTarget.onDidClick(_:_:))
             removeTarget(target, action: action, for: target.event)
             if newEvent.isEmpty {
-                targets.remove(target)
+                removes.append(target)
             } else {
                 target.event = newEvent
                 addTarget(target, action: action, for: newEvent)
             }
         }
+        targets.removeObjects(in: removes)
     }
     
     private var closureTargets: NSMutableArray {
