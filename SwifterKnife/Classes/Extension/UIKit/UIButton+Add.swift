@@ -108,7 +108,7 @@ extension TargetAction {
         for obj in targets {
             guard let target = obj as? ClosureTarget,
                   target.event.contains(event) else { continue }
-            let newEvent = target.event & (~event)
+            let newEvent = target.event &~ event
             
             let action = #selector(ClosureTarget.onDidClick(_:_:))
             removeTarget(target, action: action, for: target.event)
