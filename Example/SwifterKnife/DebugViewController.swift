@@ -197,6 +197,9 @@ fileprivate enum TestCase: String, CaseIterable {
             let nextVc = ExCodableVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .other:
+//            print(Facecore.celebrity.timeoutInterval)
+            let nextVc = ViewController()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
             break
         case .permission:
             print("permission")

@@ -554,6 +554,19 @@ public final class Promise<Value> {
         }
         return self
     }
+    @discardableResult
+    public func sthen(
+        on queue: ExecutionContext = DispatchQueue.main,
+        onFulfilled: @escaping (Value) -> Void,
+        onRejected: @escaping (Error, Int?) -> Void = { _, _ in }) -> Promise<Value> {
+        return then(on: queue, onFulfilled: onFulfilled) { err in
+            if let stepErr = err as? StepError {
+                onRejected(stepErr.error, stepErr.step)
+            } else {
+                onRejected(err, nil)
+            }
+        }
+    }
     
     private func updateState(_ newState: State<Value>) {
         lockQueue.async {

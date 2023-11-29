@@ -156,7 +156,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupTextView()
+//        setupTextView()
+        setupBody2()
 //        setupBody5()
 //        setupButton1()
 //        setupRatingView()
@@ -974,32 +975,33 @@ extension ViewController {
         }
     }
     private func setupBody2() {
-        let label = UILabel().chain.text("hello").font(.systemFont(ofSize: 12)).object.then { _ in
-            
-        }
-//        SudokuView().do { this in
-//            this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
-//            this.behaviour = .spacing(10, 15)
-////            this.behaviour = .itemLength(50, 130)
-//            view.addSubview(this)
-//            this.snp.makeConstraints { make in
-//                make.leading.trailing.equalToSuperview()
-//                make.centerY.equalToSuperview()
-//                make.height.equalToSuperview().multipliedBy(0.7)
-//            }
-//            this.warpCount = 4
-//            
-//            for i in 1...5 {
-//                let label = UILabel().then {
-//                    $0.backgroundColor = .yellow
-//                    $0.text = "\(i)"
-//                    $0.font = UIFont.systemFont(ofSize: 25)
-//                    $0.textAlignment = .center
-//                }
-//                this.addArrangedView(label)
-//            }
-//            this.placeArrangedViews()
+//        let label = UILabel().chain.text("hello").font(.systemFont(ofSize: 12)).object.then { _ in
+//
 //        }
+        SudokuView().do { this in
+            this.columnCount = 4
+            this.backgroundColor = .darkGray
+            this.layoutBehavior = .autoSelfHeight(.bottom, { _, _, w in
+                return w + CGFloat((-10...30).randomElement() ?? 0)
+            })
+//            this.layoutBehavior = .autoCellSize(4)
+            view.addSubview(this)
+            this.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview()
+                make.centerY.equalToSuperview()
+//                make.height.equalToSuperview().multipliedBy(0.7)
+            }
+            
+            for i in 1...10 {
+                let label = UILabel().then {
+                    $0.backgroundColor = .yellow
+                    $0.text = "\(i)"
+                    $0.font = UIFont.systemFont(ofSize: 25)
+                    $0.textAlignment = .center
+                }
+                this.addSubview(label)
+            }
+        }
     }
     private func setupBody1() {
         let direction: CarouselView.ScrollDirection = .vertical

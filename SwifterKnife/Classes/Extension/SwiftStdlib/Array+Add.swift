@@ -78,6 +78,9 @@ public extension Array where Element: Equatable {
         removeAll(where: { $0 == item })
         return self
     }
+    func contains(_ item: Element) -> Bool {
+        contains(where: { $0 == item })
+    }
 
     /// Remove all instances contained in items parameter from array.
     ///
