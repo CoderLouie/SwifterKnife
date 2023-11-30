@@ -34,17 +34,23 @@ open class VirtualView: UIView {
  
  */
 public final class SudokuView: UIView {
-    public var columnCount = 3
+    public var columnWidthRatios: [CGFloat] = [1, 1, 1]
     public var marginX: CGFloat = 8
     public var marginY: CGFloat = 8
+    public var contentEdgeInset: UIEdgeInsets = .zero
     
     public enum Alignment {
-        case top, center, bottom
+        public enum Inline {
+            case top, center, bottom
+        }
+        case inline(Inline)
+        case fixedMargin
+        case waterflow
     }
     public enum LayoutBehavior {
-        case autoSelfHeight(_ cellAlignment: Alignment = .center,
+        case autoSelfHeight(_ cellAlignment: Alignment = .inline(.center),
                             _ cellHeightWay: ((_ view: UIView, _ index: Int, _ width: CGFloat) -> CGFloat)? = nil)
-        case autoCellSize(_ rowCount: Int)
+        case autoCellSize(_ rowHeightRatios: [CGFloat]? = nil)
     }
     public var layoutBehavior: LayoutBehavior = .autoSelfHeight()
     
@@ -58,71 +64,130 @@ public final class SudokuView: UIView {
         return size
     }
     
+    
+    private func systemHeight(of view: UIView, limitW w: CGFloat) -> CGFloat {
+        let height = view.intrinsicContentSize.height
+        return height > 0 ? height : view.systemLayoutSizeFitting(
+            CGSize(width: w, height: 0),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel).height.pixCeil
+    }
     public override func layoutSubviews() {
         super.layoutSubviews()
-        guard columnCount > 0, !subviews.isEmpty else { return }
+        guard !columnWidthRatios.isEmpty,
+                !subviews.isEmpty else { return }
         
         let bounds = bounds
         let width = bounds.width
         let height = bounds.height
         guard width > 0 else { return }
+        let inset = contentEdgeInset
         
-        let colN = CGFloat(columnCount)
-        let w = ((width - (colN - 1) * marginX) / colN).pixFloor
-        var x: CGFloat = 0, y: CGFloat = 0
+        let sumW = columnWidthRatios.reduce(0, +)
+        let columnCount = columnWidthRatios.count
+        let totoalW = (width - inset.left - inset.right - CGFloat(columnCount - 1) * marginX)
+        let itemWs = columnWidthRatios.map { (totoalW * ($0 / sumW)).pixFloor }
+        var x: CGFloat = inset.left, y: CGFloat = inset.top
         
         switch layoutBehavior {
-        case .autoCellSize(let n):
-            let rowN = CGFloat(n)
+        case .autoCellSize(let ratios):
             guard height > 0 else { return }
-            let h = ((height - (rowN - 1) * marginY) / rowN).pixFloor
+            let rowHeightRatios: [CGFloat]
+            if let r = ratios, !r.isEmpty {
+                rowHeightRatios = r
+            } else {
+                rowHeightRatios = .init(repeating: 1, count: Int((subviews.count + columnCount - 1) / columnCount))
+            }
+            let sumH = rowHeightRatios.reduce(0, +)
+            let rowCount = rowHeightRatios.count
+            let totoalH = (height - inset.top - inset.bottom - CGFloat(rowCount - 1) * marginY)
+            let itemHs = rowHeightRatios.map { (totoalH * ($0 / sumH)).pixCeil }
             for (i, subview) in subviews.enumerated() {
+                let left = i % columnCount
+                let w = itemWs[left]
+                let h = itemHs[Int(i / columnCount)]
                 subview.frame = CGRect(x: x, y: y, width: w, height: h)
                 x += w + marginX
-                if i % columnCount == columnCount - 1 {
-                    x = 0; y += h + marginY
+                if left == columnCount - 1 {
+                    x = inset.left; y += h + marginY
                 }
             }
         case let .autoSelfHeight(cellAlignment, cellHeight):
-            var rowViews: [UIView] = []
-            var rowMaxH: CGFloat = 0
-            var rowHeights: [CGFloat] = []
-            let subviewsCount = subviews.count
-            for (i, subview) in subviews.enumerated() {
-                rowViews.append(subview)
-                let h: CGFloat
-                if let closure = cellHeight {
-                    h = closure(subview, i, w)
-                } else {
-                    let subVH = subview.frame.height
-                    h = subVH > 0 ? subVH : subview.systemLayoutSizeFitting(
-                        CGSize(width: w, height: 0),
-                        withHorizontalFittingPriority: .required,
-                        verticalFittingPriority: .fittingSizeLevel).height.pixCeil
-                }
-                rowMaxH = max(rowMaxH, h)
-                rowHeights.append(h)
-                if i % columnCount == columnCount - 1 ||
-                    i == subviewsCount - 1 {// 最后一列
-                    for (j, cell) in rowViews.enumerated() {
-                        let h = rowHeights[j]
-                        let space: CGFloat
-                        switch cellAlignment {
-                        case .top: space = 0
-                        case .center: space = (rowMaxH - h) * 0.5
-                        case .bottom: space = rowMaxH - h
-                        }
-                        cell.frame = CGRect(x: x, y: y + space, width: w, height: h)
-                        x += w + marginX
+            switch cellAlignment {
+            case .fixedMargin:
+                var columnHeights: [CGFloat] = .init(repeating: inset.top, count: columnCount)
+                for (i, subview) in subviews.enumerated() {
+                    let left = i % columnCount
+                    let w = itemWs[left]
+                    let h = cellHeight?(subview, i, w) ?? systemHeight(of: subview, limitW: w)
+                    y = columnHeights[left]
+                    subview.frame = CGRect(x: x, y: y, width: w, height: h)
+                    x += w + marginX
+                    y += h + marginY
+                    columnHeights[left] = y
+                    if left == columnCount - 1 {
+                        x = inset.left
                     }
-                    x = 0
-                    y += rowMaxH + marginY
-                    rowHeights.removeAll()
-                    rowViews.removeAll()
-                    rowMaxH = 0
                 }
+                insHeight = (columnHeights.max() ?? y) - marginY
+            case .waterflow:
+                var columnHeights: [CGFloat] = .init(repeating: inset.top, count: columnCount)
+                var columnLefts: [CGFloat] = []
+                do {
+                    var x = inset.left
+                    for i in (0..<columnCount) {
+                        columnLefts.append(x)
+                        x += itemWs[i] + marginX
+                    }
+                }
+                for (i, subview) in subviews.enumerated() {
+                    guard let (idx, height) = columnHeights.enumerated().min(by: { $0.element < $1.element
+                    }) else { return }
+                    let w = itemWs[idx]
+                    let h = cellHeight?(subview, i, w) ?? systemHeight(of: subview, limitW: w)
+                    y = height
+                    x = columnLefts[idx]
+                    
+                    subview.frame = CGRect(x: x, y: y, width: w, height: h)
+                    columnHeights[idx] += h + marginY
+                    insHeight = max(columnHeights[idx], insHeight)
+                }
+                insHeight -= marginY
+            case .inline(let inline):
+                var rowViews: [UIView] = []
+                var rowMaxH: CGFloat = 0
+                var rowHeights: [CGFloat] = []
+                let subviewsCount = subviews.count
+                for (i, subview) in subviews.enumerated() {
+                    rowViews.append(subview)
+                    let left = i % columnCount
+                    let w = itemWs[left]
+                    let h = cellHeight?(subview, i, w) ?? systemHeight(of: subview, limitW: w)
+                    rowMaxH = max(rowMaxH, h)
+                    rowHeights.append(h)
+                    if left == columnCount - 1 ||
+                        i == subviewsCount - 1 {// 最后一列
+                        for (j, cell) in rowViews.enumerated() {
+                            let h = rowHeights[j]
+                            let space: CGFloat
+                            switch inline {
+                            case .top: space = 0
+                            case .center: space = (rowMaxH - h) * 0.5
+                            case .bottom: space = rowMaxH - h
+                            }
+                            cell.frame = CGRect(x: x, y: y + space, width: itemWs[j], height: h)
+                            x += itemWs[j] + marginX
+                        }
+                        x = inset.left
+                        y += rowMaxH + marginY
+                        rowHeights.removeAll()
+                        rowViews.removeAll()
+                        rowMaxH = 0
+                    }
+                }
+                insHeight = y - marginY
             }
-            insHeight = y - marginY
+            insHeight += inset.bottom
             invalidateIntrinsicContentSize()
         }
     }

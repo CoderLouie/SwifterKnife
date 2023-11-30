@@ -203,16 +203,17 @@ fileprivate enum TestCase: String, CaseIterable {
             break
         case .permission:
             print("permission")
-            
-            Promise<Int>.repeatWhile { index, finish in
-                Console.trace("begin request", index)
-                if index == 3 { finish(.fulfill(10)) }
-                else {  finish(.retry(after: 1))  }
-            }.then { val in
-                Console.trace("fulfill with", val)
-            } onRejected: { err in
-                Console.trace("reject with", err)
-            }
+            let nextVc = WaterflowVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+//            Promise<Int>.repeatWhile { index, finish in
+//                Console.trace("begin request", index)
+//                if index == 3 { finish(.fulfill(10)) }
+//                else {  finish(.retry(after: 1))  }
+//            }.then { val in
+//                Console.trace("fulfill with", val)
+//            } onRejected: { err in
+//                Console.trace("reject with", err)
+//            }
 //            let status: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
 //            var i = 0
 //            Permission.request(exis: status, map: \.myStatus) { status, isFirst in

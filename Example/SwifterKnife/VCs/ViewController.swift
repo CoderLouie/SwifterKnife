@@ -979,9 +979,11 @@ extension ViewController {
 //
 //        }
         SudokuView().do { this in
-            this.columnCount = 4
+            this.contentEdgeInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+            this.columnWidthRatios = [1, 2, 1, 1]
             this.backgroundColor = .darkGray
-            this.layoutBehavior = .autoSelfHeight(.bottom, { _, _, w in
+            
+            this.layoutBehavior = .autoSelfHeight(.waterflow, { _, _, w in
                 return w + CGFloat((-10...30).randomElement() ?? 0)
             })
 //            this.layoutBehavior = .autoCellSize(4)
