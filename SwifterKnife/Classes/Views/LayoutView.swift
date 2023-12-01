@@ -47,9 +47,21 @@ public final class SudokuView: UIView {
         case fixedMargin
         case waterflow
     }
+    public struct Position: CustomStringConvertible {
+        public let row: Int
+        public let column: Int
+        public init(_ row: Int, _ column: Int) {
+            self.row = row
+            self.column = column
+        }
+        public var description: String {
+            "(\(row), \(column))"
+        }
+    }
+    public typealias CellHeightClosure = (_ view: UIView, _ index: Int, _ width: CGFloat, Position) -> CGFloat
     public enum LayoutBehavior {
         case autoSelfHeight(_ cellAlignment: Alignment = .inline(.center),
-                            _ cellHeightWay: ((_ view: UIView, _ index: Int, _ width: CGFloat) -> CGFloat)? = nil)
+                            _ cellHeightWay: CellHeightClosure? = nil)
         case autoCellSize(_ rowHeightRatios: [CGFloat]? = nil)
     }
     public var layoutBehavior: LayoutBehavior = .autoSelfHeight()
@@ -72,6 +84,15 @@ public final class SudokuView: UIView {
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel).height.pixCeil
     }
+    public override func setNeedsLayout() {
+        needLayout = true
+        super.setNeedsLayout()
+    }
+    public override func layoutIfNeeded() {
+        needLayout = true
+        super.layoutIfNeeded()
+    }
+    private var needLayout = true
     public override func layoutSubviews() {
         super.layoutSubviews()
         guard !columnWidthRatios.isEmpty,
@@ -81,6 +102,8 @@ public final class SudokuView: UIView {
         let width = bounds.width
         let height = bounds.height
         guard width > 0 else { return }
+        guard needLayout else { return }
+        needLayout = false
         let inset = contentEdgeInset
         
         let sumW = columnWidthRatios.reduce(0, +)
@@ -117,15 +140,15 @@ public final class SudokuView: UIView {
             case .fixedMargin:
                 var columnHeights: [CGFloat] = .init(repeating: inset.top, count: columnCount)
                 for (i, subview) in subviews.enumerated() {
-                    let left = i % columnCount
-                    let w = itemWs[left]
-                    let h = cellHeight?(subview, i, w) ?? systemHeight(of: subview, limitW: w)
-                    y = columnHeights[left]
+                    let column = i % columnCount
+                    let w = itemWs[column]
+                    let h = cellHeight?(subview, i, w, .init(Int(i / columnCount), column)) ?? systemHeight(of: subview, limitW: w)
+                    y = columnHeights[column]
                     subview.frame = CGRect(x: x, y: y, width: w, height: h)
                     x += w + marginX
                     y += h + marginY
-                    columnHeights[left] = y
-                    if left == columnCount - 1 {
+                    columnHeights[column] = y
+                    if column == columnCount - 1 {
                         x = inset.left
                     }
                 }
@@ -141,16 +164,16 @@ public final class SudokuView: UIView {
                     }
                 }
                 for (i, subview) in subviews.enumerated() {
-                    guard let (idx, height) = columnHeights.enumerated().min(by: { $0.element < $1.element
+                    guard let (column, height) = columnHeights.enumerated().min(by: { $0.element < $1.element
                     }) else { return }
-                    let w = itemWs[idx]
-                    let h = cellHeight?(subview, i, w) ?? systemHeight(of: subview, limitW: w)
+                    let w = itemWs[column]
+                    let h = cellHeight?(subview, i, w, .init(Int(i / columnCount), column)) ?? systemHeight(of: subview, limitW: w)
                     y = height
-                    x = columnLefts[idx]
+                    x = columnLefts[column]
                     
                     subview.frame = CGRect(x: x, y: y, width: w, height: h)
-                    columnHeights[idx] += h + marginY
-                    insHeight = max(columnHeights[idx], insHeight)
+                    columnHeights[column] += h + marginY
+                    insHeight = max(columnHeights[column], insHeight)
                 }
                 insHeight -= marginY
             case .inline(let inline):
@@ -160,12 +183,12 @@ public final class SudokuView: UIView {
                 let subviewsCount = subviews.count
                 for (i, subview) in subviews.enumerated() {
                     rowViews.append(subview)
-                    let left = i % columnCount
-                    let w = itemWs[left]
-                    let h = cellHeight?(subview, i, w) ?? systemHeight(of: subview, limitW: w)
+                    let column = i % columnCount
+                    let w = itemWs[column]
+                    let h = cellHeight?(subview, i, w, .init(Int(i / columnCount), column)) ?? systemHeight(of: subview, limitW: w)
                     rowMaxH = max(rowMaxH, h)
                     rowHeights.append(h)
-                    if left == columnCount - 1 ||
+                    if column == columnCount - 1 ||
                         i == subviewsCount - 1 {// 最后一列
                         for (j, cell) in rowViews.enumerated() {
                             let h = rowHeights[j]

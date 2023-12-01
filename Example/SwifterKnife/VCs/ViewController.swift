@@ -983,10 +983,13 @@ extension ViewController {
             this.columnWidthRatios = [1, 2, 1, 1]
             this.backgroundColor = .darkGray
             
-            this.layoutBehavior = .autoSelfHeight(.waterflow, { _, _, w in
-                return w + CGFloat((-10...30).randomElement() ?? 0)
-            })
-//            this.layoutBehavior = .autoCellSize(4)
+
+            this.layoutBehavior = .autoSelfHeight(.inline(.center)) { view, index ,w, pos in
+                let h = w + CGFloat((-10...30).randomElement() ?? 0)
+                print("layout \(index + 1) at \(pos)")
+                return h
+            }
+//            this.layoutBehavior = .autoCellSize([1, 2, 1])
             view.addSubview(this)
             this.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
