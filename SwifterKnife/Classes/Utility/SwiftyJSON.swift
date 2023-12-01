@@ -1355,3 +1355,22 @@ extension JSON: Codable {
 
 
 
+extension JSON {
+    static func data(of object: Any?, prettify: Bool = false) -> Data? {
+        guard let obj = object else { return nil }
+        guard JSONSerialization.isValidJSONObject(obj) else { return nil }
+        var options: JSONSerialization.WritingOptions = [.sortedKeys]
+        if prettify { options.insert(.prettyPrinted) }
+        if #available(iOS 13.0, *) {
+            options.insert(.withoutEscapingSlashes)
+        }
+        return try? JSONSerialization.data(withJSONObject: obj, options: options)
+    }
+    static func string(of object: Any?, prettify: Bool = false) -> String? {
+        guard let data = data(of: object, prettify: prettify) else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+    static func sureString(of object: Any?, prettify: Bool = false, or replace: String = "Empty") -> String {
+        string(of: object, prettify: prettify) ?? replace
+    }
+}
