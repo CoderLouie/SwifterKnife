@@ -95,7 +95,6 @@
 		36B3E6CF9789F6B4567CAFFDA93E0B85 /* SolidCompositionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47009DFAA79A2E259AEFDCD7409D9C2A /* SolidCompositionLayer.swift */; };
 		37C86001D11C36E5BE9E2A85D5CF8D41 /* AssetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0191F6F7D8CD7CEBCBFB546EE1E74352 /* AssetLibrary.swift */; };
 		385BC4B250B6A6DB8AAAEA77D5B7A46F /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078C65CD54E931E800F941A9A0FB3265 /* Combine.swift */; };
-		39BF5342029CDDEFA6E5D4C793303663 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE72E8402B0260493CCE3D84BE485B1 /* Position.swift */; };
 		3A59D8FBAF9A54906E3644AC80465AFB /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC290F218BB6B5F582783C2377BC8E0 /* Notifications.swift */; };
 		3AC1A33611B88237D0D580BE50310AC8 /* MathKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BF85F9756BE088F7D580BB5D560B66 /* MathKit.swift */; };
 		3C7C6117ABFCB1C772CACB205F09757C /* GradientAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA780951CAD1EF8D45B92A850C6670F /* GradientAnimations.swift */; };
@@ -295,6 +294,7 @@
 		B363EECE65CB37486E204D0CCFEE3986 /* LinearFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7FCF31350AB8C35DA0A9072199D302 /* LinearFlowView.swift */; };
 		B3BC0707606EB261FB6AA761951C6B0A /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5990111B6A296CEE06FFA0F66530999D /* ConstraintAttributes.swift */; };
 		B4C54C45B887AFFE5DCC3FDA18E17901 /* DefaultAnimationCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5FF1F3ACFA3AC4881020ABF53C7FF6 /* DefaultAnimationCache.swift */; };
+		B6BA9E0E2B1ACF030001C4DE /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE72E8402B0260493CCE3D84BE485B1 /* Position.swift */; };
 		B7179607D16A77327F914DE24A950DB1 /* LocalizedKeyRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8086477B2E85C39E274CA0C80A6301B7 /* LocalizedKeyRepresentable.swift */; };
 		B97269DE8463C1FD4FA754DD3C58BB2B /* Bool+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BB2F16A1A6992B1717B6BC1BFE3CD /* Bool+Add.swift */; };
 		BAB17A1C6CAD14B3788973EAF8466C93 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D44F6C18AE7E655033D0E5BC3B684CC /* NetworkReachabilityManager.swift */; };
@@ -2042,7 +2042,6 @@
 				AED51D286CD2A11371490DAC449DAA23 /* OptionalType.swift in Sources */,
 				ED63A1975737759EB8B9CA19B1D42FFD /* PaddingButton.swift in Sources */,
 				603C1ED229E4295BD89A327B8F4AC7B2 /* PaddingLabel.swift in Sources */,
-				39BF5342029CDDEFA6E5D4C793303663 /* Position.swift in Sources */,
 				CBDB85E6DD73A0ECC6048381F9CC0579 /* Promise.swift in Sources */,
 				757556F7A6126477A200E4B264D8EF28 /* Promise+Extras.swift in Sources */,
 				30725478978EA993FA122E8BA4442D2D /* PropertyValuesConvertible.swift in Sources */,
@@ -2066,6 +2065,7 @@
 				44F0307EAD2176BC42968CEDCB5D8D64 /* String+Add.swift in Sources */,
 				4C3D27D3DC4A32A29B11EDD2FD68480F /* SwifterKnife-dummy.m in Sources */,
 				5D65BC756A909BB342D29F7BF0086020 /* SwiftyAdaptable.swift in Sources */,
+				B6BA9E0E2B1ACF030001C4DE /* Position.swift in Sources */,
 				20DAFADB1287726BFB6104DC12D59631 /* SwiftyJSON.swift in Sources */,
 				6BA6536804FFCE5C6FCB973C7489C011 /* SwiftyTimer.swift in Sources */,
 				4428431C2F08F8A5F5399ED1A3E3290E /* TextField.swift in Sources */,

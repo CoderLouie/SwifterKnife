@@ -73,7 +73,7 @@ class ExCodableVC: BaseViewController {
         }
         let stu = LYStudent()
         let map = stu.propertyMap
-        print(map.jsonString() ?? "nil")
+        print(JSON.sureString(of: map))
         let dict = map as NSDictionary
         NSLog("%@", dict)
     }
@@ -134,7 +134,7 @@ class ExCodableVC: BaseViewController {
             let player = try Player.decode(from: str)
             print(player)
             
-            print(player.propertyMap.jsonString() ?? "nil")
+            print(JSON.sureString(of: player))
             
             print(player.toString())
         } catch {
@@ -273,7 +273,7 @@ class ExCodableVC: BaseViewController {
             let player = try Player.decode(from: str)
             print(player)
             
-            print(player.propertyMap.jsonString() ?? "nil")
+            print(JSON.sureString(of: player))
             
             print(player.toString())
         } catch {
@@ -344,7 +344,7 @@ class ExCodableVC: BaseViewController {
             let player = try Player.decode(from: str)
             print(player)
             
-            print(player.propertyMap.jsonString() ?? "nil")
+            print(JSON.sureString(of: player))
             
             print(player.toString())
         } catch {
@@ -672,7 +672,7 @@ class ExCodableVC: BaseViewController {
             }
         }
         let stu = ZStudent()
-        let jsonStr = stu.toJSON().jsonString()
+        let jsonStr = JSON.sureString(of: stu.toJSON())
         print(jsonStr ?? "nil")
         
         let str = """

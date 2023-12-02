@@ -132,6 +132,14 @@ extension ViewController: UITextViewDelegate {
     }
 }
 
+private var _isChina = true
+fileprivate enum School {
+    static var isChina: Bool {
+        print("School.isChina")
+        return _isChina
+    }
+}
+
 class ViewController: UIViewController {
     
    private var cursorLoc: Int? = nil
@@ -262,11 +270,38 @@ class ViewController: UIViewController {
 //            print("------2", $0.dictionaryRepresentation() as NSDictionary)
 //        }
          
-        regexTestEntry()
+//        regexTestEntry()
 //        otherTest4()
 //        progressLayer.strokeEnd += 0.1
+        
+        testchoose2()
+    }
+    
+    
+    private  func testpattern() {
+        for v in view.subviews where v is UILabel {
+        }
+    }
+    private func testchoose2() {
+        let choose = sk_pick(School.isChina, String.self)
+        print("1")
+        let str = choose("zh", "en")
+        print("2")
+        print(str)
+        _isChina = false
+        print("3")
+        print(str, choose("zh", "en"))
+        print("4")
     }
 
+    private func testchoose1() {
+        var isMal = true
+        let choose = sk_pick(isMal, String.self)
+        let str = choose("man", "woman")
+        print(str)
+        isMal = false
+        print(str, choose("man", "woman"))
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

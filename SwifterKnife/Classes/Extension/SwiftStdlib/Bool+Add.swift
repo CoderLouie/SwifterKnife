@@ -30,4 +30,8 @@ public extension Bool {
     var string: String {
         return self ? "true" : "false"
     }
+    
+    func pick<T>(_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T {
+        self ? ifTrue() : ifFalse()
+    }
 }

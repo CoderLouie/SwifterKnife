@@ -1355,7 +1355,7 @@ extension JSON: Codable {
 
 
 
-extension JSON {
+public extension JSON {
     static func data(of object: Any?, prettify: Bool = false) -> Data? {
         guard let obj = object else { return nil }
         guard JSONSerialization.isValidJSONObject(obj) else { return nil }
@@ -1370,7 +1370,7 @@ extension JSON {
         guard let data = data(of: object, prettify: prettify) else { return nil }
         return String(data: data, encoding: .utf8)
     }
-    static func sureString(of object: Any?, prettify: Bool = false, or replace: String = "Empty") -> String {
-        string(of: object, prettify: prettify) ?? replace
+    static func sureString(of object: Any?, prettify: Bool = false, or replace: @autoclosure () -> String = "Empty") -> String {
+        string(of: object, prettify: prettify) ?? replace()
     }
 }

@@ -198,8 +198,9 @@ fileprivate enum TestCase: String, CaseIterable {
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .other:
 //            print(Facecore.celebrity.timeoutInterval)
-            let nextVc = ViewController()
-            vc.navigationController?.pushViewController(nextVc, animated: true)
+//            let nextVc = ViewController()
+//            vc.navigationController?.pushViewController(nextVc, animated: true)
+            testLog()
             break
         case .permission:
             print("permission")
@@ -226,6 +227,22 @@ fileprivate enum TestCase: String, CaseIterable {
 //            }
         }
     }
+    
+    
+    private func testLog() {
+        Console.os("测试This is a defalut message.")
+        Console.osError("测试This is a error message.")
+        Console.osFault("测试This is a fault message.")
+    }
+    
+//    private func testchoose2() {
+//        var isMal = true
+//        let choose = isMal.choose(String.self)
+//        let str = choose("man", "woman")
+//        print(str)
+//        isMal = false
+//        print(str, choose("man", "woman"))
+//    }
 }
  
 enum NetError: Swift.Error {}

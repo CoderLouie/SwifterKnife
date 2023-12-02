@@ -128,3 +128,15 @@ public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T?) rethrows -> T
  rax、rdx常作为函数返回值使用
  register read/d rax 方便查看方法调用返回值 /d是10进制 /x是16进制
  */
+
+
+public func sk_pick<T>(_ condition: @escaping @autoclosure () -> Bool, _ type: T.Type) -> (_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T {
+    { condition() ? $0() : $1() }
+}
+
+
+//public extension Bool {
+//    func choose<T>(_ type: T.Type) -> (_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T  {
+//        pick(self, type)
+//    }
+//}
