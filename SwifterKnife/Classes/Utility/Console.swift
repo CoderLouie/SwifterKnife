@@ -37,26 +37,41 @@ public enum Console {
         file: StaticString,
         line: UInt,
         fn: StaticString) -> String {
-        let newItems: [Any]
-        if let format = items.first as? String, format.contains("%") {
+        var newItems: [Any] = []
+        var i = 0
+        let n = items.count
+        while i < n {
+            let item = items[i]
+            i += 1
+            guard let format = item as? String, format.contains("%") else {
+                newItems.append(item)
+                continue
+            }
+            
             let regex: Regex = #"(%@)|(%c)|(%s)|(%\d*l{0,2}[d|D|i|u|U])|(%\d*\.*\d*[f|g])"#
             let count = regex.matchesCount(in: format)
-            if count > 0 {
-                var args: [CVarArg] = []
-                var lefts: [Any] = []
-                args.reserveCapacity(count)
-                for item in items[1...] {
-                    if args.count < count, let arg = item as? CVarArg {
-                        args.append(arg)
-                    } else { lefts.append(item) }
-                }
-                if args.count < count {
-                    fatalError("the format string \(format) must has \(count) params")
-                }
-                let str = String(format: format, arguments: args)
-                newItems = [str] + lefts
-            } else { newItems = items }
-        } else { newItems = items }
+            guard count > 0 else {
+                newItems.append(item)
+                continue
+            }
+            
+            var args: [CVarArg] = []
+            args.reserveCapacity(count)
+            var n = 0
+            for item in items[i...] {
+                if args.count >= count { break }
+                if let arg = item as? CVarArg {
+                    args.append(arg)
+                } else { newItems.append(item) }
+                n += 1
+            }
+            if args.count < count {
+                fatalError("the format string \(format) must has \(count) params")
+            }
+            let str = String(format: format, arguments: args)
+            newItems.append(str)
+            i += n
+        }
             
         let method = whose.isEmpty ? "\(fn):" : "\(whose).\(fn):"
         var cmps: [String] = [tag.rawValue]
@@ -89,7 +104,29 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%{public}s", content)
+        os_log("%s", content)
+    }
+    static func osInfo(
+        _ items: Any...,
+        tag: Tag = .empty,
+        separator: String = " ",
+        file: StaticString = #file,
+        line: UInt = #line,
+        fn: StaticString = #function) {
+        guard Console.nslogEnable else { return }
+        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        os_log("%s", type: .info, content)
+    }
+    static func osDebug(
+        _ items: Any...,
+        tag: Tag = .empty,
+        separator: String = " ",
+        file: StaticString = #file,
+        line: UInt = #line,
+        fn: StaticString = #function) {
+        guard Console.nslogEnable else { return }
+        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        os_log("%s", type: .debug, content)
     }
     static func osError(
         _ items: Any...,
@@ -100,7 +137,7 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%{public}s", type: .error, content)
+        os_log("%s", type: .error, content)
     }
     static func osFault(
         _ items: Any...,
@@ -111,7 +148,7 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%{public}s", type: .fault, content)
+        os_log("%s", type: .fault, content)
     }
 }
 
@@ -167,7 +204,7 @@ public extension Console {
         guard nslogEnable else { return }
         let caller = whose.map { "\(type(of: $0))" } ?? ""
         let content = buildLog(items, blendTime: false, whose: caller, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%{public}s", content)
+        os_log("%s", content)
     }
     
     /*

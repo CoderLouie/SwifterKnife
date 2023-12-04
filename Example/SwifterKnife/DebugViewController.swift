@@ -200,7 +200,7 @@ fileprivate enum TestCase: String, CaseIterable {
 //            print(Facecore.celebrity.timeoutInterval)
 //            let nextVc = ViewController()
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
-            testLog()
+            testConsole()
             break
         case .permission:
             print("permission")
@@ -229,6 +229,16 @@ fileprivate enum TestCase: String, CaseIterable {
     }
     
     
+    private func testConsole() {
+        let values: [String: Any] = [
+            "age": 10,
+            "score": [10, 20, 30],
+            "name": "xiaohuang"
+        ]
+        let num = 10
+        let val = 3.1415926
+        Console.log(num, val, "喝了咯 hello %@ %05d, %.3f, %d", values, num, val, Seasion.spring, num, val)
+    }
     private func testLog() {
         Console.os("测试This is a defalut message.")
         Console.osError("测试This is a error message.")
@@ -244,6 +254,12 @@ fileprivate enum TestCase: String, CaseIterable {
 //        print(str, choose("man", "woman"))
 //    }
 }
+enum Seasion { case spring }
+//extension Seasion: CVarArg {
+//    var _cVarArgEncoding: [Int] {
+//        [0]
+//    }
+//}
  
 enum NetError: Swift.Error {}
 class DebugViewController: BaseViewController {
