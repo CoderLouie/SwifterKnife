@@ -57,20 +57,20 @@ public enum Console {
             
             var args: [CVarArg] = []
             args.reserveCapacity(count)
-            var n = 0
+            var N = 0
             for item in items[i...] {
                 if args.count >= count { break }
                 if let arg = item as? CVarArg {
                     args.append(arg)
                 } else { newItems.append(item) }
-                n += 1
+                N += 1
             }
             if args.count < count {
                 fatalError("the format string \(format) must has \(count) params")
             }
             let str = String(format: format, arguments: args)
             newItems.append(str)
-            i += n
+            i += N
         }
             
         let method = whose.isEmpty ? "\(fn):" : "\(whose).\(fn):"
@@ -115,7 +115,7 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%s", type: .info, content)
+        os_log("%{public}s", type: .info, content)
     }
     static func osDebug(
         _ items: Any...,
@@ -126,7 +126,7 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%s", type: .debug, content)
+        os_log("%{public}s", type: .debug, content)
     }
     static func osError(
         _ items: Any...,
@@ -137,7 +137,7 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%s", type: .error, content)
+        os_log("%{public}s", type: .error, content)
     }
     static func osFault(
         _ items: Any...,
@@ -148,7 +148,7 @@ public extension Console {
         fn: StaticString = #function) {
         guard Console.nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%s", type: .fault, content)
+        os_log("%{public}s", type: .fault, content)
     }
 }
 
@@ -204,7 +204,7 @@ public extension Console {
         guard nslogEnable else { return }
         let caller = whose.map { "\(type(of: $0))" } ?? ""
         let content = buildLog(items, blendTime: false, whose: caller, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%s", content)
+        os_log("%{public}s", content)
     }
     
     /*

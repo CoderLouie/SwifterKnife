@@ -214,6 +214,9 @@ public extension Dictionary {
 
 
 public extension Dictionary {
+    func omit(keys: Key...) -> [Key: Value] {
+        filter { !keys.contains($0.key) }
+    }
     func pick(keys: Key...) -> [Key: Value] {
         pick(keys: keys)
     }

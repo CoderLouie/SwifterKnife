@@ -19,6 +19,10 @@ public extension BidirectionalCollection {
     }
   
     
+    func typedLast<T>() -> T? {
+        last { $0 is T } as? T
+    }
+    
     func lastMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
         try last {
             try predicate($0) != nil

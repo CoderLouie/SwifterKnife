@@ -6,7 +6,11 @@
 //
 
 public extension Sequence {
-
+    
+    func typedFirst<T>() -> T? {
+        first { $0 is T } as? T
+    } 
+    
     func firstMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
         try first {
             try predicate($0) != nil
