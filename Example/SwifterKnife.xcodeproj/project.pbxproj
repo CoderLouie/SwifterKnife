@@ -145,6 +145,7 @@
 		B69156142A7398510037B59A /* FitImageViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69156132A7398510037B59A /* FitImageViewVC.swift */; };
 		B6A2B12629FBAF900009ACFA /* Mems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12529FBAF900009ACFA /* Mems.swift */; };
 		B6A2B12829FBB6090009ACFA /* CopyOnWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */; };
+		B6A4F6792B2955EA00D1EB03 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A4F6782B2955EA00D1EB03 /* KeyChain.swift */; };
 		B6B038F4290B71840091B31D /* Watchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B038F3290B71830091B31D /* Watchdog.swift */; };
 		B6B2FF3A2ADCE48D00270DBE /* AnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2FF392ADCE48D00270DBE /* AnyDecodable.swift */; };
 		B6B2FF3C2ADCE4E900270DBE /* BuiltInBridgeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B2FF3B2ADCE4E900270DBE /* BuiltInBridgeType.swift */; };
@@ -344,6 +345,7 @@
 		B69156132A7398510037B59A /* FitImageViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitImageViewVC.swift; sourceTree = "<group>"; };
 		B6A2B12529FBAF900009ACFA /* Mems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Mems.swift; path = SwifterKnife/Features/Mems.swift; sourceTree = SOURCE_ROOT; };
 		B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyOnWrite.swift; sourceTree = "<group>"; };
+		B6A4F6782B2955EA00D1EB03 /* KeyChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		B6B038F3290B71830091B31D /* Watchdog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watchdog.swift; sourceTree = "<group>"; };
 		B6B2FF392ADCE48D00270DBE /* AnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyDecodable.swift; sourceTree = "<group>"; };
 		B6B2FF3B2ADCE4E900270DBE /* BuiltInBridgeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuiltInBridgeType.swift; sourceTree = "<group>"; };
@@ -765,6 +767,7 @@
 				B6D834CB29B19308004C2BC3 /* if_.swift */,
 				B61749572AB2A3B800A115C5 /* InputSemaphore.swift */,
 				B640CA592A7BB4DC00769B08 /* ISODate.swift */,
+				B6A4F6782B2955EA00D1EB03 /* KeyChain.swift */,
 				B6A2B12529FBAF900009ACFA /* Mems.swift */,
 				B640CA5D2A7CA28500769B08 /* Notify.swift */,
 				B650CC9F282374E8003170BB /* Permission.swift */,
@@ -1155,6 +1158,7 @@
 				B6D834BC29B190C5004C2BC3 /* CallbackHell.swift in Sources */,
 				B6BA9E0D2B18AC330001C4DE /* WaterflowVC.swift in Sources */,
 				B63EDC602A860F36008B251C /* YiVideoEditor.swift in Sources */,
+				B6A4F6792B2955EA00D1EB03 /* KeyChain.swift in Sources */,
 				B63EDC642A860F36008B251C /* YiAddLayerCommand.swift in Sources */,
 				B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */,
 			);
