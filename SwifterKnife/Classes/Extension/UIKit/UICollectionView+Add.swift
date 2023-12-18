@@ -62,7 +62,9 @@ public extension UICollectionView {
         layout(flowLayout)
         self.init(frame: .zero, collectionViewLayout: flowLayout)
     }
-    
+    var theFlowLayout: UICollectionViewFlowLayout? {
+        collectionViewLayout as? UICollectionViewFlowLayout
+    }
     /// VisibleCells in the order they are displayed on screen.
     var orderedVisibleCells: [UICollectionViewCell] {
         return indexPathsForVisibleItems.sorted().compactMap { cellForItem(at: $0) }

@@ -9,6 +9,7 @@
 import UIKit
 import SwifterKnife
 import Photos
+
 extension String {
     var negativeWord: String? {
         let path = "censorship.txt".filePath(under: .bundle)
@@ -261,13 +262,27 @@ enum Seasion { case spring }
 //    }
 //}
  
+protocol UpdateTitle {
+    func updateTitle(_ title: String)
+}
+final class XXXXDog: UpdateTitle {
+    func updateTitle(_ title: String) {
+        print("Seasion updateTitle \(title)")
+    }
+}
 enum NetError: Swift.Error {}
 class DebugViewController: BaseViewController {
-    
+    private let s: Seasion = .spring
+    private let s1 = Seasion.spring as AnyObject
+    private let dog = XXXXDog()
     override func setupViews() {
         super.setupViews()
         title = "Debug"
-        setupBody() 
+        setupBody()
+        Broadcaster.register(UpdateTitle.self, observer: self.dog)
+//        Broadcaster.register(UpdateTitle.self, observer: self.s1)
+//        Broadcaster.register(UpdateTitle.self, observer: self.s)
+//        Broadcaster.register(UpdateTitle.self, observer: Seasion.spring)
     }
     private unowned var tableView: UITableView!
     private lazy var items: [TestCase] = TestCase.allCases
@@ -286,10 +301,14 @@ extension DebugViewController: UITableViewDataSource {
         return cell
     }
 }
+//
 extension DebugViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         items[indexPath.row].perform(from: self)
+//        Broadcaster.notify(UpdateTitle.self) {
+//            $0.updateTitle("哈哈哈哈")
+//        }
     }
 }
 

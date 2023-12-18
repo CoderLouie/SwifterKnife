@@ -113,7 +113,6 @@
 		B620B0722A8C6DC7007243DC /* 雨天青蛙_00023.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0162A8C6DC7007243DC /* 雨天青蛙_00023.png */; };
 		B620B0732A8C6DC7007243DC /* 雨天青蛙_00022.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0172A8C6DC7007243DC /* 雨天青蛙_00022.png */; };
 		B620B0742A8C6DC7007243DC /* 雨天青蛙_00036.png in Resources */ = {isa = PBXBuildFile; fileRef = B620B0182A8C6DC7007243DC /* 雨天青蛙_00036.png */; };
-		B620B0952A8E2EB4007243DC /* censorship.txt in Resources */ = {isa = PBXBuildFile; fileRef = B620B0932A8E2EB4007243DC /* censorship.txt */; };
 		B620B0992A8F8673007243DC /* ExCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B0982A8F8673007243DC /* ExCodable.swift */; };
 		B620B09B2A8F86A7007243DC /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B09A2A8F86A6007243DC /* StateMachine.swift */; };
 		B620B09D2A8F86CC007243DC /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620B09C2A8F86CC007243DC /* Either.swift */; };
@@ -138,6 +137,7 @@
 		B66414742988C7970071C0FA /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66414732988C7970071C0FA /* TimerViewController.swift */; };
 		B67F61E028A34A44008AD997 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B67F61E228A34A44008AD997 /* Localizable.strings */; };
 		B689824A28C1ED77006B8F7B /* banner_home_1aging@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */; };
+		B68AE8E22B2C063A00EF603A /* censorship.txt in Resources */ = {isa = PBXBuildFile; fileRef = B68AE8E12B2C063A00EF603A /* censorship.txt */; };
 		B68F99E22AD91B1B002431B0 /* ExCodableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68F99E12AD91B1B002431B0 /* ExCodableVC.swift */; };
 		B691560B2A73950A0037B59A /* UserDefaultsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560A2A73950A0037B59A /* UserDefaultsTest.swift */; };
 		B691560D2A7395D90037B59A /* StatementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B691560C2A7395D90037B59A /* StatementTest.swift */; };
@@ -177,6 +177,7 @@
 		B6DC13442A9EEB6300D50A1C /* XXXX.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13432A9EEB6300D50A1C /* XXXX.swift */; };
 		B6DC13472AA03A0300D50A1C /* OCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13462AA03A0300D50A1C /* OCUtils.m */; };
 		B6DC13492AA03A1200D50A1C /* ExceptionCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */; };
+		B6E6ABBE2B2FE87B00859E1C /* Broadcaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6ABBD2B2FE87B00859E1C /* Broadcaster.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 		B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05DF292A73D00057E659 /* DebugViewController.swift */; };
 		B6FC05E2292A751F0057E659 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05E1292A751F0057E659 /* HomeViewController.swift */; };
@@ -338,6 +339,7 @@
 		B67F61E428A34A57008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B67F61E528A34A60008AD997 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "banner_home_1aging@2x.jpg"; sourceTree = "<group>"; };
+		B68AE8E12B2C063A00EF603A /* censorship.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = censorship.txt; sourceTree = "<group>"; };
 		B68F99E12AD91B1B002431B0 /* ExCodableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExCodableVC.swift; sourceTree = "<group>"; };
 		B691560A2A73950A0037B59A /* UserDefaultsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsTest.swift; sourceTree = "<group>"; };
 		B691560C2A7395D90037B59A /* StatementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementTest.swift; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 		B6DC13452AA03A0300D50A1C /* OCUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUtils.h; sourceTree = "<group>"; };
 		B6DC13462AA03A0300D50A1C /* OCUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUtils.m; sourceTree = "<group>"; };
 		B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExceptionCatcher.swift; sourceTree = "<group>"; };
+		B6E6ABBD2B2FE87B00859E1C /* Broadcaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Broadcaster.swift; sourceTree = "<group>"; };
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		B6ED86802726A1E3003103F6 /* KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKView.m; sourceTree = "<group>"; };
@@ -681,6 +684,7 @@
 		B69156102A7397C80037B59A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B68AE8E12B2C063A00EF603A /* censorship.txt */,
 				B6FEE107283CB5EB00D8BCB2 /* h2000.jpg */,
 				B689824928C1ED77006B8F7B /* banner_home_1aging@2x.jpg */,
 			);
@@ -756,12 +760,13 @@
 		B6D834C129B19168004C2BC3 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				B6B2FF382ADCE46800270DBE /* ExCodable */,
 				B6DC13412A9EE42C00D50A1C /* Animator.swift */,
+				B6E6ABBD2B2FE87B00859E1C /* Broadcaster.swift */,
 				B6D834C229B19192004C2BC3 /* CallbackHell */,
 				B6A2B12729FBB6090009ACFA /* CopyOnWrite.swift */,
 				B648D67F29418287004FFDCE /* Defaults.swift */,
 				B620B09C2A8F86CC007243DC /* Either.swift */,
+				B6B2FF382ADCE46800270DBE /* ExCodable */,
 				B6D834D429B82BE0004C2BC3 /* FormView */,
 				B6D834C929B192F4004C2BC3 /* Func.swift */,
 				B6D834CB29B19308004C2BC3 /* if_.swift */,
@@ -916,6 +921,7 @@
 				B620B01E2A8C6DC7007243DC /* 雨天青蛙_00012.png in Resources */,
 				B620B0692A8C6DC7007243DC /* 雨天青蛙_00024.png in Resources */,
 				B620B04F2A8C6DC7007243DC /* 雨天青蛙_00085.png in Resources */,
+				B68AE8E22B2C063A00EF603A /* censorship.txt in Resources */,
 				B620B0382A8C6DC7007243DC /* 雨天青蛙_00066.png in Resources */,
 				B620B03D2A8C6DC7007243DC /* 雨天青蛙_00077.png in Resources */,
 				B620B0372A8C6DC7007243DC /* 雨天青蛙_00072.png in Resources */,
@@ -960,7 +966,6 @@
 				B620B0192A8C6DC7007243DC /* inputResources.mp4 in Resources */,
 				B620B04C2A8C6DC7007243DC /* 雨天青蛙_00078.png in Resources */,
 				B620B0602A8C6DC7007243DC /* 雨天青蛙_00055.png in Resources */,
-				B620B0952A8E2EB4007243DC /* censorship.txt in Resources */,
 				B620B04A2A8C6DC7007243DC /* 雨天青蛙_00044.png in Resources */,
 				B620B0232A8C6DC7007243DC /* 雨天青蛙_00005.png in Resources */,
 				B63EDC192A84DB28008B251C /* apple.mp4 in Resources */,
@@ -1128,6 +1133,7 @@
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
 				B6B5FAF8272BED70001BBBE1 /* Payment.swift in Sources */,
 				B63EDC652A860F36008B251C /* YiAddAudioCommand.swift in Sources */,
+				B6E6ABBE2B2FE87B00859E1C /* Broadcaster.swift in Sources */,
 				B6112A2F2AB9488D00C44AD2 /* TagLabel.swift in Sources */,
 				B63EDC552A85DD4A008B251C /* VideoEditor.swift in Sources */,
 				B617495A2AB2D4E500A115C5 /* CodableVC.swift in Sources */,
