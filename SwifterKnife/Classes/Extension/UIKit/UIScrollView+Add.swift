@@ -31,28 +31,28 @@ public extension UIScrollView {
     /// - Returns: Snapshot as UIImage for rendered ScrollView.
     var snapshot: UIImage? {
         // Original Source: https://gist.github.com/thestoics/1204051
+        let contentSize = contentSize
         UIGraphicsBeginImageContextWithOptions(contentSize, false, 0)
         defer {
             UIGraphicsEndImageContext()
         }
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
         let prevFrame = frame
         let prevOffset = contentOffset
         let prevBounds = layer.bounds
-        
-        let contentSize = contentSize
-        if #available(iOS 13, *) {
-            layer.bounds = CGRect(origin: .zero, size: contentSize)
-        }
-        contentOffset = .zero
-        frame = CGRect(origin: .zero, size: contentSize)
-        layer.render(in: context)
-        frame = prevFrame
-        contentOffset = prevOffset
-        if #available(iOS 13, *) {
+        defer {
+            frame = prevFrame
+            contentOffset = prevOffset
             layer.bounds = prevBounds
         }
-        return UIGraphicsGetImageFromCurrentImageContext()
+        
+        contentOffset = .zero
+        frame = CGRect(origin: .zero, size: contentSize)
+        layer.bounds = CGRect(origin: .zero, size: contentSize)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        layer.render(in: context)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        return image
     }
 
     /// The currently visible region of the scroll view.

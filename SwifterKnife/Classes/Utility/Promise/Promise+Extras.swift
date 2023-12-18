@@ -48,7 +48,7 @@ public enum Promises {
             }
             for promise in promises {
                 promise.then { _ in
-                    if !promises.contains(where: { $0.isRejected || $0.isPending }) {
+                    if promises.allSatisfy(\.isFulfilled) {
                         fulfill(promises.compactMap(\.value))
                     }
                 } onRejected: { error in
@@ -58,6 +58,26 @@ public enum Promises {
         }
     }
 
+    public static func allSettled<T>(_ promises: [Promise<T>]) -> Promise<[T?]> {
+        return Promise<[T?]> { fulfill, reject in
+            guard !promises.isEmpty else { fulfill([]);
+                return
+            }
+            let N = promises.count
+            var n = 0
+            var array: [T?] = .init(repeating: nil, count: N)
+            for (i, promise) in promises.enumerated() {
+                promise.finallyRes { result in
+                    array[i] = result.success
+                    n += 1
+                    if n == N {
+                        fulfill(array)
+                    }
+                }
+            }
+        }
+    }
+    
     /// Resolves itself after some delay.
     /// - parameter delay: In seconds
     public static func delay(_ delay: TimeInterval) -> Promise<()> {
@@ -91,7 +111,7 @@ public enum Promises {
     public static func retry<T>(
         onQueue queue: DispatchQueue = .global(qos: .userInitiated),
         delay interval: TimeInterval,
-        generate: @escaping (Int, Swift.Error) throws -> Promise<T>?) -> Promise<T> {
+        generate: @escaping (_ retryCount: Int, _ error: Swift.Error) throws -> Promise<T>?) -> Promise<T> {
         let promise = Promise<T>()
         queue.async {
             PromiseRetry(promise, onQueue: queue, retryCount: 0, delay: interval, dueError: PromiseError.empty, generate: generate)
@@ -204,8 +224,8 @@ extension Promises {
         on queue: DispatchQueue = .global(qos: .userInitiated),
         using closure: @escaping (_ element: Element,
                                   _ index: Int) -> Promise<Value>) -> Promise<[Value]> {
-        let promise = Promise<[Value]>()
         var iterator = array.enumerated().makeIterator()
+        let promise = Promise<[Value]>()
         guard let first = iterator.next() else {
             promise.fulfill([])
             return promise
@@ -295,14 +315,14 @@ extension Promise {
             }
         }
     }
-    public func replace(replacerOnFulfill: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
-        if replacerOnReject == nil,
-           replacerOnFulfill == nil {
+    public func replace(onFulfill: ((Value) throws -> Value)?, onReject: ((Error) throws -> Value)?) -> Promise<Value> {
+        if onFulfill == nil,
+           onReject == nil {
             return self
         }
         return Promise { fulfill, reject in
             self.then { val in
-                guard let tranform = replacerOnFulfill else {
+                guard let tranform = onFulfill else {
                     fulfill(val)
                     return
                 }
@@ -312,7 +332,7 @@ extension Promise {
                     reject(error)
                 }
             } onRejected: { error in
-                guard let tranform = replacerOnReject else {
+                guard let tranform = onReject else {
                     reject(error)
                     return
                 }

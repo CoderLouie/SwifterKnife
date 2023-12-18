@@ -154,17 +154,6 @@ public struct StepError: Swift.Error {
         self.step = step
         self.error = PromiseError.empty
     }
-    
-    public var rawError: Swift.Error {
-        return SwifterKnife.rawError(self)
-    }
-}
-
-private func rawError(_ error: Swift.Error) -> Swift.Error {
-    if let err = error as? StepError {
-        return rawError(err.error)
-    }
-    return error
 }
 
 fileprivate extension DispatchQueue {
@@ -261,11 +250,11 @@ public final class Promise<Value> {
         return promise
     }
     
-    public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Success, Failure>) -> Void  {
+    public func produce<Success, Failure: Swift.Error>(_ mapSuccess: @escaping (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error?)? = nil) -> (Result<Success, Failure>) -> Void  {
         return { self.consume($0, mapSuccess, mapError) }
     }
     
-    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, _ mapSuccess: (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error)? = nil) {
+    public func consume<Success, Failure: Swift.Error>(_ result: Result<Success, Failure>, _ mapSuccess: (Success) throws -> Value?, _ mapError: ((Failure) -> Swift.Error?)? = nil) {
         switch result {
         case .success(let success):
             do {
@@ -283,11 +272,11 @@ public final class Promise<Value> {
     }
     
     
-    public func produce<Failure: Swift.Error>(_ mapError: ((Failure) -> Swift.Error)? = nil) -> (Result<Value, Failure>) -> Void  {
+    public func produce<Failure: Swift.Error>(_ mapError: ((Failure) -> Swift.Error?)? = nil) -> (Result<Value, Failure>) -> Void  {
         return { self.consume($0, mapError) }
     }
     
-    public func consume<Failure: Swift.Error>(_ result: Result<Value, Failure>, _ mapError: ((Failure) -> Swift.Error)? = nil) {
+    public func consume<Failure: Swift.Error>(_ result: Result<Value, Failure>, _ mapError: ((Failure) -> Swift.Error?)? = nil) {
         switch result {
         case .success(let success):
             fulfill(success)
@@ -432,12 +421,15 @@ public final class Promise<Value> {
     
     public func mapError(
         on queue: ExecutionContext = DispatchQueue.main,
-        transform: @escaping (Swift.Error) throws -> Swift.Error) -> Promise<Value> {
+        transform: @escaping (Swift.Error) throws -> Swift.Error?) -> Promise<Value> {
         return Promise<Value> { fulfill, reject in
             self.then(on: queue, onFulfilled: fulfill) { error in
                 do {
-                    let newError = try transform(error)
-                    reject(newError)
+                    if let newError = try transform(error) {
+                        reject(newError)
+                    } else {
+                        reject(error)
+                    }
                 } catch {
                     reject(error)
                 }
@@ -453,7 +445,7 @@ public final class Promise<Value> {
             if let stepError = error as? StepError { 
                 return stepError
             }
-            return StepError(step: s, error: rawError(error))
+            return StepError(step: s, error: error)
         }
     }
      
@@ -496,42 +488,42 @@ public final class Promise<Value> {
     
     public var isPending: Bool {
         lockQueue.sync {
-            return self.state.isPending
+            return state.isPending
         }
     }
     
     public var isFulfilled: Bool {
         lockQueue.sync {
-            return self.state.isFulfilled
+            return state.isFulfilled
         }
     }
     
     public var isRejected: Bool {
         lockQueue.sync {
-            return self.state.isRejected
+            return state.isRejected
         }
     }
     public var isCompleted: Bool {
         lockQueue.sync {
-            return self.state.isCompleted
+            return state.isCompleted
         }
     }
     
     public var value: Value? {
         lockQueue.sync {
-            return self.state.value
+            return state.value
         }
     }
     
     public var error: Error? {
         lockQueue.sync {
-            return self.state.error
+            return state.error
         }
     }
     
     public var result: Result<Value, Swift.Error>? {
         lockQueue.sync {
-            return self.state.result
+            return state.result
         }
     }
     
@@ -554,6 +546,7 @@ public final class Promise<Value> {
         }
         return self
     }
+    /// StepError
     @discardableResult
     public func sthen(
         on queue: ExecutionContext = DispatchQueue.main,
@@ -562,6 +555,20 @@ public final class Promise<Value> {
         return then(on: queue, onFulfilled: onFulfilled) { err in
             if let stepErr = err as? StepError {
                 onRejected(stepErr.error, stepErr.step)
+            } else {
+                onRejected(err, nil)
+            }
+        }
+    }
+    /// IndexError
+    @discardableResult
+    public func ithen(
+        on queue: ExecutionContext = DispatchQueue.main,
+        onFulfilled: @escaping (Value) -> Void,
+        onRejected: @escaping (Error, Int?) -> Void = { _, _ in }) -> Promise<Value> {
+        return then(on: queue, onFulfilled: onFulfilled) { err in
+            if let idxErr = err as? IndexError {
+                onRejected(idxErr.error, idxErr.index)
             } else {
                 onRejected(err, nil)
             }
@@ -600,7 +607,25 @@ public final class Promise<Value> {
             }
         }
     }
-} 
+}
+
+@available(macOS 12.0.0, iOS 15, watchOS 7, *)
+public extension Promise {
+    /// Awaits the value in the promise or an error.
+    /// - Parameters:
+    ///   - queue: Optional; queue to await on.
+    ///            Defaults to the main queue.
+    /// - Returns: The promise's value or an error.
+    func wait(on queue: DispatchQueue = DispatchQueue.main) async throws -> Value {
+        try await withCheckedThrowingContinuation { continuation in
+            self.then(on: queue) { value in
+                continuation.resume(with: .success(value))
+            } onRejected: { error in
+                continuation.resume(with: .failure(error))
+            }
+        }
+    }
+}
 
 public typealias AnyPromise = Promise<Any>
 public typealias VoidPromise = Promise<Void>
