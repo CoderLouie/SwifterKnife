@@ -98,11 +98,28 @@ public enum JSON {
      */
     public init(_ object: Any) {
         switch object {
+//        case let object as String:
+//            if ["nil", "null"].contains(object.lowercased()) {
+//                self = .null
+//            } else {
+//                if let data = object.data(using: .utf8) {
+//                    do {
+//                        let json = try JSONSerialization.jsonObject(with: data)
+//                        self.init(jsonObject: json)
+//                    } catch {
+//                        print("not an json obj \(error)")
+//                        self = .string(object)
+//                    }
+//                } else {
+//                    self = .string(object)
+//                }
+//            }
         case let object as Data:
             do {
                 try self.init(data: object)
             } catch {
-                self.init(jsonObject: NSNull())
+//                self.init(jsonObject: NSNull())
+                self = .error(.invalidJSON)
             }
         default:
             self.init(jsonObject: object)
@@ -558,6 +575,13 @@ extension JSON {
         get { self[multiKeys: keys] }
         set { self[multiKeys: keys] = newValue }
     }
+    
+    public var isValid: Bool {
+        switch self {
+        case .error, .null: return false
+        default: return true
+        }
+    }
 }
 
 // MARK: - LiteralConvertible
@@ -742,6 +766,21 @@ extension JSON { // : Swift.Bool
     public var boolValue: Bool {
         get { return bool ?? false }
         set { object = newValue }
+    }
+}
+
+// MARK: - Parse
+
+extension JSON {
+    public var parse: JSON? {
+        guard case .string(let string) = self else {
+            return nil
+        }
+        let json = JSON(parseJSON: string)
+        return json.isValid ? json : nil
+    }
+    public var parseValue: JSON {
+        parse ?? self
     }
 }
 

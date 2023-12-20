@@ -201,7 +201,8 @@ fileprivate enum TestCase: String, CaseIterable {
 //            print(Facecore.celebrity.timeoutInterval)
 //            let nextVc = ViewController()
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
-            testConsole()
+//            testConsole()
+            testJSON()
             break
         case .permission:
             print("permission")
@@ -229,7 +230,27 @@ fileprivate enum TestCase: String, CaseIterable {
         }
     }
     
-    
+    private func testJSON() {
+//        let str = """
+//{"error_code":0,"data":{"task_id":6,"graphics_type":43,"status":3,"process_result":"{\"error_code\":0,\"data\":{\"request_id\":\"vd.43.9a4c89f798daaee66095514fa03f4221174ef83c\",\"result_list\":[{\"style_code\":\"c57c2afd03a144e5\",\"strength\":0.0,\"generate_size\":1,\"image_list\":[\"http://osscdn-va.changxinteam.com/graphics2/portrait/temp/2023-12-13/2c50454d-1c0f-4464-9e41-79d3815f5004.jpg\"]}]}}"}}
+//"""
+        let dict: [String: Any] = [
+            "error_code": 0,
+            "data": [
+                "task_id":6,
+                "graphics_type":43,
+                "status":3,
+                "process_result":"{\"error_code\":0,\"data\":{\"request_id\":\"vd.43.9a4c89f798daaee66095514fa03f4221174ef83c\",\"result_list\":[{\"style_code\":\"c57c2afd03a144e5\",\"strength\":0.0,\"generate_size\":1,\"image_list\":[\"http://osscdn-va.changxinteam.com/graphics2/portrait/temp/2023-12-13/2c50454d-1c0f-4464-9e41-79d3815f5004.jpg\"]}]}}"
+                ]
+        ]
+        let json = JSON(dict)
+        let dataJSON = json["data"]
+        let resultJSON = dataJSON["process_result"]
+        let resultDataJSON = resultJSON["data"]
+        print(resultJSON["error_code"].intValue,
+              resultDataJSON["request_id"].stringValue,
+              resultDataJSON["result_list"].arrayValue)
+    }
     private func testConsole() {
         let values: [String: Any] = [
             "age": 10,

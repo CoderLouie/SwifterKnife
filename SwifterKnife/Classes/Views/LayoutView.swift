@@ -58,7 +58,7 @@ public final class SudokuView: UIView {
             "(\(row), \(column))"
         }
     }
-    public typealias CellHeightClosure = (_ view: UIView, _ index: Int, _ width: CGFloat, Position) -> CGFloat
+    public typealias CellHeightClosure = (_ view: UIView, _ index: Int, _ width: CGFloat, _ pos: Position) -> CGFloat
     public enum LayoutBehavior {
         case autoSelfHeight(_ cellAlignment: Alignment = .inline(.center),
                             _ cellHeightWay: CellHeightClosure? = nil)

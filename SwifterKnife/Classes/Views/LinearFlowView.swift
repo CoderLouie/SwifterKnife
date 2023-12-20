@@ -14,6 +14,16 @@ open class LinearFlowView: UIView {
         case right
         case leading
         case trailing
+        
+        fileprivate func real(with isRTL: Bool) -> Alignment {
+            switch self {
+            case .leading:
+                return isRTL ? .right : .left
+            case .trailing:
+                return isRTL ? .left : .right
+            default: return self
+            }
+        }
     }
     
     public var contentInset: UIEdgeInsets = .zero
@@ -67,11 +77,8 @@ open class LinearFlowView: UIView {
         return true
     }
     open func removeAllArrangedViews() {
-        (arrangedViews + rowViews).forEach {
-            $0.removeFromSuperview()
-        }
         arrangedViews = []
-        rowViews = []
+        removeSubviews()
     }
     
     open override func layoutSubviews() {
@@ -82,8 +89,9 @@ open class LinearFlowView: UIView {
     open override var intrinsicContentSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
     }
+    public var cellSize: ((_ view: UIView, _ index: Int) -> CGSize)?
+    
     public var arrangedViews: [UIView] = []
-    public private(set) var rowViews: [UIView] = []
     public private(set) var totalHeight: CGFloat = 0
     public private(set) var totalWidth: CGFloat = 0
     private var hasLayout: Bool = false
@@ -106,6 +114,9 @@ public extension LinearFlowView {
 private extension LinearFlowView {
     func splitArray(_ nums: [CGFloat], _ m: Int) -> (CGFloat, Int) {
         let len = nums.count
+        if m == 1 {
+            return (nums.reduce(into: 0, +=), len)
+        }
         var preSum: [CGFloat] = .init(repeating: 0, count: len + 1)
         preSum[0] = 0
         for i in 0..<len {
@@ -145,117 +156,95 @@ private extension LinearFlowView {
     /// 重新摆放其管理的子视图
     func replaceArrangedViews() {
         guard !hasLayout else { return }
+        guard !arrangedViews.isEmpty else { return }
+         
+        let boundsW = max(bounds.width, minPlaceWidth)
+        if numberOfLines < 1, boundsW <= 0 { return }
         
-        let boundsW = frame.width
+        hasLayout = true
         
-        let views = arrangedViews + rowViews
-        guard !views.isEmpty else { return }
+        removeSubviews()
         
-        views.forEach { $0.removeFromSuperview() }
-        rowViews.removeAll(keepingCapacity: true)
+        let inset = contentInset
+        let N = arrangedViews.count
         
-        var tagViewSizes: [CGSize] = []
-        for tagView in arrangedViews {
-            let tagFrame = tagView.frame
-            tagViewSizes.append((tagFrame.isEmpty ? tagView.intrinsicContentSize : tagFrame.size).adaptive { $0.pixCeil })
+        let tagViewSizes = arrangedViews.enumerated().map {
+            let size: CGSize
+            if let s = cellSize?($0.1, $0.0), !s.isEmpty {
+                size = s
+            } else {
+                let s = $0.1.intrinsicContentSize
+                if !s.isEmpty {
+                    size = s
+                } else { size = $0.1.frame.size }
+            }
+            return size.adaptive { $0.pixCeil }
         }
-        let isMultipleLines = numberOfLines != 1
         let frameWidth: CGFloat
-        if numberOfLines < 2 {
+        if numberOfLines == 0 {
             frameWidth = boundsW
-            if isMultipleLines, boundsW <= 0 { return }
+        } else if numberOfLines == 1 {
+            let contentW = tagViewSizes.map(\.width).reduce(into: 0, +=)
+            let totalW = contentW + CGFloat(N - 1) * marginX + inset.horizontal
+            frameWidth = max(totalW, boundsW)
         } else {
             let widths = tagViewSizes.map(\.width)
             let pair = splitArray(widths, numberOfLines)
-            let tmpWidth = Darwin.ceil(pair.0) + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
-            let targetW = Swift.max(minPlaceWidth, boundsW)
-            frameWidth = tmpWidth < targetW ? targetW : tmpWidth
+            let totalW = Darwin.ceil(pair.0) + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
+            frameWidth = max(totalW, boundsW)
         }
-        hasLayout = true
 
         let isRtl: Bool = effectiveUserInterfaceLayoutDirection == .rightToLeft
-        let directionTransform = isRtl
+        let transform = isRtl
             ? CGAffineTransform(scaleX: -1.0, y: 1.0)
             : CGAffineTransform.identity
         
-        var rowIndex = 0
-        var currentRowTagCount = 0
+        let alignment = self.alignment.real(with: isRtl)
+        let placeWidth = frameWidth - inset.horizontal + marginX
         
-        var currentRowW: CGFloat = 0
-        var currentRowH: CGFloat = 0
-        
-        var currentTagW: CGFloat = 0
-        var currentTagH: CGFloat = 0
-        
-        var currentRowView: UIView = UIView()
-        currentRowView.transform = directionTransform
-        rowViews.append(currentRowView)
-        addSubview(currentRowView)
-        
-        let inset = contentInset
-        let placeWidth = frameWidth - inset.horizontal
+        var rowY: CGFloat = inset.top
+        var rowW: CGFloat = 0
+        var rowH: CGFloat = 0
+         
+        var rowView = UIView()
         
         for (i, tagView) in arrangedViews.enumerated() {
             let tagViewSize = tagViewSizes[i]
-            currentTagH = tagViewSize.height
-            currentTagW = tagViewSize.width
+            let tagH = tagViewSize.height
+            let tagW = tagViewSize.width
+            tagView.frame = CGRect(x: rowW, y: 0, width: tagW, height: tagH)
+            rowView.addSubview(tagView)
             
-            currentRowH = max(currentRowH, currentTagH)
+            rowH = max(rowH, tagH)
+            rowW += tagW + marginX
             
-            if isMultipleLines,
-               currentRowW + currentTagW > placeWidth {
-                if currentRowTagCount > 0 { currentRowW -= marginX }
-                rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
+            let isLast = i == N - 1
+            
+            if (isLast ||
+                rowW > placeWidth) {
+                rowW -= marginX
                 
-                rowIndex += 1
-                currentRowW = 0
-                currentRowTagCount = 0
-                
-                currentRowView = UIView()
-                currentRowView.transform = directionTransform
-                rowViews.append(currentRowView)
-                addSubview(currentRowView)
+                let rowViewX: CGFloat
+                switch alignment {
+                case .leading, .left:
+                    rowViewX = inset.left
+                case .center:
+                    rowViewX = (frameWidth - rowW) * 0.5
+                case .trailing, .right:
+                    rowViewX = frameWidth - rowW - inset.right
+                }
+                rowView.frame = CGRect(x: rowViewX, y: rowY, width: rowW, height: rowH)
+                rowView.transform = transform
+                addSubview(rowView)
+                rowY += rowH + marginY
+                rowW = 0
+
+                rowView = UIView()
             }
-            tagView.frame = CGRect(x: currentRowW, y: 0, width: currentTagW, height: currentTagH)
-            currentRowView.addSubview(tagView)
-            
-            currentRowTagCount += 1
-            currentRowW += currentTagW + marginX
-        }
-        if currentRowTagCount > 0 { currentRowW -= marginX }
-        rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
-        
-        if isMultipleLines {
-            totalWidth = frameWidth
-        } else {
-            totalWidth = currentRowW + inset.horizontal
         }
         
-        var alignment = self.alignment
-        
-        if alignment == .leading {
-            alignment = isRtl ? .right : .left
-        } else if alignment == .trailing {
-            alignment = isRtl ? .left : .right
-        }
-        
-        var rowViewX: CGFloat = inset.left
-        var rowViewY: CGFloat = inset.top
-        for view in rowViews {
-            let size = view.frame.size
-            let currentRowW = size.width
-            switch alignment {
-            case .leading, .left:
-                rowViewX = inset.left
-            case .center:
-                rowViewX = (frameWidth - currentRowW) / 2
-            case .trailing, .right:
-                rowViewX = frameWidth - currentRowW - inset.right
-            }
-            view.frame.origin = CGPoint(x: rowViewX, y: rowViewY)
-            rowViewY += size.height + marginY
-        }
-        totalHeight = rowViewY - marginY + inset.bottom
+        totalWidth = frameWidth
+        totalHeight = rowY - marginY + inset.bottom
         
         invalidateIntrinsicContentSize()
     }

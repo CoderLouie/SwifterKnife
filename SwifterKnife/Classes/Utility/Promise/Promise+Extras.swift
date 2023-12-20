@@ -68,7 +68,7 @@ public enum Promises {
             var array: [T?] = .init(repeating: nil, count: N)
             for (i, promise) in promises.enumerated() {
                 promise.finallyRes { result in
-                    array[i] = result.success
+                    array[i] = try? result.get()
                     n += 1
                     if n == N {
                         fulfill(array)
