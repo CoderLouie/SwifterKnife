@@ -33,7 +33,7 @@ import Foundation
  */
 
 /// Swift 弱引用表
-public final class WeakTable<E: AnyObject> {
+public struct WeakTable<E: AnyObject> {
     
     public static var weak: Self {
         .init(pointerArray: .weakObjects())
@@ -41,16 +41,34 @@ public final class WeakTable<E: AnyObject> {
     public static var strong: Self {
         .init(pointerArray: .strongObjects())
     }
-    public convenience init() {
+    public init() {
         self.init(pointerArray: .weakObjects())
     }
-    private let ptrs: NSPointerArray
     
-    private init(pointerArray: NSPointerArray) {
-        ptrs = pointerArray
+    public init(options: NSPointerFunctions.Options = []) {
+        self.init(pointerArray: .init(options: options))
+    }
+    public init(pointerFunctions functions: NSPointerFunctions) {
+        self.init(pointerArray: .init(pointerFunctions: functions))
     }
     
-    public func compact() {
+    private var _ptrs: NSPointerArray
+    
+    private init(pointerArray: NSPointerArray) {
+        _ptrs = pointerArray
+    }
+    private var ptrs: NSPointerArray {
+        mutating get {
+            if !isKnownUniquelyReferenced(&_ptrs),
+               let newPtrs = _ptrs.copy() as? NSPointerArray {
+                print("Clone WeakTable")
+                _ptrs = newPtrs
+            }
+            return _ptrs
+        }
+    }
+    
+    public mutating func compact() {
         /*
          经过测试如果直接compact是无法清空NULL,
          需要在compact之前,调用一次ptrs.addPointer(nil),
@@ -60,69 +78,68 @@ public final class WeakTable<E: AnyObject> {
         ptrs.compact()
     }
     
-    public subscript(safe index: Int) -> E? {
-        get {
-            guard (0..<count).contains(index) else { return nil }
-            return self[index]
-        }
-        set {
-            guard (0..<count).contains(index) else { return }
-            self[index] = newValue
-        }
-    }
-    
-    
-    public func every(_ body: (E) throws -> Void) rethrows {
-        for case let item? in self {
-            try body(item)
-        }
-    }
-    
-    private func ptr(of element: E?) -> UnsafeMutableRawPointer? {
+    private func ptr(of element: E?) -> UnsafeMutableRawPointer? {        
+//        _ptrs.allObjects
+        
         guard let val = element else { return nil }
         // 获取一个指向其val的原始指针
         return Unmanaged<E>.passUnretained(val).toOpaque()
     }
 }
-
+//extension WeakTable {
+//
+//    @discardableResult
+//    public func append(_ element: E?) -> Bool {
+//        guard let ptr = ptr(of: element) else { return false }
+//        ptrs.addPointer(ptr)
+//        return true
+//    }
+//    public var count: Int { ptrs.count }
+//
+//    public var isEmpty: Bool {
+//        return ptrs.count == 0
+//    }
+//
+//    @discardableResult
+//    public func insert(_ newElement: E?, at i: Int) -> Bool {
+//        guard let ptr = ptr(of: newElement) else { return false }
+//        ptrs.insertPointer(ptr, at: i)
+//        return true
+//    }
+//    public func remove(at index: Int) {
+//        ptrs.removePointer(at: index)
+//    }
+//    public subscript(safe index: Int) -> E? {
+//        get {
+//            guard (0..<count).contains(index) else { return nil }
+//            return self[index]
+//        }
+//        set {
+//            guard (0..<count).contains(index) else { return }
+//            self[index] = newValue
+//        }
+//    }
+//}
 extension WeakTable {
-
-    @discardableResult
-    public func append(_ element: E?) -> Bool {
-        guard let ptr = ptr(of: element) else { return false }
-        ptrs.addPointer(ptr)
-        return true
+    public var compacted: [E] {
+//        compactMap { $0 }
+        _ptrs.allObjects.compactMap { $0 as? E }
     }
+    
     public var count: Int {
-        get { ptrs.count }
-//        set { ptrs.count = newValue }
+        get { _ptrs.count }
+        mutating set {
+            ptrs.count = newValue
+        }
     }
-    public var isEmpty: Bool {
-        compact()
-        return ptrs.count == 0
-    }
-
-    @discardableResult
-    public func insert(_ newElement: E?, at i: Int) -> Bool {
-        guard let ptr = ptr(of: newElement) else { return false }
-        ptrs.insertPointer(ptr, at: i)
-        return true
-    }
-
-    public var first: E? {
-        guard ptrs.count > 0 else { return nil }
-        compact()
+    public var wFirst: E? {
+        guard _ptrs.count > 0 else { return nil }
         return self[0]
     }
-    public var last: E? {
-        let n = ptrs.count
+    public var wLast: E? {
+        let n = _ptrs.count
         guard n > 0 else { return nil }
-        compact()
         return self[n - 1]
-    }
-
-    public func remove(at index: Int) {
-        ptrs.removePointer(at: index)
     }
 }
 
@@ -135,65 +152,60 @@ extension WeakTable: CustomStringConvertible {
 }
 extension WeakTable: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "count: \(count), \(description)\n table:\(ptrs.debugDescription)"
+        "count: \(count), \(description)\n table:\(_ptrs.debugDescription)"
     }
 }
 
 extension WeakTable: ExpressibleByArrayLiteral {
     
-    public convenience init(arrayLiteral elements: E?...) {
+    public init(arrayLiteral elements: E?...) {
         self.init(pointerArray: .weakObjects())
-        for element in elements { append(element) }
-    }
-}
-
-public struct WeakTableIterator<Item: AnyObject>: IteratorProtocol {
-    private let table: WeakTable<Item>
-    private var index: Int = 0
-    public init(table: WeakTable<Item>) {
-        table.compact()
-        self.table = table
-    }
-    public mutating func next() -> Item?? {
-        guard index < table.count else { return nil }
-        let item = table[index]
-        index += 1
-        return item
+        for element in elements { self.append(element) }
     }
 }
 
 extension WeakTable: Sequence {
-
-    public func makeIterator() -> WeakTableIterator<E> {
-        WeakTableIterator(table: self)
+    public struct Iterator: IteratorProtocol {
+        private let ptrs: NSPointerArray
+        private var index: Int = 0
+        fileprivate init(ptrs: NSPointerArray) {
+            self.ptrs = ptrs.copy() as! NSPointerArray
+        }
+        public mutating func next() -> E?? {
+            guard index < ptrs.count else { return nil }
+            defer { index += 1 }
+            guard let ptr = ptrs.pointer(at: index) else { return nil }
+            return Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+        }
+    }
+    public func makeIterator() -> Iterator {
+        Iterator(ptrs: _ptrs)
     }
 }
 
 extension WeakTable: MutableCollection {
     public func index(after i: Int) -> Int { i + 1 }
     public var startIndex: Int { 0 }
-    public var endIndex: Int { count }
+    public var endIndex: Int { _ptrs.count }
     
     public subscript(index: Int) -> E? {
         get {
-            guard let ptr = ptrs.pointer(at: index) else { return nil }
+            guard let ptr = _ptrs.pointer(at: index) else { return nil }
             return Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
         }
-        set {
+        mutating set {
             ptrs.replacePointer(at: index, withPointer: ptr(of: newValue))
         }
     }
 }
-
-
 extension WeakTable: RandomAccessCollection { }
 
 extension WeakTable: RangeReplaceableCollection {
-    
-    public func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == E? {
+    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == E? {
         guard !subrange.isEmpty, !newElements.isEmpty else { return }
         
         let start = subrange.lowerBound
+        let ptrs = self.ptrs
         for (i, element) in newElements.enumerated() {
             let index = start + i
             guard subrange.contains(index) else { return }

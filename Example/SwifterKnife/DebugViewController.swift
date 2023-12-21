@@ -233,8 +233,7 @@ fileprivate enum TestCase: String, CaseIterable {
     
     private func testWeakArray() {
         var nums: [Int] = []
-        var table = WeakTable<XXXXDog>()
-        let val = table.remove(at: 0)
+//        nums.enumerated()
 //        table.append(<#T##newElement: XXXXDog?##XXXXDog?#>)
 //        var weaArr: WeakArray<XXXXDog> = .init(XXXXDog(), XXXXDog())
 //        weaArr.append(.init(.init()))

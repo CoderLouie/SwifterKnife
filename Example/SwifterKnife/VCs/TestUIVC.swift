@@ -37,6 +37,18 @@ public extension PartialKeyPath {
     }
 }
 
+fileprivate final class AirPods: NSObject, NSCopying, NSMutableCopying {
+    var age = 3
+    func copy(with zone: NSZone? = nil) -> Any {
+        Console.logFunc(whose: self)
+        return self
+    }
+    func mutableCopy(with zone: NSZone? = nil) -> Any {
+        Console.logFunc(whose: self)
+        return self
+    }
+}
+
 class TestUIVC: BaseViewController {
     
     private func testKeyPath<T>(_ keyPath: KeyPath<CALayer, T>) {
@@ -54,13 +66,33 @@ class TestUIVC: BaseViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        print(#keyPath(CALayer.bounds.origin.x))
-        testNormalKeyPath(\.origin)
-        testNormalKeyPath(\.size)
-        testNormalKeyPath(\.origin.x)
-        testNormalKeyPath(\.size.width)
+//        testNormalKeyPath(\.origin)
+//        testNormalKeyPath(\.size)
+//        testNormalKeyPath(\.origin.x)
+//        testNormalKeyPath(\.size.width)
+        
+        
 //        testKeyPath(\.bounds)
 //        testKeyPath(\.bounds.origin)
 //        testKeyPath(\.bounds.origin.x)
+        
+        test_weak_table()
+    }
+    
+    
+    private let pods = AirPods()
+    private func test_weak_table() {
+        var table1: WeakTable<AirPods> = .weak
+        table1.append(pods)
+        table1.append(pods)
+        table1.append(pods)
+        table1.append(pods)
+        table1.count = 3 
+        
+        var table2 = table1
+        print("table2.count1", table2.count, table1.count)
+        table2.count = 10
+        print("table2.count2", table2.count, table1.count)
     }
     
     private func testOfView(_ view: UIView) {

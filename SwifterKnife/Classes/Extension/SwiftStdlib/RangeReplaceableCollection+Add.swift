@@ -133,6 +133,25 @@ public extension RangeReplaceableCollection {
     }
 }
 
+public extension RangeReplaceableCollection where Self: BidirectionalCollection {
+    
+    ///     var nums = [1, 2, 3, 4, 5, 6]
+    ///     print(nums.omitAll { $1 % 2 != 0 }, nums)
+    ///     output: [1, 3, 5] [2, 4, 6]
+    @discardableResult
+    mutating func omitAll(where shouldBeRemoved: (Index, Element) throws -> Bool) rethrows -> [Element] {
+        var removed: [Element] = []
+        var index = endIndex
+        while index > startIndex {
+            formIndex(before: &index)
+            let element = self[index]
+            guard try shouldBeRemoved(index, element) else { continue }
+            removed.append(remove(at: index))
+        }
+        return removed.reversed()
+    }
+}
+
 public extension RangeReplaceableCollection {
     @inlinable
     init(capacity: Int) {
