@@ -231,7 +231,7 @@ extension CarouselView {
     }
     
     /// 滚动到指定位置
-    open func scrollToIndex(_ index: Int) {
+    public func scrollToIndex(_ index: Int) {
         guard index >= 0 else { return }
         let idx = index % itemsCount
         guard currentIndex != idx else { return }
@@ -243,19 +243,19 @@ extension CarouselView {
         }
     }
     
-    open func forward() {
+    public func forward() {
         if isHorizontal {
             scrollView.setContentOffset(CGPoint(x: side * 2, y: 0), animated: true)
         } else {
             scrollView.setContentOffset(CGPoint(x: 0, y: side * 2), animated: true)
         }
     }
-    open func backward() {
+    public func backward() {
         scrollView.setContentOffset(.zero, animated: true)
     }
     
     /// 注册cell
-    open func register<T: CarouselViewCell>(_ cellClass: T.Type) {
+    public func register<T: CarouselViewCell>(_ cellClass: T.Type) {
         if !isFirstLayout {
             fatalError("this method can only be called onece!!!")
         }

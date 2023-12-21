@@ -230,6 +230,17 @@ fileprivate enum TestCase: String, CaseIterable {
         }
     }
     
+    
+    private func testWeakArray() {
+        var nums: [Int] = []
+        var table = WeakTable<XXXXDog>()
+        let val = table.remove(at: 0)
+//        table.append(<#T##newElement: XXXXDog?##XXXXDog?#>)
+//        var weaArr: WeakArray<XXXXDog> = .init(XXXXDog(), XXXXDog())
+//        weaArr.append(.init(.init()))
+//        weaArr.append(.init())
+//        let vc = weaArr[weak: 10]
+    }
     private func testJSON() {
 //        let str = """
 //{"error_code":0,"data":{"task_id":6,"graphics_type":43,"status":3,"process_result":"{\"error_code\":0,\"data\":{\"request_id\":\"vd.43.9a4c89f798daaee66095514fa03f4221174ef83c\",\"result_list\":[{\"style_code\":\"c57c2afd03a144e5\",\"strength\":0.0,\"generate_size\":1,\"image_list\":[\"http://osscdn-va.changxinteam.com/graphics2/portrait/temp/2023-12-13/2c50454d-1c0f-4464-9e41-79d3815f5004.jpg\"]}]}}"}}

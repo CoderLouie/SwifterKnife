@@ -17,7 +17,7 @@ public enum JSONError: Int, Swift.Error {
 extension JSONError: CustomNSError {
     
     /// return the error domain of JSONError
-    public static var errorDomain: String { return "com.swiftyjson.SwiftyJSON" }
+    public static var errorDomain: String { return "com.swifterknife.SwiftyJSON" }
     
     /// return the error code of JSONError
     public var errorCode: Int { return self.rawValue }
@@ -98,27 +98,10 @@ public enum JSON {
      */
     public init(_ object: Any) {
         switch object {
-//        case let object as String:
-//            if ["nil", "null"].contains(object.lowercased()) {
-//                self = .null
-//            } else {
-//                if let data = object.data(using: .utf8) {
-//                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data)
-//                        self.init(jsonObject: json)
-//                    } catch {
-//                        print("not an json obj \(error)")
-//                        self = .string(object)
-//                    }
-//                } else {
-//                    self = .string(object)
-//                }
-//            }
         case let object as Data:
             do {
                 try self.init(data: object)
             } catch {
-//                self.init(jsonObject: NSNull())
                 self = .error(.invalidJSON)
             }
         default:
@@ -772,15 +755,17 @@ extension JSON { // : Swift.Bool
 // MARK: - Parse
 
 extension JSON {
-    public var parse: JSON? {
+    public func parse() throws -> JSON {
         guard case .string(let string) = self else {
-            return nil
+            throw JSONError.wrongType
         }
-        let json = JSON(parseJSON: string)
-        return json.isValid ? json : nil
+        guard let data = string.data(using: .utf8) else {
+            throw JSONError.invalidJSON
+        }
+        return try .init(data: data)
     }
     public var parseValue: JSON {
-        parse ?? self
+        (try? parse()) ?? self
     }
 }
 

@@ -80,9 +80,11 @@ public extension DispatchQueue {
     
     private static var _onceTracker: Set<String> = []
     
-    static func once(file: String = #file, function: String = #function, line: Int = #line, block: () -> Void) {
+    @discardableResult
+    static func once(file: String = #file, function: String = #function, line: Int = #line, block: () -> Void) -> String {
         let token = [file, function, String(line)].joined(separator: ":")
         once(token: token, block: block)
+        return token
     }
     
     /**
