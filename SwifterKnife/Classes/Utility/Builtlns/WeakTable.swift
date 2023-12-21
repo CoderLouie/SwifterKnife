@@ -198,22 +198,7 @@ extension WeakTable: RandomAccessCollection { }
 extension WeakTable: RangeReplaceableCollection {
     /// 看苹果官方文档对此方法说明
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == E? {
-//        guard !subrange.isEmpty, !newElements.isEmpty else { return }
         let ptrs = self.ptrs
-//        if subrange.isEmpty {
-////            insert(contentsOf: newElements, at: startIndex)
-//            for ptr in newElements.map(ptr) {
-//                ptrs.addPointer(ptr)
-//            }
-//            return
-//        }
-//        if newElements.isEmpty {
-////            removeSubrange(subrange)
-//            for i in subrange.reversed() {
-//                ptrs.removePointer(at: i)
-//            }
-//            return
-//        }
         
         var index = subrange.lowerBound 
         for element in newElements {
