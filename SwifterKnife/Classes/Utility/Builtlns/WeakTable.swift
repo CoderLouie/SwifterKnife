@@ -78,9 +78,7 @@ public struct WeakTable<E: AnyObject> {
         ptrs.compact()
     }
     
-    private func ptr(of element: E?) -> UnsafeMutableRawPointer? {        
-//        _ptrs.allObjects
-        
+    private func ptr(of element: E?) -> UnsafeMutableRawPointer? {
         guard let val = element else { return nil }
         // 获取一个指向其val的原始指针
         return Unmanaged<E>.passUnretained(val).toOpaque()
@@ -145,14 +143,7 @@ extension WeakTable {
 
 extension WeakTable: CustomStringConvertible {
     public var description: String {
-        map { item in
-            item.map { "\($0)" } ?? "nil"
-        }.description
-    }
-}
-extension WeakTable: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        "count: \(count), \(description)\n table:\(_ptrs.debugDescription)"
+        map { $0.map(String.init(describing:)) ?? "nil" }.description
     }
 }
 
@@ -170,12 +161,16 @@ extension WeakTable: Sequence {
         private var index: Int = 0
         fileprivate init(ptrs: NSPointerArray) {
             self.ptrs = ptrs.copy() as! NSPointerArray
+//            self.ptrs = ptrs
         }
         public mutating func next() -> E?? {
             guard index < ptrs.count else { return nil }
             defer { index += 1 }
-            guard let ptr = ptrs.pointer(at: index) else { return nil }
-            return Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+            guard let ptr = ptrs.pointer(at: index) else {
+                return .some(nil)
+            }
+            let obj = Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+            return .some(.some(obj))
         }
     }
     public func makeIterator() -> Iterator {
@@ -201,15 +196,43 @@ extension WeakTable: MutableCollection {
 extension WeakTable: RandomAccessCollection { }
 
 extension WeakTable: RangeReplaceableCollection {
+    /// 看苹果官方文档对此方法说明
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == E? {
-        guard !subrange.isEmpty, !newElements.isEmpty else { return }
-        
-        let start = subrange.lowerBound
+//        guard !subrange.isEmpty, !newElements.isEmpty else { return }
         let ptrs = self.ptrs
-        for (i, element) in newElements.enumerated() {
-            let index = start + i
-            guard subrange.contains(index) else { return }
-            ptrs.replacePointer(at: index, withPointer: ptr(of: element))
+//        if subrange.isEmpty {
+////            insert(contentsOf: newElements, at: startIndex)
+//            for ptr in newElements.map(ptr) {
+//                ptrs.addPointer(ptr)
+//            }
+//            return
+//        }
+//        if newElements.isEmpty {
+////            removeSubrange(subrange)
+//            for i in subrange.reversed() {
+//                ptrs.removePointer(at: i)
+//            }
+//            return
+//        }
+        
+        var index = subrange.lowerBound 
+        for element in newElements {
+            let ptr = ptr(of: element)
+            if subrange.contains(index) {
+                ptrs.replacePointer(at: index, withPointer: ptr)
+            } else {
+                ptrs.insertPointer(ptr, at: index)
+            }
+            index += 1
+        }
+        guard index < subrange.endIndex else { return }
+        let idx = index
+        guard idx < ptrs.count else {
+            fatalError("WeakTable replace: subrange extends past the end")
+        }
+        while index < subrange.endIndex {
+            ptrs.removePointer(at: idx)
+            index += 1
         }
     }
 }

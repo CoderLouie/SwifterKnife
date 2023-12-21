@@ -47,6 +47,9 @@ fileprivate final class AirPods: NSObject, NSCopying, NSMutableCopying {
         Console.logFunc(whose: self)
         return self
     }
+    override var description: String {
+        String(format: "AirPods %p", self)
+    }
 }
 
 class TestUIVC: BaseViewController {
@@ -82,12 +85,36 @@ class TestUIVC: BaseViewController {
     
     private let pods = AirPods()
     private func test_weak_table() {
+        var nums = Array(0..<8)
+        // 0 1 2 3 4 5 6 7 8
+        // 这样会崩溃
+//        nums.replaceSubrange(8..<9, with: [98, 99])
+        print(nums)
+        
+        
         var table1: WeakTable<AirPods> = .weak
         table1.append(pods)
         table1.append(pods)
         table1.append(pods)
-        table1.append(pods)
-        table1.count = 3 
+//        table1.count = 6
+        for _ in 0...2 {
+            let p = AirPods()
+            print("create", p)
+            table1.append(p)
+        }
+ // [p,p,p,nil,nil,nil]
+        print(table1, table1.count)
+        let p = AirPods()
+        print("replacement", p)
+        table1.replaceSubrange(2..<5, with: [p])
+        print(table1, table1.count)
+//        for (i, p) in table1.enumerated() {
+//            print(i, p ?? "nil")
+//            if i % 2 == 0 {
+//                table1.remove(at: i)
+//            }
+//        }
+        print(table1.omitAll { idx, _ in idx % 2 == 0 }, table1)
         
         var table2 = table1
         print("table2.count1", table2.count, table1.count)
