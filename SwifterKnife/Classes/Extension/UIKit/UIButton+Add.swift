@@ -7,47 +7,21 @@
 
 import UIKit
 
-public struct TouchPosition: OptionSet, CustomStringConvertible {
-    public let rawValue: Int
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    // 1
-    public static var left: TouchPosition { .init(rawValue: 1 << 0) }
-    // 2
-    public static var right: TouchPosition { .init(rawValue: 1 << 1) }
-    // 4
-    public static var top: TouchPosition { .init(rawValue: 1 << 2) }
-    // 8
-    public static var bottom: TouchPosition { .init(rawValue: 1 << 3) }
-    public var description: String {
-        if isEmpty { return "None" }
-        var desc: [String] = []
-        if contains(.left) { desc.append("left") }
-        if contains(.right) { desc.append("right") }
-        if contains(.top) { desc.append("top") }
-        if contains(.bottom) { desc.append("bottom") }
-        return desc.joined(separator: ", ")
-    }
+public enum TouchPosition {
+    case topLeft, topRight, bottomLeft, bottomRight
 }
 
 extension UITouch {
-    public var touchPosition: TouchPosition {
-        guard let v = view else { return [] }
+    public var touchPosition: TouchPosition? {
+        guard let v = view else { return nil }
         let p = location(in: v)
         let size = v.bounds.size
         
-        var res: TouchPosition = []
-        
-        if p.x > size.width * 0.5 {
-            res.formUnion(.right)
-        } else { res.formUnion(.left) }
-        
         if p.y > size.height * 0.5 {
-            res.formUnion(.bottom)
-        } else { res.formUnion(.top) }
-        
-        return res
+            return p.x > size.width * 0.5 ? .bottomRight : .bottomLeft
+        } else {
+            return p.x > size.width * 0.5 ? .topRight : .topLeft
+        }
     }
 }
 
@@ -66,9 +40,8 @@ extension UIEvent {
         }
      }
      */
-    public var touchPosition: TouchPosition {
-        guard let touch = allTouches?.randomElement() else { return [] }
-        return touch.touchPosition
+    public var touchPosition: TouchPosition? {
+        return allTouches?.randomElement()?.touchPosition
     }
 }
 

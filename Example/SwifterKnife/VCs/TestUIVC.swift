@@ -39,6 +39,11 @@ public extension PartialKeyPath {
 
 fileprivate final class AirPods: NSObject, NSCopying, NSMutableCopying {
     var age = 3
+    private var ptr: String = ""
+    override init() {
+        super.init()
+        ptr = String(format: "AirPods %p", self)
+    }
     func copy(with zone: NSZone? = nil) -> Any {
         Console.logFunc(whose: self)
         return self
@@ -48,7 +53,12 @@ fileprivate final class AirPods: NSObject, NSCopying, NSMutableCopying {
         return self
     }
     override var description: String {
-        String(format: "AirPods %p", self)
+        ptr
+    }
+    // ???: - 如果在deinit这样访问会崩溃
+    deinit {
+        // String(format: "AirPods %p", self)
+        print(ptr, "deinit")
     }
 }
 
@@ -78,18 +88,40 @@ class TestUIVC: BaseViewController {
 //        testKeyPath(\.bounds)
 //        testKeyPath(\.bounds.origin)
 //        testKeyPath(\.bounds.origin.x)
-        
-        test_weak_table()
+        guard let pos = event?.touchPosition else {
+            return
+        }
+        switch pos {
+        case .topLeft:
+            load_weak_table()
+        case .topRight:
+            print(weakTable ?? "nil")
+        case .bottomLeft:
+            load_strong_table()
+        case .bottomRight:
+            print(strongTable ?? "nil")
+        }
     }
     
     
+    private func load_strong_table() {
+        var table1 = WeakTable<AirPods>.strong
+        for _ in 0...2 {
+            let p = AirPods()
+            print("create", p)
+            table1.append(p)
+        }
+        self.strongTable = table1
+    }
+    private var strongTable: WeakTable<AirPods>!
+    private var weakTable: WeakTable<AirPods>!
     private let pods = AirPods()
-    private func test_weak_table() {
-        var nums = Array(0..<8)
+    private func load_weak_table() {
+//        var nums = Array(0..<8)
         // 0 1 2 3 4 5 6 7 8
         // 这样会崩溃
 //        nums.replaceSubrange(8..<9, with: [98, 99])
-        print(nums)
+//        print(nums)
         
         
         var table1: WeakTable<AirPods> = .weak
@@ -102,6 +134,11 @@ class TestUIVC: BaseViewController {
             print("create", p)
             table1.append(p)
         }
+        for (i, p) in table1.enumerated() {
+            print(i, p ?? "nil")
+        }
+        self.weakTable = table1
+//        return ()
  // [p,p,p,nil,nil,nil]
         print(table1, table1.count)
         let p = AirPods()
