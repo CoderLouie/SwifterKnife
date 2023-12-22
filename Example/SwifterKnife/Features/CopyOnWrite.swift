@@ -11,17 +11,17 @@ import Foundation
 
 // https://github.com/klundberg/CopyOnWrite
 
-private final class Box<Boxed> {
-    let unbox: Boxed
-    init(_ value: Boxed) {
-        unbox = value
-    }
-}
+//private final class Box<Boxed> {
+//    let unbox: Boxed
+//    init(_ value: Boxed) {
+//        unbox = value
+//    }
+//}
 
 /// Encapsulates behavior surrounding value semantics and copy-on-write behavior
 public struct CopyOnWrite<Reference: AnyObject> {
 
-    private var _reference: Box<Reference>
+    private var _reference: Reference
     private let makeCopy: (Reference) -> Reference
 
     /// Constructs the copy-on-write wrapper around the given reference and copy function
@@ -30,13 +30,13 @@ public struct CopyOnWrite<Reference: AnyObject> {
     ///   - reference: The object that is to be given value semantics
     ///   - copier: The function that is responsible for copying the reference if the consumer of this API needs it to be copied. This function should create a new instance of the referenced type; it should not return the original reference given to it.
     public init(_ reference: Reference, copier: @escaping (Reference) -> Reference) {
-        self._reference = Box(reference)
+        self._reference = reference
         self.makeCopy = copier
     }
 
     /// Returns the reference meant for read-only operations.
     public var ref: Reference {
-        return _reference.unbox
+        return _reference 
     }
 
     /// Returns the reference meant for mutable operations. If necessary, the reference is copied using the `copier` function or closure provided to the initializer before returning, in order to preserve value semantics.
@@ -44,12 +44,11 @@ public struct CopyOnWrite<Reference: AnyObject> {
         mutating get {
             // copy the reference only if necessary
             if !isKnownUniquelyReferenced(&_reference) {
-                let newRef = makeCopy(_reference.unbox)
-                _reference = Box(newRef)
-                return newRef
+                let newRef = makeCopy(_reference)
+                _reference = newRef
             }
 
-            return _reference.unbox
+            return _reference
         }
     }
 }

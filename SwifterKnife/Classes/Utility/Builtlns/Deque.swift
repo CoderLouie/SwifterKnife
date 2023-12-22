@@ -10,10 +10,10 @@ import Foundation
 /// Swift 双端队列
 public final class Deque<Element> {
     fileprivate final class Node {
-        var value: Element?
+        var value: Element
         var next: Node?
         unowned var prev: Node?
-        init(_ value: Element? = nil, next: Node? = nil, prev: Node? = nil) {
+        init(_ value: Element, next: Node? = nil, prev: Node? = nil) {
             self.value = value
             self.next = next
             self.prev = prev
@@ -21,17 +21,20 @@ public final class Deque<Element> {
     }
     
     private var size = 0
-    /// next 指向头节点，prev指向尾节点
-    fileprivate let root = Node()
     
-    fileprivate var head: Node? {
-        get { root.next }
-        set { root.next = newValue }
-    }
-    private var tail: Node? {
-        get { root.prev }
-        set { root.prev = newValue }
-    }
+    /// 采用虚拟节点方案，Node的Element得设计成可选项，貌似更占据内存
+//    fileprivate let root = Node()
+//    fileprivate var head: Node? {
+//        get { root.next }
+//        set { root.next = newValue }
+//    }
+//    private var tail: Node? {
+//        get { root.prev }
+//        set { root.prev = newValue }
+//    }
+    private var head: Node?
+    private var tail: Node?
+    
     public init() {}
     
     /// 头部入队

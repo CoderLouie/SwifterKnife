@@ -18,7 +18,7 @@ public final class Queue<Element> {
         }
     }
     private var size = 0
-    fileprivate var head: Node? = nil
+    private var head: Node? = nil
     private var tail: Node? = nil
     
     public init() {}

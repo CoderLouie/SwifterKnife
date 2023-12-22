@@ -295,6 +295,7 @@
 		B3BC0707606EB261FB6AA761951C6B0A /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5990111B6A296CEE06FFA0F66530999D /* ConstraintAttributes.swift */; };
 		B4C54C45B887AFFE5DCC3FDA18E17901 /* DefaultAnimationCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5FF1F3ACFA3AC4881020ABF53C7FF6 /* DefaultAnimationCache.swift */; };
 		B6BA9E0E2B1ACF030001C4DE /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE72E8402B0260493CCE3D84BE485B1 /* Position.swift */; };
+		B6E090762B353EBF008DC40D /* Copyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E090752B353EBF008DC40D /* Copyable.swift */; };
 		B7179607D16A77327F914DE24A950DB1 /* LocalizedKeyRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8086477B2E85C39E274CA0C80A6301B7 /* LocalizedKeyRepresentable.swift */; };
 		B97269DE8463C1FD4FA754DD3C58BB2B /* Bool+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BB2F16A1A6992B1717B6BC1BFE3CD /* Bool+Add.swift */; };
 		BAB17A1C6CAD14B3788973EAF8466C93 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D44F6C18AE7E655033D0E5BC3B684CC /* NetworkReachabilityManager.swift */; };
@@ -743,6 +744,7 @@
 		B565CECF940CDE4679B6D3997377F781 /* PreCompLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PreCompLayer.swift; path = Sources/Private/CoreAnimation/Layers/PreCompLayer.swift; sourceTree = "<group>"; };
 		B5730D016CB16B2AB4AD338C78999AC2 /* GradientFill.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GradientFill.swift; path = Sources/Private/Model/ShapeItems/GradientFill.swift; sourceTree = "<group>"; };
 		B601D5B1FB6BA38A202C443BF4CBF644 /* InvertedMatteLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InvertedMatteLayer.swift; path = Sources/Private/MainThread/LayerContainers/Utility/InvertedMatteLayer.swift; sourceTree = "<group>"; };
+		B6E090752B353EBF008DC40D /* Copyable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Copyable.swift; path = ../Promise/Copyable.swift; sourceTree = "<group>"; };
 		B774B4FC03ABF3BF5A1EE2475A8161F3 /* Alamofire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.release.xcconfig; sourceTree = "<group>"; };
 		B7754AC5D29464E1D9F7763ABAA0D0C1 /* LayerFontProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayerFontProvider.swift; path = Sources/Private/MainThread/LayerContainers/Utility/LayerFontProvider.swift; sourceTree = "<group>"; };
 		B78E574687505B8B4C6E606B5F2E4183 /* UIButton+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIButton+Add.swift"; sourceTree = "<group>"; };
@@ -1248,6 +1250,7 @@
 			children = (
 				3DB24368A97CC9E2D06CE91775546867 /* DataCodable.swift */,
 				8A9BC899D2C0EE12842E1F8C36746D30 /* PropertyValuesConvertible.swift */,
+				B6E090752B353EBF008DC40D /* Copyable.swift */,
 			);
 			name = Protocol;
 			path = SwifterKnife/Classes/Utility/Protocol;
@@ -2028,6 +2031,7 @@
 				AAAB15A668D7702C64954DF0A4B4D3FD /* Funcs.swift in Sources */,
 				FF39A384522CDCA70A1CCF752831E157 /* GradientView.swift in Sources */,
 				63D960F1AC8FB8C0BA7F482C36E20FCF /* Haptic.swift in Sources */,
+				B6E090762B353EBF008DC40D /* Copyable.swift in Sources */,
 				CE23D7EE346AF604D539B7A856AD3A56 /* Int+Add.swift in Sources */,
 				AEDBE318ABE50FCD578D0316E4D5F6DC /* KeyboardObserver.swift in Sources */,
 				3D765CD16D2C65AFF6BBC70EF250399F /* KeyPath+Add.swift in Sources */,

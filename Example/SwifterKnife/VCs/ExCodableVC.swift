@@ -673,7 +673,7 @@ class ExCodableVC: BaseViewController {
         }
         let stu = ZStudent()
         let jsonStr = JSON.sureString(of: stu.toJSON())
-        print(jsonStr ?? "nil")
+        print(jsonStr )
         
         let str = """
         {
@@ -774,7 +774,7 @@ extension ExCodableVC {
             let str1 = String(data: data, encoding: .utf8) ?? "nil"
             print(str1)
             
-            let data1 = Data(str1.utf8)
+//            let data1 = Data(str1.utf8)
             let t2 = try JSONDecoder().decode(Team.self, from: data)
             print(t2.name, t2.person.name, t2.person.age)
         } catch {

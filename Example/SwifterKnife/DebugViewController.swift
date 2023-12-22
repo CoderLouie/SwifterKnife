@@ -12,7 +12,7 @@ import Photos
 
 extension String {
     var negativeWord: String? {
-        let path = "censorship.txt".filePath(under: .bundle)
+        let path = "censorship.txt".fullFilePath(under: .bundle)
         return SandBox.readLines(path) {
             contains($0)
         }
@@ -92,8 +92,8 @@ fileprivate enum TestCase: String, CaseIterable {
             let nextVc = DictationVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .overlay2:
-            let videoPath = "inputResources.mp4".filePath(under: .bundle)
-            let destPath = "watermark.mp4".filePath(under: .temporary)
+            let videoPath = "inputResources.mp4".fullFilePath(under: .bundle)
+            let destPath = "watermark.mp4".fullFilePath(under: .temporary)
 //            LottieConfiguration.shared.renderingEngine = .mainThread
             let mark = LottieAnimationView.frog.then {
                 $0.animationSpeed = 5
@@ -116,8 +116,8 @@ fileprivate enum TestCase: String, CaseIterable {
                 }
             }
         case .overlay1:
-            let videoPath = "inputResources.mp4".filePath(under: .bundle)
-            let destPath = "watermark.mp4".filePath(under: .temporary)
+            let videoPath = "inputResources.mp4".fullFilePath(under: .bundle)
+            let destPath = "watermark.mp4".fullFilePath(under: .temporary)
 //            LottieConfiguration.shared.renderingEngine = .mainThread
             let mark = LottieAnimationView.frog.then {
                 $0.animationSpeed = 5
@@ -137,8 +137,8 @@ fileprivate enum TestCase: String, CaseIterable {
             }
             print("[Add Overlay]", flag.opDescription)
         case .overlay:
-            let videoPath = "apple.mp4".filePath(under: .bundle)
-            let destPath = "watermarkapple3.mp4".filePath(under: .document)
+            let videoPath = "apple.mp4".fullFilePath(under: .bundle)
+            let destPath = "watermarkapple3.mp4".fullFilePath(under: .document)
             let begin = CACurrentMediaTime()
             let flag = VideoEditor.addOverlay({ bounds in
                 let layer = CALayer().then {
@@ -158,7 +158,7 @@ fileprivate enum TestCase: String, CaseIterable {
         case .watermark:
             let filename = "apple.mp4"
 //            let filename = "IMG_4396.MOV"
-            let tmpUrl = URL(fileURLWithPath: filename.filePath(under: .bundle))
+            let tmpUrl = URL(fileURLWithPath: filename.fullFilePath(under: .bundle))
             let videoEditor = YiVideoEditor(videoURL: tmpUrl)
             videoEditor.addOverlay { _ in
                 CALayer().then {
@@ -166,7 +166,7 @@ fileprivate enum TestCase: String, CaseIterable {
                     $0.frame = CGRect(x: 10, y: 10, width: 40, height: 20)
                 }
             }
-            let destPath = "watermarkapple1.mp4".filePath(under: .document)
+            let destPath = "watermarkapple1.mp4".fullFilePath(under: .document)
             let destUrl = URL(fileURLWithPath: destPath)
             videoEditor.export(at: destUrl) { session in
                 print("[AIDream] export finished", session.status.rawValue, session.error ??? "nil")
@@ -232,7 +232,7 @@ fileprivate enum TestCase: String, CaseIterable {
     
     
     private func testWeakArray() {
-        var nums: [Int] = []
+//        var nums: [Int] = []
 //        nums.enumerated()
 //        table.append(<#T##newElement: XXXXDog?##XXXXDog?#>)
 //        var weaArr: WeakArray<XXXXDog> = .init(XXXXDog(), XXXXDog())
