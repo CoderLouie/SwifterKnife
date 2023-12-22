@@ -22,16 +22,6 @@ public final class Deque<Element> {
     
     private var size = 0
     
-    /// 采用虚拟节点方案，Node的Element得设计成可选项，貌似更占据内存
-//    fileprivate let root = Node()
-//    fileprivate var head: Node? {
-//        get { root.next }
-//        set { root.next = newValue }
-//    }
-//    private var tail: Node? {
-//        get { root.prev }
-//        set { root.prev = newValue }
-//    }
     private var head: Node?
     private var tail: Node?
     

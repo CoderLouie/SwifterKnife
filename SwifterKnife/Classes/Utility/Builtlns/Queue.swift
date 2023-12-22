@@ -7,7 +7,9 @@
 
 import Foundation
 
+
 /// Swift 队列
+/// 支持头部插入，头部删除，尾部插入，
 public final class Queue<Element> {
     fileprivate final class Node {
         var value: Element
@@ -37,6 +39,7 @@ public final class Queue<Element> {
         if head == nil { head = node }
         size += 1
     }
+    
     /// 头部出队
     @discardableResult
     public func pollFirst() -> Element? {
@@ -46,6 +49,7 @@ public final class Queue<Element> {
         size -= 1
         return node.value
     }
+    
     /// 头部元素
     public var first: Element? {
         get { head?.value }
@@ -57,9 +61,25 @@ public final class Queue<Element> {
             }
         }
     }
-    /// 尾部元素
+    
+    /// 尾部元素 
     public var last: Element? {
         tail?.value
+    }
+    public var theLast: Element {
+        get {
+            guard let node = tail else {
+                fatalError("Queue is Empty")
+            }
+            return node.value
+        }
+        set {
+            if let node = tail {
+                node.value = newValue
+            } else {
+                offerLast(newValue)
+            }
+        }
     }
     public var count: Int { size }
     public var isEmpty: Bool { size == 0 }

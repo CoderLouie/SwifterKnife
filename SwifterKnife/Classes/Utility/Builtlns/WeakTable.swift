@@ -94,6 +94,24 @@ public struct WeakTable<E: AnyObject> {
         // 获取一个指向其val的原始指针
         return Unmanaged<E>.passUnretained(val).toOpaque()
     }
+    private func checkIndex(_ index: Int, isInsert: Bool = false) {
+        guard index >= 0 else {
+            fatalError("WeakTable index is out of range")
+        }
+        let n = _ptrs.count
+        let max = isInsert ? n + 1 : n
+        guard index < max else {
+            fatalError("WeakTable index is out of range")
+        }
+    }
+    private func checkRange(_ range: Range<Int>) {
+        guard range.lowerBound >= 0 else {
+            fatalError("WeakTable subrange lowerBound is invalid")
+        }
+        guard range.upperBound <= _ptrs.count else {
+            fatalError("WeakTable subrange extends past the end")
+        }
+    }
 }
 
 extension WeakTable {
@@ -154,10 +172,12 @@ extension WeakTable: MutableCollection {
     
     public subscript(index: Int) -> E? {
         get {
+            checkIndex(index)
             guard let ptr = _ptrs.pointer(at: index) else { return nil }
             return Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
         }
         mutating set {
+            checkIndex(index)
             mutablePtrs.replacePointer(at: index, withPointer: ptr(of: newValue))
         }
     }
@@ -172,17 +192,18 @@ extension WeakTable: MutableCollection {
 }
 extension WeakTable: RandomAccessCollection { }
 
-extension WeakTable: RangeReplaceableCollection {
+extension WeakTable: RangeReplaceableCollection { 
     /// 看苹果官方文档对此方法说明
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, E? == C.Element {
-        if subrange.isEmpty {
-            insert(contentsOf: newElements, at: subrange.lowerBound)
-            return
-        }
-        if newElements.isEmpty {
-            removeSubrange(subrange)
-            return
-        }
+        checkRange(subrange)
+//        if subrange.isEmpty {
+//            insert(contentsOf: newElements, at: subrange.lowerBound)
+//            return
+//        }
+//        if newElements.isEmpty {
+//            removeSubrange(subrange)
+//            return
+//        }
         
         let ptrs = mutablePtrs
 
@@ -198,9 +219,6 @@ extension WeakTable: RangeReplaceableCollection {
         }
         guard index < subrange.endIndex else { return }
         let idx = index
-        guard idx < ptrs.count else {
-            fatalError("WeakTable replace: subrange extends past the end")
-        }
         while index < subrange.endIndex {
             ptrs.removePointer(at: idx)
             index += 1
@@ -240,9 +258,11 @@ extension WeakTable: RangeReplaceableCollection {
         }
     }
     public mutating func insert(_ newElement: E?, at i: Int) {
+        checkIndex(i, isInsert: true)
         mutablePtrs.insertPointer(ptr(of: newElement), at: i)
     }
     public mutating func insert<S>(contentsOf newElements: S, at i: Int) where S : Collection, E? == S.Element {
+        checkIndex(i, isInsert: true)
         var index = i
         let ptrs = mutablePtrs
         for element in newElements {
@@ -256,6 +276,8 @@ extension WeakTable: RangeReplaceableCollection {
         return obj
     }
     public mutating func removeSubrange(_ bounds: Range<Int>) {
+        if bounds.isEmpty { return }
+        checkRange(bounds)
         let index = bounds.lowerBound
         let ptrs = mutablePtrs
         for _ in bounds {

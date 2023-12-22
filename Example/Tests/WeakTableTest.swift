@@ -9,7 +9,18 @@
 import XCTest
 import SwifterKnife
 
-
+fileprivate final class Fish: ExpressibleByIntegerLiteral, CustomStringConvertible {
+    let age: Int
+    init(_ age: Int) {
+        self.age = age
+    }
+    init(integerLiteral value: Int) {
+        self.age = value
+    }
+    var description: String {
+        "\(age)"
+    }
+}
 
 final class WeakTableTest: XCTestCase {
 
@@ -22,11 +33,30 @@ final class WeakTableTest: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        var array: WeakTable<Fish> = .strong
+        array.append(contentsOf: fishes(3..<6))
+        assert(array, [3, 4, 5])
+        do {
+            var ptrs = array
+            ptrs.replaceSubrange(0..<0, with: fishes(0...2))
+            assert(ptrs, [0, 1, 2, 3, 4, 5])
+            ptrs.replaceSubrange(0..<6, with: fishes(0..<0))
+            assert(ptrs, [])
+        }
+        assert(array, [3, 4, 5])
+        do {
+            var ptrs = array
+            ptrs.replaceSubrange(2..<3, with: fishes(10..<13))
+            assert(ptrs, [3, 4, 10, 11, 12])
+        }
+    }
+    private func assert(_ array: WeakTable<Fish>, _ range: [Int]) {
+//        print(array.description)
+//        print(range.description)
+        XCTAssertEqual(array.description, range.map { "\($0)" }.description)
+    }
+    private func fishes<S: Sequence>(_ range: S) -> [Fish] where S.Element == Int {
+        range.map(Fish.init(_:))
     }
 
     func testPerformanceExample() throws {

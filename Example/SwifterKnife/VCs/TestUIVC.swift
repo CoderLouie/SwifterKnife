@@ -118,7 +118,7 @@ class TestUIVC: BaseViewController {
     private let pods = AirPods()
     private func load_weak_table() {
 //        var nums = Array(0..<8)
-        // 0 1 2 3 4 5 6 7 8
+        // 0 1 2 3 4 5 6 7 
         // 这样会崩溃
 //        nums.replaceSubrange(8..<9, with: [98, 99])
 //        print(nums)
@@ -144,6 +144,7 @@ class TestUIVC: BaseViewController {
         let p = AirPods()
         print("replacement", p)
         table1.replaceSubrange(2..<5, with: [p])
+//        table1.replaceSubrange(0...3, with: [p])
         print(table1, table1.count)
 //        for (i, p) in table1.enumerated() {
 //            print(i, p ?? "nil")
