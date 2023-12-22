@@ -9,6 +9,19 @@ import UIKit
 
 public enum TouchPosition {
     case topLeft, topRight, bottomLeft, bottomRight
+    
+    public var atTop: Bool {
+        self == .topLeft || self == .topRight
+    }
+    public var atBottom: Bool {
+        self == .bottomLeft || self == .bottomRight
+    }
+    public var atLeft: Bool {
+        self == .topLeft || self == .bottomLeft
+    }
+    public var atRight: Bool {
+        self == .topRight || self == .bottomRight
+    }
 }
 
 extension UITouch {

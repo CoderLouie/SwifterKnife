@@ -44,6 +44,7 @@ fileprivate extension NSPointerArray {
 
 
 /// Swift 弱引用表
+@frozen
 public struct WeakTable<E: AnyObject> {
     
     public static var weak: Self {
@@ -100,12 +101,6 @@ extension WeakTable {
         _ptrs.allObjects.compactMap { $0 as? E }
     }
     
-    public var count: Int {
-        get { _ptrs.count }
-        mutating set {
-            mutablePtrs.count = newValue
-        }
-    }
     public var wFirst: E? {
         guard _ptrs.count > 0 else { return nil }
         return self[0]
@@ -126,10 +121,7 @@ extension WeakTable: CustomStringConvertible {
 extension WeakTable: ExpressibleByArrayLiteral {
     
     public init(arrayLiteral elements: E?...) {
-        self.init(pointerArray: .weakObjects())
-        for element in elements {
-            _ptrs.addPointer(ptr(of: element))
-        }
+        self.init(elements)
     }
 }
 
@@ -169,15 +161,32 @@ extension WeakTable: MutableCollection {
             mutablePtrs.replacePointer(at: index, withPointer: ptr(of: newValue))
         }
     }
+    
+    // 可以不实现
+    public var count: Int {
+        get { _ptrs.count }
+        mutating set {
+            mutablePtrs.count = newValue
+        }
+    }
 }
 extension WeakTable: RandomAccessCollection { }
 
 extension WeakTable: RangeReplaceableCollection {
     /// 看苹果官方文档对此方法说明
-    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == E? {
-        let ptrs = mutablePtrs
+    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, E? == C.Element {
+        if subrange.isEmpty {
+            insert(contentsOf: newElements, at: subrange.lowerBound)
+            return
+        }
+        if newElements.isEmpty {
+            removeSubrange(subrange)
+            return
+        }
         
-        var index = subrange.lowerBound 
+        let ptrs = mutablePtrs
+
+        var index = subrange.lowerBound
         for element in newElements {
             let ptr = ptr(of: element)
             if subrange.contains(index) {
@@ -195,6 +204,69 @@ extension WeakTable: RangeReplaceableCollection {
         while index < subrange.endIndex {
             ptrs.removePointer(at: idx)
             index += 1
+        }
+    }
+    
+    // 下面的方法可以不用实现，但为了提高执行效率还是实现一下
+    public mutating func reserveCapacity(_ n: Int) {
+        mutablePtrs.count = n
+    }
+    
+    public init(repeating repeatedValue: E?, count: Int) {
+        self.init(pointerArray: .weakObjects())
+        guard let value = repeatedValue else {
+            _ptrs.count = count
+            return
+        }
+        let ptr = self.ptr(of: value)
+        for _ in 0..<count {
+            _ptrs.addPointer(ptr)
+        }
+    }
+    public init<S>(_ elements: S) where S : Sequence, E? == S.Element {
+        self.init(pointerArray: .weakObjects())
+        for element in elements {
+            _ptrs.addPointer(ptr(of: element))
+        }
+    }
+    
+    public mutating func append(_ newElement: E?) {
+        mutablePtrs.addPointer(ptr(of: newElement))
+    }
+    public mutating func append<S>(contentsOf newElements: S) where S : Sequence, E? == S.Element {
+        let ptrs = mutablePtrs
+        for element in newElements {
+            ptrs.addPointer(ptr(of: element))
+        }
+    }
+    public mutating func insert(_ newElement: E?, at i: Int) {
+        mutablePtrs.insertPointer(ptr(of: newElement), at: i)
+    }
+    public mutating func insert<S>(contentsOf newElements: S, at i: Int) where S : Collection, E? == S.Element {
+        var index = i
+        let ptrs = mutablePtrs
+        for element in newElements {
+            ptrs.insertPointer(ptr(of: element), at: index)
+            index += 1
+        }
+    }
+    public mutating func remove(at i: Int) -> E? {
+        let obj = self[i]
+        mutablePtrs.removePointer(at: i)
+        return obj
+    }
+    public mutating func removeSubrange(_ bounds: Range<Int>) {
+        let index = bounds.lowerBound
+        let ptrs = mutablePtrs
+        for _ in bounds {
+            ptrs.removePointer(at: index)
+        }
+    }
+    public mutating func removeAll(keepingCapacity keepCapacity: Bool) {
+        let count = _ptrs.count
+        _ptrs = NSPointerArray(pointerFunctions: _ptrs.pointerFunctions)
+        if keepCapacity {
+            _ptrs.count = count
         }
     }
 }

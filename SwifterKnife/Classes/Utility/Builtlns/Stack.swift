@@ -9,7 +9,7 @@ import Foundation
 
 /// Swift 栈数据结构
 public final class Stack<Element> {
-    fileprivate class Node {
+    fileprivate final class Node {
         var value: Element
         let next: Node?
         init(_ value: Element, _ next: Node? = nil) {
@@ -42,10 +42,10 @@ public final class Stack<Element> {
 
     @discardableResult
     public func pop() -> Element? {
-        guard let first = head else { return nil }
-        head = first.next
+        guard let node = head else { return nil }
+        head = node.next
         size -= 1
-        return first.value
+        return node.value
     }
     
     public var top: Element? {
@@ -56,6 +56,13 @@ public final class Stack<Element> {
             } else {
                 pop()
             }
+        }
+    }
+    /// 只是为了和其他API统一
+    public var first: Element? {
+        get { top }
+        set {
+            top = newValue
         }
     }
     
@@ -77,20 +84,21 @@ public extension Stack {
     } 
 }
 
-public struct StackIterator<Item>: IteratorProtocol {
-    private var node: Stack<Item>.Node?
-    public init(stack: Stack<Item>) {
-        self.node = stack.head
-    }
-    public mutating func next() -> Item? {
-        guard let tmp = node else { return nil }
-        node = node?.next
-        return tmp.value
-    }
-}
+
 extension Stack: Sequence {
-    public func makeIterator() -> StackIterator<Element> {
-        StackIterator(stack: self)
+    public struct Iterator: IteratorProtocol {
+        private var node: Stack.Node?
+        fileprivate init(stack: Stack) {
+            self.node = stack.head
+        }
+        public mutating func next() -> Element? {
+            guard let tmp = node else { return nil }
+            node = node?.next
+            return tmp.value
+        }
+    }
+    public func makeIterator() -> Iterator {
+        Iterator(stack: self)
     }
 }
 

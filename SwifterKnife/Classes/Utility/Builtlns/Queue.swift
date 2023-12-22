@@ -9,8 +9,8 @@ import Foundation
 
 /// Swift 队列
 public final class Queue<Element> {
-    fileprivate class Node {
-        let value: Element
+    fileprivate final class Node {
+        var value: Element
         var next: Node?
         init(_ value: Element, _ next: Node? = nil) {
             self.value = value
@@ -22,40 +22,47 @@ public final class Queue<Element> {
     private var tail: Node? = nil
     
     public init() {}
-    /// 尾部入队
-    public func offerLast(_ element: Element) {
-        let node = Node(element)
-        if head == nil { head = node }
-        else { tail?.next = node }
-        tail = node
-        size += 1
-    }
     /// 头部入队
     public func offerFirst(_ element: Element) {
         let node = Node(element, head)
-        if tail == nil { tail = node }
         head = node
+        if tail == nil { tail = node }
+        size += 1
+    }
+    /// 尾部入队
+    public func offerLast(_ element: Element) {
+        let node = Node(element)
+        tail?.next = node
+        tail = node
+        if head == nil { head = node }
         size += 1
     }
     /// 头部出队
     @discardableResult
     public func pollFirst() -> Element? {
-        guard let first = head else { return nil }
-        head = first.next
+        guard let node = head else { return nil }
+        head = node.next
         if head == nil { tail = nil }
         size -= 1
-        return first.value
+        return node.value
     }
     /// 头部元素
-    public var peekFirst: Element? {
-        return head?.value
+    public var first: Element? {
+        get { head?.value }
+        set {
+            if let val = newValue {
+                head?.value = val
+            } else {
+                pollFirst()
+            }
+        }
     }
     /// 尾部元素
-    public var peekLast: Element? {
-        return tail?.value
+    public var last: Element? {
+        tail?.value
     }
-    public var count: Int { return size }
-    public var isEmpty: Bool { return size == 0 }
+    public var count: Int { size }
+    public var isEmpty: Bool { size == 0 }
 }
 
 public extension Queue {
@@ -73,20 +80,21 @@ public extension Queue {
 }
 
 
-public struct QueueIterator<Item>: IteratorProtocol {
-    private var node: Queue<Item>.Node?
-    public init(queue: Queue<Item>) {
-        self.node = queue.head
-    }
-    public mutating func next() -> Item? {
-        guard let tmp = node else { return nil }
-        node = node?.next
-        return tmp.value
-    }
-}
+
 extension Queue: Sequence {
-    public func makeIterator() -> QueueIterator<Element> {
-        QueueIterator(queue: self)
+    public struct Iterator: IteratorProtocol {
+        private var node: Queue.Node?
+        fileprivate init(queue: Queue) {
+            self.node = queue.head
+        }
+        public mutating func next() -> Element? {
+            guard let tmp = node else { return nil }
+            node = node?.next
+            return tmp.value
+        }
+    }
+    public func makeIterator() -> Iterator {
+        Iterator(queue: self)
     }
 }
 
