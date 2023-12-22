@@ -1,5 +1,5 @@
 //
-//  WeakTable.swift
+//  RefArray.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2021/10/19.
@@ -10,7 +10,7 @@ import Foundation
 // http://www.cocoachina.com/articles/179477
 
 /**
- var table: WeakTable<Person> = .init()
+ var table: RefArray<Person> = .init()
  do {
      for i in 1...5 {
          let p = Person(name: "xiaoming\(i)")
@@ -43,9 +43,9 @@ fileprivate extension NSPointerArray {
 }
 
 
-/// Swift 弱引用表
+/// Swift 引用数组，可以指定内存管理方式
 @frozen
-public struct WeakTable<E: AnyObject> {
+public struct RefArray<E: AnyObject> {
     
     public static var weak: Self {
         .init(pointerArray: .weakObjects())
@@ -96,25 +96,25 @@ public struct WeakTable<E: AnyObject> {
     }
     private func checkIndex(_ index: Int, isInsert: Bool = false) {
         guard index >= 0 else {
-            fatalError("WeakTable index is out of range")
+            fatalError("RefArray index is out of range")
         }
         let n = _ptrs.count
         let max = isInsert ? n + 1 : n
         guard index < max else {
-            fatalError("WeakTable index is out of range")
+            fatalError("RefArray index is out of range")
         }
     }
     private func checkRange(_ range: Range<Int>) {
         guard range.lowerBound >= 0 else {
-            fatalError("WeakTable subrange lowerBound is invalid")
+            fatalError("RefArray subrange lowerBound is invalid")
         }
         guard range.upperBound <= _ptrs.count else {
-            fatalError("WeakTable subrange extends past the end")
+            fatalError("RefArray subrange extends past the end")
         }
     }
 }
 
-extension WeakTable {
+extension RefArray {
     public var compacted: [E] {
         _ptrs.allObjects.compactMap { $0 as? E }
     }
@@ -130,20 +130,20 @@ extension WeakTable {
     }
 }
 
-extension WeakTable: CustomStringConvertible {
+extension RefArray: CustomStringConvertible {
     public var description: String {
         map { $0.map(String.init(describing:)) ?? "nil" }.description
     }
 }
 
-extension WeakTable: ExpressibleByArrayLiteral {
+extension RefArray: ExpressibleByArrayLiteral {
     
     public init(arrayLiteral elements: E?...) {
         self.init(elements)
     }
 }
 
-extension WeakTable: Sequence {
+extension RefArray: Sequence {
     public struct Iterator: IteratorProtocol {
         private let ptrs: NSPointerArray
         private var index: Int = 0
@@ -165,7 +165,7 @@ extension WeakTable: Sequence {
     }
 }
 
-extension WeakTable: MutableCollection {
+extension RefArray: MutableCollection {
     public func index(after i: Int) -> Int { i + 1 }
     public var startIndex: Int { 0 }
     public var endIndex: Int { _ptrs.count }
@@ -190,20 +190,12 @@ extension WeakTable: MutableCollection {
         }
     }
 }
-extension WeakTable: RandomAccessCollection { }
+extension RefArray: RandomAccessCollection { }
 
-extension WeakTable: RangeReplaceableCollection { 
+extension RefArray: RangeReplaceableCollection {
     /// 看苹果官方文档对此方法说明
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, E? == C.Element {
         checkRange(subrange)
-//        if subrange.isEmpty {
-//            insert(contentsOf: newElements, at: subrange.lowerBound)
-//            return
-//        }
-//        if newElements.isEmpty {
-//            removeSubrange(subrange)
-//            return
-//        }
         
         let ptrs = mutablePtrs
 
@@ -293,5 +285,5 @@ extension WeakTable: RangeReplaceableCollection {
     }
 }
 
-extension WeakTable: LazyCollectionProtocol { }
+extension RefArray: LazyCollectionProtocol { }
  

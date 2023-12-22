@@ -33,9 +33,14 @@ final class WeakTableTest: XCTestCase {
     }
 
     func testExample() throws {
-        var array: WeakTable<Fish> = .strong
+        var array: RefArray<Fish> = .strong
         array.append(contentsOf: fishes(3..<6))
         assert(array, [3, 4, 5])
+        array.count = 5
+        for f in array {
+            print(f ?? "nil")
+        }
+        array.count = 3
         do {
             var ptrs = array
             ptrs.replaceSubrange(0..<0, with: fishes(0...2))
@@ -50,7 +55,7 @@ final class WeakTableTest: XCTestCase {
             assert(ptrs, [3, 4, 10, 11, 12])
         }
     }
-    private func assert(_ array: WeakTable<Fish>, _ range: [Int]) {
+    private func assert(_ array: RefArray<Fish>, _ range: [Int]) {
 //        print(array.description)
 //        print(range.description)
         XCTAssertEqual(array.description, range.map { "\($0)" }.description)

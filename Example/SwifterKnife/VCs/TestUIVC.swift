@@ -105,7 +105,7 @@ class TestUIVC: BaseViewController {
     
     
     private func load_strong_table() {
-        var table1 = WeakTable<AirPods>.strong
+        var table1 = RefArray<AirPods>.strong
         for _ in 0...2 {
             let p = AirPods()
             print("create", p)
@@ -113,8 +113,8 @@ class TestUIVC: BaseViewController {
         }
         self.strongTable = table1
     }
-    private var strongTable: WeakTable<AirPods>!
-    private var weakTable: WeakTable<AirPods>!
+    private var strongTable: RefArray<AirPods>!
+    private var weakTable: RefArray<AirPods>!
     private let pods = AirPods()
     private func load_weak_table() {
 //        var nums = Array(0..<8)
@@ -124,7 +124,7 @@ class TestUIVC: BaseViewController {
 //        print(nums)
         
         
-        var table1: WeakTable<AirPods> = .weak
+        var table1: RefArray<AirPods> = .weak
         table1.append(pods)
         table1.append(pods)
         table1.append(pods)
