@@ -174,8 +174,21 @@ class TestUIVC: BaseViewController {
 //        views.forEach { testOfView($0) }
 //        setupImageLabel()
 //        setupTextView()
-        setupButton()
+//        setupButton()
+        print("pods", pods)
+        weakArray.append(pods)
+        let p = AirPods()
+        print("create", p)
+        weakArray.append(p)
+        print(self.weakArray)
+        for case let o? in weakArray {
+            print(o)
+        }
+        DispatchQueue.main.after(1) {
+            print(self.weakArray)
+        }
     }
+    private var weakArray: WeakArray<AirPods> = .init()
     
     private func setupButton() {
         NewButton().do { this in

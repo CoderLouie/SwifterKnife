@@ -18,41 +18,7 @@ import Foundation
 //    }
 //}
 
-/// Encapsulates behavior surrounding value semantics and copy-on-write behavior
-public struct CopyOnWrite<Reference: AnyObject> {
-
-    private var _reference: Reference
-    private let makeCopy: (Reference) -> Reference
-
-    /// Constructs the copy-on-write wrapper around the given reference and copy function
-    ///
-    /// - Parameters:
-    ///   - reference: The object that is to be given value semantics
-    ///   - copier: The function that is responsible for copying the reference if the consumer of this API needs it to be copied. This function should create a new instance of the referenced type; it should not return the original reference given to it.
-    public init(_ reference: Reference, copier: @escaping (Reference) -> Reference) {
-        self._reference = reference
-        self.makeCopy = copier
-    }
-
-    /// Returns the reference meant for read-only operations.
-    public var ref: Reference {
-        return _reference 
-    }
-
-    /// Returns the reference meant for mutable operations. If necessary, the reference is copied using the `copier` function or closure provided to the initializer before returning, in order to preserve value semantics.
-    public var mutatingRef: Reference {
-        mutating get {
-            // copy the reference only if necessary
-            if !isKnownUniquelyReferenced(&_reference) {
-                let newRef = makeCopy(_reference)
-                _reference = newRef
-            }
-
-            return _reference
-        }
-    }
-}
-
+import Foundation
 /// Describes reference types that can be copied
 public protocol Cloneable: AnyObject {
 
@@ -61,42 +27,15 @@ public protocol Cloneable: AnyObject {
     /// - Returns: A new instance of `self` with all relevant data copied from it.
     func clone() -> Self
 }
-
-// MARK: - Cloneable
-extension CopyOnWrite where Reference: Cloneable {
-
-    /// Constructs the copy-on-write wrapper around the given `Cloneable` reference
-    ///
-    /// - Parameter reference: A `Cloneable` object which will be copied with `clone()` when it is to be mutated.
-    public init(_ reference: Reference) {
-        self.init(reference, copier: { $0.clone() })
+extension Cloneable where Self: NSCopying {
+    func clone() -> Self {
+        copy() as! Self
+    }
+}
+extension Cloneable where Self: NSMutableCopying {
+    func clone() -> Self {
+        mutableCopy() as! Self
     }
 }
 
-import Foundation
 
-// MARK: - NSCopying
-extension CopyOnWrite where Reference: NSCopying {
-
-    /// Constructs the copy-on-write wrapper around the given `NSCopying` reference
-    ///
-    /// CAUTION: If `Reference` implements both `NSCopying` and `NSMutableCopying`, make sure you only pass an instance of a type that returns the same type when calling `copy()`, otherwise an attempt to mutate this reference could cause your program to trap.
-    ///
-    /// - Parameter reference: An `NSCopying` object which will be copied with `copy()` when it is to be mutated.
-    public init(copyingReference reference: Reference) {
-        self.init(reference, copier: { $0.copy() as! Reference })
-    }
-}
-
-// MARK: - NSMutableCopying
-extension CopyOnWrite where Reference: NSMutableCopying {
-
-    /// Constructs the copy-on-write wrapper around the given `NSMutableCopying` reference
-    ///
-    /// CAUTION: If `Reference` implements both `NSCopying` and `NSMutableCopying`, make sure you only pass an instance of a type that returns the same type when calling `mutableCopy()`, otherwise an attempt to mutate this reference could cause your program to trap.
-    ///
-    /// - Parameter reference: An `NSMutableCopying` object which will be copied with `mutableCopy()` when it is to be mutated.
-    public init(mutableCopyingReference reference: Reference) {
-        self.init(reference, copier: { $0.mutableCopy() as! Reference })
-    }
-}

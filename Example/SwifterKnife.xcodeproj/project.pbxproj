@@ -178,6 +178,7 @@
 		B6DC13472AA03A0300D50A1C /* OCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13462AA03A0300D50A1C /* OCUtils.m */; };
 		B6DC13492AA03A1200D50A1C /* ExceptionCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */; };
 		B6E090742B35301B008DC40D /* WeakTableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E090732B35301B008DC40D /* WeakTableTest.swift */; };
+		B6E090782B358694008DC40D /* MapTableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E090772B358694008DC40D /* MapTableTest.swift */; };
 		B6E6ABBE2B2FE87B00859E1C /* Broadcaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6ABBD2B2FE87B00859E1C /* Broadcaster.swift */; };
 		B6ED86812726A1E3003103F6 /* KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6ED86802726A1E3003103F6 /* KKView.m */; };
 		B6FC05E0292A73D00057E659 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC05DF292A73D00057E659 /* DebugViewController.swift */; };
@@ -383,6 +384,7 @@
 		B6DC13462AA03A0300D50A1C /* OCUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUtils.m; sourceTree = "<group>"; };
 		B6DC13482AA03A1200D50A1C /* ExceptionCatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExceptionCatcher.swift; sourceTree = "<group>"; };
 		B6E090732B35301B008DC40D /* WeakTableTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakTableTest.swift; sourceTree = "<group>"; };
+		B6E090772B358694008DC40D /* MapTableTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableTest.swift; sourceTree = "<group>"; };
 		B6E6ABBD2B2FE87B00859E1C /* Broadcaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Broadcaster.swift; sourceTree = "<group>"; };
 		B6ED867B2726A054003103F6 /* SwifterKnife_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwifterKnife_Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6ED867F2726A1E3003103F6 /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
@@ -479,6 +481,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				B6E090772B358694008DC40D /* MapTableTest.swift */,
 				B6E090732B35301B008DC40D /* WeakTableTest.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
@@ -1179,6 +1182,7 @@
 			files = (
 				B6E090742B35301B008DC40D /* WeakTableTest.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				B6E090782B358694008DC40D /* MapTableTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@
 import XCTest
 import SwifterKnife
 
-fileprivate final class Fish: ExpressibleByIntegerLiteral, CustomStringConvertible {
+final class Fish: ExpressibleByIntegerLiteral, CustomStringConvertible {
     let age: Int
     init(_ age: Int) {
         self.age = age

@@ -287,3 +287,107 @@ extension RefArray: RangeReplaceableCollection {
 
 extension RefArray: LazyCollectionProtocol { }
  
+
+
+// MARK: - WeakArray
+
+public struct WeakArray<O: AnyObject> {
+    private struct Box {
+        weak var object: O?
+        fileprivate init(_ obj: O?) {
+            self.object = obj
+        }
+        fileprivate var isValid: Bool {
+            object != nil
+        }
+    }
+    private var _buffer: ContiguousArray<Box>
+    
+    public init() {
+        _buffer = .init()
+    }
+    public mutating func compact() {
+        _buffer = _buffer.filter(\.isValid)
+    }
+    public var compacted: [O] {
+        _buffer.compactMap(\.object)
+    }
+}
+extension WeakArray: CustomStringConvertible {
+    public var description: String {
+        map { $0.map(String.init(describing:)) ?? "nil" }.description
+    }
+}
+extension WeakArray: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: O?...) {
+        self.init(elements)
+    }
+}
+extension WeakArray: Sequence {
+    public typealias Element = O?
+    
+    public func makeIterator() -> IndexingIterator<[O?]> {
+        _buffer.map(\.object).makeIterator()
+    }
+}
+extension WeakArray: MutableCollection {
+    public func index(after i: Int) -> Int {
+        _buffer.index(after: i)
+    }
+    public subscript(position: Int) -> O? {
+        get { _buffer[position].object }
+        set {
+            if let val = newValue {
+                _buffer[position].object = val
+            } else {
+                _buffer.remove(at: position)
+            }
+        }
+    }
+    public var startIndex: Int {
+        _buffer.startIndex
+    }
+    
+    public var endIndex: Int {
+        _buffer.endIndex
+    }
+}
+extension WeakArray: RandomAccessCollection {}
+extension WeakArray: RangeReplaceableCollection {
+    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, O? == C.Element {
+        _buffer.replaceSubrange(subrange, with: newElements.map(Box.init))
+    }
+    
+    public mutating func reserveCapacity(_ n: Int) {
+        _buffer.reserveCapacity(n)
+    }
+    public init(repeating repeatedValue: O?, count: Int) {
+        let val = Box(repeatedValue)
+        _buffer = .init(repeating: val, count: count)
+    }
+    public init<S>(_ elements: S) where S : Sequence, O? == S.Element {
+        _buffer = .init(elements.map(Box.init))
+    }
+    public mutating func append(_ newElement: O?) {
+        _buffer.append(Box(newElement))
+    }
+    public mutating func append<S>(contentsOf newElements: S) where S : Sequence, O? == S.Element {
+        _buffer.append(contentsOf: newElements.map(Box.init))
+    }
+    public mutating func insert(_ newElement: O?, at i: Int) {
+        _buffer.insert(Box(newElement), at: i)
+    }
+    public mutating func insert<S>(contentsOf newElements: S, at i: Int) where S : Collection, O? == S.Element {
+        _buffer.insert(contentsOf: newElements.map(Box.init), at: i)
+    }
+    public mutating func remove(at i: Int) -> O? {
+        _buffer.remove(at: i).object
+    }
+    public mutating func removeSubrange(_ bounds: Range<Int>) {
+        _buffer.removeSubrange(bounds)
+    }
+    public mutating func removeAll(keepingCapacity keepCapacity: Bool) {
+        _buffer.removeAll(keepingCapacity: keepCapacity)
+    }
+}
+extension WeakArray: LazyCollectionProtocol { }
