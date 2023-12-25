@@ -26,10 +26,12 @@
 public protocol OptionalType: ExpressibleByNilLiteral {
     associatedtype Wrapped
     var value: Optional<Wrapped> { get }
+//    init(_ some: Wrapped)
 }
 
 extension Optional: OptionalType {
     public var value: Optional<Wrapped> { self }
+    
 }
 
 extension OptionalType {

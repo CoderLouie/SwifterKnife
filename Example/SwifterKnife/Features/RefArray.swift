@@ -92,7 +92,12 @@ public struct RefArray<E: AnyObject> {
     private func ptr(of element: E?) -> UnsafeMutableRawPointer? {
         guard let val = element else { return nil }
         // 获取一个指向其val的原始指针
-        return Unmanaged<E>.passUnretained(val).toOpaque()
+        /*
+         toOpaque()
+         unsafeBitCast(_value, to: UnsafeMutableRawPointer.self)
+         */
+//        return Unmanaged<E>.passUnretained(val).toOpaque()
+        return unsafeBitCast(val, to: UnsafeMutableRawPointer.self)
     }
     private func checkIndex(_ index: Int, isInsert: Bool = false) {
         guard index >= 0 else {
@@ -156,7 +161,8 @@ extension RefArray: Sequence {
             guard let ptr = ptrs.pointer(at: index) else {
                 return .some(nil)
             }
-            let obj = Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+//            let obj = Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+            let obj = unsafeBitCast(ptr, to: E.self)
             return .some(.some(obj))
         }
     }
@@ -174,7 +180,8 @@ extension RefArray: MutableCollection {
         get {
             checkIndex(index)
             guard let ptr = _ptrs.pointer(at: index) else { return nil }
-            return Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+//            return Unmanaged<E>.fromOpaque(ptr).takeUnretainedValue()
+            return unsafeBitCast(ptr, to: E.self)
         }
         mutating set {
             checkIndex(index)
@@ -287,7 +294,7 @@ extension RefArray: RangeReplaceableCollection {
 
 extension RefArray: LazyCollectionProtocol { }
  
-
+/*
 
 // MARK: - WeakArray
 
@@ -391,3 +398,4 @@ extension WeakArray: RangeReplaceableCollection {
     }
 }
 extension WeakArray: LazyCollectionProtocol { }
+*/

@@ -380,7 +380,7 @@
 		F319D6E449947591768336D4B14FDEB5 /* DotLottieFileHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A73F076B9C6A401E2CA2CC2B3901AB /* DotLottieFileHelpers.swift */; };
 		F37EF4CC733919D48EE6DE523EAAC602 /* Vectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F9A6B8008F6E87B958FF4095B27D27 /* Vectors.swift */; };
 		F51D779B51981B47B5C0E262CF1BA11F /* GradientFillRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671C2435DD70500F0850AA32C820A9C4 /* GradientFillRenderer.swift */; };
-		F5254ED759F3D4B0716042A4102D1E15 /* RefArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C9A7AA3CD19A46C08854E676E3B1B7 /* RefArray.swift */; };
+		F5254ED759F3D4B0716042A4102D1E15 /* WrapArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C9A7AA3CD19A46C08854E676E3B1B7 /* WrapArray.swift */; };
 		F66CC47AD425C8D57BD149AFD09C2AFE /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6AE859BF5E57A3128C04CC6488FF35 /* HTTPMethod.swift */; };
 		F6BD6440096857E7A4B051C871191BBC /* AnimationFontProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEABEE4FFDE78FE290C19859BEDD319 /* AnimationFontProvider.swift */; };
 		F6E94E8EE1CE35F49B9091BE8748587B /* Result+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A146C3CAEFCE1C357EA365A4FCE2D3 /* Result+Alamofire.swift */; };
@@ -501,7 +501,7 @@
 		23E4D83F2FB3BA35C46400888A40BE8C /* BezierPath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BezierPath.swift; path = Sources/Private/Utility/Primitives/BezierPath.swift; sourceTree = "<group>"; };
 		240E4624F965E496B1E2D5E839BA3E4B /* Constraint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constraint.swift; path = Sources/Constraint.swift; sourceTree = "<group>"; };
 		2468F2D7259C2B549D2572FE20A762BE /* FillNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FillNode.swift; path = Sources/Private/MainThread/NodeRenderSystem/Nodes/RenderNodes/FillNode.swift; sourceTree = "<group>"; };
-		26C9A7AA3CD19A46C08854E676E3B1B7 /* RefArray.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RefArray.swift; sourceTree = "<group>"; };
+		26C9A7AA3CD19A46C08854E676E3B1B7 /* WrapArray.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WrapArray.swift; sourceTree = "<group>"; };
 		27138072955B456E3CC7E52BC13811BC /* CALayer+fillBounds.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CALayer+fillBounds.swift"; path = "Sources/Private/CoreAnimation/Extensions/CALayer+fillBounds.swift"; sourceTree = "<group>"; };
 		27161D8CADB29C714BA65D3AEEBF0A0E /* InterpolatableExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InterpolatableExtensions.swift; path = Sources/Private/Utility/Interpolatable/InterpolatableExtensions.swift; sourceTree = "<group>"; };
 		27289E6B623BE973B3032147C244E1E4 /* RequestTaskMap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequestTaskMap.swift; path = Source/RequestTaskMap.swift; sourceTree = "<group>"; };
@@ -1323,7 +1323,7 @@
 				BF200BC55A5EE288C0DA0B30502C2719 /* Deque.swift */,
 				5EC30DEC331E5483BD4808C8FD537D43 /* Queue.swift */,
 				7AB1F6F85F6C46EAA9CB14F2DB26046D /* Stack.swift */,
-				26C9A7AA3CD19A46C08854E676E3B1B7 /* RefArray.swift */,
+				26C9A7AA3CD19A46C08854E676E3B1B7 /* WrapArray.swift */,
 			);
 			name = Builtlns;
 			path = SwifterKnife/Classes/Utility/Builtlns;
@@ -2092,7 +2092,7 @@
 				66ECC50525CA7D6EEFB32C36D688F059 /* UIView+Search.swift in Sources */,
 				07105BB8409AB1CAB9AB12A3C067FF06 /* UIViewController+Add.swift in Sources */,
 				C3FC617E6E07BC623E33FB727F8F9F9B /* URL+Add.swift in Sources */,
-				F5254ED759F3D4B0716042A4102D1E15 /* RefArray.swift in Sources */,
+				F5254ED759F3D4B0716042A4102D1E15 /* WrapArray.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

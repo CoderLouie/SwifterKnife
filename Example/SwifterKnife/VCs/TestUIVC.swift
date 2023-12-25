@@ -180,12 +180,12 @@ class TestUIVC: BaseViewController {
         let p = AirPods()
         print("create", p)
         weakArray.append(p)
-        print(self.weakArray)
+        print(self.weakArray.explicitDesc)
         for case let o? in weakArray {
             print(o)
         }
         DispatchQueue.main.after(1) {
-            print(self.weakArray)
+            print(self.weakArray.explicitDesc)
         }
     }
     private var weakArray: WeakArray<AirPods> = .init()
