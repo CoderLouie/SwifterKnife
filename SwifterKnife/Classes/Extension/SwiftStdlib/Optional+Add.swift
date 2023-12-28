@@ -119,10 +119,13 @@ public extension Optional {
         }
     }
     
-    @discardableResult
-    func onSome(_ work: (Wrapped) -> Void) -> Optional {
-        if let value = self { work(value) }
-        return self
+    func modify(_ work: (inout Wrapped) throws -> Void) rethrows -> Optional {
+        switch self {
+        case .some(var x):
+            try work(&x)
+            return .some(x)
+        case .none: return .none
+        }
     }
 }
 

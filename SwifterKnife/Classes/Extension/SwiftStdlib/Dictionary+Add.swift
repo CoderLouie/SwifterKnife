@@ -256,3 +256,16 @@ public extension Dictionary {
  不过反过来不必为真：两个相同哈希值的实例不一定需要相等
  
  */
+
+
+extension Hasher {
+    public mutating func combine<O: AnyObject>(_ value: O) {
+        let val = unsafeBitCast(value, to: UInt.self)
+        combine(val)
+    }
+    public mutating func combines<H: Hashable>(_ keyPaths: KeyPath<Self, H>...) {
+        keyPaths.forEach {
+            combine(self[keyPath: $0])
+        }
+    }
+}

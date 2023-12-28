@@ -21,7 +21,7 @@ public extension Copyable where Self: NSCopying {
     }
 }
 public extension Copyable where Self: NSMutableCopying {
-    func copyable() -> Self {
+    func mutableCopyable() -> Self {
         let obj = mutableCopy()
         guard let ins = obj as? Self else {
             fatalError("when mutable copy \(self) but got type \(type(of: obj))")

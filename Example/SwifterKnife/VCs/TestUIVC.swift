@@ -126,6 +126,8 @@ class TestUIVC: BaseViewController {
         
         var table1: RefArray<AirPods> = .weak
         table1.append(pods)
+        let table3 = table1
+        
         table1.append(pods)
         table1.append(pods)
 //        table1.count = 6
@@ -180,12 +182,12 @@ class TestUIVC: BaseViewController {
         let p = AirPods()
         print("create", p)
         weakArray.append(p)
-        print(self.weakArray.explicitDesc)
+        print(self.weakArray.safedesc())
         for case let o? in weakArray {
             print(o)
         }
         DispatchQueue.main.after(1) {
-            print(self.weakArray.explicitDesc)
+            print(self.weakArray.safedesc())
         }
     }
     private var weakArray: WeakArray<AirPods> = .init()

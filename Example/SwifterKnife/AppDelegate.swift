@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds).then {
+//            $0.windowLevel += 1
+            $0.windowLevel = .statusBar + 1
             $0.rootViewController = UINavigationController(rootViewController: DebugViewController())
             $0.makeKeyAndVisible()
         } 

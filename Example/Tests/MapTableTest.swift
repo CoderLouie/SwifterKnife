@@ -7,6 +7,10 @@
 //
 
 import XCTest
+import SwifterKnife
+import Foundation
+
+extension NSArray: Copyable {}
 
 final class MapTableTest: XCTestCase {
 
@@ -19,6 +23,9 @@ final class MapTableTest: XCTestCase {
     }
 
     func testExample() throws {
+        let nsarray = NSArray()
+        let tmp = nsarray.copyable()
+        return ()
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         // Any test you write for XCTest can be annotated as throws and async.

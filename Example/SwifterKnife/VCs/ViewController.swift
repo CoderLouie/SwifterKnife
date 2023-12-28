@@ -142,7 +142,8 @@ fileprivate enum School {
 
 class ViewController: UIViewController {
     
-   private var cursorLoc: Int? = nil
+    @IBOutlet weak var vcButton: UIButton!
+    private var cursorLoc: Int? = nil
 
     private func setupTextView() {
         UITextView().do {

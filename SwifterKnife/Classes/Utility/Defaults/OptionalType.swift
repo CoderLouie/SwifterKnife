@@ -35,16 +35,22 @@ extension Optional: OptionalType {
 }
 
 extension OptionalType {
-    public var explicitDesc: String {
+    public func safedesc(or placeholder: @autoclosure () -> String = "nil") -> String {
         if case .some(let wrapper) = value {
             return String(describing: wrapper)
         }
-        return "nil"
+        return placeholder()
     }
 }
 
 extension Sequence where Element: OptionalType {
-    public var explicitDesc: String {
-        String(describing: map(\.explicitDesc))
+    public func safedesc(or placeholder: @autoclosure () -> String = "nil") -> String {
+        let array = map { element in
+            guard case let x? = element.value else {
+                return placeholder()
+            }
+            return String(describing: x)
+        }
+        return String(describing: array)
     }
 }
