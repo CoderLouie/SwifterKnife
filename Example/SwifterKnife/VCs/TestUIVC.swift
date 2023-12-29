@@ -181,6 +181,12 @@ class TestUIVC: BaseViewController {
 //        NotificationCenter.default.removeObserver(<#T##observer: Any##Any#>)
 //        withoutActuallyEscaping(<#T##closure: ClosureType##ClosureType#>, do: <#T##(ClosureType) throws -> ResultType##(ClosureType) throws -> ResultType##(_ escapingClosure: ClosureType) throws -> ResultType#>)
 //        let weakDict: WeakDictionary<String, AirPods> = .init(collection: [:])
+//        var nums: Array<Int> = []
+//        var weakArr: WeakArray<AirPods> = []
+//        weakArr.append(<#T##newElement: WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element##WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element#>)
+//
+//        var weakSet: WeakSet<AirPods> = .init()
+//        weakSet.insert(nil)
         
         print("pods", pods)
         weakArray.append(pods)

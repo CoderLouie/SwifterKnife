@@ -12,14 +12,131 @@ public protocol WrapContainerType {
     var wrapValue: WrapType { get }
     init(_ wrapValue: WrapType)
 }
+public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable {
+    public static func == (lhs: WeakBox<O>, rhs: WeakBox<O>) -> Bool {
+        switch (lhs.wrapValue, rhs.wrapValue) {
+        case let (lw?, rw?):
+            return lw === rw
+        case (nil, nil):
+            return true
+        default: return false
+        }
+    }
+    public func hash(into hasher: inout Hasher) {
+        if let v = wrapValue {
+            let val = unsafeBitCast(v, to: UInt.self)
+            hasher.combine(val)
+        }
+    }
+    
+    public private(set) weak var wrapValue: O?
+    public init(_ wrapValue: O?) {
+        self.wrapValue = wrapValue
+    }
+}
 
+// MARK: - WrapCollection
 
+public struct WrapArray<Container: WrapContainerType> {
+    public typealias Element = Container.WrapType
+    
+    private var _buffer: ContiguousArray<Container>
+    
+    public init() {
+        _buffer = .init()
+    }
+}
+extension WrapArray: CustomStringConvertible {
+    public var description: String {
+        _buffer.map(\.wrapValue).description
+    }
+}
+extension WrapArray: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Element...) {
+        self.init(elements)
+    }
+}
+extension WrapArray: Sequence {
+    public func makeIterator() -> IndexingIterator<[Element]> {
+        _buffer.map(\.wrapValue).makeIterator()
+    }
+}
+extension WrapArray: MutableCollection {
+    public func index(after i: Int) -> Int {
+        _buffer.index(after: i)
+    }
+    public subscript(position: Int) -> Element {
+        get { _buffer[position].wrapValue }
+        set {
+            _buffer[position] = Container(newValue)
+        }
+    }
+    public var startIndex: Int {
+        _buffer.startIndex
+    }
+    
+    public var endIndex: Int {
+        _buffer.endIndex
+    }
+}
+extension WrapArray: RandomAccessCollection {}
+extension WrapArray: RangeReplaceableCollection {
+    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, Element == C.Element {
+        _buffer.replaceSubrange(subrange, with: newElements.map(Container.init))
+    }
+    
+    public mutating func reserveCapacity(_ n: Int) {
+        _buffer.reserveCapacity(n)
+    }
+    public init(repeating repeatedValue: Element, count: Int) {
+        let val = Container(repeatedValue)
+        _buffer = .init(repeating: val, count: count)
+    }
+    public init<S>(_ elements: S) where S : Sequence, Element == S.Element {
+        _buffer = .init(elements.map(Container.init))
+    }
+    public mutating func append(_ newElement: Element) {
+        _buffer.append(Container(newElement))
+    }
+    public mutating func append<S>(contentsOf newElements: S) where S : Sequence, Element == S.Element {
+        _buffer.append(contentsOf: newElements.map(Container.init))
+    }
+    public mutating func insert(_ newElement: Element, at i: Int) {
+        _buffer.insert(Container(newElement), at: i)
+    }
+    public mutating func insert<S>(contentsOf newElements: S, at i: Int) where S : Collection, Element == S.Element {
+        _buffer.insert(contentsOf: newElements.map(Container.init), at: i)
+    }
+    public mutating func remove(at i: Int) -> Element {
+        _buffer.remove(at: i).wrapValue
+    }
+    public mutating func removeSubrange(_ bounds: Range<Int>) {
+        _buffer.removeSubrange(bounds)
+    }
+    public mutating func removeAll(keepingCapacity keepCapacity: Bool) {
+        _buffer.removeAll(keepingCapacity: keepCapacity)
+    }
+}
+extension WrapArray: LazyCollectionProtocol { }
+
+public extension WrapArray where Element: OptionalType {
+    mutating func compact() {
+        _buffer = _buffer.filter { $0.wrapValue.value != nil }
+    }
+    var compacted: [Element.Wrapped] {
+        _buffer.compactMap(\.wrapValue.value)
+    }
+}
+
+public typealias WeakArray<O: AnyObject> = WrapArray<WeakBox<O>>
+
+/*
 // MARK: - WrapCollection
 
 public struct WrapCollection<Collection: Swift.Collection> where Collection.Element: WrapContainerType {
     public typealias Index = Collection.Index
     public typealias Container = Collection.Element
-    public typealias W = Container.WrapType
+    public typealias Element = Container.WrapType
     
     private var _buffer: Collection
     public init(collection: Collection) {
@@ -32,7 +149,7 @@ extension WrapCollection: CustomStringConvertible {
     }
 }
 extension WrapCollection: Sequence {
-    public func makeIterator() -> IndexingIterator<[W]> {
+    public func makeIterator() -> IndexingIterator<[Element]> {
         _buffer.map(\.wrapValue).makeIterator()
     }
 }
@@ -47,12 +164,12 @@ extension WrapCollection: Swift.Collection {
     public func index(after i: Index) -> Index {
         _buffer.index(after: i)
     }
-    public subscript(position: Index) -> W {
+    public subscript(position: Index) -> Element {
         _buffer[position].wrapValue
     }
 }
 extension WrapCollection: MutableCollection where Collection: MutableCollection {
-    public subscript(position: Index) -> W {
+    public subscript(position: Index) -> Element {
         get { _buffer[position].wrapValue }
         set {
             _buffer[position] = Container(newValue)
@@ -70,32 +187,32 @@ extension WrapCollection: RangeReplaceableCollection where Collection: RangeRepl
     public init() {
         _buffer = .init()
     }
-    public mutating func replaceSubrange<C>(_ subrange: Range<Index>, with newElements: C) where C: Swift.Collection, W == C.Element {
+    public mutating func replaceSubrange<C>(_ subrange: Range<Index>, with newElements: C) where C: Swift.Collection, Element == C.Element {
         _buffer.replaceSubrange(subrange, with: newElements.map(Container.init))
     }
     public mutating func reserveCapacity(_ n: Int) {
         _buffer.reserveCapacity(n)
     }
-    public init(repeating repeatedValue: W, count: Int) {
+    public init(repeating repeatedValue: Element, count: Int) {
         let val = Container(repeatedValue)
         _buffer = .init(repeating: val, count: count)
     }
-    public init<S>(_ elements: S) where S : Sequence, W == S.Element {
+    public init<S>(_ elements: S) where S : Sequence, Element == S.Element {
         _buffer = .init(elements.map(Container.init))
     }
-    public mutating func append(_ newElement: W) {
+    public mutating func append(_ newElement: Element) {
         _buffer.append(Container(newElement))
     }
-    public mutating func append<S>(contentsOf newElements: S) where S : Sequence, W == S.Element {
+    public mutating func append<S>(contentsOf newElements: S) where S : Sequence, Element == S.Element {
         _buffer.append(contentsOf: newElements.map(Container.init))
     }
-    public mutating func insert(_ newElement: W, at i: Index) {
+    public mutating func insert(_ newElement: Element, at i: Index) {
         _buffer.insert(Container(newElement), at: i)
     }
-    public mutating func insert<S>(contentsOf newElements: S, at i: Index) where S: Swift.Collection, W == S.Element {
+    public mutating func insert<S>(contentsOf newElements: S, at i: Index) where S: Swift.Collection, Element == S.Element {
         _buffer.insert(contentsOf: newElements.map(Container.init), at: i)
     }
-    public mutating func remove(at i: Index) -> W {
+    public mutating func remove(at i: Index) -> Element {
         _buffer.remove(at: i).wrapValue
     }
     public mutating func removeSubrange(_ bounds: Range<Index>) {
@@ -107,33 +224,40 @@ extension WrapCollection: RangeReplaceableCollection where Collection: RangeRepl
 }
 extension WrapCollection: LazyCollectionProtocol { }
 
-public extension WrapCollection where W: OptionalType {
-    var compacted: [W.Wrapped] {
+public extension WrapCollection where Element: OptionalType {
+    var compacted: [Element.Wrapped] {
         _buffer.compactMap(\.wrapValue.value)
     }
 }
-public extension WrapCollection where W: OptionalType, Collection: ExpressibleByArrayLiteral, Collection.ArrayLiteralElement == [Container] {
+public extension WrapCollection where Element: OptionalType, Collection: ExpressibleByArrayLiteral {
     mutating func compact() {
         let keeped = _buffer.filter { $0.wrapValue.value != nil }
-        _buffer = Collection(arrayLiteral: keeped)
+        self = .init(containers: keeped)
     }
 }
 
-extension WrapCollection: ExpressibleByArrayLiteral where Collection: ExpressibleByArrayLiteral, Collection.ArrayLiteralElement == [Container] {
-    public init(arrayLiteral elements: W...) {
-        _buffer = Collection(arrayLiteral: elements.map(Container.init))
+extension WrapCollection: ExpressibleByArrayLiteral where Collection: ExpressibleByArrayLiteral {
+    fileprivate init(containers: [Container]) {
+        let creator = unsafeBitCast(
+          Collection.init(arrayLiteral:),
+          to: (([Container]) -> Collection).self
+        )
+        _buffer = creator(containers)
+    }
+    public init(arrayLiteral elements: Element...) {
+        self.init(containers: elements.map(Container.init))
     }
 }
 
 // MARK: - Set
 extension WrapCollection: Equatable where Collection: Equatable {}
 
-extension WrapCollection: SetAlgebra where Collection: SetAlgebra, Collection.ArrayLiteralElement == [Container] {
+extension WrapCollection: SetAlgebra where Collection: SetAlgebra {
 
     public init() {
         _buffer = .init()
     }
-    public func contains(_ member: W) -> Bool {
+    public func contains(_ member: Element) -> Bool {
         _buffer.contains(Container(member))
     }
     
@@ -150,14 +274,14 @@ extension WrapCollection: SetAlgebra where Collection: SetAlgebra, Collection.Ar
         return .init(collection: set)
     }
     
-    public mutating func insert(_ newMember: __owned W) -> (inserted: Bool, memberAfterInsert: W) {
+    public mutating func insert(_ newMember: __owned Element) -> (inserted: Bool, memberAfterInsert: Element) {
         let flag = _buffer.insert(Container(newMember))
         return (flag.inserted, flag.memberAfterInsert.wrapValue)
     }
-    public mutating func remove(_ member: W) -> W? {
+    public mutating func remove(_ member: Element) -> Element? {
         _buffer.remove(Container(member))?.wrapValue
     }
-    public mutating func update(with newMember: __owned W) -> W? {
+    public mutating func update(with newMember: __owned Element) -> Element? {
         _buffer.update(with: Container(newMember))?.wrapValue
     }
     public mutating func formUnion(_ other: __owned WrapCollection<Collection>) {
@@ -185,7 +309,7 @@ extension WrapCollection: SetAlgebra where Collection: SetAlgebra, Collection.Ar
     }
     public var isEmpty: Bool { _buffer.isEmpty }
     
-    public init<S>(_ sequence: __owned S) where S : Sequence, W == S.Element {
+    public init<S>(_ sequence: __owned S) where S : Sequence, Element == S.Element {
         _buffer = Collection(sequence.map(Container.init))
     }
     
@@ -221,3 +345,4 @@ public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable {
 public typealias WeakArray<O: AnyObject> = WrapCollection<ContiguousArray<WeakBox<O>>>
 public typealias WeakSet<O: AnyObject> = WrapCollection<Set<WeakBox<O>>>
 
+*/
