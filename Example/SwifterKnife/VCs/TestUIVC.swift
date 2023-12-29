@@ -223,11 +223,14 @@ class TestUIVC: BaseViewController {
             print(self.weakArray)
         }
     }
-    private var weakSet: WeakSet<AirPods> = .init()
+    private var weakSet: WeakSet<AirPods> = [nil]
     private func test_weak_set() {
+        print(weakSet)
+        print(weakSet.insert(nil))
         print("pods", pods)
         print(weakSet.insert(pods))
         print(weakSet.contains(pods))
+        print(weakSet.insert(pods))
         let p = AirPods()
         print("create", p)
         print(weakSet.contains(p))
