@@ -18,19 +18,19 @@ public protocol WrapContainerType {
 
 public struct WrapCollection<Collection: Swift.Collection> where Collection.Element: WrapContainerType {
     public typealias Index = Collection.Index
-    
     public typealias Container = Collection.Element
     public typealias W = Container.WrapType
+    
     private var _buffer: Collection
     public init(collection: Collection) {
         _buffer = collection
     }
 }
-//extension WrapCollection: CustomStringConvertible {
-//    public var description: String {
-//        _buffer.map(\.wrapValue).description
-//    }
-//}
+extension WrapCollection: CustomStringConvertible {
+    public var description: String {
+        _buffer.map(\.wrapValue).description
+    }
+}
 extension WrapCollection: Sequence {
     public func makeIterator() -> IndexingIterator<[W]> {
         _buffer.map(\.wrapValue).makeIterator()
@@ -38,7 +38,6 @@ extension WrapCollection: Sequence {
 }
 
 extension WrapCollection: Swift.Collection {
-
     public var startIndex: Index {
         _buffer.startIndex
     }
@@ -194,30 +193,7 @@ extension WrapCollection: SetAlgebra where Collection: SetAlgebra, Collection.Ar
         _buffer.subtract(other._buffer)
     }
 }
-
-
-// MARK: - Dictionary
-//public protocol _DictionaryProtocol: Collection where Element == (key: Key, value: Value) {
-//    associatedtype Key: Hashable
-//    associatedtype Value
-//
-//    var keys: Dictionary<Key, Value>.Keys { get }
-//
-//    subscript(key: Key) -> Value? { get set }
-//
-//    mutating func merge<S: Sequence>(_ other: S, uniquingKeysWith combine: (Value, Value) throws -> Value) rethrows where S.Element == (Key, Value)
-//
-//    mutating func merge(
-//        _ other: [Key: Value], uniquingKeysWith combine: (Value, Value) throws -> Value
-//    ) rethrows
-//
-//    @discardableResult
-//    mutating func removeValue(forKey key: Key) -> Value?
-//
-//    mutating func updateValue(_ value: Value, forKey key: Key) -> Value?
-//}
-//
-//extension Dictionary: _DictionaryProtocol {}
+ 
  
 
 public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable {
@@ -242,10 +218,6 @@ public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable {
         self.wrapValue = wrapValue
     }
 }
-//public typealias WeakPair<Key, O: AnyObject> = (Key, WeakBox<O>)
-//extension WeakPair: WrapContainerType {
-//
-//}
 public typealias WeakArray<O: AnyObject> = WrapCollection<ContiguousArray<WeakBox<O>>>
 public typealias WeakSet<O: AnyObject> = WrapCollection<Set<WeakBox<O>>>
-//public typealias WeakDictionary<Key: Hashable, O: AnyObject> = WrapCollection<Dictionary<Key, WeakBox<O>>>
+
