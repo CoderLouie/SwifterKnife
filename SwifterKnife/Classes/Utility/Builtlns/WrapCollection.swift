@@ -1,5 +1,5 @@
 //
-//  WrapArray.swift
+//  WrapCollection.swift
 //  SwifterKnife
 //
 //  Created by liyang on 2023/12/25.
@@ -19,33 +19,33 @@ public protocol WrapContainerType {
 //}
 
 
-// MARK: - WrapArray
+// MARK: - WrapCollection
 
-public struct WrapArray<W: WrapContainerType> {
+public struct WrapCollection<W: WrapContainerType> {
     private var _buffer: ContiguousArray<W>
     
     public init() {
         _buffer = .init()
     }
 }
-extension WrapArray: CustomStringConvertible {
+extension WrapCollection: CustomStringConvertible {
     public var description: String {
         _buffer.map(\.wrapValue).description
     }
 }
-extension WrapArray: ExpressibleByArrayLiteral {
+extension WrapCollection: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: W.WrapType...) {
         self.init(elements)
     }
 }
-extension WrapArray: Sequence {
+extension WrapCollection: Sequence {
     public typealias Element = W.WrapType
     
     public func makeIterator() -> IndexingIterator<[W.WrapType]> {
         _buffer.map(\.wrapValue).makeIterator()
     }
 }
-extension WrapArray: MutableCollection {
+extension WrapCollection: MutableCollection {
     public func index(after i: Int) -> Int {
         _buffer.index(after: i)
     }
@@ -73,8 +73,8 @@ extension WrapArray: MutableCollection {
         _buffer.endIndex
     }
 }
-extension WrapArray: RandomAccessCollection {}
-extension WrapArray: RangeReplaceableCollection {
+extension WrapCollection: RandomAccessCollection {}
+extension WrapCollection: RangeReplaceableCollection {
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, W.WrapType == C.Element {
         _buffer.replaceSubrange(subrange, with: newElements.map(W.init))
     }
@@ -111,9 +111,9 @@ extension WrapArray: RangeReplaceableCollection {
         _buffer.removeAll(keepingCapacity: keepCapacity)
     }
 }
-extension WrapArray: LazyCollectionProtocol { }
+extension WrapCollection: LazyCollectionProtocol { }
 
-public extension WrapArray where W.WrapType: OptionalType {
+public extension WrapCollection where W.WrapType: OptionalType {
     
     mutating func compact() {
         _buffer = _buffer.filter { $0.wrapValue.value != nil }
@@ -131,4 +131,4 @@ public struct WeakBox<O: AnyObject>: WrapContainerType {
     }
 }
 
-public typealias WeakArray<O: AnyObject> = WrapArray<WeakBox<O>>
+public typealias WeakArray<O: AnyObject> = WrapCollection<WeakBox<O>>
