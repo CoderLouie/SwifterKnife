@@ -12,7 +12,7 @@ public protocol WrapContainerType: Hashable {
     var wrapValue: WrapType { get }
     init(_ wrapValue: WrapType)
 }
-public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable {
+public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable, CustomStringConvertible {
     public static func == (lhs: WeakBox<O>, rhs: WeakBox<O>) -> Bool {
         switch (lhs.wrapValue, rhs.wrapValue) {
         case let (lw?, rw?):
@@ -32,6 +32,13 @@ public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable {
     public private(set) weak var wrapValue: O?
     public init(_ wrapValue: O?) {
         self.wrapValue = wrapValue
+    }
+    
+    public var description: String {
+        if let val = wrapValue {
+            return String(describing: val)
+        }
+        return "nil"
     }
 }
 
@@ -331,9 +338,9 @@ public struct WrapCollection<Collection: Swift.Collection> where Collection.Elem
         _buffer = collection
     }
 }
-extension WrapCollection: CustomStringConvertible {
+extension WrapCollection: CustomStringConvertible where Collection: CustomStringConvertible {
     public var description: String {
-        _buffer.map(\.wrapValue).description
+        _buffer.description
     }
 }
 extension WrapCollection: Sequence {
@@ -461,14 +468,16 @@ extension WrapCollection: SetAlgebra where Collection: SetAlgebra {
         let set = _buffer.symmetricDifference(other._buffer)
         return .init(collection: set)
     }
-    
+    @discardableResult
     public mutating func insert(_ newMember: __owned Collection.Element.WrapType) -> (inserted: Bool, memberAfterInsert: Collection.Element.WrapType) {
         let flag = _buffer.insert(Container(newMember))
         return (flag.inserted, flag.memberAfterInsert.wrapValue)
     }
+    @discardableResult
     public mutating func remove(_ member: Collection.Element.WrapType) -> Collection.Element.WrapType? {
         _buffer.remove(Container(member))?.wrapValue
     }
+    @discardableResult
     public mutating func update(with newMember: __owned Collection.Element.WrapType) -> Collection.Element.WrapType? {
         _buffer.update(with: Container(newMember))?.wrapValue
     }

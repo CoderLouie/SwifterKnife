@@ -96,6 +96,8 @@ class TestUIVC: BaseViewController {
             load_weak_table()
         case .topRight:
             print(weakTable ?? "nil")
+            weakTable.compact()
+            print(weakTable ?? "nil")
         case .bottomLeft:
             load_strong_table()
         case .bottomRight:
@@ -201,21 +203,46 @@ class TestUIVC: BaseViewController {
         var weakSet: WeakSet<AirPods> = .init()
 //        weakSet.insert(<#T##newMember: AirPods?##AirPods?#>)
         
+        test_weak_set()
+    }
+    
+    private var weakArray: WeakArray<AirPods> = .init()
+    private func test_weak_array() {
         print("pods", pods)
         weakArray.append(pods)
         let p = AirPods()
         print("create", p)
         weakArray.append(p)
-        print(self.weakArray.safedesc())
+        print(self.weakArray)
         for case let o? in weakArray {
             print(o)
         }
         DispatchQueue.main.after(1) {
-            print(self.weakArray.safedesc())
+            print(self.weakArray)
+            self.weakArray.compact()
+            print(self.weakArray)
         }
     }
-    private var weakArray: WeakArray<AirPods> = .init()
-    
+    private var weakSet: WeakSet<AirPods> = .init()
+    private func test_weak_set() {
+        print("pods", pods)
+        print(weakSet.insert(pods))
+        print(weakSet.contains(pods))
+        let p = AirPods()
+        print("create", p)
+        print(weakSet.contains(p))
+        print(weakSet.insert(p))
+        print(weakSet.contains(p))
+        print(self.weakSet)
+        for case let o? in weakSet {
+            print(o)
+        }
+        DispatchQueue.main.after(1) {
+            print(self.weakSet)
+            self.weakSet.compact()
+            print(self.weakSet)
+        }
+    }
     private func setupButton() {
         NewButton().do { this in
             this.backgroundColor = UIColor(gray: 40)
