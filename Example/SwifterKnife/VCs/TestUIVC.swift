@@ -180,13 +180,26 @@ class TestUIVC: BaseViewController {
 //        NotificationCenter.default.addObserver(forName: <#T##NSNotification.Name?#>, object: <#T##Any?#>, queue: <#T##OperationQueue?#>, using: <#T##(Notification) -> Void#>)
 //        NotificationCenter.default.removeObserver(<#T##observer: Any##Any#>)
 //        withoutActuallyEscaping(<#T##closure: ClosureType##ClosureType#>, do: <#T##(ClosureType) throws -> ResultType##(ClosureType) throws -> ResultType##(_ escapingClosure: ClosureType) throws -> ResultType#>)
-//        let weakDict: WeakDictionary<String, AirPods> = .init(collection: [:])
-//        var nums: Array<Int> = []
-//        var weakArr: WeakArray<AirPods> = []
-//        weakArr.append(<#T##newElement: WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element##WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element#>)
 //
-//        var weakSet: WeakSet<AirPods> = .init()
-//        weakSet.insert(nil)
+//        var nums: Array<Int> = []
+        var weakArr: WeakArray<AirPods> = []
+//        weakArr.append(<#T##newElement: WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element##WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element#>)
+//        weakArr.append(<#T##newElement: WrapArray<WeakBox<AirPods>>.Element##WrapArray<WeakBox<AirPods>>.Element#>)
+//        weakArr.append(<#T##newElement: AirPods?##AirPods?#>)
+//        weakArr.append(<#T##newElement: AirPods?##AirPods?#>)
+        
+        var normalDict: [String: Int] = [:]
+        for p in normalDict {
+//            p.key
+        }
+//        var weakDict: WeakDictionary<String, AirPods> = .init()
+//        for pair in weakDict {
+////            pair
+//        }
+//        weakDict.updateValue(nil, forKey: "name")
+        
+        var weakSet: WeakSet<AirPods> = .init()
+//        weakSet.insert(<#T##newMember: AirPods?##AirPods?#>)
         
         print("pods", pods)
         weakArray.append(pods)
