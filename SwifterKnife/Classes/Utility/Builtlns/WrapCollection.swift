@@ -7,7 +7,7 @@
 
 import Foundation
  
-public protocol WrapContainerType: Hashable {
+public protocol WrapContainerType {
     associatedtype WrapType
     var wrapValue: WrapType { get }
     init(_ wrapValue: WrapType)
