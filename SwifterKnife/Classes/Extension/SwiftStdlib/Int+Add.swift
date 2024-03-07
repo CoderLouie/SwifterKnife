@@ -78,3 +78,4 @@ public extension OptionSet where RawValue: FixedWidthInteger {
         lhs.rawValue & rhs.rawValue != 0
     }
 }
+

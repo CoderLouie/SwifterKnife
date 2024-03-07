@@ -282,6 +282,11 @@ class ViewController: UIViewController {
     private  func testpattern() {
         for v in view.subviews where v is UILabel {
         }
+//        self.isKind(of: <#T##AnyClass#>)
+//        self.isMember(of: UIViewController.self)
+//        let s: Step = .step1
+//        s.inSet([.step1])
+//        s.inArray([.step2])
     }
     private func testchoose2() {
         let choose = sk_pick(School.isChina, String.self)

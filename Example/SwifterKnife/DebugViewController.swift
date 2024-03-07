@@ -203,6 +203,7 @@ fileprivate enum TestCase: String, CaseIterable {
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
 //            testConsole()
             testJSON()
+            Haptic.vibrate()
             break
         case .permission:
             print("permission")
@@ -255,7 +256,7 @@ fileprivate enum TestCase: String, CaseIterable {
         ]
         let json = JSON(dict)
         let dataJSON = json["data"]
-        let resultJSON = dataJSON["process_result"]
+        let resultJSON = dataJSON["process_result"].parseValue
         let resultDataJSON = resultJSON["data"]
         print(resultJSON["error_code"].intValue,
               resultDataJSON["request_id"].stringValue,

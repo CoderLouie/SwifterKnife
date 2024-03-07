@@ -49,4 +49,11 @@ public enum Haptic {
         }
     }
 }
- 
+
+import AudioToolbox
+extension Haptic {
+    public static func vibrate() {
+        AudioServicesPlaySystemSound(1519)
+//        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    }
+}

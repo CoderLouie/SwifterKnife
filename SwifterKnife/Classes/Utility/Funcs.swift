@@ -140,3 +140,26 @@ public func sk_pick<T>(_ condition: @escaping @autoclosure () -> Bool, _ type: T
 //        pick(self, type)
 //    }
 //}
+
+
+/// Returns a modified closure that emits the latest non-nil value
+/// if the original closure would return nil.
+///
+/// - SeeAlso: https://github.com/Thomvis/Construct/blob/main/Construct/Foundation/Memoize.swift
+public func replayNonNil<A, B>(_ f: @escaping (A) -> B?) -> (A) -> B? {
+    var memo: B?
+    return {
+        if let res = f($0) {
+            memo = res
+            return res
+        }
+        return memo
+    }
+}
+
+/// Creates a closure (T?) -> T? that returns last non-`nil` T passed to it.
+///
+/// - SeeAlso: https://github.com/Thomvis/Construct/blob/main/Construct/Foundation/Memoize.swift
+public func replayNonNil<T>() -> (T?) -> T? {
+    replayNonNil { $0 }
+}
