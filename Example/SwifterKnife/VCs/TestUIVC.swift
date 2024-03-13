@@ -68,6 +68,10 @@ class TestUIVC: BaseViewController {
 //        print(#keyPath(keyPath))
 //        print(keyPath._kvcKeyPathString ??? "nil") 
         print(keyPath.animKeyPath ??? "exten nil")
+        
+        // Fatal error: Could not extract a String from KeyPath Swift.ReferenceWritableKeyPath<__C.CALayer, __C.CGPoint>
+        print(NSExpression(forKeyPath: keyPath).keyPath)
+        
 //        print(keyPath.keyPath)
 //        let expression = NSExpression(forKeyPath: keyPath)
 //        print(expression.keyPath)
@@ -85,24 +89,24 @@ class TestUIVC: BaseViewController {
 //        testNormalKeyPath(\.size.width)
         
         
-//        testKeyPath(\.bounds)
-//        testKeyPath(\.bounds.origin)
+        testKeyPath(\.bounds)
+        testKeyPath(\.bounds.origin)
 //        testKeyPath(\.bounds.origin.x)
-        guard let pos = event?.touchPosition else {
-            return
-        }
-        switch pos {
-        case .topLeft:
-            load_weak_table()
-        case .topRight:
-            print(weakTable ?? "nil")
-            weakTable.compact()
-            print(weakTable ?? "nil")
-        case .bottomLeft:
-            load_strong_table()
-        case .bottomRight:
-            print(strongTable ?? "nil")
-        }
+//        guard let pos = event?.touchPosition else {
+//            return
+//        }
+//        switch pos {
+//        case .topLeft:
+//            load_weak_table()
+//        case .topRight:
+//            print(weakTable ?? "nil")
+//            weakTable.compact()
+//            print(weakTable ?? "nil")
+//        case .bottomLeft:
+//            load_strong_table()
+//        case .bottomRight:
+//            print(strongTable ?? "nil")
+//        }
     }
     
     

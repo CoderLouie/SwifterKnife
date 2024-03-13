@@ -202,8 +202,14 @@ fileprivate enum TestCase: String, CaseIterable {
 //            let nextVc = ViewController()
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
 //            testConsole()
-            testJSON()
-            Haptic.vibrate()
+//            testJSON()
+//            Haptic.vibrate()
+            
+            let type1: IssuedDataType = []
+            let type2: IssuedDataType = [.none]
+            let type3: IssuedDataType = .none
+            
+            print(type1 == type2, type1.rawValue, type2.rawValue, type3.rawValue)
             break
         case .permission:
             print("permission")
