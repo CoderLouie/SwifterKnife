@@ -89,7 +89,7 @@ open class LinearFlowView: UIView {
     open override var intrinsicContentSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
     }
-    public var cellSize: ((_ view: UIView, _ index: Int) -> CGSize)?
+    public var cellSize: ((_ view: UIView, _ index: Int) -> CGSize?)?
     
     public var arrangedViews: [UIView] = []
     public private(set) var totalHeight: CGFloat = 0
@@ -212,16 +212,14 @@ private extension LinearFlowView {
             let tagViewSize = tagViewSizes[i]
             let tagH = tagViewSize.height
             let tagW = tagViewSize.width
-            tagView.frame = CGRect(x: rowW, y: 0, width: tagW, height: tagH)
-            rowView.addSubview(tagView)
-            
-            rowH = max(rowH, tagH)
-            rowW += tagW + marginX
             
             let isLast = i == N - 1
-            
-            if (isLast ||
-                rowW > placeWidth) {
+            let nextRowW = rowW + tagW + marginX
+            let noSpace = nextRowW > placeWidth
+            if (noSpace || isLast) {
+                if !noSpace {
+                    rowW = nextRowW
+                }
                 rowW -= marginX
                 
                 let rowViewX: CGFloat
@@ -237,10 +235,19 @@ private extension LinearFlowView {
                 rowView.transform = transform
                 addSubview(rowView)
                 rowY += rowH + marginY
-                rowW = 0
-
-                rowView = UIView()
+                if noSpace {
+                    rowW = 0
+                    rowView = UIView()
+                } else {
+                    rowW -= tagW
+                }
             }
+            
+            tagView.frame = CGRect(x: rowW, y: 0, width: tagW, height: tagH)
+            rowView.addSubview(tagView)
+            
+            rowH = max(rowH, tagH)
+            if !isLast { rowW += tagW + marginX }
         }
         
         totalWidth = frameWidth

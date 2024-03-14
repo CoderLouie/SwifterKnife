@@ -116,22 +116,28 @@ public final class SudokuView: UIView {
         case .autoCellSize(let ratios):
             guard height > 0 else { return }
             let rowHeightRatios: [CGFloat]
+            let rowCount = Int((subviews.count + columnCount - 1) / columnCount)
             if let r = ratios, !r.isEmpty {
-                rowHeightRatios = r
+                if r.count > rowCount {
+                    rowHeightRatios = Array(r.prefix(rowCount))
+                } else if r.count < rowCount {
+                    rowHeightRatios = r + .init(repeating: r.last!, count: rowCount - r.count)
+                } else {
+                    rowHeightRatios = r
+                }
             } else {
-                rowHeightRatios = .init(repeating: 1, count: Int((subviews.count + columnCount - 1) / columnCount))
+                rowHeightRatios = .init(repeating: 1, count: rowCount)
             }
             let sumH = rowHeightRatios.reduce(0, +)
-            let rowCount = rowHeightRatios.count
             let totoalH = (height - inset.top - inset.bottom - CGFloat(rowCount - 1) * marginY)
             let itemHs = rowHeightRatios.map { (totoalH * ($0 / sumH)).pixCeil }
             for (i, subview) in subviews.enumerated() {
-                let left = i % columnCount
-                let w = itemWs[left]
+                let column = i % columnCount
+                let w = itemWs[column]
                 let h = itemHs[Int(i / columnCount)]
                 subview.frame = CGRect(x: x, y: y, width: w, height: h)
                 x += w + marginX
-                if left == columnCount - 1 {
+                if column == columnCount - 1 {
                     x = inset.left; y += h + marginY
                 }
             }
