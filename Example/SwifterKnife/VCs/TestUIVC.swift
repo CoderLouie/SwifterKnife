@@ -296,6 +296,7 @@ extension TestUIVC {
             this.addBorder(color: .red, radius: 0, width: 1)
 //            this.contentInset = .init(inset: 20.fit)
             this.layoutBehavior = .autoSelfWidth(3)
+//            this.numberOfLines = 3
             labels.forEach {
                 this.addSubview($0)
             }

@@ -7,7 +7,6 @@
 
 import UIKit
 
-/*
 open class LinearFlowView: UIView {
     
     public var contentInset: UIEdgeInsets = .zero
@@ -97,7 +96,7 @@ private extension LinearFlowView {
                 size = s
             } else { size = cell.frame.size }
         }
-        return size.adaptive { $0.pixCeil }
+        return size.adaptive { Darwin.ceil($0) }
     }
     /// 重新摆放其管理的子视图
     func replaceArrangedViews() {
@@ -264,10 +263,9 @@ private extension LinearFlowView {
         return (dp[len - 1][m], len)
     }
 }
-*/
 
 
-open class LinearFlowView: UIView {
+open class LinearFlowView1: UIView {
     
     public var contentInset: UIEdgeInsets = .zero
     public var numberOfLines: Int = 0
@@ -310,7 +308,7 @@ open class LinearFlowView: UIView {
     private var hasLayout: Bool = false
 }
 
-public extension LinearFlowView {
+public extension LinearFlowView1 {
     func setNeedsReplace() {
         hasLayout = false
     }
@@ -324,7 +322,7 @@ public extension LinearFlowView {
 /*
  https://leetcode.cn/problems/split-array-largest-sum/solution/er-fen-cha-zhao-by-liweiwei1419-4/
  */
-private extension LinearFlowView {
+private extension LinearFlowView1 {
     func splitArray(_ nums: [CGFloat], _ m: Int) -> (CGFloat, Int) {
         let len = nums.count
         if m == 1 {
@@ -369,7 +367,8 @@ private extension LinearFlowView {
     /// 重新摆放其管理的子视图
     func replaceArrangedViews() {
         guard !hasLayout else { return }
-        guard !arrangedViews.isEmpty else { return }
+        let subviews = self.subviews
+        guard !subviews.isEmpty else { return }
          
         let boundsW = max(bounds.width, minPlaceWidth)
         if numberOfLines < 1, boundsW <= 0 { return }
@@ -379,9 +378,9 @@ private extension LinearFlowView {
         removeSubviews()
         
         let inset = contentInset
-        let N = arrangedViews.count
+        let N = subviews.count
         
-        let tagViewSizes = arrangedViews.enumerated().map {
+        let tagViewSizes = subviews.enumerated().map {
             let size: CGSize
             if let s = cellSize?($0.1, $0.0), !s.isEmpty {
                 size = s
@@ -415,11 +414,12 @@ private extension LinearFlowView {
          
         var rowView = UIView()
         
-        for (i, tagView) in arrangedViews.enumerated() {
+        for (i, tagView) in subviews.enumerated() {
             let tagViewSize = tagViewSizes[i]
             let tagH = tagViewSize.height
             let tagW = tagViewSize.width
             
+            rowH = max(rowH, tagH)
             let isLast = i == N - 1
             let nextRowW = rowW + tagW + marginX
             let noSpace = nextRowW > placeWidth
@@ -443,7 +443,6 @@ private extension LinearFlowView {
             tagView.frame = CGRect(x: rowW, y: 0, width: tagW, height: tagH)
             rowView.addSubview(tagView)
             
-            rowH = max(rowH, tagH)
             if !isLast { rowW += tagW + marginX }
         }
         
