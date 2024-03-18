@@ -89,8 +89,8 @@ class TestUIVC: BaseViewController {
 //        testNormalKeyPath(\.size.width)
         
         
-        testKeyPath(\.bounds)
-        testKeyPath(\.bounds.origin)
+//        testKeyPath(\.bounds)
+//        testKeyPath(\.bounds.origin)
 //        testKeyPath(\.bounds.origin.x)
 //        guard let pos = event?.touchPosition else {
 //            return
@@ -178,21 +178,19 @@ class TestUIVC: BaseViewController {
     }
     override func setupViews() {
         super.setupViews()
+        setupLinearFlowView()
 //        let views: [UIView] = [UILabel(), UIView(), UIImageView(), UIButton()]
 //        views.forEach { testOfView($0) }
 //        setupImageLabel()
 //        setupTextView()
 //        setupButton()
-//        NotificationCenter.default.addObserver(forName: <#T##NSNotification.Name?#>, object: <#T##Any?#>, queue: <#T##OperationQueue?#>, using: <#T##(Notification) -> Void#>)
-//        NotificationCenter.default.removeObserver(<#T##observer: Any##Any#>)
-//        withoutActuallyEscaping(<#T##closure: ClosureType##ClosureType#>, do: <#T##(ClosureType) throws -> ResultType##(ClosureType) throws -> ResultType##(_ escapingClosure: ClosureType) throws -> ResultType#>)
 //
+
+    }
+    
+    private func test_weak_collection() {
 //        var nums: Array<Int> = []
         var weakArr: WeakArray<AirPods> = []
-//        weakArr.append(<#T##newElement: WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element##WrapCollection<ContiguousArray<WeakBox<AirPods>>>.Element#>)
-//        weakArr.append(<#T##newElement: WrapArray<WeakBox<AirPods>>.Element##WrapArray<WeakBox<AirPods>>.Element#>)
-//        weakArr.append(<#T##newElement: AirPods?##AirPods?#>)
-//        weakArr.append(<#T##newElement: AirPods?##AirPods?#>)
         
         var normalDict: [String: Int] = [:]
         for p in normalDict {
@@ -209,7 +207,6 @@ class TestUIVC: BaseViewController {
         
         test_weak_set()
     }
-    
     private var weakArray: WeakArray<AirPods> = .init()
     private func test_weak_array() {
         print("pods", pods)
@@ -250,6 +247,68 @@ class TestUIVC: BaseViewController {
             print(self.weakSet)
         }
     }
+    
+}
+
+
+fileprivate extension UILabel {
+    static func testTag(_ text: String) -> UILabel {
+        UILabel().then {
+            $0.textColor = .black
+            $0.font = .regular(16)
+            $0.text = text
+            $0.addBorder(color: .orange, radius: 3, width: 1)
+        }
+    }
+}
+
+fileprivate let TestTags = [
+    "nightsky",
+    "seashore",
+    "sunset",
+    "sunset clouds",
+    "the most beautiful image ever seen",
+    "technique highly detailed",
+    "dreamatic lighting",
+    "beautiful",
+    "ray tracing",
+    "detailed rendering",
+    "masterpiece",
+    "beautiful eyes",
+    "a very delicate girl",
+    "pink pupils",
+    "Delicate face"
+]
+extension TestUIVC {
+    private func setupLinearFlowView() {
+        let labels = TestTags.map(UILabel.testTag(_:))
+        let scrollView = UIScrollView().then { s in
+            s.showsVerticalScrollIndicator = false
+            s.showsHorizontalScrollIndicator = false
+            s.contentInsetAdjustmentBehavior = .never
+            view.addSubview(s)
+            s.snp.makeConstraints { make in
+                make.horizontalSpace(30.fit)
+                make.centerY.equalToSuperview()
+            }
+        }
+        LinearFlowView().do { this in
+            this.addBorder(color: .red, radius: 0, width: 1)
+//            this.contentInset = .init(inset: 20.fit)
+            this.layoutBehavior = .autoSelfWidth(3)
+            labels.forEach {
+                this.addSubview($0)
+            }
+            scrollView.addSubview(this)
+            this.snp.makeConstraints { make in
+//                make.horizontalSpace(30.fit)
+                make.height.edges.equalTo(scrollView)
+            }
+        }
+    }
+}
+
+extension TestUIVC {
     private func setupButton() {
         NewButton().do { this in
             this.backgroundColor = UIColor(gray: 40)
@@ -281,7 +340,7 @@ class TestUIVC: BaseViewController {
     private func setupTextView() {
         PlaceholderTextView().do {
             $0.maxLength = 3
-            $0.onTextDidChange = { 
+            $0.onTextDidChange = {
                 print($0.text ?? "nil")
             }
             view.addSubview($0)
