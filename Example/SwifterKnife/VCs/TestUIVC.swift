@@ -263,24 +263,28 @@ fileprivate extension UILabel {
 }
 
 fileprivate let TestTags = [
-    "nightsky",
-    "seashore",
-    "sunset",
-    "sunset clouds",
-    "the most beautiful image ever seen",
-    "technique highly detailed",
-    "dreamatic lighting",
-    "beautiful",
-    "ray tracing",
-    "detailed rendering",
-    "masterpiece",
-    "beautiful eyes",
-    "a very delicate girl",
-    "pink pupils",
-    "Delicate face"
+    "nightsky",//0
+    "seashore",//1
+    "sunset",//2
+    "sunset clouds",//3
+    "the most beautiful image ever seen",//4
+    "technique highly detailed",//5
+    "dreamatic lighting",//6
+    "beautiful",//7
+    "ray tracing",//8
+    "detailed rendering",//9
+    "masterpiece",//10
+    "beautiful eyes",//11
+    "a very delicate girl",//12
+    "pink pupils",//13
+    "Delicate face"//14
 ]
 extension TestUIVC {
     private func setupLinearFlowView() {
+        setupFixedWidth()
+//        setupAutoSelfWidth()
+    }
+    private func setupAutoSelfWidth() {
         let labels = TestTags.map(UILabel.testTag(_:))
         let scrollView = UIScrollView().then { s in
             s.showsVerticalScrollIndicator = false
@@ -296,14 +300,39 @@ extension TestUIVC {
             this.addBorder(color: .red, radius: 0, width: 1)
 //            this.contentInset = .init(inset: 20.fit)
             this.layoutBehavior = .autoSelfWidth(3)
-//            this.numberOfLines = 3
             labels.forEach {
                 this.addSubview($0)
             }
             scrollView.addSubview(this)
             this.snp.makeConstraints { make in
-//                make.horizontalSpace(30.fit)
                 make.height.edges.equalTo(scrollView)
+            }
+        }
+    }
+    private func setupFixedWidth() {
+        let labels = TestTags.map(UILabel.testTag(_:))
+        LinearFlowView().do { this in
+            this.addBorder(color: .red, radius: 0, width: 1)
+//            this.contentInset = .init(inset: 20.fit)
+//            this.layoutBehavior = .fixedWidth
+//            labels.forEach {
+//                this.addSubview($0)
+//            }
+            this.layoutBehavior = .fixedWidth1({ pos, times in
+                print("1", pos)
+                if times > 9 { return nil }
+                return UILabel.testTag(TestTags[times])
+            }, { pos, enoughSpace in
+                print("2", pos)
+                if pos.row == 1, !enoughSpace {
+                    return .exit
+                }
+                return .goon
+            })
+            view.addSubview(this)
+            this.snp.makeConstraints { make in
+                make.horizontalSpace(30.fit)
+                make.centerY.equalToSuperview()
             }
         }
     }
