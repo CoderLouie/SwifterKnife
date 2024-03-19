@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class LinearFlowView: UIView {
+public final class LinearFlowView: UIView {
     
     public var contentInset: UIEdgeInsets = .zero
     
@@ -46,27 +46,35 @@ open class LinearFlowView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open func setup() { }
+    private func setup() { }
     
-    open func addArrangedView(_ view: UIView) {
+    public func addArrangedView(_ view: UIView) {
         addSubview(view)
     }
-    open func addArrangedViews(_ views: [UIView]) {
+    public func addArrangedViews(_ views: [UIView]) {
         for view in views {
             addSubview(view)
         }
     }
     
-    open func removeAllArrangedViews() {
+    public func removeAllArrangedViews() {
         removeSubviews()
     }
     
-    open override func layoutSubviews() {
+    public override func setNeedsLayout() {
+        hasLayout = false
+        super.setNeedsLayout()
+    }
+    public override func layoutIfNeeded() {
+        hasLayout = false
+        super.layoutIfNeeded()
+    }
+    public override func layoutSubviews() {
         super.layoutSubviews()
         replaceArrangedViews()
     }
     
-    open override var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
     }
     
@@ -76,22 +84,11 @@ open class LinearFlowView: UIView {
     private var hasLayout: Bool = false
 }
 
-public extension LinearFlowView {
-    func setNeedsReplace() {
-        hasLayout = false
-    }
-    /// 如有必要，重新摆放其管理的子视图
-    func replaceArrangedViewsIfNeeded() {
-        if hasLayout { return }
-        replaceArrangedViews()
-    }
-}
-
 /*
  https://leetcode.cn/problems/split-array-largest-sum/solution/er-fen-cha-zhao-by-liweiwei1419-4/
  */
 private extension LinearFlowView {
-    private func getCellSize(_ cell: UIView, at index: Int) -> CGSize {
+    func getCellSize(_ cell: UIView, at index: Int) -> CGSize {
         let size: CGSize
         if let s = cellSize?(cell, index), !s.isEmpty {
             size = s
