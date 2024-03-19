@@ -267,7 +267,7 @@ fileprivate let TestTags = [
     "seashore",//1
     "sunset",//2
     "sunset clouds",//3
-    "the most beautiful image ever seen",//4
+    "the most beautiful image ever seen, the most beautiful image ever seen",//4
     "technique highly detailed",//5
     "dreamatic lighting",//6
     "beautiful",//7
@@ -299,7 +299,7 @@ extension TestUIVC {
         LinearFlowView().do { this in
             this.addBorder(color: .red, radius: 0, width: 1)
 //            this.contentInset = .init(inset: 20.fit)
-            this.layoutBehavior = .autoSelfWidth(3)
+            this.layoutBehavior = .autoWidth(3)
             labels.forEach {
                 this.addSubview($0)
             }
@@ -318,13 +318,17 @@ extension TestUIVC {
 //            labels.forEach {
 //                this.addSubview($0)
 //            }
-            this.layoutBehavior = .fixedWidth1({ pos, times in
-                print("1", pos)
-                if times > 9 { return nil }
-                return UILabel.testTag(TestTags[times])
-            }, { pos, enoughSpace in
-                print("2", pos)
-                if pos.row == 1, !enoughSpace {
+            this.layoutBehavior = .fixedWidth1({ times in
+                if times > 14 { return nil }
+                let text = TestTags[times]
+//                print("1", text)
+                return UILabel.testTag(text)
+            }, { rows, size, contentWidth, currentWidth, enoughSpace in
+//                print("2", pos)
+                if size.width > contentWidth {
+                    return .ignore
+                }
+                if rows == 2, !enoughSpace {
                     return .exit
                 }
                 return .goon

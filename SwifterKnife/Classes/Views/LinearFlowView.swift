@@ -27,14 +27,14 @@ open class LinearFlowView: UIView {
     public enum LayoutBehavior {
         /// 宽度自动，不会小于minPlaceWidth，
         /// 根据子视图数量布局成numberOfLines行，但需要 > 0
-        case autoSelfWidth(_ numberOfLines: Int)
+        case autoWidth(_ numberOfLines: Int)
         
         /// 固定宽度(max(bounds.width, minPlaceWidth))
         case fixedWidth
         
         /// 固定宽度(max(bounds.width, minPlaceWidth))
         /// 支持动态添加子视图
-        case fixedWidth1(_ createView: (_ pos: SudokuView.Position, _ times: Int) -> UIView?, _ onDidLayout: (_ pos: SudokuView.Position, _ enoughSpace: Bool) -> InlineAction)
+        case fixedWidth1(_ createView: (_ times: Int) -> UIView?, _ onDidLayout: (_ rows: Int, _ size: CGSize, _ contentWidth: CGFloat, _ currentWidth: CGFloat, _ enoughSpace: Bool) -> InlineAction)
     }
     public var layoutBehavior: LayoutBehavior = .fixedWidth
     
@@ -131,7 +131,7 @@ private extension LinearFlowView {
             var columns = 0
             
             var hasIn = false
-        outer: while let view = create(.init(rows, columns), times) {
+        outer: while let view = create(times) {
             hasIn = true
             times += 1
             let tagViewSize = getCellSize(view, at: index)
@@ -141,7 +141,7 @@ private extension LinearFlowView {
             let nextRowW = rowW + marginX
             let enough = nextRowW + tagW <= placeWidth
             
-            switch layout(.init(rows, columns), enough) {
+            switch layout(rows, tagViewSize, contentW, rowW, enough) {
             case .ignore: continue
             case .goon: let _ = times;
             case .exit: break outer
@@ -172,7 +172,7 @@ private extension LinearFlowView {
             return
         case .fixedWidth:
             break
-        case let .autoSelfWidth(linesN):
+        case let .autoWidth(linesN):
             guard linesN > 0, !subviews.isEmpty else { return }
             numberOfLines = linesN
         }
