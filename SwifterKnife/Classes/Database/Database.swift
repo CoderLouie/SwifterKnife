@@ -7,22 +7,7 @@
 
 import Foundation
 import SQLite3
-
-fileprivate extension String {
-    func quote(_ mark: Character = "\"") -> String {
-        var quoted = ""
-        quoted.append(mark)
-        for character in self {
-            quoted.append(character)
-            if character == mark {
-                quoted.append(character)
-            }
-        }
-        quoted.append(mark)
-        return quoted
-    }
-}
-
+ 
 public final class Database {
     public enum Location {
         case inMemory
@@ -135,8 +120,8 @@ extension Database {
         try execute("update sqlite_sequence set seq = \(req) where name = '\(table)';")
     }
     public func tableExis(_ table: String) throws -> Bool {
-        let res = try query("select count(name) as count from sqlite_master where type = 'table' and name = '\(table)';")
-        return res.first?["count"]?.boolValue ?? false
+        let res = try scalar("select count(name) as count from sqlite_master where type = 'table' and name = '\(table)';")
+        return (res?["count"] as? Int) ?? 0 > 0
     }
     
     public func track(_ callback: ((String) -> Void)?) {
@@ -173,52 +158,9 @@ extension String: Binding { }
 extension Bool: Binding { }
 extension Data: Binding { }
 
-public enum Values: Hashable {
-    case blob(Data)
-    case integer(Int)
-    case float(Double)
-    case text(String)
-    
-    var rawValue: Any {
-        switch self {
-        case .blob(let v): return v
-        case .integer(let v): return v
-        case .float(let v): return v
-        case .text(let v): return v
-        }
-    }
-    var boolValue: Bool? {
-        if case let .integer(int) = self { return int != 0 }
-        return nil
-    }
-    var intValue: Int? {
-        if case let .integer(int) = self { return int }
-        return nil
-    }
-    var doubleValue: Double? {
-        if case let .float(double) = self { return double }
-        return nil
-    }
-    var numValue: NSNumber? {
-        switch self {
-        case let .integer(int):
-            return int as NSNumber
-        case let .float(double):
-            return double as NSNumber
-        case let .text(string):
-            let num = NSDecimalNumber(string: string)
-            return num == .notANumber ? nil : num
-        default: return nil
-        }
-    }
-    var stringValue: String? {
-        if case let .text(string) = self { return string }
-        return nil
-    }
-}
 
 public enum Results {
-    case value(Values)
+    case value(Binding)
     case null
     case error(String)
 }
@@ -247,7 +189,6 @@ public extension Database {
         try transaction("BEGIN \(mode.rawValue) TRANSACTION", block, "COMMIT TRANSACTION", or: "ROLLBACK TRANSACTION")
     }
     func savepoint(_ name: String = UUID().uuidString, block: () throws -> Void) throws {
-        let name = name.quote("'")
         let savepoint = "SAVEPOINT \(name)"
 
         try transaction(savepoint, block, "RELEASE \(savepoint)", or: "ROLLBACK TO \(savepoint)")
@@ -265,35 +206,38 @@ public extension Database {
 }
 public extension Database {
     
-    func perform(_ sqlFunc: String) throws -> Values? {
+    func perform(_ sqlFunc: String) throws -> Binding? {
         guard let row = try query("select \(sqlFunc) as result").first else { return nil }
         return row["result"]
     }
-    func query(_ sql: String) throws -> [[String: Values]] {
+    func scalar(_ sql: String) throws -> [String: Binding]? {
+        try query(sql).first
+    }
+    func query(_ sql: String) throws -> [[String: Binding]] {
         guard !sql.isEmpty else { return [] }
         
         var stmt: OpaquePointer?
         let code = sqlite3_prepare_v2(handle, sql.cString(using: .utf8), -1, &stmt, nil)
         try check(code)
-        var res: [[String: Values]] = []
+        var res: [[String: Binding]] = []
         while sqlite3_step(stmt) == SQLITE_ROW {
             let count = sqlite3_column_count(stmt)
-            var row: [String: Values] = [:]
+            var row: [String: Binding] = [:]
             for i in 0..<count {
                 let name = String(cString: sqlite3_column_name(stmt, i))
                 
                 switch sqlite3_column_type(stmt, i) {
                 case SQLITE_INTEGER:
-                    row[name] = .integer(Int(sqlite3_column_int64(stmt, i)))
+                    row[name] = Int(sqlite3_column_int64(stmt, i))
                 case SQLITE_FLOAT:
-                    row[name] = .float(sqlite3_column_double(stmt, i))
+                    row[name] = sqlite3_column_double(stmt, i)
                 case SQLITE_BLOB:
                     if let pointer = sqlite3_column_blob(stmt, i) {
                         let length = sqlite3_column_bytes(stmt, i)
-                        row[name] = .blob(Data(bytes: pointer, count: Int(length)))
+                        row[name] = Data(bytes: pointer, count: Int(length))
                     }
                 case SQLITE_TEXT:
-                    row[name] = .text(String(cString: sqlite3_column_text(stmt, i)))
+                    row[name] = String(cString: sqlite3_column_text(stmt, i))
                 default: break
                 }
             }
@@ -307,19 +251,19 @@ public extension Database {
 fileprivate typealias Context = OpaquePointer?
 fileprivate typealias Argv = UnsafeMutablePointer<OpaquePointer?>?
 fileprivate extension Argv {
-    func getParameter(argc: Int32) -> [Values] {
+    func getParameter(argc: Int32) -> [Binding] {
         (0..<Int(argc)).map { idx in
             let value = self![idx]
             switch sqlite3_value_type(value) {
             case SQLITE_BLOB:
-                return .blob(Data(bytes: sqlite3_value_blob(value), count: Int(sqlite3_value_bytes(value))))
+                return Data(bytes: sqlite3_value_blob(value), count: Int(sqlite3_value_bytes(value)))
             case SQLITE_FLOAT:
-                return .float(sqlite3_value_double(value))
+                return sqlite3_value_double(value)
             case SQLITE_INTEGER:
-                return .integer(Int(sqlite3_value_int64(value)))
+                return Int(sqlite3_value_int64(value))
             
             case SQLITE_TEXT:
-                return .text(String(cString: UnsafePointer(sqlite3_value_text(value))))
+                return String(cString: UnsafePointer(sqlite3_value_text(value)))
             case let type:
                 fatalError("unsupported value type: \(type)")
             }
@@ -332,15 +276,19 @@ fileprivate extension Context {
         switch result {
         case let .value(value):
             switch value {
-            case let .blob(data):
-                let pointer = data.withUnsafeBytes { $0.baseAddress! }
-                sqlite3_result_blob(self, pointer, Int32(data.count), nil)
-            case let .float(double):
+            case let data as Data:
+                let bytes = [UInt8](data)
+                sqlite3_result_blob(self, bytes, Int32(bytes.count), nil)
+            case let double as Double:
                 sqlite3_result_double(self, double)
-            case let .integer(int):
+            case let int as Int:
                 sqlite3_result_int64(self, Int64(int))
-            case let .text(string):
+            case let string as String:
                 sqlite3_result_text(self, string, Int32(string.lengthOfBytes(using: .utf8)), SQLITE_TRANSIENT)
+            case let bool as Bool:
+                sqlite3_result_int64(self, Int64(bool ? 1 : 0))
+            default:
+                fatalError("unsupported result type: \(String(describing: result))")
             }
         case .null:
             sqlite3_result_null(self)
@@ -355,7 +303,7 @@ extension Database {
     public func addFunction(_ name: String,
                             argumentCount: UInt? = nil,
                             deterministic: Bool = false,
-                            _ block: @escaping (_ db: Database, _ args: [Values]) -> Results) throws {
+                            _ block: @escaping (_ db: Database, _ args: [Binding]) -> Results) throws {
         let argc = argumentCount.map { Int($0) } ?? -1
         let box: Function = { (context: Context, argc, argv: Argv) in
             context.set(result: block(self, argv.getParameter(argc: argc)))
@@ -385,14 +333,14 @@ extension Database {
 extension Database {
     
     private func addUnixepoch() throws {
-        try addFunction("unixepoch") { db, param in
+        try addFunction("unixepoch") { (_ db: Database, _ param: [Binding]) -> Results in
             let n = param.count
             guard n > 1 else { return .error("need at least two arguments") }
             
-            guard let ts = param[0].numValue else {
+            guard let ts = param[0] as? NSNumber else {
                 return .error("first argument must be integer or float")
             }
-            guard let modifier = param[1].stringValue?.lowercased() else {
+            guard let modifier = (param[1] as? String)?.lowercased() else {
                 return .error("second argument must be text")
             }
             let unsupportError: Results = .error("unsupport '\(modifier)' modifier")
@@ -412,7 +360,7 @@ extension Database {
             } else if modifier.contains("week") {
                 var delta = ""
                 if n > 2 {
-                    if let val2 = param[2].intValue {
+                    if let val2 = param[2] as? Int {
                         let temp = abs(val2)
                         delta = val2 > 0 ? " '+\(temp) day'," : " '-\(temp) day',"
                     } else {
@@ -427,13 +375,13 @@ extension Database {
                     return unsupportError
                 }
             } else if modifier.contains("hour") {
-                guard let rows = try? db.query("select strftime('%H', \(ts), 'unixepoch', 'localtime') as result") else {
+                guard let row = try? db.scalar("select strftime('%H', \(ts), 'unixepoch', 'localtime') as result") else {
                     return .null
                 }
-                guard var hour = rows.first?["result"]?.numValue?.intValue else { return .null }
+                guard var hour = row["result"] as? Int else { return .null }
                 var step = 1
                 if n > 2 {
-                    if let val2 = param[2].intValue {
+                    if let val2 = param[2] as? Int {
                         guard (0..<24).contains(val2) else {
                             return .error("thrid argument out of bounds")
                         }
@@ -460,16 +408,16 @@ extension Database {
                 guard n > 2 else {
                     return .error("need at least three arguments")
                 }
-                guard let step = param[2].intValue else {
+                guard let step = param[2] as? Int else {
                     return .error("thrid argument must be integer")
                 }
                 if step <= 0 {
                     return .error("thrid argument should be > 0")
                 }
-                guard let rows = try? db.query("select strftime('%H:%M', \(ts), 'unixepoch', 'localtime') as result") else {
+                guard let row = try? db.scalar("select strftime('%H:%M', \(ts), 'unixepoch', 'localtime') as result") else {
                     return .null
                 }
-                guard let cmps = rows.first?["result"]?.stringValue?.components(separatedBy: ":").compactMap(Int.init),
+                guard let cmps = (row["result"] as? String)?.components(separatedBy: ":").compactMap(Int.init),
                       cmps.count > 1 else { return .null }
                 var min = cmps[0] * 60 + cmps[1]
                 var delta = ""
@@ -486,7 +434,7 @@ extension Database {
             } else {
                 return unsupportError
             }
-            guard let v = try? db.query(sql).first?["result"] else {
+            guard let v = try? db.scalar(sql)?["result"] else {
                 return .null
             }
             return .value(v)
