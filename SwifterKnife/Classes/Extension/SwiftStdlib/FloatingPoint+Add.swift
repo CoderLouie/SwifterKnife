@@ -42,6 +42,16 @@ public extension FloatingPoint {
     static func !~=(lhs: Self, rhs: Self) -> Bool {
         return !(lhs ~= rhs)
     }
+    
+    static func * <I: BinaryInteger>(lhs: I, rhs: Self) -> Self {
+        return Self(lhs) * rhs
+    }
+    static func * <I: BinaryInteger>(lhs: Self, rhs: I) -> Self {
+        return lhs * Self(rhs)
+    }
+    static func / <I: BinaryInteger>(lhs: Self, rhs: I) -> Self {
+        return lhs / Self(rhs)
+    }
 }
 
 infix operator ~= : ComparisonPrecedence

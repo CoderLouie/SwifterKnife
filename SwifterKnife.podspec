@@ -49,7 +49,7 @@ Pod::Spec.new do |s|
     sp.source_files = 'SwifterKnife/Classes/Utility/**/*'
   end
   
-  # Layout Extensions
+  # Views Extensions
   s.subspec 'Views' do |sp|
     
     sp.dependency 'SwifterKnife/Extension'
@@ -58,5 +58,9 @@ Pod::Spec.new do |s|
     sp.source_files =
     'SwifterKnife/Classes/Views/**/*.swift'
     
+  end
+  
+  s.subspec 'Database' do |sp|
+    sp.source_files = 'SwifterKnife/Classes/Database/**/*'
   end
 end

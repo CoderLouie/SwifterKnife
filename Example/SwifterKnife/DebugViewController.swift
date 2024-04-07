@@ -70,8 +70,13 @@ fileprivate enum TestCase: String, CaseIterable {
     }
     
     func perform(from vc: DebugViewController) {
+        "".filePath(under: .document)
         switch self {
         case .shuffled:
+            let v: Double = 3.0
+            let int = 5
+            let num = v * int
+            let num1 = int * v
 //            let nums = [0, 2, 4, 7, 6]
 //            nums.forEach(slice: 2) { print($0) }
             print(AssociationKey.current())

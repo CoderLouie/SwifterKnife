@@ -52,6 +52,10 @@
         ]
       },
       "source_files": "SwifterKnife/Classes/Views/**/*.swift"
+    },
+    {
+      "name": "Database",
+      "source_files": "SwifterKnife/Classes/Database/**/*"
     }
   ],
   "swift_version": "5.3"
