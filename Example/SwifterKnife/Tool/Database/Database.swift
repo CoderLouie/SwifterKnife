@@ -119,8 +119,8 @@ extension Database {
     public func resetReq(to req: Int = 0, on table: String) throws {
         try execute("update sqlite_sequence set seq = \(req) where name = '\(table)';")
     }
-    public func tableExis(_ table: String) throws -> Bool {
-        let res = try scalar("select count(name) as count from sqlite_master where type = 'table' and name = '\(table)';")
+    public func tableExist(_ table: String) throws -> Bool {
+        let res = try run("select count(name) as count from sqlite_master where type = 'table' and name = '\(table)';")
         return (res?["count"] as? Int) ?? 0 > 0
     }
     
@@ -210,15 +210,50 @@ public extension Database {
         guard let row = try query("select \(sqlFunc) as result").first else { return nil }
         return row["result"]
     }
-    func scalar(_ sql: String) throws -> [String: Binding]? {
-        try query(sql).first
+    func run(_ sql: String, _ bindings: Binding?...) throws -> [String: Binding]? {
+        try queue.sync { try _query(sql, once: true, bindings).first }
     }
-    func query(_ sql: String) throws -> [[String: Binding]] {
+    
+    func query(_ sql: String, once: Bool = false, _ bindings: Binding?...) throws -> [[String: Binding]] {
+        try queue.sync { try _query(sql, once: once, bindings) }
+    }
+    private func _query(_ sql: String, once: Bool = false, _ bindings: [Binding?]) throws -> [[String: Binding]] {
         guard !sql.isEmpty else { return [] }
         
         var stmt: OpaquePointer?
         let code = sqlite3_prepare_v2(handle, sql.cString(using: .utf8), -1, &stmt, nil)
         try check(code)
+        if !bindings.isEmpty {
+            let paramsN = sqlite3_bind_parameter_count(stmt)
+            guard bindings.count == Int(paramsN) else {
+                fatalError("\(paramsN) values expected, \(bindings.count) passed")
+            }
+            for idx in 1...bindings.count {
+                let value = bindings[idx - 1]
+                let i = Int32(idx)
+                switch value {
+                case .none:
+                    sqlite3_bind_null(stmt, i)
+                case let data as Data:
+                    if data.isEmpty {
+                        sqlite3_bind_zeroblob(stmt, i, 0)
+                    } else {
+                        let bytes = [UInt8](data)
+                        sqlite3_bind_blob(stmt, i, bytes, Int32(bytes.count), SQLITE_TRANSIENT)
+                    }
+                case let double as Double:
+                    sqlite3_bind_double(stmt, i, double)
+                case let int as Int:
+                    sqlite3_bind_int64(stmt, i, Int64(int))
+                case let bool as Bool:
+                    sqlite3_bind_int64(stmt, i, bool ? 1 : 0)
+                case let string as String:
+                    sqlite3_bind_text(stmt, i, string, -1, SQLITE_TRANSIENT)
+                case .some(let val):
+                    fatalError("tried to bind unexpected value \(val)")
+                }
+            }
+        }
         var res: [[String: Binding]] = []
         while sqlite3_step(stmt) == SQLITE_ROW {
             let count = sqlite3_column_count(stmt)
@@ -241,6 +276,7 @@ public extension Database {
                 default: break
                 }
             }
+            if once { return [row] }
             if !row.isEmpty { res.append(row) }
         }
         sqlite3_finalize(stmt)
@@ -375,7 +411,7 @@ extension Database {
                     return unsupportError
                 }
             } else if modifier.contains("hour") {
-                guard let row = try? db.scalar("select strftime('%H', \(ts), 'unixepoch', 'localtime') as result") else {
+                guard let row = try? db.run("select strftime('%H', \(ts), 'unixepoch', 'localtime') as result") else {
                     return .null
                 }
                 guard var hour = row["result"] as? Int else { return .null }
@@ -414,7 +450,7 @@ extension Database {
                 if step <= 0 {
                     return .error("thrid argument should be > 0")
                 }
-                guard let row = try? db.scalar("select strftime('%H:%M', \(ts), 'unixepoch', 'localtime') as result") else {
+                guard let row = try? db.run("select strftime('%H:%M', \(ts), 'unixepoch', 'localtime') as result") else {
                     return .null
                 }
                 guard let cmps = (row["result"] as? String)?.components(separatedBy: ":").compactMap(Int.init),
@@ -434,7 +470,7 @@ extension Database {
             } else {
                 return unsupportError
             }
-            guard let v = try? db.scalar(sql)?["result"] else {
+            guard let v = try? db.run(sql)?["result"] else {
                 return .null
             }
             return .value(v)

@@ -159,6 +159,8 @@
 		B6B5FAFF272BF4AE001BBBE1 /* RestoreControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */; };
 		B6BA9E0B2B18AC240001C4DE /* WaterflowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA9E0A2B18AC240001C4DE /* WaterflowLayout.swift */; };
 		B6BA9E0D2B18AC330001C4DE /* WaterflowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA9E0C2B18AC330001C4DE /* WaterflowVC.swift */; };
+		B6D1EF642BC389CC00FB5D30 /* DBStorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1EF622BC389CC00FB5D30 /* DBStorable.swift */; };
+		B6D1EF652BC389CC00FB5D30 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1EF632BC389CC00FB5D30 /* Database.swift */; };
 		B6D507A2272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */; };
 		B6D834B929B0C89B004C2BC3 /* XcodeKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */; };
 		B6D834BC29B190C5004C2BC3 /* CallbackHell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D834BB29B190C5004C2BC3 /* CallbackHell.swift */; };
@@ -365,6 +367,8 @@
 		B6B5FAFE272BF4AE001BBBE1 /* RestoreControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreControl.swift; sourceTree = "<group>"; };
 		B6BA9E0A2B18AC240001C4DE /* WaterflowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterflowLayout.swift; sourceTree = "<group>"; };
 		B6BA9E0C2B18AC330001C4DE /* WaterflowVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterflowVC.swift; sourceTree = "<group>"; };
+		B6D1EF622BC389CC00FB5D30 /* DBStorable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBStorable.swift; sourceTree = "<group>"; };
+		B6D1EF632BC389CC00FB5D30 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		B6D507A1272AE48500DE90BE /* ConstraintMakerRelatable+Add.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ConstraintMakerRelatable+Add.swift"; sourceTree = "<group>"; };
 		B6D834B429B0B4FB004C2BC3 /* Empty.txt */ = {isa = PBXFileReference; explicitFileType = text; path = Empty.txt; sourceTree = "<group>"; };
 		B6D834B829B0C89B004C2BC3 /* XcodeKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeKeys.swift; sourceTree = "<group>"; };
@@ -642,6 +646,7 @@
 		B63EDC4E2A85DC73008B251C /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				B6D1EF612BC389CC00FB5D30 /* Database */,
 				B63EDC582A860F36008B251C /* YiVideoEditor */,
 				B63EDC542A85DD4A008B251C /* VideoEditor.swift */,
 				B63EDC2A2A84E13D008B251C /* PhotoManager.swift */,
@@ -743,6 +748,15 @@
 				B6B2FF3D2ADCEACA00270DBE /* ExCodingKey.swift */,
 			);
 			path = ExCodable;
+			sourceTree = "<group>";
+		};
+		B6D1EF612BC389CC00FB5D30 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				B6D1EF622BC389CC00FB5D30 /* DBStorable.swift */,
+				B6D1EF632BC389CC00FB5D30 /* Database.swift */,
+			);
+			path = Database;
 			sourceTree = "<group>";
 		};
 		B6D834BD29B19111004C2BC3 /* IAP */ = {
@@ -1142,6 +1156,7 @@
 				B6DC13472AA03A0300D50A1C /* OCUtils.m in Sources */,
 				B6E0907C2B392306008DC40D /* RefArray.swift in Sources */,
 				B620B09B2A8F86A7007243DC /* StateMachine.swift in Sources */,
+				B6D1EF642BC389CC00FB5D30 /* DBStorable.swift in Sources */,
 				B6B2FF3C2ADCE4E900270DBE /* BuiltInBridgeType.swift in Sources */,
 				B6D834CE29B1E09C004C2BC3 /* Validator.swift in Sources */,
 				B6D834E129B9F2D0004C2BC3 /* SKStackCellType.swift in Sources */,
@@ -1180,6 +1195,7 @@
 				B63EDC602A860F36008B251C /* YiVideoEditor.swift in Sources */,
 				B6A4F6792B2955EA00D1EB03 /* KeyChain.swift in Sources */,
 				B63EDC642A860F36008B251C /* YiAddLayerCommand.swift in Sources */,
+				B6D1EF652BC389CC00FB5D30 /* Database.swift in Sources */,
 				B65E581229C8478600C48C3A /* TypedNotification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

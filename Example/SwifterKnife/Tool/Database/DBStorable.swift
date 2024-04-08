@@ -8,14 +8,14 @@
 import Foundation
 
 
-public protocol DBStorable {
+public protocol SimpleDB {
     func encodeToDBData() throws -> Data
     init(fromDBData data: Data)
     
     static var dbFilePath: String { get }
     static var dbTableName: String { get }
 }
-extension DBStorable {
+extension SimpleDB {
     static var dbFilePath: String {
         "SwifterKnifeDB/common.sqlite".fullFilePath(under: .document)
     }

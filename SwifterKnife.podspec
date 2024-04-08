@@ -59,8 +59,5 @@ Pod::Spec.new do |s|
     'SwifterKnife/Classes/Views/**/*.swift'
     
   end
-  
-  s.subspec 'Database' do |sp|
-    sp.source_files = 'SwifterKnife/Classes/Database/**/*'
-  end
+   
 end
