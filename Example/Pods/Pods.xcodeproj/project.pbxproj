@@ -10,7 +10,6 @@
 		000FA291D66300ECD8C818A8E022700B /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF359478A0765FEE57A074F85DCF749F /* ConstraintMakerPrioritizable.swift */; };
 		0158C295477EB1FD0845CE16456CCF2C /* PreCompositionLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5968066A24432F27ABC27B7CC2E1737C /* PreCompositionLayer.swift */; };
 		025C9E62CC02EF0A9C88DDC229C03A6F /* Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB085548E072D3A2C65CDCF9B846A5 /* Fill.swift */; };
-		0489DA1ED312B02A5CD2B52989B3BDD0 /* PropertyValuesConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10433AA67F3FE6E9DF9D72B6C224F493 /* PropertyValuesConvertible.swift */; };
 		04A8430BFC619C34E5F4D3878D094380 /* CachedResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1314F3F36A702B2E186CD1A3D1547C /* CachedResponseHandler.swift */; };
 		04CCAF0908BF277DC30626FB6CDEF82B /* Pods-SwifterKnife_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B78991071814C617E81558E2B8638C1 /* Pods-SwifterKnife_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		074792654A1C0BB30DCBC26839E73808 /* DataCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E223C14DF98230BB0C7B87BA8884D4 /* DataCodable.swift */; };
@@ -481,7 +480,6 @@
 		0CC92590C528139E35E669E2A67F5EB2 /* DefaultsKeys.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DefaultsKeys.swift; sourceTree = "<group>"; };
 		0CD52CE24FE6F17EDDCB27BFE56C8F53 /* GroupOutputNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupOutputNode.swift; path = Sources/Private/MainThread/NodeRenderSystem/Nodes/OutputNodes/GroupOutputNode.swift; sourceTree = "<group>"; };
 		0F3D4467909850C9377BCB85A6A3B74E /* KeyframeInterpolator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeyframeInterpolator.swift; path = Sources/Private/Utility/Interpolatable/KeyframeInterpolator.swift; sourceTree = "<group>"; };
-		10433AA67F3FE6E9DF9D72B6C224F493 /* PropertyValuesConvertible.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PropertyValuesConvertible.swift; sourceTree = "<group>"; };
 		10D74C927504928B75D1CC0BD65231DD /* ShapeLayerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShapeLayerModel.swift; path = Sources/Private/Model/Layers/ShapeLayerModel.swift; sourceTree = "<group>"; };
 		11262F3D98FEEF56FB5A9516C492904F /* RootAnimationLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootAnimationLayer.swift; path = Sources/Private/RootAnimationLayer.swift; sourceTree = "<group>"; };
 		116619A22EE251B4956486A8B6CD8724 /* NSObject+Add.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSObject+Add.swift"; sourceTree = "<group>"; };
@@ -1329,7 +1327,6 @@
 			children = (
 				3CBDE0F1DD4948B27F9A6BD3C5639217 /* Copyable.swift */,
 				79E223C14DF98230BB0C7B87BA8884D4 /* DataCodable.swift */,
-				10433AA67F3FE6E9DF9D72B6C224F493 /* PropertyValuesConvertible.swift */,
 			);
 			name = Protocol;
 			path = SwifterKnife/Classes/Utility/Protocol;
@@ -2002,7 +1999,6 @@
 				FB0819AF35E43A5EAA62CAC2E33D7A4B /* Position.swift in Sources */,
 				32B33BD08956DF3DB53AFF7479749F0A /* Promise.swift in Sources */,
 				55CC4BF4AE3658C8A7A01B8BAC80971B /* Promise+Extras.swift in Sources */,
-				0489DA1ED312B02A5CD2B52989B3BDD0 /* PropertyValuesConvertible.swift in Sources */,
 				31C443AB0D2A06087A00AD191840AD23 /* PropertyWrapper.swift in Sources */,
 				667A06FCEF925EACDDDCCA8C411942F6 /* PropertyWrappers.swift in Sources */,
 				754C5A57BA4FAB5F6D49F9D1E0C2CD11 /* Queue.swift in Sources */,

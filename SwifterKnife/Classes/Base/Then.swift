@@ -125,7 +125,7 @@ extension UIRectEdge: Then {}
 #endif
 
 
-
+/*
 @dynamicMemberLookup
 /// 用于实现链式调用
 public struct Chain<Object: AnyObject> {
@@ -166,3 +166,4 @@ extension Then where Self: AnyObject {
         .init(self)
     }
 }
+*/

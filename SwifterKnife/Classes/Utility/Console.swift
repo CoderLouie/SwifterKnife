@@ -204,7 +204,8 @@ public extension Console {
         guard nslogEnable else { return }
         let caller = whose.map { "\(type(of: $0))" } ?? ""
         let content = buildLog(items, blendTime: false, whose: caller, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%{public}s", content)
+//        os_log("%{public}s", content)
+        NSLog("\n\(content)")
     }
     
     /*
@@ -226,6 +227,7 @@ public extension Console {
         );
      } 00010, 3.142, 10 3.1415926
      */
+    
     static func trace(
         _ items: Any...,
         tag: Tag = .empty,
@@ -236,7 +238,8 @@ public extension Console {
         
         guard nslogEnable else { return }
         let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-        os_log("%{public}s", content)
+//        os_log("%{public}s", content)
+        NSLog("\n\(content)")
     }
 }
 

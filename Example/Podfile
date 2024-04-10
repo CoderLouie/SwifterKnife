@@ -2,6 +2,11 @@ use_frameworks!
 
 platform :ios, '13.0'
 
+inhibit_all_warnings!
+
+use_frameworks!
+install! 'cocoapods', :preserve_pod_file_structure => true
+
 target 'SwifterKnife_Example' do
   pod 'SwifterKnife', :path => '../'
   pod 'SnapKit', :git => 'https://github.com/CoderLouie/SnapKit.git', :branch => 'my_source'

@@ -1398,3 +1398,39 @@ public extension JSON {
         string(of: object, prettify: prettify) ?? replace()
     }
 }
+
+extension JSON {
+    private static func rawValue(of val: Any) -> Any {
+        if let raw = val as? (any RawRepresentable) {
+            return raw.rawValue
+        }
+        if let dict = val as? [AnyHashable: Any] {
+            return dict.reduce(into: [String: Any]()) {
+                $0[$1.key.description] = rawValue(of: $1.value)
+            }
+        }
+        let mirror = Mirror(reflecting: val)
+        if mirror.displayStyle == .enum {
+            return String(describing: val)
+        }
+        let childs = sequence(first: mirror, next: \.superclassMirror).flatMap(\.children)
+        if childs.isEmpty { return val }
+        var res: [String: Any] = [:]
+        for child in childs {
+            guard case let (label?, value) = child else { continue }
+            let lbl = label.hasPrefix("_") ? String(label.dropFirst()) : label
+            if let v = value as? Any? {
+                if case let .some(raw) = v {
+                    res[lbl] = rawValue(of: raw)
+                }
+            } else {
+                res[lbl] = rawValue(of: value)
+            }
+        }
+        return res
+    }
+    public static func keyValues(of val: Any) -> [String: Any] {
+        let map = (rawValue(of: val) as? [String: Any]) ?? [:]
+        return map
+    }
+}
