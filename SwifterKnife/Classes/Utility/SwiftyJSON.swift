@@ -1418,14 +1418,9 @@ extension JSON {
         var res: [String: Any] = [:]
         for child in childs {
             guard case let (label?, value) = child else { continue }
+            guard case Optional<Any>.some(let x) = value else { continue }
             let lbl = label.hasPrefix("_") ? String(label.dropFirst()) : label
-            if let v = value as? Any? {
-                if case let .some(raw) = v {
-                    res[lbl] = rawValue(of: raw)
-                }
-            } else {
-                res[lbl] = rawValue(of: value)
-            }
+            res[lbl] = rawValue(of: x)
         }
         return res
     }

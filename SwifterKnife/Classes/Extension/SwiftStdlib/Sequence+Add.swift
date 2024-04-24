@@ -12,9 +12,12 @@ public extension Sequence {
     } 
     
     func firstMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
-        try first {
-            try predicate($0) != nil
-        } as? T
+        var result: T? = nil
+        let _ = try first {
+            if let tmp = try predicate($0) { result = tmp; return true }
+            return false
+        }
+        return result
     }
     
     /// Get element count based on condition.

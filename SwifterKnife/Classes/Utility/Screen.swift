@@ -136,6 +136,13 @@ import UIKit
         }
         return rootVC.front()
     }
+    
+    @objc public static var isRTL: Bool {
+        guard let window = currentWindow else {
+            return false
+        }
+        return UIView.userInterfaceLayoutDirection(for: window.semanticContentAttribute) == .rightToLeft
+    }
 }
 
 

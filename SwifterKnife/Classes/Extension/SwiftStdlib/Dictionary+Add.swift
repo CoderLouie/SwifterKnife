@@ -97,6 +97,11 @@ public extension Dictionary where Value: Equatable {
 // MARK: - Methods (ExpressibleByStringLiteral)
 
 public extension Dictionary where Key: StringProtocol {
+    var lowercasedKeys: Self {
+        var copy = self
+        copy.lowercaseAllKeys()
+        return copy
+    }
     /// Lowercase all keys in dictionary.
     ///
     ///        var dict = ["tEstKeY": "value"]
@@ -214,9 +219,7 @@ public extension Dictionary {
 
 
 public extension Dictionary {
-    func omit(keys: Key...) -> [Key: Value] {
-        filter { !keys.contains($0.key) }
-    }
+
     func pick(keys: Key...) -> [Key: Value] {
         pick(keys: keys)
     }

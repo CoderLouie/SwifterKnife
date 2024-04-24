@@ -43,7 +43,7 @@ public struct Language: RawRepresentable, Equatable, Hashable {
             }
             return Language(rawValue: code)
         }
-        guard let code = Locale.preferredLanguages.first else {
+        guard let code = Locale.current.languageCode else {
                   return nil
               }
         if let closure = customized {

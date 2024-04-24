@@ -24,9 +24,12 @@ public extension BidirectionalCollection {
     }
     
     func lastMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
-        try last {
-            try predicate($0) != nil
-        } as? T
+        var result: T? = nil
+        let _ = try last {
+            if let tmp = try predicate($0) { result = tmp; return true }
+            return false
+        }
+        return result
     }
     
     @inlinable
