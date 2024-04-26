@@ -1400,6 +1400,32 @@ public extension JSON {
 }
 
 extension JSON {
+    
+    public static func filterNullValue(_ value: Any, _ nullableString: [String] = []) -> Any? {
+        switch value {
+        case let str as String:
+            let lowstr = str.lowercased()
+            if lowstr == "nil" || lowstr == "null" ||
+                nullableString.contains(lowstr) { return nil }
+            return str
+        case _ as NSNull: return nil
+        case Optional<Any>.none: return nil
+        default: return value
+        }
+    }
+    public static func deepFilterNullValue(_ value: Any, _ nullableString: [String] = []) -> Any? {
+        guard let json = filterNullValue(value, nullableString) else {
+            return nil
+        }
+        switch json {
+        case let array as [Any]:
+            return array.compactMap { deepFilterNullValue($0, nullableString) }
+        case let dictionary as [AnyHashable: Any]:
+            return dictionary.compactMapValues{ deepFilterNullValue($0, nullableString) }
+        default: return value
+        }
+    }
+    
     private static func rawValue(of val: Any) -> Any {
         if let raw = val as? (any RawRepresentable) {
             return raw.rawValue
@@ -1418,7 +1444,7 @@ extension JSON {
         var res: [String: Any] = [:]
         for child in childs {
             guard case let (label?, value) = child else { continue }
-            guard case Optional<Any>.some(let x) = value else { continue }
+            guard let x = filterNullValue(value) else { continue }
             let lbl = label.hasPrefix("_") ? String(label.dropFirst()) : label
             res[lbl] = rawValue(of: x)
         }
