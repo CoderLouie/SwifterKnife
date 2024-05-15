@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwifterKnife
 
 enum Gender: String, DefaultsSerializable {
     case man, woman

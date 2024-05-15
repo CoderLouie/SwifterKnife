@@ -31,7 +31,6 @@ public protocol OptionalType: ExpressibleByNilLiteral {
 
 extension Optional: OptionalType {
     public var value: Optional<Wrapped> { self }
-    
 }
 
 extension OptionalType {

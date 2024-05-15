@@ -74,7 +74,7 @@ public final class DefaultsAdapter {
     ///
     /// - Parameter key: The key.
     public func clear<ValueType>(_ key: DefaultsKey<ValueType>) {
-        userDefaults.removeObject(forKey: key._key)
+        clear(key._key)
     }
     public func clear(_ key: String) {
         userDefaults.removeObject(forKey: key)
@@ -85,7 +85,7 @@ public final class DefaultsAdapter {
     /// - Parameter key: The key to look for.
     /// - Returns: A boolean value indicating if a value exists for the specified key.
     public func has<ValueType>(_ key: DefaultsKey<ValueType>) -> Bool {
-        return userDefaults.value(forKey: key._key) != nil
+        return has(key._key)
     }
     public func has(_ key: String) -> Bool {
         return userDefaults.value(forKey: key) != nil

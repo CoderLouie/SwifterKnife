@@ -145,7 +145,20 @@ public extension Sequence {
         for keyPath: KeyPath<Element, T>) -> T {
         // Inspired by: https://swiftbysundell.com/articles/reducers-in-swift/
         return reduce(.zero) { $0 + $1[keyPath: keyPath] }
-    } 
+    }
+    
+    func mapToKeyValues<K: Hashable, V>(by keyMap: (Element) -> K, _ valueMap: (Element) -> V) -> [K: V] {
+        .init(map { (keyMap($0), valueMap($0)) }) { $1 }
+    }
+    func compactMapToKeyValues<K: Hashable, V>(by keyMap: (Element) -> K?, _ valueMap: (Element) -> V?) -> [K: V] {
+        let pairs = compactMap { (element) -> (K, V)? in
+            guard let key = keyMap(element),
+                  let value = valueMap(element) else { return nil }
+            return (key, value)
+        }
+        return .init(pairs) { $1 }
+    }
+    
 }
 
 public extension Sequence where Element: Equatable {

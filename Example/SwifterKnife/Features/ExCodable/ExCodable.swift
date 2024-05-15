@@ -25,9 +25,9 @@ public final class ExCodableMap<Value> {
         self.wrappedValue = wrappedValue
     }
 }
-extension ExCodableMap: PropertyValuesConvertible {
-    public var propertyValues: Any { wrappedValue }
-}
+//extension ExCodableMap: PropertyValuesConvertible {
+//    public var propertyValues: Any { wrappedValue }
+//}
 @propertyWrapper
 public final class ExCodableKeyMap<Value> {
     fileprivate let keys: [String]
@@ -37,9 +37,9 @@ public final class ExCodableKeyMap<Value> {
         self.keys = keys
     }
 }
-extension ExCodableKeyMap: PropertyValuesConvertible {
-    public var propertyValues: Any { wrappedValue }
-}
+//extension ExCodableKeyMap: PropertyValuesConvertible {
+//    public var propertyValues: Any { wrappedValue }
+//}
 fileprivate protocol EncodablePropertyWrapper {
     func encode(to encoder: Encoder, label: String) throws
 }

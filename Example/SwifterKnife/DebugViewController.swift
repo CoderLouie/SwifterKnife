@@ -70,7 +70,7 @@ fileprivate enum TestCase: String, CaseIterable {
     }
     
     func perform(from vc: DebugViewController) {
-        "".filePath(under: .document)
+//        "".filePath(under: .document)
         switch self {
         case .shuffled:
             let v: Double = 3.0

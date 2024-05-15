@@ -1409,7 +1409,12 @@ extension JSON {
                 nullableString.contains(lowstr) { return nil }
             return str
         case _ as NSNull: return nil
-        case Optional<Any>.none: return nil
+        case let opVal as (any OptionalType):
+            if let v = opVal.value {
+                return filterNullValue(v, nullableString)
+            } else {
+                return nil
+            }
         default: return value
         }
     }
@@ -1434,6 +1439,9 @@ extension JSON {
             return dict.reduce(into: [String: Any]()) {
                 $0[$1.key.description] = rawValue(of: $1.value)
             }
+        }
+        if let array = val as? [Any] {
+            return array.map(rawValue)
         }
         let mirror = Mirror(reflecting: val)
         if mirror.displayStyle == .enum {

@@ -67,12 +67,12 @@ class ExCodableVC: BaseViewController {
         final class LYClass {
             var name = "三年级(5)班"
         }
-        final class LYStudent: LYPerson, PropertyValuesConvertible {
+        final class LYStudent: LYPerson {
             var theClass = LYClass()
             var score = 90
         }
         let stu = LYStudent()
-        let map = stu.propertyMap
+        let map = JSON.keyValues(of: stu)
         print(JSON.sureString(of: map))
         let dict = map as NSDictionary
         NSLog("%@", dict)
@@ -91,7 +91,7 @@ class ExCodableVC: BaseViewController {
             required init() {}
         }
         
-        class Player: ExAutoCodable, DataCodable, PropertyValuesConvertible, CustomDebugStringConvertible {
+        class Player: ExAutoCodable, DataCodable, CustomDebugStringConvertible {
             @ExCodableKeyMap("player_name")
             var name: String = ""
             @ExCodableMap
@@ -224,7 +224,7 @@ class ExCodableVC: BaseViewController {
 //            }
         }
         
-        final class Player: ExCodable, ExCodingKeyMap, DataCodable, CustomDebugStringConvertible, PropertyValuesConvertible {
+        final class Player: ExCodable, ExCodingKeyMap, DataCodable, CustomDebugStringConvertible {
             static var keyMapping: [KeyMap<Player>] {
                 [KeyMap(\.name, to: "player_name"),
                  KeyMap(\.age, to: "age"),
@@ -282,7 +282,7 @@ class ExCodableVC: BaseViewController {
     }
     
     private func test_codable6() {
-        class Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible, PropertyValuesConvertible {
+        class Remark: Codable, ExCodingKeyMap, CustomDebugStringConvertible {
             static var keyMapping: [KeyMap<Remark>] {
                 [KeyMap(\.judge, to: "r_judge"),
                  KeyMap(\.content, to: "r_content")]
@@ -298,7 +298,7 @@ class ExCodableVC: BaseViewController {
             }
         }
         
-        class Player: Codable, ExCodingKeyMap, DataCodable, CustomDebugStringConvertible, PropertyValuesConvertible {
+        class Player: Codable, ExCodingKeyMap, DataCodable, CustomDebugStringConvertible {
             static var keyMapping: [KeyMap<Player>] {
                 [KeyMap(\.name, to: "player_name"),
                  KeyMap(\.age, to: "age"),

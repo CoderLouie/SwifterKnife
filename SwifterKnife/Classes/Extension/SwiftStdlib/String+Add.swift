@@ -103,6 +103,10 @@ public extension String {
         let hasNumbers = rangeOfCharacter(from: .decimalDigits, options: .literal, range: nil) != nil
         return hasLetters && !hasNumbers
     }
+    /// Check if string contains only numbers.
+    var isNumbers: Bool {
+        return rangeOfCharacter(from: .decimalDigits.inverted, options: .literal, range: nil) == nil
+    }
 
     /// Check if string contains at least one letter and one number.
     ///

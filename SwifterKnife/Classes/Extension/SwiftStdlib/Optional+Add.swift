@@ -91,6 +91,12 @@ public extension Optional {
 //        assert(optional != nil, failureText())
 //    }
     
+    func typeMap<T>(_ ifNone: @autoclosure () -> T, _ ifSome: (Wrapped) -> T) -> T {
+        switch self {
+        case .some(let x): return ifSome(x)
+        case .none: return ifNone()
+        }
+    }
     func or(throws error: @autoclosure () -> Error) throws -> Wrapped {
         switch self {
         case .some(let x): return x
@@ -128,7 +134,11 @@ public extension Optional {
         }
     }
 }
-
+public extension Optional where Wrapped: Swift.Error {
+    var operateDesc: String {
+        typeMap("成功") { "失败\($0)" }
+    }
+}
 // MARK: - Methods (Collection)
 
 public extension Optional where Wrapped: Collection {
