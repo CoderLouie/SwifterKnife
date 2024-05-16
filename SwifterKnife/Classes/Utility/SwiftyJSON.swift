@@ -670,12 +670,7 @@ extension JSON {
     //Optional [Any]
     public var arrayObject: [Any]? {
         get {
-            if case .array(let array) = self {
-                return array.map {
-                    if let v = $0 as? JSON { return v.object }
-                    return $0
-                }
-            }
+            if case .array(let array) = self { return array }
             return nil
         }
         set {
@@ -711,12 +706,7 @@ extension JSON {
     
     public var dictionaryObject: [String: Any]? {
         get {
-            if case .dictionary(let dict) = self {
-                return dict.mapValues {
-                    if let v = $0 as? JSON { return v.object }
-                    return $0
-                }
-            }
+            if case .dictionary(let dict) = self { return dict }
             return nil
         }
         set {
@@ -1279,9 +1269,13 @@ extension JSON: Codable {
                 case let stringType as String.Type:
                     object = try? container.decode(stringType)
                 case let jsonValueArrayType as [JSON].Type:
-                    object = try? container.decode(jsonValueArrayType)
+                    if let arr = try? container.decode(jsonValueArrayType) {
+                        object = arr.map(\.object)
+                    }
                 case let jsonValueDictType as [String: JSON].Type:
-                    object = try? container.decode(jsonValueDictType)
+                    if let dict = try? container.decode(jsonValueDictType) {
+                        object = dict.mapValues(\.object)
+                    }
                 default: break
                 }
             }
