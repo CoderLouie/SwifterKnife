@@ -118,7 +118,11 @@ public enum JSON {
      */
     public init(parseJSON jsonString: String) {
         if let data = jsonString.data(using: .utf8) {
-            self.init(data)
+            do {
+                try self.init(data: data)
+            } catch {
+                self = .error(.invalidJSON)
+            }
         } else {
             self = .null
         }
@@ -660,6 +664,9 @@ extension JSON {
         if case .array(let array) = self {
             return array.map { JSON($0) }
         }
+        if case .string(let string) = self {
+            return JSON(parseJSON: string).array
+        }
         return nil
     }
     //Non-optional [JSON]
@@ -671,6 +678,9 @@ extension JSON {
     public var arrayObject: [Any]? {
         get {
             if case .array(let array) = self { return array }
+            if case .string(let string) = self {
+                return JSON(parseJSON: string).arrayObject
+            }
             return nil
         }
         set {
@@ -692,9 +702,11 @@ extension JSON {
                 d[pair.key] = JSON(pair.value)
             }
             return d
-        } else {
-            return nil
         }
+        if case .string(let string) = self {
+            return JSON(parseJSON: string).dictionary
+        }
+        return nil
     }
     
     //Non-optional [String : JSON]
@@ -703,10 +715,12 @@ extension JSON {
     }
     
     //Optional [String : Any]
-    
     public var dictionaryObject: [String: Any]? {
         get {
             if case .dictionary(let dict) = self { return dict }
+            if case .string(let string) = self {
+                return JSON(parseJSON: string).dictionaryObject
+            }
             return nil
         }
         set {
@@ -748,22 +762,6 @@ extension JSON { // : Swift.Bool
     }
 }
 
-// MARK: - Parse
-
-extension JSON {
-    public func parse() throws -> JSON {
-        guard case .string(let string) = self else {
-            throw JSONError.wrongType
-        }
-        guard let data = string.data(using: .utf8) else {
-            throw JSONError.invalidJSON
-        }
-        return try .init(data: data)
-    }
-    public var parseValue: JSON {
-        (try? parse()) ?? self
-    }
-}
 
 // MARK: - String
 
