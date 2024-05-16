@@ -496,6 +496,36 @@ extension JSON {
         set { self[path] = newValue }
     }
     
+    public subscript(parse key: String) -> JSON {
+        guard case .dictionary(let dict) = self else {
+            return orError(.wrongType)
+        }
+        if let o = dict[key] {
+            if let str = o as? String {
+                let parseV = JSON(parseJSON: str)
+                return parseV.isValid ? parseV : .string(str)
+            }
+            return JSON(o)
+        } else {
+            return .error(.notExist)
+        }
+    }
+    public subscript(parse index: Int) -> JSON {
+        guard case .array(let array) = self else {
+            return orError(.wrongType)
+        }
+        if array.indices.contains(index) {
+            let o = array[index]
+            if let str = o as? String {
+                let parseV = JSON(parseJSON: str)
+                return parseV.isValid ? parseV : .string(str)
+            }
+            return JSON(o)
+        } else {
+            return .error(.indexOutOfBounds)
+        }
+    }
+    
     public subscript(caseInsensitive key: String) -> JSON {
         get {
             guard case .dictionary(let dict) = self else {
@@ -542,6 +572,20 @@ extension JSON {
     public subscript(multiKeys keys: String...) -> JSON {
         get { self[multiKeys: keys] }
         set { self[multiKeys: keys] = newValue }
+    }
+    
+    public func searchIgnoreCase(_ keys: String...) -> JSON {
+        guard case .dictionary(let dict) = self else {
+            return orError(.wrongType)
+        }
+        for key in keys {
+            for (k, v) in dict {
+                if k.compare(key, options: [.caseInsensitive]) == .orderedSame {
+                    return JSON(v)
+                }
+            }
+        }
+        return .error(.notExist)
     }
     
     public var isValid: Bool {
@@ -664,9 +708,9 @@ extension JSON {
         if case .array(let array) = self {
             return array.map { JSON($0) }
         }
-        if case .string(let string) = self {
-            return JSON(parseJSON: string).array
-        }
+//        if case .string(let string) = self {
+//            return JSON(parseJSON: string).array
+//        }
         return nil
     }
     //Non-optional [JSON]
@@ -678,9 +722,9 @@ extension JSON {
     public var arrayObject: [Any]? {
         get {
             if case .array(let array) = self { return array }
-            if case .string(let string) = self {
-                return JSON(parseJSON: string).arrayObject
-            }
+//            if case .string(let string) = self {
+//                return JSON(parseJSON: string).arrayObject
+//            }
             return nil
         }
         set {
@@ -703,9 +747,9 @@ extension JSON {
             }
             return d
         }
-        if case .string(let string) = self {
-            return JSON(parseJSON: string).dictionary
-        }
+//        if case .string(let string) = self {
+//            return JSON(parseJSON: string).dictionary
+//        }
         return nil
     }
     
@@ -718,9 +762,9 @@ extension JSON {
     public var dictionaryObject: [String: Any]? {
         get {
             if case .dictionary(let dict) = self { return dict }
-            if case .string(let string) = self {
-                return JSON(parseJSON: string).dictionaryObject
-            }
+//            if case .string(let string) = self {
+//                return JSON(parseJSON: string).dictionaryObject
+//            }
             return nil
         }
         set {

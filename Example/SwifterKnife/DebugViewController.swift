@@ -206,17 +206,17 @@ fileprivate enum TestCase: String, CaseIterable {
 //            print(Facecore.celebrity.timeoutInterval)
 //            let nextVc = ViewController()
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
-//            testConsole()
-//            testJSON()
+            testConsole()
+            testJSON()
 //            Haptic.vibrate()
             
-            let a: Int?? = Optional<Int>.some(3)
-//            a.unsafelyUnwrapped
-//            _OptionalNilComparisonType.self
-            
-            let aa = a as Any
-            let json = JSON(aa)
-            print(json.number, json.isValid, json == .null)
+//            let a: Int?? = Optional<Int>.some(3)
+////            a.unsafelyUnwrapped
+////            _OptionalNilComparisonType.self
+//
+//            let aa = a as Any
+//            let json = JSON(aa)
+//            print(json.number, json.isValid, json == .null)
 //            let type1: IssuedDataType = []
 //            let type2: IssuedDataType = [.none]
 //            let type3: IssuedDataType = .none
@@ -274,24 +274,29 @@ fileprivate enum TestCase: String, CaseIterable {
         ]
         let json = JSON(dict)
         let dataJSON = json["data"]
-        let resultJSON = dataJSON["process_result"].parseValue
+        let resultJSON = dataJSON[parse: "process_result"]
         let resultDataJSON = resultJSON["data"]
         print(resultJSON["error_code"].intValue,
               resultDataJSON["request_id"].stringValue,
-              resultDataJSON["result_list"].arrayValue)
+              resultDataJSON["result_list"].arrayObject)
     }
     private func testConsole() {
-        let values: [String: Any] = [
-            "age": 10,
-            "score": [10, 20, 30],
-            "name": "xiaohuang"
-        ]
-        let num = 10
-        let val = 3.1415926
-        Console.log(num, val, "喝了咯 hello %@ %05d, %.3f, %d", values, num, val, Seasion.spring, num, val)
+//        let values: [String: Any] = [
+//            "age": 10,
+//            "score": [10, 20, 30],
+//            "name": "xiaohuang"
+//        ]
+//        let num = 10
+//        let val = 3.1415926
+//        Console.log(num, val, "喝了咯 hello %@ %05d, %.3f, %d", values, num, val, Seasion.spring, num, val)
+        Console.log("hello log")
+        Console.trace("hello trace")
+        testLog()
     }
     private func testLog() {
         Console.os("测试This is a defalut message.")
+        Console.osDebug("测试This is a debug message.")
+        Console.osInfo("测试This is a info message.")
         Console.osError("测试This is a error message.")
         Console.osFault("测试This is a fault message.")
     }

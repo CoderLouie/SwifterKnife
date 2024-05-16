@@ -25,61 +25,25 @@ public enum Console {
         return dataFmt.string(from: Date())
     }
     
-    public static var printEnable: Bool = App.isDebug
-    public static var nslogEnable: Bool = App.isDebug
+    public static var logEnable: Bool = App.isDebug
     
     private static func buildLog(
-        _ items: [Any],
+        _ content: String,
         blendTime: Bool,
         whose: String = "",
         tag: Tag = .empty,
-        separator: String,
         file: StaticString,
         line: UInt,
         fn: StaticString) -> String {
-        var newItems: [Any] = []
-        var i = 0
-        let n = items.count
-        while i < n {
-            let item = items[i]
-            i += 1
-            guard let format = item as? String, format.contains("%") else {
-                newItems.append(item)
-                continue
-            }
-            
-            let regex: Regex = #"(%@)|(%c)|(%s)|(%\d*l{0,2}[d|D|i|u|U])|(%\d*\.*\d*[f|g])"#
-            let count = regex.matchesCount(in: format)
-            guard count > 0 else {
-                newItems.append(item)
-                continue
-            }
-            
-            var args: [CVarArg] = []
-            args.reserveCapacity(count)
-            var N = 0
-            for item in items[i...] {
-                if args.count >= count { break }
-                if let arg = item as? CVarArg {
-                    args.append(arg)
-                } else { newItems.append(item) }
-                N += 1
-            }
-            if args.count < count {
-                fatalError("the format string \(format) must has \(count) params")
-            }
-            let str = String(format: format, arguments: args)
-            newItems.append(str)
-            i += N
-        }
-            
-        let method = whose.isEmpty ? "\(fn):" : "\(whose).\(fn):"
-        var cmps: [String] = [tag.rawValue]
+
+        var cmps: [String] = []
+        let tagStr = tag.rawValue
+        if !tagStr.isEmpty { cmps.append(tagStr) }
         if blendTime { cmps.append(timeString) }
         cmps.append(NSString(stringLiteral: file).lastPathComponent)
         cmps.append(String(line))
+        let method = whose.isEmpty ? "\(fn):" : "\(whose).\(fn):"
         cmps.append(String(method))
-        let content = newItems.map(String.init(describing:)).joined(separator: separator)
         cmps.append(content)
         return cmps.joined(separator: " ")
     }
@@ -96,88 +60,81 @@ public enum Console {
 import OSLog
 public extension Console {
     static func os(
-        _ items: Any...,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        guard Console.nslogEnable else { return }
-        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        guard Console.logEnable else { return }
+        let content = buildLog(content(), blendTime: false, tag: tag, file: file, line: line, fn: fn)
         os_log("%s", content)
     }
     static func osInfo(
-        _ items: Any...,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        guard Console.nslogEnable else { return }
-        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        guard Console.logEnable else { return }
+        let content = buildLog(content(), blendTime: false, tag: tag, file: file, line: line, fn: fn)
         os_log("%{public}s", type: .info, content)
     }
     static func osDebug(
-        _ items: Any...,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        guard Console.nslogEnable else { return }
-        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        guard Console.logEnable else { return }
+        let content = buildLog(content(), blendTime: false, tag: tag, file: file, line: line, fn: fn)
         os_log("%{public}s", type: .debug, content)
     }
     static func osError(
-        _ items: Any...,
-        tag: Tag = .empty,
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         separator: String = " ",
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        guard Console.nslogEnable else { return }
-        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        guard Console.logEnable else { return }
+        let content = buildLog(content(), blendTime: false, tag: tag, file: file, line: line, fn: fn)
         os_log("%{public}s", type: .error, content)
     }
     static func osFault(
-        _ items: Any...,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        guard Console.nslogEnable else { return }
-        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        guard Console.logEnable else { return }
+        let content = buildLog(content(), blendTime: false, tag: tag, file: file, line: line, fn: fn)
         os_log("%{public}s", type: .fault, content)
     }
 }
 
 public extension Console {
     static func log(
-        _ items: Any...,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        guard Console.printEnable else { return }
-        let content = buildLog(items, blendTime: true, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        guard Console.logEnable else { return }
+        let content = buildLog(content(), blendTime: true, tag: tag, file: file, line: line, fn: fn)
         print(content)
     }
     
     // 20:47:47.401 ViewController.swift 18 viewDidLoad: hello
     static func log<Whose>(
-        _ items: Any...,
-        whose: Whose?,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
+        whose: Whose,
         file: StaticString = #file,
         line: UInt = #line,
-        fn: StaticString = #function) {
-            
-        guard Console.printEnable else { return }
-        let caller = whose.map { "\(type(of: $0))" } ?? ""
-        let content = buildLog(items, blendTime: true, whose: caller, tag: tag, separator: separator, file: file, line: line, fn: fn)
+        fn: StaticString = #function) { 
+        guard Console.logEnable else { return }
+        let caller = "\(type(of: whose))"
+        let content = buildLog(content(), blendTime: true, whose: caller, tag: tag, file: file, line: line, fn: fn)
         print(content)
     }
     static func logFunc<Whose>(
@@ -185,7 +142,7 @@ public extension Console {
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        log(whose: whose, tag: .func, file: file, line: line, fn: fn)
+        log(.func, "", whose: whose, file: file, line: line, fn: fn)
     }
 }
 
@@ -193,52 +150,29 @@ public extension Console {
     /// 重要的日志记录，测试人员和开发人员查看
     // 2021-10-28 20:48:16.251154+0800 SwifterKnife_Example[2550:8953056] world
     static func trace<Whose>(
-        _ items: Any...,
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         whose: Whose?,
-        tag: Tag = .empty,
         separator: String = " ",
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
         
-        guard nslogEnable else { return }
+        guard logEnable else { return }
         let caller = whose.map { "\(type(of: $0))" } ?? ""
-        let content = buildLog(items, blendTime: false, whose: caller, tag: tag, separator: separator, file: file, line: line, fn: fn)
-//        os_log("%{public}s", content)
+        let content = buildLog(content(), blendTime: false, whose: caller, tag: tag, file: file, line: line, fn: fn)
         NSLog("\n\(content)")
     }
     
-    /*
-     let values: [String: Any] = [
-         "age": 10,
-         "score": [10, 20, 30],
-         "name": "xiaohuang"
-     ]
-     let num = 10
-     let val = 3.1415926
-     Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
-     喝了咯 hello {
-        age = 10;
-        name = xiaohuang;
-        score = (
-            10,
-            20,
-            30
-        );
-     } 00010, 3.142, 10 3.1415926
-     */
-    
     static func trace(
-        _ items: Any...,
-        tag: Tag = .empty,
-        separator: String = " ",
+        _ tag: Tag = .empty,
+        _ content: @autoclosure () -> String,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
         
-        guard nslogEnable else { return }
-        let content = buildLog(items, blendTime: false, tag: tag, separator: separator, file: file, line: line, fn: fn)
-//        os_log("%{public}s", content)
+        guard logEnable else { return }
+        let content = buildLog(content(), blendTime: false, tag: tag, file: file, line: line, fn: fn)
         NSLog("\n\(content)")
     }
 }
