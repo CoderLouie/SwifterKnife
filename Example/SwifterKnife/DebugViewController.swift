@@ -210,11 +210,18 @@ fileprivate enum TestCase: String, CaseIterable {
 //            testJSON()
 //            Haptic.vibrate()
             
-            let type1: IssuedDataType = []
-            let type2: IssuedDataType = [.none]
-            let type3: IssuedDataType = .none
+            let a: Int?? = Optional<Int>.some(3)
+//            a.unsafelyUnwrapped
+//            _OptionalNilComparisonType.self
             
-            print(type1 == type2, type1.rawValue, type2.rawValue, type3.rawValue)
+            let aa = a as Any
+            let json = JSON(aa)
+            print(json.number, json.isValid, json == .null)
+//            let type1: IssuedDataType = []
+//            let type2: IssuedDataType = [.none]
+//            let type3: IssuedDataType = .none
+//
+//            print(type1 == type2, type1.rawValue, type2.rawValue, type3.rawValue)
             break
         case .permission:
             print("permission")
