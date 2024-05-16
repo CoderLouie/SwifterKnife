@@ -671,7 +671,10 @@ extension JSON {
     public var arrayObject: [Any]? {
         get {
             if case .array(let array) = self {
-                return array
+                return array.map {
+                    if let v = $0 as? JSON { return v.object }
+                    return $0
+                }
             }
             return nil
         }
@@ -708,7 +711,12 @@ extension JSON {
     
     public var dictionaryObject: [String: Any]? {
         get {
-            if case .dictionary(let dict) = self { return dict }
+            if case .dictionary(let dict) = self {
+                return dict.mapValues {
+                    if let v = $0 as? JSON { return v.object }
+                    return $0
+                }
+            }
             return nil
         }
         set {
