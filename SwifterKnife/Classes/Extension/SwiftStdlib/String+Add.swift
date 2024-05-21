@@ -696,3 +696,39 @@ extension String {
 
 
 //https://www.jianshu.com/p/17fab783bfad
+
+
+extension String.StringInterpolation {
+
+    public mutating func appendInterpolation<T>(op value: T?, or defValue: @autoclosure () -> String = "nil") {
+        if let val = value {
+            appendInterpolation(val)
+        } else {
+            appendInterpolation(defValue())
+        }
+    }
+    public mutating func appendInterpolation<T>(if condition: Bool, _ value: T) {
+        guard condition else { return }
+        appendInterpolation(value)
+    }
+    public mutating func appendInterpolation<T>(ifSome value: T?) {
+        guard let val = value else { return }
+        appendInterpolation(val)
+    }
+    
+    public mutating func appendInterpolation(res value: Swift.Error?) {
+        if let val = value {
+            appendInterpolation("failed \(val.localizedDescription)")
+        } else {
+            appendInterpolation("success")
+        }
+    }
+    public mutating func appendInterpolation<S, F: Swift.Error>(res value: Result<S, F>) {
+        switch value {
+        case let .success(val):
+            appendInterpolation("success \(val)")
+        case let .failure(error):
+            appendInterpolation("failed \(error.localizedDescription)")
+        }
+    }
+}

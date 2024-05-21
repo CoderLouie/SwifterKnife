@@ -240,3 +240,4 @@ public extension Optional where Wrapped: RawRepresentable, Wrapped.RawValue: Equ
     }
 
 }
+

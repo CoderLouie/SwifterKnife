@@ -60,8 +60,8 @@ public enum Console {
 import OSLog
 public extension Console {
     static func os(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -70,8 +70,8 @@ public extension Console {
         os_log("%s", content)
     }
     static func osInfo(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -80,8 +80,8 @@ public extension Console {
         os_log("%{public}s", type: .info, content)
     }
     static func osDebug(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -90,8 +90,8 @@ public extension Console {
         os_log("%{public}s", type: .debug, content)
     }
     static func osError(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         separator: String = " ",
         file: StaticString = #file,
         line: UInt = #line,
@@ -101,8 +101,8 @@ public extension Console {
         os_log("%{public}s", type: .error, content)
     }
     static func osFault(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -114,8 +114,8 @@ public extension Console {
 
 public extension Console {
     static func log(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -126,8 +126,8 @@ public extension Console {
     
     // 20:47:47.401 ViewController.swift 18 viewDidLoad: hello
     static func log<Whose>(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         whose: Whose,
         file: StaticString = #file,
         line: UInt = #line,
@@ -142,7 +142,7 @@ public extension Console {
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        log(.func, "", whose: whose, file: file, line: line, fn: fn)
+        log("", .func, whose: whose, file: file, line: line, fn: fn)
     }
 }
 
@@ -150,8 +150,8 @@ public extension Console {
     /// 重要的日志记录，测试人员和开发人员查看
     // 2021-10-28 20:48:16.251154+0800 SwifterKnife_Example[2550:8953056] world
     static func trace<Whose>(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         whose: Whose?,
         separator: String = " ",
         file: StaticString = #file,
@@ -165,8 +165,8 @@ public extension Console {
     }
     
     static func trace(
-        _ tag: Tag = .empty,
         _ content: @autoclosure () -> String,
+        _ tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {

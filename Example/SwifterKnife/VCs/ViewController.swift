@@ -461,14 +461,14 @@ private extension ViewController {
         regexa2()
     }
     func regexa3() {
-        let values: [String: Any] = [
-            "age": 10,
-            "score": [10, 20, 30],
-            "name": "xiaohuang"
-        ]
-        let num = 10
-        let val = 3.1415926
-        Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
+//        let values: [String: Any] = [
+//            "age": 10,
+//            "score": [10, 20, 30],
+//            "name": "xiaohuang"
+//        ]
+//        let num = 10
+//        let val = 3.1415926
+//        Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
     }
     func regexa2() {
         print(String(format: "hello%05qd", 3))
@@ -569,7 +569,7 @@ class KView: UIView {
     var text: String? {
         set {
             label.text = newValue
-            Console.log("setText", newValue ?? "nil")
+            Console.log("setText, \(newValue ?? "nil")")
 //            setNeedsLayout()
             invalidateIntrinsicContentSize()
         }
@@ -589,7 +589,7 @@ class KView: UIView {
         let size = label.intrinsicContentSize
         let inset = textInsets
         let res = CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
-        Console.log("intrinsicContentSize", res, size)
+        Console.log("intrinsicContentSize\(res), \(size)")
         return res
     }
     override func layoutSubviews() {
@@ -597,13 +597,13 @@ class KView: UIView {
         let bounds = bounds
         let insetBounds = bounds.inset(by: textInsets)
         var textSize = label.intrinsicContentSize
-        Console.log("layoutSubviews", bounds, insetBounds, textSize)
+        Console.log("layoutSubviews \(bounds), \(insetBounds), \(textSize)")
         if textSize.width > insetBounds.width {
             if label.numberOfLines != 1 {
                 label.preferredMaxLayoutWidth = insetBounds.width
                 textSize = label.intrinsicContentSize
                 invalidateIntrinsicContentSize()
-                Console.log("layoutSubviews 1", textSize)
+                Console.log("layoutSubviews 1 \(textSize)")
             }
         }
         textSize.width = min(textSize.width, insetBounds.width)
@@ -715,12 +715,12 @@ extension ViewController {
     }
     
     @objc private func kbuttonDidClick(_ sender: UIButton) {
-        Console.log("1", sender.intrinsicContentSize, sender.sizeThatFits(.zero), sender.titleLabel?.sizeThatFits(.zero) ??? "nil")
+        Console.log("1 \(sender.intrinsicContentSize), \(sender.sizeThatFits(.zero)), \(sender.titleLabel?.sizeThatFits(.zero) ??? "nil")")
         sender.isSelected = !sender.isSelected
 //        sender.invalidateIntrinsicContentSize()
         sender.setNeedsLayout()
         DispatchQueue.main.async {
-            Console.log("2", sender.intrinsicContentSize, sender.sizeThatFits(.zero), sender.titleLabel?.intrinsicContentSize ??? "nil")
+            Console.log("2 \(sender.intrinsicContentSize), \(sender.sizeThatFits(.zero)), \(sender.titleLabel?.intrinsicContentSize ??? "nil")")
         }
     }
     private func setupKButton() {

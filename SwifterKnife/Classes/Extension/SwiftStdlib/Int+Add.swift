@@ -53,6 +53,16 @@ public extension Int {
     }
 }
 
+extension Int {
+    
+    /// 已知总数和列数，求行数
+    /// - Parameter columnCount: 列数
+    /// - Returns: 行数
+    public func rowCount(of columnCount: Int) -> Int {
+        Int((self + columnCount - 1) / columnCount)
+    }
+    
+}
 
 infix operator &~ : AdditionPrecedence
 infix operator &? : AdditionPrecedence

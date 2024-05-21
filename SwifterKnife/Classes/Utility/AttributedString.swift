@@ -166,17 +166,6 @@ public extension Attributes {
     }
     
     @discardableResult
-    func foreground(color: UIColor) -> Attributes {
-        dictionary[.foregroundColor] = color
-        return self
-    }
-    
-    @discardableResult
-    func background(color: UIColor) -> Attributes {
-        dictionary[.backgroundColor] = color
-        return self
-    }
-    @discardableResult
     func fgColor(_ color: UIColor) -> Attributes {
         dictionary[.foregroundColor] = color
         return self

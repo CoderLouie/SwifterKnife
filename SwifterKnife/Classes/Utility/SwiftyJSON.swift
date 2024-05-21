@@ -575,15 +575,14 @@ extension JSON {
     }
     
     public func searchIgnoreCase(_ keys: String...) -> JSON {
-        guard case .dictionary(let dict) = self else {
+        guard case .dictionary(var dict) = self else {
             return orError(.wrongType)
         }
-        for key in keys {
-            for (k, v) in dict {
-                if k.compare(key, options: [.caseInsensitive]) == .orderedSame {
-                    return JSON(v)
-                }
-            }
+        dict = dict.mapKeysAndValues {
+            ($0.key.lowercased(), $0.value)
+        }
+        for key in keys.map({ $0.lowercased() }) {
+            if let o = dict[key] { return JSON(o) }
         }
         return .error(.notExist)
     }
@@ -680,8 +679,12 @@ extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertibl
         case let .number(num): return "number(\(num.description))"
         case let .string(str): return "string(\(str.description))"
         case let .bool(bool): return "bool(\(bool.description))"
-        case let .array(arr): return "array(\(arr.description)"
-        case let .dictionary(dict): return "dictionary(\(dict.description)"
+        case let .array(arr):
+            let json = formatJSONString ?? arr.description
+            return "array(\(json))"
+        case let .dictionary(dict):
+            let json = formatJSONString ?? dict.description
+            return "dictionary(\(json))"
         case .null: return "null"
         case let .error(error): return "error\(error.localizedDescription)"
         }
@@ -692,8 +695,12 @@ extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertibl
         case let .number(num): return "number(\(num.description))"
         case let .string(str): return "string(\(str.debugDescription))"
         case let .bool(bool): return "bool(\(bool.description))"
-        case let .array(arr): return "array(\(arr.debugDescription)"
-        case let .dictionary(dict): return "dictionary(\(dict.debugDescription)"
+        case let .array(arr):
+            let json = formatJSONString ?? arr.debugDescription
+            return "array(\(json))"
+        case let .dictionary(dict):
+            let json = formatJSONString ?? dict.description
+            return "dictionary(\(json))"
         case .null: return "null"
         case let .error(error): return "error(\(error.localizedDescription))"
         }

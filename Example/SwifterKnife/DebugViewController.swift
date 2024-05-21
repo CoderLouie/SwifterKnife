@@ -70,6 +70,7 @@ fileprivate enum TestCase: String, CaseIterable {
     }
     
     func perform(from vc: DebugViewController) {
+//        let b = pick(in: [.codable: "a", .permission: "b"])
 //        "".filePath(under: .document)
         switch self {
         case .shuffled:
@@ -206,6 +207,8 @@ fileprivate enum TestCase: String, CaseIterable {
 //            print(Facecore.celebrity.timeoutInterval)
 //            let nextVc = ViewController()
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
+            let num: Int? = 3
+            print("\(op: num, or: "none")")
             testConsole()
             testJSON()
 //            Haptic.vibrate()

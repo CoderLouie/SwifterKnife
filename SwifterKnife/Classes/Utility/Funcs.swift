@@ -163,3 +163,35 @@ public func replayNonNil<A, B>(_ f: @escaping (A) -> B?) -> (A) -> B? {
 public func replayNonNil<T>() -> (T?) -> T? {
     replayNonNil { $0 }
 }
+
+
+public func cost(_ work: @escaping (Double) -> Void) -> () -> Void {
+   let now = CACurrentMediaTime()
+   return { work(CACurrentMediaTime() - now) }
+}
+/*
+ func dowork(_ completion: @escaping (Int) -> Void) {
+     DispatchQueue.main.after(2.1) {
+         completion(1)
+     }
+ }
+ dowork(cost { num, cost in
+     print(num, cost)
+ })
+ */
+public func cost<T>(_ work: @escaping (T, Double) -> Void) -> (T) -> Void {
+    let now = CACurrentMediaTime()
+    return { work($0, CACurrentMediaTime() - now) }
+}
+
+public func cost<T, V>(_ work: @escaping (T, V, Double) -> Void) -> (T, V) -> Void {
+   let now = CACurrentMediaTime()
+   return { work($0, $1, CACurrentMediaTime() - now) }
+}
+
+public func cost<T, V, P>(_ work: @escaping (T, V, P, Double) -> Void) -> (T, V, P) -> Void {
+   let now = CACurrentMediaTime()
+   return { work($0, $1, $2, CACurrentMediaTime() - now) }
+}
+
+
