@@ -312,7 +312,11 @@ public extension Folder {
 
 
 extension String {
+    @available(*, deprecated, message: "filePath(under:) deprecated and will be removed in the future. Use fullPath(under:) instead.")
     public func filePath(under folder: Folder) -> String {
+        return fullFilePath(under: folder)
+    }
+    public func fullFilePath(under folder: Folder) -> String {
         return folder.path(for: self)
     }
 }

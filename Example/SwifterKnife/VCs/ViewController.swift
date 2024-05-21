@@ -132,9 +132,18 @@ extension ViewController: UITextViewDelegate {
     }
 }
 
+private var _isChina = true
+fileprivate enum School {
+    static var isChina: Bool {
+        print("School.isChina")
+        return _isChina
+    }
+}
+
 class ViewController: UIViewController {
     
-   private var cursorLoc: Int? = nil
+    @IBOutlet weak var vcButton: UIButton!
+    private var cursorLoc: Int? = nil
 
     private func setupTextView() {
         UITextView().do {
@@ -156,7 +165,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupTextView()
+//        setupTextView()
+        setupBody2()
 //        setupBody5()
 //        setupButton1()
 //        setupRatingView()
@@ -261,11 +271,43 @@ class ViewController: UIViewController {
 //            print("------2", $0.dictionaryRepresentation() as NSDictionary)
 //        }
          
-        regexTestEntry()
+//        regexTestEntry()
 //        otherTest4()
 //        progressLayer.strokeEnd += 0.1
+        
+        testchoose2()
+    }
+    
+    
+    private  func testpattern() {
+        for v in view.subviews where v is UILabel {
+        }
+//        self.isKind(of: <#T##AnyClass#>)
+//        self.isMember(of: UIViewController.self)
+//        let s: Step = .step1
+//        s.inSet([.step1])
+//        s.inArray([.step2])
+    }
+    private func testchoose2() {
+        let choose = sk_pick(School.isChina, String.self)
+        print("1")
+        let str = choose("zh", "en")
+        print("2")
+        print(str)
+        _isChina = false
+        print("3")
+        print(str, choose("zh", "en"))
+        print("4")
     }
 
+    private func testchoose1() {
+        var isMal = true
+        let choose = sk_pick(isMal, String.self)
+        let str = choose("man", "woman")
+        print(str)
+        isMal = false
+        print(str, choose("man", "woman"))
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -419,14 +461,14 @@ private extension ViewController {
         regexa2()
     }
     func regexa3() {
-        let values: [String: Any] = [
-            "age": 10,
-            "score": [10, 20, 30],
-            "name": "xiaohuang"
-        ]
-        let num = 10
-        let val = 3.1415926
-        Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
+//        let values: [String: Any] = [
+//            "age": 10,
+//            "score": [10, 20, 30],
+//            "name": "xiaohuang"
+//        ]
+//        let num = 10
+//        let val = 3.1415926
+//        Console.trace("喝了咯 hello %@ %05d, %.3f", values, num, val, num, val)
     }
     func regexa2() {
         print(String(format: "hello%05qd", 3))
@@ -527,7 +569,7 @@ class KView: UIView {
     var text: String? {
         set {
             label.text = newValue
-            Console.log("setText", newValue ?? "nil")
+            Console.log("setText, \(newValue ?? "nil")")
 //            setNeedsLayout()
             invalidateIntrinsicContentSize()
         }
@@ -547,7 +589,7 @@ class KView: UIView {
         let size = label.intrinsicContentSize
         let inset = textInsets
         let res = CGSize(width: size.width + inset.left + inset.right, height: size.height + inset.top + inset.bottom)
-        Console.log("intrinsicContentSize", res, size)
+        Console.log("intrinsicContentSize\(res), \(size)")
         return res
     }
     override func layoutSubviews() {
@@ -555,13 +597,13 @@ class KView: UIView {
         let bounds = bounds
         let insetBounds = bounds.inset(by: textInsets)
         var textSize = label.intrinsicContentSize
-        Console.log("layoutSubviews", bounds, insetBounds, textSize)
+        Console.log("layoutSubviews \(bounds), \(insetBounds), \(textSize)")
         if textSize.width > insetBounds.width {
             if label.numberOfLines != 1 {
                 label.preferredMaxLayoutWidth = insetBounds.width
                 textSize = label.intrinsicContentSize
                 invalidateIntrinsicContentSize()
-                Console.log("layoutSubviews 1", textSize)
+                Console.log("layoutSubviews 1 \(textSize)")
             }
         }
         textSize.width = min(textSize.width, insetBounds.width)
@@ -673,12 +715,12 @@ extension ViewController {
     }
     
     @objc private func kbuttonDidClick(_ sender: UIButton) {
-        Console.log("1", sender.intrinsicContentSize, sender.sizeThatFits(.zero), sender.titleLabel?.sizeThatFits(.zero) ??? "nil")
+        Console.log("1 \(sender.intrinsicContentSize), \(sender.sizeThatFits(.zero)), \(sender.titleLabel?.sizeThatFits(.zero) ??? "nil")")
         sender.isSelected = !sender.isSelected
 //        sender.invalidateIntrinsicContentSize()
         sender.setNeedsLayout()
         DispatchQueue.main.async {
-            Console.log("2", sender.intrinsicContentSize, sender.sizeThatFits(.zero), sender.titleLabel?.intrinsicContentSize ??? "nil")
+            Console.log("2 \(sender.intrinsicContentSize), \(sender.sizeThatFits(.zero)), \(sender.titleLabel?.intrinsicContentSize ??? "nil")")
         }
     }
     private func setupKButton() {
@@ -974,32 +1016,38 @@ extension ViewController {
         }
     }
     private func setupBody2() {
-        let label = UILabel().chain.text("hello").font(.systemFont(ofSize: 12)).object.then { _ in
-            
-        }
-//        SudokuView().do { this in
-//            this.contentInsets = UIEdgeInsets(top: 68, left: 50, bottom: 15, right: 30)
-//            this.behaviour = .spacing(10, 15)
-////            this.behaviour = .itemLength(50, 130)
-//            view.addSubview(this)
-//            this.snp.makeConstraints { make in
-//                make.leading.trailing.equalToSuperview()
-//                make.centerY.equalToSuperview()
-//                make.height.equalToSuperview().multipliedBy(0.7)
-//            }
-//            this.warpCount = 4
-//            
-//            for i in 1...5 {
-//                let label = UILabel().then {
-//                    $0.backgroundColor = .yellow
-//                    $0.text = "\(i)"
-//                    $0.font = UIFont.systemFont(ofSize: 25)
-//                    $0.textAlignment = .center
-//                }
-//                this.addArrangedView(label)
-//            }
-//            this.placeArrangedViews()
+//        let label = UILabel().chain.text("hello").font(.systemFont(ofSize: 12)).object.then { _ in
+//
 //        }
+        SudokuView().do { this in
+            this.contentEdgeInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+            this.columnWidthRatios = [1, 2, 1, 1]
+            this.backgroundColor = .darkGray
+            
+
+            this.layoutBehavior = .autoSelfHeight(.inline(.center)) { view, index ,w, pos in
+                let h = w + CGFloat((-10...30).randomElement() ?? 0)
+                print("layout \(index + 1) at \(pos)")
+                return h
+            }
+//            this.layoutBehavior = .autoCellSize([1, 2, 1])
+            view.addSubview(this)
+            this.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview()
+                make.centerY.equalToSuperview()
+//                make.height.equalToSuperview().multipliedBy(0.7)
+            }
+            
+            for i in 1...10 {
+                let label = UILabel().then {
+                    $0.backgroundColor = .yellow
+                    $0.text = "\(i)"
+                    $0.font = UIFont.systemFont(ofSize: 25)
+                    $0.textAlignment = .center
+                }
+                this.addSubview(label)
+            }
+        }
     }
     private func setupBody1() {
         let direction: CarouselView.ScrollDirection = .vertical

@@ -7,14 +7,55 @@
 
 import UIKit
 import Photos
+import AppTrackingTransparency
  
+fileprivate extension PHAuthorizationStatus {
+    var myStatus: Permission.AuthorizationStatus? {
+        switch self {
+        case .restricted: return .restricted
+        case .denied: return .denied
+        case .notDetermined:
+            return nil
+        case .authorized: return .authorized
+        case .limited: return .limited
+        @unknown default: return .authorized
+        }
+    }
+}
+fileprivate extension AVAuthorizationStatus {
+    var myStatus: Permission.AuthorizationStatus? {
+        switch self {
+        case .restricted: return .restricted
+        case .denied: return .denied
+        case .notDetermined:
+            return nil
+        case .authorized: return .authorized
+        @unknown default: return .authorized
+        }
+    }
+}
+
+@available(iOS 14, *)
+fileprivate extension ATTrackingManager.AuthorizationStatus {
+    var myStatus: Permission.AuthorizationStatus? {
+        switch self {
+        case .restricted: return .restricted
+        case .denied: return .denied
+        case .notDetermined:
+            return nil
+        case .authorized: return .authorized
+        @unknown default: return .authorized
+        }
+    }
+}
+
 public enum Permission {
     public enum AuthorizationStatus {
         case authorized
         case denied
         case restricted
+        case limited
         case notSupport
-        
         #if ImportLocation
         public enum LocationWay {
             case always
@@ -73,39 +114,37 @@ public enum Permission {
         default: return .authorized
         }
     }
-    public static func requestPhoto(completion: @escaping CompletionHandler) {
-        assert(for: .photoUsage)
-        _requestPhoto { status, isFirst in
-            DispatchQueue.main.async {
-                completion(status, isFirst)
+    static func request<T>(exis: T,
+                           map: @escaping (T) -> Permission.AuthorizationStatus?,
+                           completion: @escaping CompletionHandler,
+                           work: @escaping (_ finish: @escaping (T) -> Void) -> Void) {
+        if let status = map(exis) {
+            completion(status, false)
+            return
+        }
+        var continuation: ((T) -> Void)!
+        continuation = { new in
+            if let status = map(new) {
+                DispatchQueue.main.async {
+                    completion(status, true)
+                }
+            } else {
+                DispatchQueue.main.after(0.5) {
+                    work(continuation)
+                }
             }
         }
+        work(continuation)
     }
-
-    private static func _requestPhoto(completion: @escaping CompletionHandler) {
+    
+    public static func requestPhoto(completion: @escaping CompletionHandler) {
         assert(for: .photoUsage)
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
             completion(.notSupport, false)
             return
         }
-        let status = PHPhotoLibrary.authorizationStatus()
-        switch status {
-        case .restricted:
-            completion(.restricted, false)
-        case .denied:
-            completion(.denied, false)
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { newStatus in
-                var tmpStatus: AuthorizationStatus = .authorized
-                if newStatus == .restricted {
-                    tmpStatus = .restricted
-                } else if newStatus == .denied {
-                    tmpStatus = .denied
-                }
-                completion(tmpStatus, true)
-            }
-        default:
-            completion(.authorized, false)
+        request(exis: PHPhotoLibrary.authorizationStatus(), map: \.myStatus, completion: completion) { finish in
+            PHPhotoLibrary.requestAuthorization(finish)
         }
     }
     
@@ -130,21 +169,21 @@ public enum Permission {
             return
         }
         
-        let status = AVCaptureDevice.authorizationStatus(for: .video)
-        switch status {
-        case .restricted:
-            completion(.restricted, false)
-        case .denied:
-            completion(.denied, false)
-        case .notDetermined:
+        request(exis: AVCaptureDevice.authorizationStatus(for: .video), map: \.myStatus, completion: completion) { finish in
             AVCaptureDevice.requestAccess(for: .video) { granted in
-                let tmpStatus: AuthorizationStatus = granted ? .authorized : .denied
-                DispatchQueue.main.async {
-                    completion(tmpStatus, true)
-                }
+                finish(granted ? .authorized : .denied)
             }
-        default:
-            completion(.authorized, false)
+        }
+    }
+    
+    // MARK: - ATT
+    public static func requestATT(completion: @escaping CompletionHandler) {
+        if #available(iOS 14, *) {
+            request(exis: ATTrackingManager.trackingAuthorizationStatus, map: \.myStatus, completion: completion) { finish in
+                ATTrackingManager.requestTrackingAuthorization(completionHandler: finish)
+            }
+        } else {
+            completion(.notSupport, false)
         }
     }
     

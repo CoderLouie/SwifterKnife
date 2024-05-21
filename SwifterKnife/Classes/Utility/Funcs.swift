@@ -113,7 +113,85 @@ public func ~=<T>(pattern: (T) -> Bool, value: T) -> Bool {
     pattern(value)
 }
 
+
+infix operator &&->: LogicalConjunctionPrecedence
+@discardableResult @inlinable
+public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T) rethrows -> T? {
+    return lhs ? try rhs() : nil
+}
+@discardableResult @inlinable
+public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T?) rethrows -> T? {
+    return lhs ? try rhs() : nil
+}
+
 /*
  rax、rdx常作为函数返回值使用
  register read/d rax 方便查看方法调用返回值 /d是10进制 /x是16进制
  */
+
+
+public func sk_pick<T>(_ condition: @escaping @autoclosure () -> Bool, _ type: T.Type) -> (_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T {
+    { condition() ? $0() : $1() }
+}
+
+
+//public extension Bool {
+//    func choose<T>(_ type: T.Type) -> (_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T  {
+//        pick(self, type)
+//    }
+//}
+
+
+/// Returns a modified closure that emits the latest non-nil value
+/// if the original closure would return nil.
+///
+/// - SeeAlso: https://github.com/Thomvis/Construct/blob/main/Construct/Foundation/Memoize.swift
+public func replayNonNil<A, B>(_ f: @escaping (A) -> B?) -> (A) -> B? {
+    var memo: B?
+    return {
+        if let res = f($0) {
+            memo = res
+            return res
+        }
+        return memo
+    }
+}
+
+/// Creates a closure (T?) -> T? that returns last non-`nil` T passed to it.
+///
+/// - SeeAlso: https://github.com/Thomvis/Construct/blob/main/Construct/Foundation/Memoize.swift
+public func replayNonNil<T>() -> (T?) -> T? {
+    replayNonNil { $0 }
+}
+
+
+public func cost(_ work: @escaping (Double) -> Void) -> () -> Void {
+   let now = CACurrentMediaTime()
+   return { work(CACurrentMediaTime() - now) }
+}
+/*
+ func dowork(_ completion: @escaping (Int) -> Void) {
+     DispatchQueue.main.after(2.1) {
+         completion(1)
+     }
+ }
+ dowork(cost { num, cost in
+     print(num, cost)
+ })
+ */
+public func cost<T>(_ work: @escaping (T, Double) -> Void) -> (T) -> Void {
+    let now = CACurrentMediaTime()
+    return { work($0, CACurrentMediaTime() - now) }
+}
+
+public func cost<T, V>(_ work: @escaping (T, V, Double) -> Void) -> (T, V) -> Void {
+   let now = CACurrentMediaTime()
+   return { work($0, $1, CACurrentMediaTime() - now) }
+}
+
+public func cost<T, V, P>(_ work: @escaping (T, V, P, Double) -> Void) -> (T, V, P) -> Void {
+   let now = CACurrentMediaTime()
+   return { work($0, $1, $2, CACurrentMediaTime() - now) }
+}
+
+

@@ -1,9 +1,8 @@
 //
 //  PropertyWrapper.swift
-//  SwifterKnife_Example
+//  SwifterKnife
 //
-//  Created by 李阳 on 2023/9/13.
-//  Copyright © 2023 CocoaPods. All rights reserved.
+//  Created by liyang on 2023/9/13. 
 //
 
 import Foundation
@@ -57,7 +56,7 @@ public struct Trimed {
 
 
 @propertyWrapper
-public struct VoidClosure {
+public struct StashClosure {
     public typealias Closure = () -> Void
     private var closure: Closure?
     
@@ -89,7 +88,7 @@ public struct VoidClosure {
 }
 
 @propertyWrapper
-public struct Param1Closure<T> {
+public struct Stash1Closure<T> {
     public typealias Closure = (T) -> Void
     private var closure: Closure?
      
@@ -119,7 +118,7 @@ public struct Param1Closure<T> {
     }
 }
 @propertyWrapper
-public struct Param2Closure<T, U> {
+public struct Stash2Closure<T, U> {
     public typealias Closure = (T, U) -> Void
     private var closure: Closure?
     

@@ -10,24 +10,7 @@ import UIKit
 import SnapKit
 import SwifterKnife
 
-fileprivate class ZPerson: Encodable, CodingKeyMap, DataEncodable {
-    private(set) var age = 20
-    private(set) var name = "xiaohua"
-    static var keyMapping: [KeyMap<ZPerson>] {
-        [KeyMap(ref: \.age, to: "age"),
-         KeyMap(ref: \.name, to: "name")]
-    }
-}
-fileprivate class ZStudent: ZPerson {
-    private(set) var score = 80
-    static var selfKeyMapping: [KeyMap<ZStudent>] {
-        [KeyMap(ref: \.score, to: "score")]
-    }
-    override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        try encode(to: encoder, with: Self.selfKeyMapping)
-    }
-}
+
 
 class CheckoutBox: NewButton {
     override func setup() {
@@ -99,7 +82,7 @@ class CodableVC: BaseViewController {
     @SwiftyDefaults(key: "at_gender")
     private var gender: Gender?
     
-    @VoidClosure
+    @StashClosure
     private var closure: (() -> Void)?
     private func test_codable() {
         
@@ -119,20 +102,38 @@ class CodableVC: BaseViewController {
 //        observeDeinit(for: self) {
 //            print("observeDeinit2 for")
 //        }
-//        let stu = ZStudent()
-//
-//        let jsonStr = stu.toJSON().jsonString()
-//        print(jsonStr ?? "nil")
+
     }
 //    private var radioGroup: RadioGroup {
 //        RadioGroup[.codable]
 //    }
+    
+    private var stu_index = 0
+    private var score: Int {
+        get { Defaults["stu_score_\(stu_index)"] ?? 0 }
+        set { Defaults["stu_score_\(stu_index)"] = newValue }
+    }
+    private func test_codable1() {
+        print(score) // 0
+        score = 90
+        print(score)// 90
+        
+        stu_index = 1
+        print(score) // 0
+        score = 70
+        print(score)// 70
+        
+        stu_index = 0
+        print(score)// 90
+    }
+    
     private var radioGroup = RadioGroup()
     private let group1 = "group1"
     override func setupViews() {
         super.setupViews()
         
-        setupColorView()
+//        setupColorView()
+//        setRadioGroupView()
         
     }
     @objc private func tapBlueView() {
@@ -196,14 +197,19 @@ class CodableVC: BaseViewController {
                 }
             }
         }.then {
-            
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.center.equalToSuperview()
                 make.width.equalTo(200)
             }
         }
-        
+//        stackView.customSpacing(10, at: 0)
+//        stackView.customSpacing(20, at: 1)
+//        stackView.customSpacing(30, at: 2)
+//        stackView.arrangedSubviews[1].isHidden = true
+//        // 10.0 20.0 30.0 3.4028234663852886e+38 3.4028234663852886e+38 1.1754943508222875e-38
+//        print(stackView[spacingIndex: 0], stackView[spacingIndex: 1],
+//              stackView[spacingIndex: 2], stackView[spacingIndex: 3], UIStackView.spacingUseDefault, UIStackView.spacingUseSystem)
         
         UIView().do {
             $0.backgroundColor = .cyan
@@ -230,6 +236,7 @@ class CodableVC: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        run_new(a: "param")
 //        run(a: "param")
+        test_codable1()
     }
 }
 //extension CodableVC {

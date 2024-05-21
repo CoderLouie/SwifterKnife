@@ -48,7 +48,7 @@ public enum Promises {
             }
             for promise in promises {
                 promise.then { _ in
-                    if !promises.contains(where: { $0.isRejected || $0.isPending }) {
+                    if promises.allSatisfy(\.isFulfilled) {
                         fulfill(promises.compactMap(\.value))
                     }
                 } onRejected: { error in
@@ -58,6 +58,26 @@ public enum Promises {
         }
     }
 
+    public static func allSettled<T>(_ promises: [Promise<T>]) -> Promise<[T?]> {
+        return Promise<[T?]> { fulfill, reject in
+            guard !promises.isEmpty else { fulfill([]);
+                return
+            }
+            let N = promises.count
+            var n = 0
+            var array: [T?] = .init(repeating: nil, count: N)
+            for (i, promise) in promises.enumerated() {
+                promise.finallyRes { result in
+                    array[i] = try? result.get()
+                    n += 1
+                    if n == N {
+                        fulfill(array)
+                    }
+                }
+            }
+        }
+    }
+    
     /// Resolves itself after some delay.
     /// - parameter delay: In seconds
     public static func delay(_ delay: TimeInterval) -> Promise<()> {
@@ -91,7 +111,7 @@ public enum Promises {
     public static func retry<T>(
         onQueue queue: DispatchQueue = .global(qos: .userInitiated),
         delay interval: TimeInterval,
-        generate: @escaping (Int, Swift.Error) throws -> Promise<T>?) -> Promise<T> {
+        generate: @escaping (_ retryCount: Int, _ error: Swift.Error) throws -> Promise<T>?) -> Promise<T> {
         let promise = Promise<T>()
         queue.async {
             PromiseRetry(promise, onQueue: queue, retryCount: 0, delay: interval, dueError: PromiseError.empty, generate: generate)
@@ -204,8 +224,8 @@ extension Promises {
         on queue: DispatchQueue = .global(qos: .userInitiated),
         using closure: @escaping (_ element: Element,
                                   _ index: Int) -> Promise<Value>) -> Promise<[Value]> {
-        let promise = Promise<[Value]>()
         var iterator = array.enumerated().makeIterator()
+        let promise = Promise<[Value]>()
         guard let first = iterator.next() else {
             promise.fulfill([])
             return promise
@@ -295,14 +315,14 @@ extension Promise {
             }
         }
     }
-    public func replace(replacerOnFulfill: ((Value) throws -> Value)?, replacerOnReject: ((Error) throws -> Value)?) -> Promise<Value> {
-        if replacerOnReject == nil,
-           replacerOnFulfill == nil {
+    public func replace(onFulfill: ((Value) throws -> Value)?, onReject: ((Error) throws -> Value)?) -> Promise<Value> {
+        if onFulfill == nil,
+           onReject == nil {
             return self
         }
         return Promise { fulfill, reject in
             self.then { val in
-                guard let tranform = replacerOnFulfill else {
+                guard let tranform = onFulfill else {
                     fulfill(val)
                     return
                 }
@@ -312,7 +332,7 @@ extension Promise {
                     reject(error)
                 }
             } onRejected: { error in
-                guard let tranform = replacerOnReject else {
+                guard let tranform = onReject else {
                     reject(error)
                     return
                 }
@@ -347,6 +367,76 @@ extension Promise {
             if let castedError = error as? E {
                 onHit(castedError)
             }
+        }
+    }
+}
+ 
+extension Promises {
+    static func downloadImage(from urlString: String) -> Promise<UIImage> {
+        Promise.create { fulfill, reject in
+            guard let url = URL(string: urlString) else {
+                reject(PromiseError.missed)
+                return
+            }
+            do {
+                let data = try Data(contentsOf: url)
+                if let img = UIImage(data: data) {
+                    fulfill(img)
+                } else {
+                    reject(PromiseError.missed)
+                }
+            } catch {
+                reject(error)
+            }
+        }
+    }
+    static func downloadImage(from url: URL) -> Promise<UIImage> {
+        Promise.create { fulfill, reject in
+            do {
+                let data = try Data(contentsOf: url)
+                if let img = UIImage(data: data) {
+                    fulfill(img)
+                } else {
+                    reject(PromiseError.missed)
+                }
+            } catch {
+                reject(error)
+            }
+        }
+    }
+    
+    static func download(from urlString: String, destination: @escaping (URL) -> String) -> Promise<URL> {
+        return Promise.create { fulfill, reject in
+            guard let url = URL(string: urlString) else {
+                reject(PromiseError.missed)
+                return
+            }
+            URLSession.shared.downloadTask(with: url) { fileUrl, response, error in
+                if let err = error {
+                    reject(err)
+                    return
+                }
+                guard let cacheUrl = fileUrl else {
+                    reject(PromiseError.missed)
+                    return
+                }
+                let path = destination(cacheUrl)
+                let destURL = URL(fileURLWithPath: path)
+                let mgr = FileManager.default
+                guard destURL.isFileURL else {
+                    reject(PromiseError.missed)
+                    try? mgr.removeItem(at: cacheUrl)
+                    return
+                }
+                do {
+                    try SandBox.reset(path: path)
+                    try mgr.moveItem(at: cacheUrl, to: destURL)
+                    fulfill(destURL)
+                } catch {
+                    try? mgr.removeItem(at: cacheUrl)
+                    reject(error)
+                }
+            }.resume()
         }
     }
 }

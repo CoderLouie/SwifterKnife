@@ -97,6 +97,11 @@ public extension Dictionary where Value: Equatable {
 // MARK: - Methods (ExpressibleByStringLiteral)
 
 public extension Dictionary where Key: StringProtocol {
+    var lowercasedKeys: Self {
+        var copy = self
+        copy.lowercaseAllKeys()
+        return copy
+    }
     /// Lowercase all keys in dictionary.
     ///
     ///        var dict = ["tEstKeY": "value"]
@@ -214,6 +219,7 @@ public extension Dictionary {
 
 
 public extension Dictionary {
+
     func pick(keys: Key...) -> [Key: Value] {
         pick(keys: keys)
     }
@@ -253,3 +259,16 @@ public extension Dictionary {
  不过反过来不必为真：两个相同哈希值的实例不一定需要相等
  
  */
+
+
+extension Hasher {
+    public mutating func combine<O: AnyObject>(_ value: O) {
+        let val = unsafeBitCast(value, to: UInt.self)
+        combine(val)
+    }
+    public mutating func combines<H: Hashable>(_ keyPaths: KeyPath<Self, H>...) {
+        keyPaths.forEach {
+            combine(self[keyPath: $0])
+        }
+    }
+}

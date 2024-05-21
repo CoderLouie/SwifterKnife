@@ -21,14 +21,14 @@ public extension RangeReplaceableCollection {
         guard let index = try firstIndex(where: predicate) else { return nil }
         return remove(at: index)
     }
-
+    
     /// Remove a random value from the collection.
     @discardableResult
     mutating func removeRandomElement() -> Element? {
         guard let randomIndex = indices.randomElement() else { return nil }
         return remove(at: randomIndex)
     }
-
+    
     /// Keep elements of Array while condition is true.
     ///
     ///        [0, 2, 4, 7].keep(while: { $0 % 2 == 0 }) -> [0, 2, 4]
@@ -43,7 +43,7 @@ public extension RangeReplaceableCollection {
         }
         return self
     }
-
+    
     /// Take element of Array while condition is true.
     ///
     ///        [0, 2, 4, 7, 6, 8].take( where: {$0 % 2 == 0}) -> [0, 2, 4]
@@ -53,7 +53,7 @@ public extension RangeReplaceableCollection {
     func take(while condition: (Element) throws -> Bool) rethrows -> Self {
         return try Self(prefix(while: condition))
     }
-
+    
     /// Skip elements of Array while condition is true.
     ///
     ///        [0, 2, 4, 7, 6, 8].skip( where: {$0 % 2 == 0}) -> [6, 8]
@@ -64,7 +64,7 @@ public extension RangeReplaceableCollection {
         guard let idx = try firstIndex(where: { try !condition($0) }) else { return Self() }
         return Self(self[idx...])
     }
-
+    
     /// Remove all duplicate elements using KeyPath to compare.
     ///
     /// - Parameter path: Key path to compare, the value must be Equatable.
@@ -78,15 +78,15 @@ public extension RangeReplaceableCollection {
             return true
         }
     }
-
+    
     /// Remove all duplicate elements using KeyPath to compare.
     ///
     /// - Parameter path: Key path to compare, the value must be Hashable.
     mutating func removeDuplicates<E: Hashable>(keyPath path: KeyPath<Element, E>) {
         var set = Set<E>()
         removeAll { !set.insert($0[keyPath: path]).inserted }
-    } 
-
+    }
+    
     /// Accesses a contiguous subrange of the collection’s elements.
     ///
     /// - Parameter range: A range of the collection’s indices offsets. The bounds of the range must be valid indices of the collection.
@@ -104,6 +104,14 @@ public extension RangeReplaceableCollection {
         }
     }
     
+    
+    
+    @discardableResult
+    mutating func prependIfNonNil(_ newElement: Element?) -> Bool {
+        guard let newElement = newElement else { return false }
+        insert(newElement, at: startIndex)
+        return true
+    }
     /**
      Adds a new element at the end of the array, mutates the array in place
      - Parameter newElement: The optional element to append to the array
@@ -122,6 +130,25 @@ public extension RangeReplaceableCollection {
     mutating func appendIfNonNil<S>(contentsOf newElements: S?) where Element == S.Element, S : Sequence {
         guard let newElements = newElements else { return }
         append(contentsOf: newElements)
+    }
+}
+
+public extension RangeReplaceableCollection where Self: BidirectionalCollection {
+    
+    ///     var nums = [1, 2, 3, 4, 5, 6]
+    ///     print(nums.omitAll { $1 % 2 != 0 }, nums)
+    ///     output: [1, 3, 5] [2, 4, 6]
+    @discardableResult
+    mutating func omitAll(where shouldBeRemoved: (Index, Element) throws -> Bool) rethrows -> [Element] {
+        var removed: [Element] = []
+        var index = endIndex
+        while index > startIndex {
+            formIndex(before: &index)
+            let element = self[index]
+            guard try shouldBeRemoved(index, element) else { continue }
+            removed.append(remove(at: index))
+        }
+        return removed.reversed()
     }
 }
 

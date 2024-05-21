@@ -205,6 +205,18 @@ public extension Collection {
     }
 }
 
+extension Collection {
+    public subscript(cycle index: Index) -> Element {
+        self[self.index(startIndex, offsetBy: distance(from: startIndex, to: index) % count)]
+    }
+}
+extension Collection where Index == Int {
+    public subscript(cycle index: Index) -> Element {
+        self[index % count]
+    }
+}
+
+
 extension Collection where Index == Int, Element: Collection, Element.Index == Int {
     public subscript(_ indexPath: IndexPath) -> Element.Element {
         return self[indexPath.section][indexPath.row]

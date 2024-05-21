@@ -5,12 +5,21 @@
 //  Created by liyang on 2021/10/19.
 //
 
-public extension Sequence { 
+public extension Sequence {
     
-    func theFirst<T>(ofType type: T.Type = T.self) -> T? {
+    func typedFirst<T>() -> T? {
         first { $0 is T } as? T
+    } 
+    
+    func firstMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
+        for element in self {
+            if let tmp = try predicate(element) {
+                return tmp
+            }
+        }
+        return nil
     }
-
+    
     /// Get element count based on condition.
     ///
     ///        [2, 2, 4, 7].count(where: {$0 % 2 == 0}) -> 3
@@ -136,7 +145,20 @@ public extension Sequence {
         for keyPath: KeyPath<Element, T>) -> T {
         // Inspired by: https://swiftbysundell.com/articles/reducers-in-swift/
         return reduce(.zero) { $0 + $1[keyPath: keyPath] }
-    } 
+    }
+    
+    func mapToKeyValues<K: Hashable, V>(by keyMap: (Element) -> K, _ valueMap: (Element) -> V) -> [K: V] {
+        .init(map { (keyMap($0), valueMap($0)) }) { $1 }
+    }
+    func compactMapToKeyValues<K: Hashable, V>(by keyMap: (Element) -> K?, _ valueMap: (Element) -> V?) -> [K: V] {
+        let pairs = compactMap { (element) -> (K, V)? in
+            guard let key = keyMap(element),
+                  let value = valueMap(element) else { return nil }
+            return (key, value)
+        }
+        return .init(pairs) { $1 }
+    }
+    
 }
 
 public extension Sequence where Element: Equatable {
@@ -146,26 +168,26 @@ public extension Sequence where Element: Equatable {
     ///        [1.2, 2.3, 4.5, 3.4, 4.5].contains([2, 6]) -> false
     ///        ["h", "e", "l", "l", "o"].contains(["l", "o"]) -> true
     ///
-    /// - Parameter elements: array of elements to check.
-    /// - Returns: true if array contains all given items.
+    /// - Parameter elements: sequence of elements to check.
+    /// - Returns: true if sequence contains all given items.
     /// - Complexity: _O(m·n)_, where _m_ is the length of `elements` and _n_ is the length of this sequence.
-    func contains(_ elements: [Element]) -> Bool {
+    func contains<S>(_ elements: S) -> Bool where S: Sequence, Element == S.Element {
         return elements.allSatisfy { contains($0) }
     }
 }
 
 public extension Sequence where Element: Hashable {
-    /// Check if array contains an array of elements.
+    /// Check if sequence contains an array of elements.
     ///
     ///        [1, 2, 3, 4, 5].contains([1, 2]) -> true
     ///        [1.2, 2.3, 4.5, 3.4, 4.5].contains([2, 6]) -> false
     ///        ["h", "e", "l", "l", "o"].contains(["l", "o"]) -> true
     ///        [1, 2, 3].contains([1, 4]) -> false
     ///
-    /// - Parameter elements: array of elements to check.
-    /// - Returns: true if array contains all given items.
+    /// - Parameter elements: sequence of elements to check.
+    /// - Returns: true if sequence contains all given items.
     /// - Complexity: _O(m + n)_, where _m_ is the length of `elements` and _n_ is the length of this sequence.
-    func contains(_ elements: [Element]) -> Bool {
+    func contains<S: Sequence>(_ elements: S) -> Bool where Element == S.Element {
         let set = Set(self)
         return elements.allSatisfy { set.contains($0) }
     }

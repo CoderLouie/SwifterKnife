@@ -29,10 +29,7 @@ import UIKit
         UIDevice.current.userInterfaceIdiom == .pad
     }
     @objc public static let isIPhoneXSeries: Bool = {
-        var bottomSafeInset: CGFloat = 0
-        if #available(iOS 11.0, *) {
-            bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
-        }
+        let bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
         return bottomSafeInset > 0
     }()
     
@@ -82,29 +79,37 @@ import UIKit
         safeAreaB + 49
     }
     
+    @objc public static var delegateWindow: UIWindow? {
+        UIApplication.shared.delegate?.window ?? nil
+    }
+    
     @objc public static var currentWindow: UIWindow? {
-        if let window = UIApplication.shared.delegate?.window {
-            return window
-        }
-        if #available(iOS 13.0, *) {
-            if let windowScene = UIApplication.shared.connectedScenes.first {
-                if let mainWindow = windowScene.value(forKeyPath: "delegate.window") as? UIWindow {
-                    return mainWindow
-                }
-                return UIApplication.shared.windows.last
-            }
-        }
-        return UIApplication.shared.keyWindow
+        delegateWindow ?? keyWindow
+    }
+    
+    @available(iOS 13.0, *)
+    public static var activeWindowScene: UIWindowScene? {
+        return UIApplication.shared.connectedScenes.first {
+            $0.activationState == .foregroundActive && $0 is UIWindowScene
+        } as? UIWindowScene
     }
     @objc public static var keyWindow: UIWindow? {
-        return UIApplication.shared.keyWindow
+        if #available(iOS 13.0, *) {
+            return activeWindowScene?.windows.first(where: \.isKeyWindow)
+        } else {
+            return UIApplication.shared.keyWindow
+        }
     }
-//    @objc public static var fontWindow: UIWindow? {
+//    public static func fontWindow(maxLevel: CGFloat? = nil) -> UIWindow? {
 //        for window in UIApplication.shared.windows.reversed() {
 //            if window.isKeyWindow,
 //               window.screen === UIScreen.main,
 //               (!window.isHidden && window.alpha > 0),
 //               window.windowLevel >= .normal {
+//                if let level = maxLevel,
+//                   window.windowLevel.rawValue > level {
+//                    return nil
+//                }
 //                return window
 //            }
 //        }
@@ -118,9 +123,10 @@ import UIKit
             if let inset = window.rootViewController?.view.safeAreaInsets,
                inset.top > 0 { return inset }
             return window.safeAreaInsets
+        } else {
+            let height = UIApplication.shared.statusBarFrame.height
+            return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
         }
-        let height = UIApplication.shared.statusBarFrame.height
-        return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
     }
     
     @objc public static var frontViewController: UIViewController? {
@@ -129,6 +135,13 @@ import UIKit
             return nil
         }
         return rootVC.front()
+    }
+    
+    @objc public static var isRTL: Bool {
+        guard let window = currentWindow else {
+            return false
+        }
+        return UIView.userInterfaceLayoutDirection(for: window.semanticContentAttribute) == .rightToLeft
     }
 }
 

@@ -90,12 +90,12 @@ class FormViewController: BaseViewController {
             }
         }
         
-        let val: NSAttributedString = attributed {
+        let _: NSAttributedString = attributed {
             "Hello".build(with: .one.fgColor(.red).font(.bold(20)))
             "\n"
             "word".build
         }
-        
+        print(newAge)
 //        hStack {
 //            label1 <=> UILabel()
 //            SpaceView(height: 20)

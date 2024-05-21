@@ -52,3 +52,40 @@ public extension Int {
         self / value * value + (value / 2) / (value / 2) * value
     }
 }
+
+extension Int {
+    
+    /// 已知总数和列数，求行数
+    /// - Parameter columnCount: 列数
+    /// - Returns: 行数
+    public func rowCount(of columnCount: Int) -> Int {
+        Int((self + columnCount - 1) / columnCount)
+    }
+    
+}
+
+infix operator &~ : AdditionPrecedence
+infix operator &? : AdditionPrecedence
+public extension OptionSet where RawValue: FixedWidthInteger {
+    
+    static func & (lhs: Self, rhs: Self) -> Self {
+        .init(rawValue: lhs.rawValue & rhs.rawValue)
+    }
+    
+    static func | (lhs: Self, rhs: Self) -> Self {
+        .init(rawValue: lhs.rawValue | rhs.rawValue)
+    }
+    
+    static prefix func ~ (lhs: Self) -> Self {
+        .init(rawValue: ~lhs.rawValue)
+    }
+    
+    static func &~ (lhs: Self, rhs: Self) -> Self {
+        .init(rawValue: lhs.rawValue & (~rhs.rawValue))
+    }
+    
+    static func &? (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawValue & rhs.rawValue != 0
+    }
+}
+

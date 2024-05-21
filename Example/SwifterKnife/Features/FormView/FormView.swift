@@ -102,11 +102,11 @@ public typealias FormViewCell = FormCellType & UIView
 
 extension FormView {
     @discardableResult
-    open func addSpace(amount: CGFloat, animated: Bool = false) -> FormSpaceCell {
+    public func addSpace(amount: CGFloat, animated: Bool = false) -> FormSpaceCell {
         insertSpace(amount: amount, at: container.arrangedSubviews.count, animated: animated)
     }
     @discardableResult
-    open func insertSpace(amount: CGFloat,
+    public func insertSpace(amount: CGFloat,
                           at index: Int,
                           animated: Bool = false) -> FormSpaceCell {
         let cell = FormSpaceCell()
@@ -115,11 +115,11 @@ extension FormView {
         return cell
     }
     
-    open func addCell<T: FormViewCell>(_ cell: T, animated: Bool = false) {
+    public func addCell<T: FormViewCell>(_ cell: T, animated: Bool = false) {
         insertCell(cell, at: container.arrangedSubviews.count, animated: animated)
     }
     
-    open func insertCell<T: FormViewCell>(_ cell: T, at index: Int, animated: Bool = false) {
+    public func insertCell<T: FormViewCell>(_ cell: T, at index: Int, animated: Bool = false) {
         container.insertArrangedSubview(cell, at: index)
         cell.axisDidChange(to: axis, dueToAxisPropertyChanged: false)
         cell.updateSeperatorsState(on: container)

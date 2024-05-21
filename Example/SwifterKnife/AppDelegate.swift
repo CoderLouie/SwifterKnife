@@ -15,8 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+//        Chain(UILabel()).font
+        
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds).then {
+//            $0.windowLevel += 1
+            $0.windowLevel = .statusBar + 1
             $0.rootViewController = UINavigationController(rootViewController: DebugViewController())
             $0.makeKeyAndVisible()
         } 

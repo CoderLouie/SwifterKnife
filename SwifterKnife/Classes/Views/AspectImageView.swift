@@ -82,22 +82,26 @@ open class FitVImageView: UIImageView {
             }
         }
     }
-    public var ratioMap: ((CGFloat, CGFloat, UIImage) -> CGFloat)?
+    public var ratioMap: ((FitVImageView) -> CGFloat)?
     open override var intrinsicContentSize: CGSize {
-        guard let img = image else {
-            return super.intrinsicContentSize
-        }
-        let imgSize = img.size
-        if imgSize.width == 0 {
-            return super.intrinsicContentSize
-        }
         let size = bounds.size
-        if size.width == 0 {
+        let w = size.width
+        if w == 0 {
             return super.intrinsicContentSize
         }
-        let w = size.width
-        let imgRatio = imgSize.width / imgSize.height
-        let ratio = ratioMap?(imgRatio, w, img) ?? imgRatio
+        let ratio: CGFloat
+        if let closure = ratioMap {
+            ratio = closure(self)
+        } else {
+            guard let img = image else {
+                return super.intrinsicContentSize
+            }
+            let imgSize = img.size
+            if imgSize.width == 0 {
+                return super.intrinsicContentSize
+            }
+            ratio = imgSize.width / imgSize.height
+        }
         let h = w / ratio
         return CGSize(width: w, height: h.pixCeil)
     }
@@ -124,22 +128,27 @@ open class FitHImageView: UIImageView {
             }
         }
     }
-    public var ratioMap: ((CGFloat, CGFloat, UIImage) -> CGFloat)?
+    public var ratioMap: ((FitHImageView) -> CGFloat)?
     open override var intrinsicContentSize: CGSize {
-        guard let img = image else {
-            return super.intrinsicContentSize
-        }
-        let imgSize = img.size
-        if imgSize.height == 0 {
-            return super.intrinsicContentSize
-        }
         let size = bounds.size
-        if size.height == 0 {
+        let h = size.height
+        if h == 0 {
             return super.intrinsicContentSize
         }
-        let h = size.height
-        let imgRatio = imgSize.width / imgSize.height
-        let ratio = ratioMap?(imgRatio, h, img) ?? imgRatio
+        let ratio: CGFloat
+        if let closure = ratioMap {
+            ratio = closure(self)
+        } else {
+            guard let img = image else {
+                return super.intrinsicContentSize
+            }
+            let imgSize = img.size
+            if imgSize.height == 0 {
+                return super.intrinsicContentSize
+            }
+            ratio = imgSize.width / imgSize.height
+        }
+        
         let w = h * ratio
         return CGSize(width: w.pixCeil, height: h)
     }

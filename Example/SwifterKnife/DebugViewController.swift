@@ -8,9 +8,11 @@
 
 import UIKit
 import SwifterKnife
+import Photos
+
 extension String {
     var negativeWord: String? {
-        let path = "censorship.txt".filePath(under: .bundle)
+        let path = "censorship.txt".fullFilePath(under: .bundle)
         return SandBox.readLines(path) {
             contains($0)
         }
@@ -61,13 +63,21 @@ fileprivate enum TestCase: String, CaseIterable {
     case dictation = "语音输入"
     case testUI = "Test UI"
     case codable = "Codable"
+    case excodable = "ExCodable"
+    case permission = "Permission"
     var token: String {
         return "\(#fileID)_\(#function)_\(#line)"
     }
     
     func perform(from vc: DebugViewController) {
+//        let b = pick(in: [.codable: "a", .permission: "b"])
+//        "".filePath(under: .document)
         switch self {
         case .shuffled:
+            let v: Double = 3.0
+            let int = 5
+            let num = v * int
+            let num1 = int * v
 //            let nums = [0, 2, 4, 7, 6]
 //            nums.forEach(slice: 2) { print($0) }
             print(AssociationKey.current())
@@ -88,8 +98,8 @@ fileprivate enum TestCase: String, CaseIterable {
             let nextVc = DictationVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
         case .overlay2:
-            let videoPath = "inputResources.mp4".filePath(under: .bundle)
-            let destPath = "watermark.mp4".filePath(under: .temporary)
+            let videoPath = "inputResources.mp4".fullFilePath(under: .bundle)
+            let destPath = "watermark.mp4".fullFilePath(under: .temporary)
 //            LottieConfiguration.shared.renderingEngine = .mainThread
             let mark = LottieAnimationView.frog.then {
                 $0.animationSpeed = 5
@@ -112,8 +122,8 @@ fileprivate enum TestCase: String, CaseIterable {
                 }
             }
         case .overlay1:
-            let videoPath = "inputResources.mp4".filePath(under: .bundle)
-            let destPath = "watermark.mp4".filePath(under: .temporary)
+            let videoPath = "inputResources.mp4".fullFilePath(under: .bundle)
+            let destPath = "watermark.mp4".fullFilePath(under: .temporary)
 //            LottieConfiguration.shared.renderingEngine = .mainThread
             let mark = LottieAnimationView.frog.then {
                 $0.animationSpeed = 5
@@ -133,8 +143,8 @@ fileprivate enum TestCase: String, CaseIterable {
             }
             print("[Add Overlay]", flag.opDescription)
         case .overlay:
-            let videoPath = "apple.mp4".filePath(under: .bundle)
-            let destPath = "watermarkapple3.mp4".filePath(under: .document)
+            let videoPath = "apple.mp4".fullFilePath(under: .bundle)
+            let destPath = "watermarkapple3.mp4".fullFilePath(under: .document)
             let begin = CACurrentMediaTime()
             let flag = VideoEditor.addOverlay({ bounds in
                 let layer = CALayer().then {
@@ -154,7 +164,7 @@ fileprivate enum TestCase: String, CaseIterable {
         case .watermark:
             let filename = "apple.mp4"
 //            let filename = "IMG_4396.MOV"
-            let tmpUrl = URL(fileURLWithPath: filename.filePath(under: .bundle))
+            let tmpUrl = URL(fileURLWithPath: filename.fullFilePath(under: .bundle))
             let videoEditor = YiVideoEditor(videoURL: tmpUrl)
             videoEditor.addOverlay { _ in
                 CALayer().then {
@@ -162,7 +172,7 @@ fileprivate enum TestCase: String, CaseIterable {
                     $0.frame = CGRect(x: 10, y: 10, width: 40, height: 20)
                 }
             }
-            let destPath = "watermarkapple1.mp4".filePath(under: .document)
+            let destPath = "watermarkapple1.mp4".fullFilePath(under: .document)
             let destUrl = URL(fileURLWithPath: destPath)
             videoEditor.export(at: destUrl) { session in
                 print("[AIDream] export finished", session.status.rawValue, session.error ??? "nil")
@@ -190,19 +200,147 @@ fileprivate enum TestCase: String, CaseIterable {
         case .codable:
             let nextVc = CodableVC()
             vc.navigationController?.pushViewController(nextVc, animated: true)
+        case .excodable:
+            let nextVc = ExCodableVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
         case .other:
+//            print(Facecore.celebrity.timeoutInterval)
+//            let nextVc = ViewController()
+//            vc.navigationController?.pushViewController(nextVc, animated: true)
+            let num: Int? = 3
+            print("\(op: num, or: "none")")
+            testConsole()
+            testJSON()
+//            Haptic.vibrate()
+            
+//            let a: Int?? = Optional<Int>.some(3)
+////            a.unsafelyUnwrapped
+////            _OptionalNilComparisonType.self
+//
+//            let aa = a as Any
+//            let json = JSON(aa)
+//            print(json.number, json.isValid, json == .null)
+//            let type1: IssuedDataType = []
+//            let type2: IssuedDataType = [.none]
+//            let type3: IssuedDataType = .none
+//
+//            print(type1 == type2, type1.rawValue, type2.rawValue, type3.rawValue)
             break
+        case .permission:
+            print("permission")
+            let nextVc = WaterflowVC()
+            vc.navigationController?.pushViewController(nextVc, animated: true)
+//            Promise<Int>.repeatWhile { index, finish in
+//                Console.trace("begin request", index)
+//                if index == 3 { finish(.fulfill(10)) }
+//                else {  finish(.retry(after: 1))  }
+//            }.then { val in
+//                Console.trace("fulfill with", val)
+//            } onRejected: { err in
+//                Console.trace("reject with", err)
+//            }
+//            let status: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+//            var i = 0
+//            Permission.request(exis: status, map: \.myStatus) { status, isFirst in
+//                Console.trace(status, isFirst)
+//            } work: { finish in
+//                Console.trace("start request", i)
+//                if i == 3 { finish(.authorized) }
+//                else { finish(.notDetermined) }
+//                i += 1
+//            }
         }
     }
+    
+    
+    private func testWeakArray() {
+//        var nums: [Int] = []
+//        nums.enumerated()
+//        table.append(<#T##newElement: XXXXDog?##XXXXDog?#>)
+//        var weaArr: WeakArray<XXXXDog> = .init(XXXXDog(), XXXXDog())
+//        weaArr.append(.init(.init()))
+//        weaArr.append(.init())
+//        let vc = weaArr[weak: 10]
+    }
+    private func testJSON() {
+//        let str = """
+//{"error_code":0,"data":{"task_id":6,"graphics_type":43,"status":3,"process_result":"{\"error_code\":0,\"data\":{\"request_id\":\"vd.43.9a4c89f798daaee66095514fa03f4221174ef83c\",\"result_list\":[{\"style_code\":\"c57c2afd03a144e5\",\"strength\":0.0,\"generate_size\":1,\"image_list\":[\"http://osscdn-va.changxinteam.com/graphics2/portrait/temp/2023-12-13/2c50454d-1c0f-4464-9e41-79d3815f5004.jpg\"]}]}}"}}
+//"""
+        let dict: [String: Any] = [
+            "error_code": 0,
+            "data": [
+                "task_id":6,
+                "graphics_type":43,
+                "status":3,
+                "process_result":"{\"error_code\":0,\"data\":{\"request_id\":\"vd.43.9a4c89f798daaee66095514fa03f4221174ef83c\",\"result_list\":[{\"style_code\":\"c57c2afd03a144e5\",\"strength\":0.0,\"generate_size\":1,\"image_list\":[\"http://osscdn-va.changxinteam.com/graphics2/portrait/temp/2023-12-13/2c50454d-1c0f-4464-9e41-79d3815f5004.jpg\"]}]}}"
+                ]
+        ]
+        let json = JSON(dict)
+        let dataJSON = json["data"]
+        let resultJSON = dataJSON[parse: "process_result"]
+        let resultDataJSON = resultJSON["data"]
+        print(resultJSON["error_code"].intValue,
+              resultDataJSON["request_id"].stringValue,
+              resultDataJSON["result_list"].arrayObject)
+    }
+    private func testConsole() {
+//        let values: [String: Any] = [
+//            "age": 10,
+//            "score": [10, 20, 30],
+//            "name": "xiaohuang"
+//        ]
+//        let num = 10
+//        let val = 3.1415926
+//        Console.log(num, val, "喝了咯 hello %@ %05d, %.3f, %d", values, num, val, Seasion.spring, num, val)
+        Console.log("hello log")
+        Console.trace("hello trace")
+        testLog()
+    }
+    private func testLog() {
+        Console.os("测试This is a defalut message.")
+        Console.osDebug("测试This is a debug message.")
+        Console.osInfo("测试This is a info message.")
+        Console.osError("测试This is a error message.")
+        Console.osFault("测试This is a fault message.")
+    }
+    
+//    private func testchoose2() {
+//        var isMal = true
+//        let choose = isMal.choose(String.self)
+//        let str = choose("man", "woman")
+//        print(str)
+//        isMal = false
+//        print(str, choose("man", "woman"))
+//    }
 }
+enum Seasion { case spring }
+//extension Seasion: CVarArg {
+//    var _cVarArgEncoding: [Int] {
+//        [0]
+//    }
+//}
  
+protocol UpdateTitle {
+    func updateTitle(_ title: String)
+}
+final class XXXXDog: UpdateTitle {
+    func updateTitle(_ title: String) {
+        print("Seasion updateTitle \(title)")
+    }
+}
 enum NetError: Swift.Error {}
 class DebugViewController: BaseViewController {
-    
+    private let s: Seasion = .spring
+    private let s1 = Seasion.spring as AnyObject
+    private let dog = XXXXDog()
     override func setupViews() {
         super.setupViews()
         title = "Debug"
-        setupBody() 
+        setupBody()
+        Broadcaster.register(UpdateTitle.self, observer: self.dog)
+//        Broadcaster.register(UpdateTitle.self, observer: self.s1)
+//        Broadcaster.register(UpdateTitle.self, observer: self.s)
+//        Broadcaster.register(UpdateTitle.self, observer: Seasion.spring)
     }
     private unowned var tableView: UITableView!
     private lazy var items: [TestCase] = TestCase.allCases
@@ -221,10 +359,14 @@ extension DebugViewController: UITableViewDataSource {
         return cell
     }
 }
+//
 extension DebugViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         items[indexPath.row].perform(from: self)
+//        Broadcaster.notify(UpdateTitle.self) {
+//            $0.updateTitle("哈哈哈哈")
+//        }
     }
 }
 

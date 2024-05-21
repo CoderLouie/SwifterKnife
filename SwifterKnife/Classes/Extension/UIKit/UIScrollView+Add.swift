@@ -10,6 +10,19 @@ import UIKit
 // MARK: - Methods
 
 public extension UIScrollView {
+    var rawSnapshot: UIImage? {
+        let size = contentSize
+        guard size != .zero else { return nil }
+
+        // Original Source: https://gist.github.com/thestoics/1204051
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let previousFrame = frame
+            frame = CGRect(origin: frame.origin, size: size)
+            layer.render(in: context.cgContext)
+            frame = previousFrame
+        }
+    }
+    
     /// Takes a snapshot of an entire ScrollView.
     ///
     ///    AnySubclassOfUIScrollView().snapshot
@@ -18,28 +31,28 @@ public extension UIScrollView {
     /// - Returns: Snapshot as UIImage for rendered ScrollView.
     var snapshot: UIImage? {
         // Original Source: https://gist.github.com/thestoics/1204051
+        let contentSize = contentSize
         UIGraphicsBeginImageContextWithOptions(contentSize, false, 0)
         defer {
             UIGraphicsEndImageContext()
         }
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
         let prevFrame = frame
         let prevOffset = contentOffset
         let prevBounds = layer.bounds
-        
-        let contentSize = contentSize
-        if #available(iOS 13, *) {
-            layer.bounds = CGRect(origin: .zero, size: contentSize)
-        }
-        contentOffset = .zero
-        frame = CGRect(origin: .zero, size: contentSize)
-        layer.render(in: context)
-        frame = prevFrame
-        contentOffset = prevOffset
-        if #available(iOS 13, *) {
+        defer {
+            frame = prevFrame
+            contentOffset = prevOffset
             layer.bounds = prevBounds
         }
-        return UIGraphicsGetImageFromCurrentImageContext()
+        
+        contentOffset = .zero
+        frame = CGRect(origin: .zero, size: contentSize)
+        layer.bounds = CGRect(origin: .zero, size: contentSize)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        layer.render(in: context)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        return image
     }
 
     /// The currently visible region of the scroll view.

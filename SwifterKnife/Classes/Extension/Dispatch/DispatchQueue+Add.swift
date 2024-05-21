@@ -66,18 +66,25 @@ public extension DispatchQueue {
     /// - Parameters:
     ///   - delay:   `TimeInterval` to delay execution.
     ///   - closure: Closure to execute.
-    @discardableResult
-    func after(_ delay: TimeInterval, execute closure: @escaping () -> Void) -> DispatchWorkItem {
+    func after(_ delay: TimeInterval, execute closure: @escaping () -> Void) {
+        asyncAfter(deadline: .now() + delay, execute: closure)
+    }
+    
+    /// 可以取消
+    func afterItem(_ delay: TimeInterval, execute closure: @escaping () -> Void) -> DispatchWorkItem {
         let item = DispatchWorkItem(block: closure)
         asyncAfter(deadline: .now() + delay, execute: item)
         return item
     }
     
+    
     private static var _onceTracker: Set<String> = []
     
-    static func once(file: String = #file, function: String = #function, line: Int = #line, block: () -> Void) {
+    @discardableResult
+    static func once(file: String = #file, function: String = #function, line: Int = #line, block: () -> Void) -> String {
         let token = [file, function, String(line)].joined(separator: ":")
         once(token: token, block: block)
+        return token
     }
     
     /**

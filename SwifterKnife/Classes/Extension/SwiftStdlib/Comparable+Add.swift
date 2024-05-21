@@ -69,3 +69,20 @@ public extension Comparable {
         return .orderedSame
     }
 }
+
+
+
+extension Hashable {
+    public func inSet(_ set: Set<Self>) -> Bool {
+        set.contains(self)
+    }
+     
+    public func pick<T>(in map: [Self: T]) -> T? {
+        map[self]
+    }
+}
+extension Equatable {
+    public func inArray(_ array: Array<Self>) -> Bool {
+        array.contains { $0 == self }
+    }
+}

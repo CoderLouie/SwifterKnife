@@ -17,11 +17,20 @@ public extension BidirectionalCollection {
         let index = distance >= 0 ? startIndex : endIndex
         return self[indices.index(index, offsetBy: distance)]
     }
- 
-    func theLast<T>(ofType type: T.Type = T.self) -> T? {
+  
+    
+    func typedLast<T>() -> T? {
         last { $0 is T } as? T
     }
     
+    func lastMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
+        var result: T? = nil
+        let _ = try last {
+            if let tmp = try predicate($0) { result = tmp; return true }
+            return false
+        }
+        return result
+    }
     
     @inlinable
     var lastIndex: Index? {

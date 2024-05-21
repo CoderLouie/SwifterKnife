@@ -11,25 +11,33 @@ public enum Either<Left, Right> {
     case left(Left)
     case right(Right)
     
+    public var isLeft: Bool {
+        if case .left = self { return true }
+        return false
+    }
     public var left: Left? {
-        if case .left(let left) = self {  return left }
-        return nil
+        get {
+            if case .left(let left) = self {  return left }
+            return nil
+        }
+        set {
+            guard let val = newValue else { return }
+            self = .left(val)
+        }
     }
     
+    public var isRight: Bool {
+        if case .right = self { return true }
+        return false
+    }
     public var right: Right? {
-        if case .right(let right) = self {  return right }
-        return nil
-    }
-    
-    public func either<Value>(
-        ifLeft: (Left) throws -> Value,
-        ifRight: (Right) throws -> Value
-    ) rethrows -> Value {
-        switch self {
-        case let .left(left):
-            return try ifLeft(left)
-        case let .right(right):
-            return try ifRight(right)
+        get {
+            if case .right(let right) = self {  return right }
+            return nil
+        }
+        set {
+            guard let val = newValue else { return }
+            self = .right(val)
         }
     }
     
@@ -45,11 +53,46 @@ public enum Either<Left, Right> {
         }
     }
     
+    public func reduce<Value>(
+        ifLeft transformLeft: (Left) throws -> Value,
+        ifRight transformRight: (Right) throws -> Value
+    ) rethrows -> Value {
+        switch self {
+        case .left(let lhs):
+            return try transformLeft(lhs)
+        case .right(let rhs):
+            return try transformRight(rhs)
+        }
+    }
+    public func reduceLeft(
+        _ transform: (Right) throws -> Left
+    ) rethrows -> Left {
+        return try reduce(ifLeft: { $0 }, ifRight: transform)
+    }
+    public func reduceRight(
+        _ transform: (Left) throws -> Right
+    ) rethrows -> Right {
+        return try reduce(ifLeft: transform, ifRight: { $0 })
+    }
+    
+    public func filter(
+        ifLeft leftPredicate: (Left) throws -> Bool,
+        ifRight rightPredicate: (Right) throws -> Bool
+    ) rethrows -> Self? {
+        switch self {
+        case let .left(left):
+            return try leftPredicate(left) ? self : nil
+        case let .right(right):
+            return try rightPredicate(right) ? self : nil
+        }
+    }
+    
+    
     public func map<NewLeft, NewRight>(
         ifLeft transformLeft: (Left) throws -> NewLeft,
         ifRight transformRight: (Right) throws -> NewRight
     ) rethrows -> Either<NewLeft, NewRight> {
-        return try either(
+        return try reduce(
             ifLeft: { .left(try transformLeft($0)) },
             ifRight: { .right(try transformRight($0)) }
         )
@@ -67,16 +110,39 @@ public enum Either<Left, Right> {
         return try map(ifLeft: { $0 }, ifRight: transform)
     }
     
+    
+    public func flatMap<NewLeft, NewRight>(
+        ifLeft transformLeft: ((Left) throws -> NewLeft?),
+        ifRight transformRight: ((Right) throws -> NewRight?)
+    ) rethrows -> Either<NewLeft, NewRight>? {
+        switch self {
+        case .left(let lhs):
+            return try transformLeft(lhs).map(Either<NewLeft, NewRight>.left)
+        case .right(let rhs):
+            return try transformRight(rhs).map(Either<NewLeft, NewRight>.right)
+        }
+    }
     public func flatMapLeft<NewLeft>(
-        _ transform: (Left) throws -> Either<NewLeft, Right>
-    ) rethrows -> Either<NewLeft, Right> {
-        return try either(ifLeft: transform, ifRight: { .right($0) })
+        _ transform: ((Left) throws -> NewLeft?)
+    ) rethrows -> Either<NewLeft, Right>? {
+        return try flatMap(ifLeft: transform, ifRight: { $0 })
+    }
+    public func flatMapRight<NewRight>(
+        left transform: ((Right) throws -> NewRight?)
+    ) rethrows -> Either<Left, NewRight>? {
+        return try flatMap(ifLeft: { $0 }, ifRight: transform)
     }
     
-    public func flatMapRight<NewRight>(
+    
+    public func compactMapLeft<NewLeft>(
+        _ transform: (Left) throws -> Either<NewLeft, Right>
+    ) rethrows -> Either<NewLeft, Right> {
+        return try reduce(ifLeft: transform, ifRight: { .right($0) })
+    }
+    public func compactMapRight<NewRight>(
         _ transform: (Right) throws -> Either<Left, NewRight>
     ) rethrows -> Either<Left, NewRight> {
-        return try either(ifLeft: { .left($0) }, ifRight: transform)
+        return try reduce(ifLeft: { .left($0) }, ifRight: transform)
     }
     
     public static func zipLeft<LeftLeft, RightLeft>(
@@ -105,6 +171,21 @@ public enum Either<Left, Right> {
         case let (_, .left(left)):
             return .left(left)
         }
+    }
+}
+
+extension Either: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String {
+        reduce(
+            ifLeft: { "Either.left(\(String(describing: $0)))" },
+            ifRight: { "Either.right(\(String(describing: $0)))" }
+        )
+    }
+    public var debugDescription: String {
+        reduce(
+            ifLeft: { "Either.left(\(String(reflecting: $0)))" },
+            ifRight: { "Either.right(\(String(reflecting: $0)))" }
+        )
     }
 }
 
@@ -151,11 +232,11 @@ extension Either: Hashable where Left: Hashable, Right: Hashable {
     }
 }
 
-public struct DecodingErrors: Error {
-    let errors: [Error]
-}
 
 extension Either: Decodable where Left: Decodable, Right: Decodable {
+    public struct DecodeError: Error {
+        public let errors: [Error]
+    }
     public init(from decoder: Decoder) throws {
         do {
             self = try .left(Left(from: decoder))
@@ -168,7 +249,7 @@ extension Either: Decodable where Left: Decodable, Right: Decodable {
                     .init(
                         codingPath: decoder.codingPath,
                         debugDescription: "Could not decode \(Left.self) or \(Right.self)",
-                        underlyingError: DecodingErrors(errors: [leftError, rightError])
+                        underlyingError: DecodeError(errors: [leftError, rightError])
                     )
                 )
             }
@@ -178,33 +259,31 @@ extension Either: Decodable where Left: Decodable, Right: Decodable {
 
 extension Either: Encodable where Left: Encodable, Right: Encodable {
     public func encode(to encoder: Encoder) throws {
-        return try either(
+        return try reduce(
             ifLeft: { try $0.encode(to: encoder) },
             ifRight: { try $0.encode(to: encoder) }
         )
     }
 }
 
-#if swift(>=5.0)
 extension Either where Left: Error {
     public var asRightResult: Result<Right, Left> {
-        return either(ifLeft: Result.failure, ifRight: Result.success)
+        return reduce(ifLeft: Result.failure, ifRight: Result.success)
     }
 }
 
 extension Either where Right: Error {
     public var asLeftResult: Result<Left, Right> {
-        return either(ifLeft: Result.success, ifRight: Result.failure)
-    }
+        return reduce(ifLeft: Result.success, ifRight: Result.failure)
+    } 
 }
-#endif
 
 extension Optional {
     public func selectLeft<Left, Right>(
         _ perform: (Right) -> Left? = {_ in nil }) -> Left?
     where Wrapped == Either<Left, Right> {
         return flatMap { e in
-            e.either(
+            e.reduce(
                 ifLeft: { a in .some(a) },
                 ifRight: { b in perform(b) }
             )
@@ -214,7 +293,7 @@ extension Optional {
         _ perform: (Left) -> Right? = {_ in nil }) -> Right?
     where Wrapped == Either<Left, Right> {
         return flatMap { e in
-            e.either(
+            e.reduce(
                 ifLeft: { a in perform(a) },
                 ifRight: { b in .some(b) }
             )

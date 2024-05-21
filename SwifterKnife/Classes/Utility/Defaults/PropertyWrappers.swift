@@ -24,6 +24,15 @@
 
 #if swift(>=5.1)
 
+/*
+ 如果key是动态的，请像下面这样使用
+ private var stu_index = 0
+ private var score: Int {
+     get { Defaults["stu_score_\(stu_index)"] ?? 0 }
+     set { Defaults["stu_score_\(stu_index)"] = newValue }
+ }
+ */
+
 @propertyWrapper
 public struct SwiftyDefaults<T: DefaultsSerializable> where T.T == T {
     private let _key: String

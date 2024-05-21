@@ -91,6 +91,12 @@ public extension Optional {
 //        assert(optional != nil, failureText())
 //    }
     
+    func typeMap<T>(_ ifNone: @autoclosure () -> T, _ ifSome: (Wrapped) -> T) -> T {
+        switch self {
+        case .some(let x): return ifSome(x)
+        case .none: return ifNone()
+        }
+    }
     func or(throws error: @autoclosure () -> Error) throws -> Wrapped {
         switch self {
         case .some(let x): return x
@@ -119,13 +125,20 @@ public extension Optional {
         }
     }
     
-    @discardableResult
-    func onSome(_ work: (Wrapped) -> Void) -> Optional {
-        if let value = self { work(value) }
-        return self
+    func modify(_ work: (inout Wrapped) throws -> Void) rethrows -> Optional {
+        switch self {
+        case .some(var x):
+            try work(&x)
+            return .some(x)
+        case .none: return .none
+        }
     }
 }
-
+public extension Optional where Wrapped: Swift.Error {
+    var operateDesc: String {
+        typeMap("成功") { "失败\($0)" }
+    }
+}
 // MARK: - Methods (Collection)
 
 public extension Optional where Wrapped: Collection {
@@ -227,3 +240,4 @@ public extension Optional where Wrapped: RawRepresentable, Wrapped.RawValue: Equ
     }
 
 }
+

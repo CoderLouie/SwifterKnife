@@ -60,13 +60,11 @@ public extension UIView {
 public extension UIView {
     /// Take screenshot of view (if applicable).
     var screenshot: UIImage? {
-        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
-        defer {
-            UIGraphicsEndImageContext()
+        let size = layer.frame.size
+        guard size != .zero else { return nil }
+        return UIGraphicsImageRenderer(size: size).image { context in
+            layer.render(in: context.cgContext)
         }
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        layer.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
     }
     var screenshotView: UIImageView? {
         guard let snapshot = screenshot else { return nil }
@@ -469,6 +467,14 @@ public extension UIView {
 //        translatesAutoresizingMaskIntoConstraints = true
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
+    
+    func blur(withStyle style: UIBlurEffect.Style) {
+        let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: style))
+        blurEffectView.frame = bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(blurEffectView)
+        clipsToBounds = true
+    }
     /*
      amount < 0 会变得更容易被拉伸或压缩
      amount > 0 会变得更不容易被拉伸或压缩
@@ -527,4 +533,103 @@ class XXView: UIView {
 public func ~=(pattern: UIView, value: (superview: UIView, point: CGPoint, event: UIEvent?)) -> Bool {
     let point = value.superview.convert(value.point, to: pattern)
     return pattern.point(inside: point, with: value.event)
+}
+ 
+
+private struct Identifier<Type>: Hashable {
+    let rawValue: String
+}
+/// A configuration pattern generic implementation.
+///
+/// Simple and powerful way to extend any type to support configuration driven
+/// views.
+///
+/// **Configuration Declaration**
+///
+/// ```swift
+/// extension XConfiguration where Type: UILabel {
+///     static var header: XConfiguration {
+///         .init(id: #function) {
+///             $0.font = .app(.title1)
+///             $0.numberOfLines = 0
+///         }
+///     }
+/// }
+/// ```
+///
+/// **Usage**
+///
+/// ```swift
+/// let headerLabel = UILabel(configuration: .header)
+/// ```
+public struct XConfiguration<Type> {
+    
+    public typealias ID = String
+    public let id: ID
+    public let configure: (Type) -> Void
+
+    public init(id: ID? = nil, _ configure: @escaping (Type) -> Void) {
+        self.id = Self.makeId(id: id)
+        self.configure = configure
+    }
+
+    public func extend(id: ID? = nil, _ configure: @escaping (Type) -> Void) -> Self {
+        .init(id: Self.makeId(id: id)) { type in
+            self.configure(type)
+            configure(type)
+        }
+    }
+
+    private static func makeId(id: ID? = nil) -> ID {
+        id ?? UUID().uuidString
+    }
+}
+
+// MARK: - Equatable
+
+extension XConfiguration: Equatable {
+    public static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+// MARK: - Hashable
+
+extension XConfiguration: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+// MARK: - Convenience UIKit Initializers
+
+extension UILabel {
+    public convenience init(text: String?, configuration: XConfiguration<UILabel>) {
+        self.init()
+        self.text = text
+        configuration.configure(self)
+    } 
+}
+
+// MARK: - XConfigurationInitializable
+
+public protocol XConfigurationInitializable {}
+
+@MainActor
+extension XConfigurationInitializable where Self: UIView {
+    public init(configuration: XConfiguration<Self>) {
+        self.init()
+        configuration.configure(self)
+    }
+}
+
+extension UIView: XConfigurationInitializable {}
+extension UIBarButtonItem: XConfigurationInitializable {}
+
+// MARK: - Built-in
+
+extension XConfiguration {
+    public static var none: Self {
+        .init(id: #function) { _ in }
+    }
 }

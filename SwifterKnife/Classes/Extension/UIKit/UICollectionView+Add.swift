@@ -62,6 +62,15 @@ public extension UICollectionView {
         layout(flowLayout)
         self.init(frame: .zero, collectionViewLayout: flowLayout)
     }
+    var theFlowLayout: UICollectionViewFlowLayout? {
+        collectionViewLayout as? UICollectionViewFlowLayout
+    }
+    
+    var displayingCells: [UICollectionViewCell] {
+        let visibleCells = visibleCells
+        let visibleRect = frame.intersection(superview?.bounds ?? frame)
+        return visibleCells.filter { $0.frame.intersects(visibleRect) }
+    }
     
     /// VisibleCells in the order they are displayed on screen.
     var orderedVisibleCells: [UICollectionViewCell] {

@@ -25,6 +25,31 @@
 
 public protocol OptionalType: ExpressibleByNilLiteral {
     associatedtype Wrapped
+    var value: Optional<Wrapped> { get }
+//    init(_ some: Wrapped)
 }
 
-extension Optional: OptionalType { }
+extension Optional: OptionalType {
+    public var value: Optional<Wrapped> { self }
+}
+
+extension OptionalType {
+    public func safedesc(or placeholder: @autoclosure () -> String = "nil") -> String {
+        if case .some(let wrapper) = value {
+            return String(describing: wrapper)
+        }
+        return placeholder()
+    }
+}
+
+extension Sequence where Element: OptionalType {
+    public func safedesc(or placeholder: @autoclosure () -> String = "nil") -> String {
+        let array = map { element in
+            guard case let x? = element.value else {
+                return placeholder()
+            }
+            return String(describing: x)
+        }
+        return String(describing: array)
+    }
+}

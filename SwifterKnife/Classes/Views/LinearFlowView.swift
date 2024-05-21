@@ -7,22 +7,36 @@
 
 import UIKit
 
-open class LinearFlowView: UIView {
-    public enum Alignment: Int {
-        case left
-        case center
-        case right
-        case leading
-        case trailing
-    }
+public final class LinearFlowView: UIView {
     
     public var contentInset: UIEdgeInsets = .zero
-    public var numberOfLines: Int = 0
-     
-    public var alignment: Alignment = .leading
+    
     public var marginY: CGFloat = 5
     public var marginX: CGFloat = 5
     public var minPlaceWidth: CGFloat = 0
+    
+    public var cellSize: ((_ view: UIView, _ index: Int) -> CGSize?)?
+    
+    public enum InlineAction {
+        case ignore
+        case exit
+        case goon
+    }
+    // 高度根据布局属性及子视图自动计算
+    /// 布局行为
+    public enum LayoutBehavior {
+        /// 宽度自动，不会小于minPlaceWidth，
+        /// 根据子视图数量布局成numberOfLines行，但需要 > 0
+        case autoWidth(_ numberOfLines: Int)
+        
+        /// 固定宽度(max(bounds.width, minPlaceWidth))
+        case fixedWidth
+        
+        /// 固定宽度(max(bounds.width, minPlaceWidth))
+        /// 支持动态添加子视图
+        case fixedWidth1(_ createView: (_ times: Int) -> UIView?, _ onDidLayout: (_ rows: Int, _ size: CGSize, _ contentWidth: CGFloat, _ currentWidth: CGFloat, _ enoughSpace: Bool) -> InlineAction)
+    }
+    public var layoutBehavior: LayoutBehavior = .fixedWidth
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,80 +46,190 @@ open class LinearFlowView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open func setup() { }
+    private func setup() { }
     
-    open func addArrangedView(_ view: UIView) {
-        arrangedViews.append(view)
+    public func addArrangedView(_ view: UIView) {
+        addSubview(view)
     }
-    open func insertArrangedView(_ view: UIView, at index: Int) {
-        arrangedViews.insert(view, at: index)
-    }
-    open func addArrangedViews(_ views: [UIView]) {
+    public func addArrangedViews(_ views: [UIView]) {
         for view in views {
-            arrangedViews.append(view)
+            addSubview(view)
         }
     }
     
-    @discardableResult
-    open func removeArrangedView(_ view: UIView) -> Bool {
-        if let index = arrangedViews.firstIndex(of: view) {
-            view.removeFromSuperview()
-            arrangedViews.remove(at: index)
-            return true
-        } else {
-            return false
-        }
-    }
-    @discardableResult
-    open func removeArrangedView(at index: Int) -> Bool {
-        guard arrangedViews.indices.contains(index) else {
-            return false
-        }
-        let view = arrangedViews[index]
-        view.removeFromSuperview()
-        arrangedViews.remove(at: index)
-        return true
-    }
-    open func removeAllArrangedViews() {
-        (arrangedViews + rowViews).forEach {
-            $0.removeFromSuperview()
-        }
-        arrangedViews = []
-        rowViews = []
+    public func removeAllArrangedViews() {
+        removeSubviews()
     }
     
-    open override func layoutSubviews() {
+    public override func setNeedsLayout() {
+        hasLayout = false
+        super.setNeedsLayout()
+    }
+    public override func layoutIfNeeded() {
+        hasLayout = false
+        super.layoutIfNeeded()
+    }
+    public override func layoutSubviews() {
         super.layoutSubviews()
         replaceArrangedViews()
     }
     
-    open override var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
     }
-    public var arrangedViews: [UIView] = []
-    public private(set) var rowViews: [UIView] = []
-    public private(set) var totalHeight: CGFloat = 0
-    public private(set) var totalWidth: CGFloat = 0
+    
+    public private(set) var linesCount = 0
+    public private(set) var totalHeight = UIView.noIntrinsicMetric
+    public private(set) var totalWidth = UIView.noIntrinsicMetric
     private var hasLayout: Bool = false
-}
-
-public extension LinearFlowView {
-    func setNeedsReplace() {
-        hasLayout = false
-    }
-    /// 如有必要，重新摆放其管理的子视图
-    func replaceArrangedViewsIfNeeded() {
-        if hasLayout { return }
-        replaceArrangedViews()
-    }
 }
 
 /*
  https://leetcode.cn/problems/split-array-largest-sum/solution/er-fen-cha-zhao-by-liweiwei1419-4/
  */
 private extension LinearFlowView {
+    func getCellSize(_ cell: UIView, at index: Int) -> CGSize {
+        let size: CGSize
+        if let s = cellSize?(cell, index), !s.isEmpty {
+            size = s
+        } else {
+            let s = cell.intrinsicContentSize
+            if !s.isEmpty {
+                size = s
+            } else { size = cell.frame.size }
+        }
+        return size.adaptive { Darwin.ceil($0) }
+    }
+    /// 重新摆放其管理的子视图
+    func replaceArrangedViews() {
+        guard !hasLayout else { return }
+        
+        let boundsW = max(bounds.width, minPlaceWidth)
+        
+        let inset = contentInset
+        let subviews = self.subviews
+        
+        var numberOfLines = 0
+        switch layoutBehavior {
+        case let .fixedWidth1(create, layout):
+            
+            hasLayout = true
+            removeSubviews()
+            
+            let placeWidth = boundsW - inset.right
+            let contentW = placeWidth - inset.left
+            var index = 0
+            var times = 0
+            
+            var rowY: CGFloat = inset.top
+            var rowW: CGFloat = inset.left - marginX
+            var rowH: CGFloat = 0
+            var rows = 0
+            var columns = 0
+            
+            var hasIn = false
+        outer: while let view = create(times) {
+            hasIn = true
+            times += 1
+            let tagViewSize = getCellSize(view, at: index)
+            let tagH = tagViewSize.height
+            let tagW = min(tagViewSize.width, contentW)
+            
+            let nextRowW = rowW + marginX
+            let enough = nextRowW + tagW <= placeWidth
+            
+            switch layout(rows, tagViewSize, contentW, rowW, enough) {
+            case .ignore: continue
+            case .goon: let _ = times;
+            case .exit: break outer
+            }
+            index += 1
+            if enough {
+                rowW = nextRowW
+                columns += 1
+            } else {
+                rows += 1
+                rowY += rowH + marginY
+                rowW = inset.left
+                rowH = 0
+                columns = 0
+            }
+            
+            view.frame = CGRect(x: rowW, y: rowY, width: tagW, height: tagH)
+            addSubview(view)
+            rowH = max(rowH, tagH)
+            rowW += tagW
+        }
+            
+            totalWidth = boundsW
+            guard hasIn else { return }
+            self.linesCount = rows + 1
+            totalHeight = rowY + rowH + inset.bottom
+            invalidateIntrinsicContentSize()
+            return
+        case .fixedWidth:
+            break
+        case let .autoWidth(linesN):
+            guard linesN > 0, !subviews.isEmpty else { return }
+            numberOfLines = linesN
+        }
+        let tagViewSizes = subviews.enumerated().map {
+            return getCellSize($0.1, at: $0.0)
+        }
+        
+        let N = subviews.count
+        let frameWidth: CGFloat
+        if numberOfLines == 0 {
+            frameWidth = boundsW
+            if boundsW <= 0 { return }
+        } else if numberOfLines == 1 {
+            let totalW = tagViewSizes.map(\.width).reduce(into: 0, +=) + CGFloat(N - 1) * marginX + inset.horizontal
+            frameWidth = max(totalW, boundsW)
+        } else {
+            let widths = tagViewSizes.map(\.width)
+            let pair = splitArray(widths, numberOfLines)
+            let totalW = Darwin.ceil(pair.0) + CGFloat((pair.1 - 1)) * marginX + inset.horizontal
+            frameWidth = max(totalW, boundsW)
+        }
+        
+        hasLayout = true
+        
+        let placeWidth = frameWidth - inset.right
+        let contentW = placeWidth - inset.left
+        
+        var rowY: CGFloat = inset.top
+        var rowW: CGFloat = inset.left - marginX
+        var rowH: CGFloat = 0
+        var lines = 1
+        for (i, tagView) in subviews.enumerated() {
+            let tagViewSize = tagViewSizes[i]
+            let tagH = tagViewSize.height
+            let tagW = min(tagViewSize.width, contentW)
+            
+            let nextRowW = rowW + marginX
+            if nextRowW + tagW > placeWidth {
+                lines += 1
+                rowY += rowH + marginY
+                rowW = inset.left
+                rowH = 0
+            } else {
+                rowW = nextRowW
+            }
+            tagView.frame = CGRect(x: rowW, y: rowY, width: tagW, height: tagH)
+            rowH = max(rowH, tagH)
+            rowW += tagW
+        }
+        self.linesCount = lines
+        totalWidth = frameWidth
+        totalHeight = rowY + rowH + inset.bottom
+        invalidateIntrinsicContentSize()
+    }
+    
     func splitArray(_ nums: [CGFloat], _ m: Int) -> (CGFloat, Int) {
         let len = nums.count
+        if m == 1 {
+            return (nums.reduce(into: 0, +=), len)
+        }
         var preSum: [CGFloat] = .init(repeating: 0, count: len + 1)
         preSum[0] = 0
         for i in 0..<len {
@@ -142,121 +266,5 @@ private extension LinearFlowView {
         }
         return (dp[len - 1][m], len)
     }
-    /// 重新摆放其管理的子视图
-    func replaceArrangedViews() {
-        guard !hasLayout else { return }
-        
-        let boundsW = frame.width
-        
-        let views = arrangedViews + rowViews
-        guard !views.isEmpty else { return }
-        
-        views.forEach { $0.removeFromSuperview() }
-        rowViews.removeAll(keepingCapacity: true)
-        
-        var tagViewSizes: [CGSize] = []
-        for tagView in arrangedViews {
-            let tagFrame = tagView.frame
-            tagViewSizes.append((tagFrame.isEmpty ? tagView.intrinsicContentSize : tagFrame.size).adaptive { $0.pixCeil })
-        }
-        let isMultipleLines = numberOfLines != 1
-        let frameWidth: CGFloat
-        if numberOfLines < 2 {
-            frameWidth = boundsW
-            if isMultipleLines, boundsW <= 0 { return }
-        } else {
-            let widths = tagViewSizes.map(\.width)
-            let pair = splitArray(widths, numberOfLines)
-            let tmpWidth = Darwin.ceil(pair.0) + CGFloat((pair.1 - 1)) * marginX + contentInset.horizontal
-            let targetW = Swift.max(minPlaceWidth, boundsW)
-            frameWidth = tmpWidth < targetW ? targetW : tmpWidth
-        }
-        hasLayout = true
-
-        let isRtl: Bool = effectiveUserInterfaceLayoutDirection == .rightToLeft
-        let directionTransform = isRtl
-            ? CGAffineTransform(scaleX: -1.0, y: 1.0)
-            : CGAffineTransform.identity
-        
-        var rowIndex = 0
-        var currentRowTagCount = 0
-        
-        var currentRowW: CGFloat = 0
-        var currentRowH: CGFloat = 0
-        
-        var currentTagW: CGFloat = 0
-        var currentTagH: CGFloat = 0
-        
-        var currentRowView: UIView = UIView()
-        currentRowView.transform = directionTransform
-        rowViews.append(currentRowView)
-        addSubview(currentRowView)
-        
-        let inset = contentInset
-        let placeWidth = frameWidth - inset.horizontal
-        
-        for (i, tagView) in arrangedViews.enumerated() {
-            let tagViewSize = tagViewSizes[i]
-            currentTagH = tagViewSize.height
-            currentTagW = tagViewSize.width
-            
-            currentRowH = max(currentRowH, currentTagH)
-            
-            if isMultipleLines,
-               currentRowW + currentTagW > placeWidth {
-                if currentRowTagCount > 0 { currentRowW -= marginX }
-                rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
-                
-                rowIndex += 1
-                currentRowW = 0
-                currentRowTagCount = 0
-                
-                currentRowView = UIView()
-                currentRowView.transform = directionTransform
-                rowViews.append(currentRowView)
-                addSubview(currentRowView)
-            }
-            tagView.frame = CGRect(x: currentRowW, y: 0, width: currentTagW, height: currentTagH)
-            currentRowView.addSubview(tagView)
-            
-            currentRowTagCount += 1
-            currentRowW += currentTagW + marginX
-        }
-        if currentRowTagCount > 0 { currentRowW -= marginX }
-        rowViews[rowIndex].frame.size = CGSize(width: currentRowW, height: currentRowH)
-        
-        if isMultipleLines {
-            totalWidth = frameWidth
-        } else {
-            totalWidth = currentRowW + inset.horizontal
-        }
-        
-        var alignment = self.alignment
-        
-        if alignment == .leading {
-            alignment = isRtl ? .right : .left
-        } else if alignment == .trailing {
-            alignment = isRtl ? .left : .right
-        }
-        
-        var rowViewX: CGFloat = inset.left
-        var rowViewY: CGFloat = inset.top
-        for view in rowViews {
-            let size = view.frame.size
-            let currentRowW = size.width
-            switch alignment {
-            case .leading, .left:
-                rowViewX = inset.left
-            case .center:
-                rowViewX = (frameWidth - currentRowW) / 2
-            case .trailing, .right:
-                rowViewX = frameWidth - currentRowW - inset.right
-            }
-            view.frame.origin = CGPoint(x: rowViewX, y: rowViewY)
-            rowViewY += size.height + marginY
-        }
-        totalHeight = rowViewY - marginY + inset.bottom
-        
-        invalidateIntrinsicContentSize()
-    }
 }
+

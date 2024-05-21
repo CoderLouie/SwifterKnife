@@ -103,6 +103,10 @@ public extension String {
         let hasNumbers = rangeOfCharacter(from: .decimalDigits, options: .literal, range: nil) != nil
         return hasLetters && !hasNumbers
     }
+    /// Check if string contains only numbers.
+    var isNumbers: Bool {
+        return rangeOfCharacter(from: .decimalDigits.inverted, options: .literal, range: nil) == nil
+    }
 
     /// Check if string contains at least one letter and one number.
     ///
@@ -665,35 +669,66 @@ public extension String {
     }
 }
 
-public extension String {
-    func aspectFitSize(for font: UIFont, limitSize: CGSize, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
-        var attr: [NSAttributedString.Key: Any] = [.font: font]
-        if model != .byWordWrapping {
-            let style = NSMutableParagraphStyle()
-            style.lineBreakMode = model
-            attr[.paragraphStyle] = style
+// Extension #3 - Retrieves valid URLs from a given string.
+//Credit - Thanks to Paul Hudson for the core functionality on this extension.
+//Source - https://www.hackingwithswift.com/example-code/strings/how-to-detect-a-url-in-a-string-using-nsdatadetector
+extension String {
+    /// Searches through a string to find valid URLs.
+    /// - Returns: An array of found URLs.
+    func extractURLs() -> [URL] {
+        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+            return []
         }
-        let rect = (self as NSString).boundingRect(with: limitSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: attr, context: nil)
-        let res = rect.size.adaptive(tramsform: \.pixCeil)
-        return res
-    }
-    func aspectFitSize(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
-        aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model)
-    }
-    func aspectFitHeight(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
-        aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model).height
-    }
-    func aspectFitWidth(for font: UIFont, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
-        let size = CGSize(width: CGFloat.greatestFiniteMagnitude,
-                          height: CGFloat.greatestFiniteMagnitude)
-        return aspectFitSize(for: font, limitSize: size, model: model).width
-    }
-}
-extension UIFont {
-    public var singleLineHeight: CGFloat {
-        "Hello".aspectFitHeight(for: self,
-                                maxWidth: .greatestFiniteMagnitude)
+         
+        return detector.matches(
+            in: self,
+            options: [],
+            range: NSRange(location: 0, length: self.utf16.count)
+        ).compactMap {
+            guard let range = Range($0.range, in: self),
+                  let retrievedURL = URL(string: String(self[range])) else {
+                return nil
+            }
+            return retrievedURL
+        }
     }
 }
 
+
 //https://www.jianshu.com/p/17fab783bfad
+
+
+extension String.StringInterpolation {
+
+    public mutating func appendInterpolation<T>(op value: T?, or defValue: @autoclosure () -> String = "nil") {
+        if let val = value {
+            appendInterpolation(val)
+        } else {
+            appendInterpolation(defValue())
+        }
+    }
+    public mutating func appendInterpolation<T>(if condition: Bool, _ value: T) {
+        guard condition else { return }
+        appendInterpolation(value)
+    }
+    public mutating func appendInterpolation<T>(ifSome value: T?) {
+        guard let val = value else { return }
+        appendInterpolation(val)
+    }
+    
+    public mutating func appendInterpolation(res value: Swift.Error?) {
+        if let val = value {
+            appendInterpolation("failed \(val.localizedDescription)")
+        } else {
+            appendInterpolation("success")
+        }
+    }
+    public mutating func appendInterpolation<S, F: Swift.Error>(res value: Result<S, F>) {
+        switch value {
+        case let .success(val):
+            appendInterpolation("success \(val)")
+        case let .failure(error):
+            appendInterpolation("failed \(error.localizedDescription)")
+        }
+    }
+}

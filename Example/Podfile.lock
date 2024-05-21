@@ -2,16 +2,19 @@ PODS:
   - Alamofire (5.7.1)
   - lottie-ios (4.2.0)
   - SnapKit (5.6.0)
-  - SwifterKnife (0.2.0):
-    - SwifterKnife/Base (= 0.2.0)
-    - SwifterKnife/Extension (= 0.2.0)
-    - SwifterKnife/Utility (= 0.2.0)
-    - SwifterKnife/Views (= 0.2.0)
-  - SwifterKnife/Base (0.2.0)
-  - SwifterKnife/Extension (0.2.0)
-  - SwifterKnife/Utility (0.2.0)
-  - SwifterKnife/Views (0.2.0):
+  - SwifterKnife (0.3.0):
+    - SwifterKnife/Base (= 0.3.0)
+    - SwifterKnife/Extension (= 0.3.0)
+    - SwifterKnife/Utility (= 0.3.0)
+    - SwifterKnife/Views (= 0.3.0)
+  - SwifterKnife/Base (0.3.0)
+  - SwifterKnife/Extension (0.3.0):
+    - SwifterKnife/Base
+  - SwifterKnife/Utility (0.3.0)
+  - SwifterKnife/Views (0.3.0):
     - SnapKit
+    - SwifterKnife/Extension
+    - SwifterKnife/Utility
 
 DEPENDENCIES:
   - Alamofire
@@ -40,8 +43,8 @@ SPEC CHECKSUMS:
   Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
   lottie-ios: 809ecf2d460ed650a6aed7aa88b2ec45fab4779c
   SnapKit: 9eedce9d0d01ad07c7c75194ee7d39b42c04bb1f
-  SwifterKnife: a0c637fd230e8b1ab25ac047ea2b56b231abbd7e
+  SwifterKnife: 931e414b38acb426b7682f831f3ba8cb50c7fb93
 
-PODFILE CHECKSUM: bd9382508b09f5362660d80a9760f4d9f5638986
+PODFILE CHECKSUM: 5185c4058c8a292db591711f147d602f1bed3638
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.14.2

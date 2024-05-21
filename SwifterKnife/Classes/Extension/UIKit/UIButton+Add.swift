@@ -7,34 +7,34 @@
 
 import UIKit
 
-public struct TouchPosition: OptionSet {
-    public let rawValue: Int
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
+public enum TouchPosition {
+    case topLeft, topRight, bottomLeft, bottomRight
+    
+    public var atTop: Bool {
+        self == .topLeft || self == .topRight
     }
-    public static var left: TouchPosition { .init(rawValue: 1 << 0) }
-    public static var right: TouchPosition { .init(rawValue: 1 << 1) }
-    public static var top: TouchPosition { .init(rawValue: 1 << 2) }
-    public static var bottom: TouchPosition { .init(rawValue: 1 << 3) }
+    public var atBottom: Bool {
+        self == .bottomLeft || self == .bottomRight
+    }
+    public var atLeft: Bool {
+        self == .topLeft || self == .bottomLeft
+    }
+    public var atRight: Bool {
+        self == .topRight || self == .bottomRight
+    }
 }
 
 extension UITouch {
-    public var touchPosition: TouchPosition {
-        guard let v = view else { return [] }
+    public var touchPosition: TouchPosition? {
+        guard let v = view else { return nil }
         let p = location(in: v)
         let size = v.bounds.size
         
-        var res: TouchPosition = []
-        
-        if p.x > size.width * 0.5 {
-            res.formUnion(.right)
-        } else { res.formUnion(.left) }
-        
         if p.y > size.height * 0.5 {
-            res.formUnion(.bottom)
-        } else { res.formUnion(.top) }
-        
-        return res
+            return p.x > size.width * 0.5 ? .bottomRight : .bottomLeft
+        } else {
+            return p.x > size.width * 0.5 ? .topRight : .topLeft
+        }
     }
 }
 
@@ -53,21 +53,124 @@ extension UIEvent {
         }
      }
      */
-    public var touchPosition: TouchPosition {
-        guard let touch = allTouches?.randomElement() else { return [] }
-        return touch.touchPosition
+    public var touchPosition: TouchPosition? {
+        return allTouches?.randomElement()?.touchPosition
     }
 }
 
-public extension UIControl {
+fileprivate final class ClosureTarget {
+    fileprivate let closure: (UIControl, UIEvent) -> Void
+    fileprivate var event: UIControl.Event
     
+    fileprivate init(event: UIControl.Event, closure: @escaping (UIControl, UIEvent) -> Void) {
+        self.closure = closure
+        self.event = event
+    }
+    @objc fileprivate func onDidClick(_ sender: UIControl, _ event: UIEvent) {
+        closure(sender, event)
+    }
+}
+public protocol TargetAction: AnyObject {
+    func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event)
+    func removeTarget(_ target: Any?, action: Selector?, for controlEvents: UIControl.Event)
+}
+
+private var controlClosureTargetKey: UInt8 = 0
+extension TargetAction {
+    public func addClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        if event.isEmpty { return }
+        let wrap = ClosureTarget(event: event) { control, event in
+            guard let sender = control as? Self else { return }
+            closure(sender, event)
+        }
+        addTarget(wrap, action: #selector(ClosureTarget.onDidClick(_:_:)), for: event)
+        closureTargets.add(wrap)
+    }
+
+    public func removeClosures(for event: UIControl.Event) {
+        if event.isEmpty { return }
+        let targets = self.closureTargets
+        var removes: [ClosureTarget] = []
+        for obj in targets {
+            guard let target = obj as? ClosureTarget,
+                  target.event.contains(event) else { continue }
+            let newEvent = target.event &~ event
+            
+            let action = #selector(ClosureTarget.onDidClick(_:_:))
+            removeTarget(target, action: action, for: target.event)
+            if newEvent.isEmpty {
+                removes.append(target)
+            } else {
+                target.event = newEvent
+                addTarget(target, action: action, for: newEvent)
+            }
+        }
+        targets.removeObjects(in: removes)
+    }
+    
+    private var closureTargets: NSMutableArray {
+        if let array = objc_getAssociatedObject(self, &controlClosureTargetKey) as? NSMutableArray {
+            return array
+        }
+        let array = NSMutableArray()
+        objc_setAssociatedObject(self, &controlClosureTargetKey, array, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return array
+    }
+}
+extension TargetAction {
+    
+    public func setClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        removeClosures(for: event)
+        addClosure(for: event, closure: closure)
+    }
+    
+    public func addTouchUpInsideClosure(_ closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        addClosure(for: .touchUpInside, closure: closure)
+    }
+    public func setTouchUpInsideClosure(_ closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        setClosure(for: .touchUpInside, closure: closure)
+    }
+}
+
+extension UIControl: TargetAction {}
+
+public extension UIControl {
     func addTouchUpInside(_ target: Any?, _ action: Selector) {
         addTarget(target, action: action, for: .touchUpInside)
     }
 }
 
 public extension UIButton {
-    
+    /// Center align title text and image.
+    /// - Parameters:
+    ///   - imageAboveText: set true to make image above title text, default is false, image on left of text.
+    ///   - spacing: spacing between title text and image.
+    func centerTextAndImage(imageAboveText: Bool = false, spacing: CGFloat) {
+        if imageAboveText {
+            // https://stackoverflow.com/questions/2451223/#7199529
+            guard
+                let imageSize = imageView?.image?.size,
+                let text = titleLabel?.text,
+                let font = titleLabel?.font else { return }
+
+            let titleSize = text.size(withAttributes: [.font: font])
+
+            let titleOffset = -(imageSize.height + spacing)
+            titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: titleOffset, right: 0.0)
+
+            let imageOffset = -(titleSize.height + spacing)
+            imageEdgeInsets = UIEdgeInsets(top: imageOffset, left: 0.0, bottom: 0.0, right: -titleSize.width)
+
+            let edgeOffset = abs(titleSize.height - imageSize.height) / 2.0
+            contentEdgeInsets = UIEdgeInsets(top: edgeOffset, left: 0.0, bottom: edgeOffset, right: 0.0)
+        } else {
+            let insetAmount = spacing / 2
+            imageEdgeInsets = UIEdgeInsets(top: 0, left: -insetAmount, bottom: 0, right: insetAmount)
+            titleEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: -insetAmount)
+            contentEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: insetAmount)
+        }
+    }
+
     /// Set background color for specified state.
     /// - Parameters:
     ///   - color: The color of the image that will be set as background for the button in the given state.
