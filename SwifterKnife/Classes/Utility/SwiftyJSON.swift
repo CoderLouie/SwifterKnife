@@ -575,14 +575,16 @@ extension JSON {
     }
     
     public func searchIgnoreCase(_ keys: String...) -> JSON {
-        guard case .dictionary(var dict) = self else {
+        guard case .dictionary(let dict) = self else {
             return orError(.wrongType)
         }
-        dict = dict.mapKeysAndValues {
-            ($0.key.lowercased(), $0.value)
+        var map: [String: Any] = [:]
+        map.reserveCapacity(dict.count)
+        for (key, value) in dict {
+            map[key.lowercased()] = value
         }
         for key in keys.map({ $0.lowercased() }) {
-            if let o = dict[key] { return JSON(o) }
+            if let o = map[key] { return JSON(o) }
         }
         return .error(.notExist)
     }

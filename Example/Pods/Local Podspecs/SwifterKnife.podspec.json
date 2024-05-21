@@ -1,6 +1,6 @@
 {
   "name": "SwifterKnife",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "summary": "A handy collection of Swift method and Tools to build project faster and more efficient.",
   "description": "SwifterKnife is a collection of Swift extension method and some tools that often use in develop project, with them you might build project faster and more efficient.",
   "homepage": "https://github.com/CoderLouie/SwifterKnife",
@@ -18,7 +18,7 @@
   "requires_arc": true,
   "source": {
     "git": "https://github.com/CoderLouie/SwifterKnife.git",
-    "tag": "0.2.0"
+    "tag": "0.3.0"
   },
   "subspecs": [
     {
@@ -52,10 +52,6 @@
         ]
       },
       "source_files": "SwifterKnife/Classes/Views/**/*.swift"
-    },
-    {
-      "name": "Database",
-      "source_files": "SwifterKnife/Classes/Database/**/*"
     }
   ],
   "swift_version": "5.3"

@@ -1,4 +1,3 @@
-use_frameworks!
 
 platform :ios, '13.0'
 
@@ -11,8 +10,9 @@ target 'SwifterKnife_Example' do
   pod 'SwifterKnife', :path => '../'
   pod 'SnapKit', :git => 'https://github.com/CoderLouie/SnapKit.git', :branch => 'my_source'
   pod 'lottie-ios'
-#  pod 'FBSDKLoginKit'
+
   pod 'Alamofire'
+  
   target 'SwifterKnife_Tests' do
     inherit! :search_paths
     
