@@ -58,3 +58,18 @@
  Dictionary 有两个副作 用：它会去掉重复的键，并且会将所有键重新排序。如果你想要使用像是 [key: value] 这样的字 面量语法，而又不想引入 Dictionary 的这两个副作用的话，就可以使用 DictionaryLiteral。 DictionaryLiteral 是对于键值对数组 (比如 [(key, value)]) 的很好的替代，它不会引入字典的副 作用，同时让调用者能够使用更加便捷的 [:] 语法。
  
  */
+
+
+/// Evaluates the specified closure when the result of this `DataResponse` is a success, passing the unwrapped
+/// result value as a parameter.
+///
+/// - Note: xxx
+/// Use the `map` method with a closure that does not throw. For example:
+///
+///     let possibleData: DataResponse<Data> = ...
+///     let possibleInt = possibleData.map { $0.count }
+///
+/// - parameter transform: A closure **MUST** that takes the success value of the instance's result.
+///
+/// - returns: A `DataResponse` whose result wraps the value returned by the given closure. If this instance's
+///            result is a failure, returns a response wrapping the same failure.
