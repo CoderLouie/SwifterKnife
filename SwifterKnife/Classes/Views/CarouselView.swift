@@ -332,3 +332,112 @@ extension CarouselView: UIScrollViewDelegate {
         targetIndex = nil
     }
 }
+
+
+public protocol ATPageViewDelegate: AnyObject {
+    func pageView(_ pageView: ATPageView, configCell cell: UICollectionViewCell, at index: Int)
+    func pageView(_ pageView: ATPageView, didClickCell cell: UICollectionViewCell, at index: Int)
+    func pageView(_ pageView: ATPageView, didSelectCell cell: UICollectionViewCell, at index: Int)
+}
+public extension ATPageViewDelegate {
+    func pageView(_ pageView: ATPageView, didClickCell cell: UICollectionViewCell, at index: Int) {}
+    func pageView(_ pageView: ATPageView, didSelectCell cell: UICollectionViewCell, at index: Int) {}
+}
+
+public final class ATPageView: UIView {
+    public override init(frame: CGRect) {
+        layout = UICollectionViewFlowLayout().then {
+            $0.scrollDirection = .horizontal
+            $0.minimumLineSpacing = 0
+            $0.minimumInteritemSpacing = 0
+        }
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout).then {
+            $0.showsHorizontalScrollIndicator = false
+            $0.showsVerticalScrollIndicator = false
+            $0.contentInsetAdjustmentBehavior = .never
+            $0.backgroundColor = .clear
+            $0.isPagingEnabled = true
+            $0.decelerationRate = .fast
+            $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
+        }
+        super.init(frame: .zero)
+        addSubview(collectionView)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    public var isHorizontalScroll: Bool {
+        layout.scrollDirection == .horizontal
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    public weak var delegate: ATPageViewDelegate?
+    public var itemsCount = 0
+    
+    
+    private var _selectedIndex: Int = 0
+    public var selectedIndex: Int {
+        get { _selectedIndex }
+        set {
+            guard newValue != _selectedIndex else { return }
+            _selectedIndex = newValue
+            scrollToIndex(newValue, animated: hasLayout)
+        }
+    }
+    
+    public func scrollToIndex(_ index: Int, animated: Bool) {
+        collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: isHorizontalScroll ? .centeredHorizontally : .centeredVertically, animated: animated)
+    }
+    public func forward() {
+        selectedIndex += 1
+    }
+    public func backward() {
+        selectedIndex -= 1
+    }
+    
+    private var hasLayout = false
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        let bounds = bounds
+        guard !bounds.isEmpty, !hasLayout else { return }
+        hasLayout = true
+        collectionView.frame = bounds
+        layout.itemSize = bounds.size
+    }
+    
+    private let collectionView: UICollectionView
+    public let layout: UICollectionViewFlowLayout
+}
+extension ATPageView: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return
+        }
+        delegate?.pageView(self, didClickCell: cell, at: indexPath.item)
+    }
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollingDidEnd()
+    }
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        scrollingDidEnd()
+    }
+    private func scrollingDidEnd() {
+        let index = collectionView.pageIndex()
+        guard index != _selectedIndex else { return }
+        _selectedIndex = index
+        guard let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) else { return }
+        delegate?.pageView(self, didSelectCell: cell, at: index)
+    }
+}
+extension ATPageView: UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        itemsCount
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
+        delegate?.pageView(self, configCell: cell, at: indexPath.item)
+        return cell
+    }
+}

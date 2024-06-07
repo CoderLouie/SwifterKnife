@@ -19,6 +19,10 @@ public enum App {
             Darwin.exit(0)
         }
     }
+    /// 打断点
+    public static func makeBreakpoint() {
+        raise(SIGTRAP)
+    }
     
     public static var isIdleTimerEnable: Bool {
         get { !UIApplication.shared.isIdleTimerDisabled }
