@@ -9,20 +9,20 @@ import Foundation
 
 
 public protocol LocalizedKeyRepresentable {
-    var localizeKey: String { get }
+    var key: String { get }
     
     var table: String? { get }
-    static var bundle: Bundle { get }
+    var bundle: Bundle { get }
 }
 public extension LocalizedKeyRepresentable {
     var table: String? { nil }
-    static var bundle: Bundle { .main }
+    var bundle: Bundle { .main }
 }
 
 
 public extension LocalizedKeyRepresentable {
     var localized: String {
-        NSLocalizedString(localizeKey, tableName: table, bundle: Self.bundle, value:"", comment:"")
+        NSLocalizedString(key, tableName: table, bundle: bundle, value:"", comment:"")
     }
     
     func localizedFormat(with args: CVarArg...) -> String {
@@ -30,28 +30,28 @@ public extension LocalizedKeyRepresentable {
     }
     
     var i18n: String {
-        i18n(using: .current)
+        i18n(using: .main)
     }
-    func i18n(using language: Language) -> String {
-        let key = localizeKey
-        if let path = Self.bundle.path(forResource: language.rawValue, ofType: "lproj"),
+    func i18n(using lan: Lan) -> String {
+        let key = key
+        if let path = lan.bundle.path(forResource: lan.current.rawValue, ofType: "lproj"),
               let bundle = Bundle(path: path)  {
             return bundle.localizedString(forKey: key, value: nil, table: table)
         }
         return key
     }
-    func i18nFormat(with args: CVarArg..., using lan: Language = .current) -> String {
+    func i18nFormat(with args: CVarArg..., using lan: Lan = .main) -> String {
         return String(format: i18n(using: lan), arguments: args)
     }
 }
 
 
 extension LocalizedKeyRepresentable where Self: RawRepresentable, Self.RawValue == String {
-    public var localizeKey: String { rawValue }
+    public var key: String { rawValue }
 }
 
 extension String: LocalizedKeyRepresentable {
-    public var localizeKey: String { self }
+    public var key: String { self }
 }
 
 
@@ -64,6 +64,5 @@ public struct LocalizedKey {
     }
 }
 extension LocalizedKey: LocalizedKeyRepresentable {
-    public var localizeKey: String { key }
     public var table: String? { tableName }
 } 

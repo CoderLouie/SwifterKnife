@@ -6,93 +6,16 @@
 //
 
 import Foundation
-/*
- //从userDefault中获取到的，返回的是一个数组,表示在当前APP下使用过的。["zh-Hans-CN","en"]
- let userLanguage = UserDefaults.standard.object(forKey: "AppleLanguages")
- 
- //用户在手机系统设置里设置的首选语言列表。可以通过设置-通用-语言与地区-首选语言顺序看到，不是程序正在显示的语言。["zh-Hans-CN","en"]
- let preferredLanguages = Locale.preferredLanguages
- 
- //当前系统语言，不带地区码，"zh","en"
- let currentLanguage = Locale.current.languageCode
- 
- //返回数组 ["Base"]?
- let bundleLanguages = Bundle.main.preferredLocalizations
- */
+
+
 public struct Language: RawRepresentable, Equatable, Hashable {
     public let rawValue: String
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
     
-    public static var didChangeNotification: Notification.Name {
-        .init("LanguageDidChangeNotification")
-    }
-    
-    public static func available(for bundle: Bundle = .main, excludeBase: Bool = true) -> [Language] {
-        var languages = bundle.localizations
-        if excludeBase {
-            languages.removeAll { $0 == "Base" }
-        }
-        return languages.map(Language.init(rawValue:))
-    }
-    
-    public static func availableCodes(for bundle: Bundle = .main) -> Set<String> {
-        Set(bundle.localizations)
-    }
-    
-    public static var customized: ((_ code: String) -> String?)?
-    
-    public static var `default`: Language = .en
-    
-    public static func reset() {
-        current = `default`
-    }
-    
-    private static let CurrentLanguageCodeKey = "CurrentLanguageCodeKey"
-    
-    private static func loadCurrent() -> Language? {
-        if let code = UserDefaults.standard.object(forKey: CurrentLanguageCodeKey) as? String {
-            return Language(rawValue: code)
-        }
-        guard var code = Locale.current.languageCode else {
-            return nil
-        }
-        if let closure = customized,
-           let res = closure(code) {
-            code = res
-        }
-        guard Set(Bundle.main.localizations).contains(code) else {
-            return nil
-        }
-        return Language(rawValue: code)
-    }
-    private static var _current: Language? {
-        didSet {
-            guard let lan = _current else { return }
-            UIView.appearance().semanticContentAttribute = lan.direction == .rightToLeft ? .forceRightToLeft : .forceLeftToRight
-        }
-    }
-    public static var current: Language {
-        get {
-            if let tmp = _current { return tmp }
-            let lan = loadCurrent() ?? `default`
-            _current = lan
-            return lan
-        }
-        set {
-            if newValue == current { return }
-            _current = newValue
-            UserDefaults.standard.set(newValue.rawValue, forKey: CurrentLanguageCodeKey)
-            UserDefaults.standard.synchronize()
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
-            }
-        }
-    }
-    
-    public func displayName(localized: Bool = false) -> String? {
-        let locale = NSLocale(localeIdentifier: localized ? Self.current.rawValue : rawValue)
+    public var displayName: String? {
+        let locale = NSLocale(localeIdentifier: rawValue)
         return locale.displayName(forKey: .identifier, value: rawValue)
     }
     
@@ -100,6 +23,7 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         Locale.characterDirection(forLanguage: rawValue)
     }
 }
+
 
 
 public extension Language {
@@ -138,4 +62,69 @@ public extension Language {
      /// 阿拉伯语 Arabic
      static var ar: Language { .init(rawValue: "ar") }
      */
+}
+
+public final class Lan {
+    public static let main = Lan(bundle: .main)
+    
+    public let bundle: Bundle
+    public var `default`: Language
+    public init(bundle: Bundle, defaultLanguage: Language = .en) {
+        self.bundle = bundle
+        self.default = defaultLanguage
+    }
+    
+    public static var didChangeNotification: Notification.Name {
+        .init("LanguageDidChangeNotification")
+    }
+    
+    public func available(excludeBase: Bool = true) -> [Language] {
+        var languages = bundle.localizations
+        if excludeBase {
+            languages.removeAll { $0 == "Base" }
+        }
+        return languages.map(Language.init(rawValue:))
+    }
+    
+    public func reset() {
+        current = `default`
+    }
+    
+    private var cachedLanguage: Language? {
+        get {
+            if let code = UserDefaults.standard.object(forKey: "CurrentLanguageCodeKey") as? String {
+                return Language(rawValue: code)
+            }
+            return nil
+        }
+        set {
+            UserDefaults.standard.set(newValue?.rawValue, forKey: "CurrentLanguageCodeKey")
+        }
+    }
+    private var preferredLanguage: Language? {
+        guard let code = bundle.preferredLocalizations.first,
+                !code.isEmpty else {
+            return nil
+        }
+        return Language(rawValue: code)
+    }
+     
+    private var _current: Language?
+    public var current: Language {
+        get {
+            if let tmp = _current { return tmp }
+            let lan = cachedLanguage ?? preferredLanguage ?? `default`
+            _current = lan
+            return lan
+        }
+        set {
+            if newValue == current { return }
+            _current = newValue
+            UIView.appearance().semanticContentAttribute = newValue.direction == .rightToLeft ? .forceRightToLeft : .forceLeftToRight
+            cachedLanguage = newValue
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
+            }
+        }
+    }
 } 
