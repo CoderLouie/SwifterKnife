@@ -17,7 +17,13 @@ public extension Int {
     /// Degree value of radian input.
     var radiansToDegrees: Double {
         return Double(self) * 180 / Double.pi
-    } 
+    }
+    
+    public init(_ obj: AnyObject) {
+//        String(format: "%p", obj)
+//        unsafeBitCast(obj, to: Int.self)
+        self = Int(bitPattern: ObjectIdentifier(obj))
+    }
 }
 
 

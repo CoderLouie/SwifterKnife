@@ -61,7 +61,7 @@ import OSLog
 public extension Console {
     static func os(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -71,7 +71,7 @@ public extension Console {
     }
     static func osInfo(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -81,7 +81,7 @@ public extension Console {
     }
     static func osDebug(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -91,7 +91,7 @@ public extension Console {
     }
     static func osError(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         separator: String = " ",
         file: StaticString = #file,
         line: UInt = #line,
@@ -102,7 +102,7 @@ public extension Console {
     }
     static func osFault(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -115,7 +115,7 @@ public extension Console {
 public extension Console {
     static func log(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -127,7 +127,7 @@ public extension Console {
     // 20:47:47.401 ViewController.swift 18 viewDidLoad: hello
     static func log<Whose>(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         whose: Whose,
         file: StaticString = #file,
         line: UInt = #line,
@@ -142,7 +142,7 @@ public extension Console {
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
-        log("", .func, whose: whose, file: file, line: line, fn: fn)
+        log("", tag: .func, whose: whose, file: file, line: line, fn: fn)
     }
 }
 
@@ -151,9 +151,8 @@ public extension Console {
     // 2021-10-28 20:48:16.251154+0800 SwifterKnife_Example[2550:8953056] world
     static func trace<Whose>(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         whose: Whose?,
-        separator: String = " ",
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {
@@ -166,7 +165,7 @@ public extension Console {
     
     static func trace(
         _ content: @autoclosure () -> String,
-        _ tag: Tag = .empty,
+        tag: Tag = .empty,
         file: StaticString = #file,
         line: UInt = #line,
         fn: StaticString = #function) {

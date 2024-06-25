@@ -58,3 +58,125 @@
  Dictionary 有两个副作 用：它会去掉重复的键，并且会将所有键重新排序。如果你想要使用像是 [key: value] 这样的字 面量语法，而又不想引入 Dictionary 的这两个副作用的话，就可以使用 DictionaryLiteral。 DictionaryLiteral 是对于键值对数组 (比如 [(key, value)]) 的很好的替代，它不会引入字典的副 作用，同时让调用者能够使用更加便捷的 [:] 语法。
  
  */
+
+
+/// Evaluates the specified closure when the result of this `DataResponse` is a success, passing the unwrapped
+/// result value as a parameter.
+///
+/// - Note: xxx
+/// Use the `map` method with a closure that does not throw. For example:
+///
+///     let possibleData: DataResponse<Data> = ...
+///     let possibleInt = possibleData.map { $0.count }
+///
+/// - parameter transform: A closure **MUST** that takes the success value of the instance's result.
+///
+/// - returns: A `DataResponse` whose result wraps the value returned by the given closure. If this instance's
+///            result is a failure, returns a response wrapping the same failure.
+
+
+
+
+
+
+
+
+/*
+ https://www.jianshu.com/p/88f39aa8e09c
+ https://www.jianshu.com/p/fb9855581ecf
+ //从userDefault中获取到的，返回的是一个数组,表示在当前APP下使用过的。["zh-Hans-CN","en"]
+ let userLanguage = UserDefaults.standard.object(forKey: "AppleLanguages")
+ 
+ //用户在手机系统设置里设置的首选语言列表。可以通过设置-通用-语言与地区-首选语言顺序看到，不是程序正在显示的语言。["zh-Hans-CN","en"]
+ let preferredLanguages = Locale.preferredLanguages
+ 
+ //当前系统语言，不带地区码，"zh","en"
+ let currentLanguage = Locale.current.languageCode
+ 
+ //返回数组 ["Base"]?
+ let bundleLanguages = Bundle.main.preferredLocalizations
+ 
+ 
+ let local = Locale.current
+ print(UserDefaults.standard.object(forKey: "AppleLanguages") as Any)
+ print(Locale.preferredLanguages)
+ print(local.languageCode ?? "nil")
+ print((local as NSLocale).localeIdentifier)
+ print(Bundle.main.localizations)
+ print(Bundle.main.preferredLocalizations)
+ 
+ new2222
+ Tips：
+ 设置 -> 通用 -> 语言和地区
+ iPhone语言 一定是 首选语言顺序(1,2,3,4) 中的第一个
+ 
+ 设置 -> 逗图相机 -> 首选语言(a,b,c)。列的是Bundle.main.localizations(排除Base)，选择的是a
+ 
+ 
+ 改变iPhone语言不会改变首选语言
+ let local = Locale.current
+ print(UserDefaults.standard.object(forKey: "AppleLanguages") as Any)
+ print(Locale.preferredLanguages)
+ 上面两个结果一样
+ 
+ print(local.languageCode ?? "nil")// 只有语言没有地区
+ print(Bundle.main.localizations)
+ print(Bundle.main.preferredLocalizations)
+ 
+ 首选语言顺序： ["en", "zh-Hant", "zh-Hans", "ja", "es", "it", "ko", "ru"]
+ 地区：中国大陆
+ {
+ 首选语言：zh-Hans
+ ["zh-Hans-CN", "en-CN", "zh-Hant-CN", "ja-CN", "es-CL", "it-CN", "ko-CN", "ru-CN"]
+ zh
+ ["en", "Base", "zh-Hans"]
+ ["zh-Hans"]
+ 
+ 首选语言：en
+ ["en-CN", "zh-Hant-CN", "zh-Hans-CN", "ja-CN", "es-CL", "it-CN", "ko-CN", "ru-CN"]
+ en
+ ["en", "Base", "zh-Hans"]
+ ["en"]
+ }
+ 
+ 首选语言顺序： ["zh-Hans"]
+ 地区：中国大陆
+ {
+ App设置无首选语言选项
+ ["zh-Hans-CN"]
+ zh
+ ["en", "Base", "zh-Hans"]
+ ["zh-Hans"]
+ }
+ 
+ 首选语言顺序： ["ja", "zh-Hans"]
+ 地区：中国大陆
+ {
+ App设置首选语言：zh-Hans
+ ["ja-CN", "zh-Hans-CN"]
+ zh
+ ["en", "Base", "zh-Hans"]
+ ["zh-Hans"]
+ App设置首选语言：en，这是系统设置首选语言顺序变成["ja", "zh-Hans", "en"]
+ ["en-CN", "ja-CN", "zh-Hans-CN"]
+ en
+ ["en", "Base", "zh-Hans"]
+ ["en"]
+ }
+ 
+ 
+ 首选语言顺序： ["zh-Hans", "ja", "en"]
+ 地区：美国
+ {
+ App设置首选语言：en
+ ["en-CN", "ja-CN", "zh-Hans-CN"]
+ en
+ ["en", "Base", "zh-Hans"]
+ ["en"]
+ App设置首选语言：en，这是系统设置首选语言顺序变成["ja", "zh-Hans", "en"]
+ ["en-CN", "ja-CN", "zh-Hans-CN"]
+ en
+ ["en", "Base", "zh-Hans"]
+ ["en"]
+ }
+ */

@@ -80,6 +80,10 @@ extension Hashable {
     public func pick<T>(in map: [Self: T]) -> T? {
         map[self]
     }
+    public func pick<T>(in map: [Self: T?]) -> T? {
+        if let v = map[self] { return v }
+        return nil
+    }
 }
 extension Equatable {
     public func inArray(_ array: Array<Self>) -> Bool {

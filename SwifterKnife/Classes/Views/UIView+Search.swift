@@ -59,3 +59,32 @@ public extension UIView {
         return nil
     }
 }
+
+
+public final class Animations {
+    public typealias Work = () -> Void
+    
+    public let work: Work
+    public let duration: TimeInterval
+    private var next: Animations?
+    
+    public init(_ duration: TimeInterval, work: @escaping Work) {
+        self.duration = duration
+        self.work = work
+    }
+    
+    @discardableResult
+    public func append(_ duration: TimeInterval, work: @escaping Work) -> Animations {
+        var last = self
+        while let next = last.next { last = next }
+        last.next = Animations(duration, work: work)
+        return self
+    }
+    
+    public func run() {
+        UIView.animate(withDuration: duration, animations: work) { [weak self] finished in
+            guard finished, let next = self?.next else { return }
+            next.run()
+        }
+    }
+}

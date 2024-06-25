@@ -291,8 +291,14 @@ extension SwiftyAdaptable {
     public var fitC: TargetType {
         ui.fitC
     }
+    /// fitSmall
     public var fitS: TargetType {
         ui.fitS
+    }
+    // fitAll 屏幕高度 > 667(6s, se) 按宽度适配，否则按高度适配
+    public var fitA: TargetType {
+        if Screen.height > 700 { return ui.fit }
+        return ui.fitH
     }
 }
 
