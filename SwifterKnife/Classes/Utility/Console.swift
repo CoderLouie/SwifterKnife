@@ -42,9 +42,9 @@ public enum Console {
         if blendTime { cmps.append(timeString) }
         cmps.append(NSString(stringLiteral: file).lastPathComponent)
         cmps.append(String(line))
-        let method = whose.isEmpty ? "\(fn):" : "\(whose).\(fn):"
+        let method = whose.isEmpty ? "\(fn)" : "\(whose).\(fn)"
         cmps.append(String(method))
-        cmps.append(content)
+        if !content.isEmpty { cmps.append(content) }
         return cmps.joined(separator: " ")
     }
     

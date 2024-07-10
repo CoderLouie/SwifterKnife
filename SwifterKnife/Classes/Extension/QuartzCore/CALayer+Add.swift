@@ -12,6 +12,13 @@ import QuartzCore
 public extension CALayer {
     /// 核心动画是否处于暂停状态
     var animationIsPaused: Bool { timeOffset > 0 }
+    
+    /// Remove all sublayers
+    func removeSublayers() {
+        while let lastLayer = sublayers?.last {
+            lastLayer.removeFromSuperlayer()
+        }
+    }
 }
 
 // MARK: - Methods

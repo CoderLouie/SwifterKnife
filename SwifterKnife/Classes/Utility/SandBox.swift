@@ -79,7 +79,14 @@ public enum SandBox {
     public static func moveItem(atPath: String, toPath: String) throws {
         try FileManager.default.moveItem(atPath: atPath, toPath: toPath)
     }
-    
+    public static func renameFile(atPath path: String, to name: String) throws {
+        let mgr = FileManager.default
+        guard mgr.fileExists(atPath: path) else { return }
+        let nsfilename = (path as NSString).lastPathComponent as NSString
+        let filename = nsfilename.deletingPathExtension
+        let newpath = path.replacingOccurrences(of: filename, with: name)
+        try mgr.moveItem(atPath: path, toPath: newpath)
+    }
     public static func write(data: Data, toPath: String) throws {
         try data.write(to: URL(fileURLWithPath: toPath), options: .atomic)
     }
