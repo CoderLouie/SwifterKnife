@@ -10,8 +10,10 @@ import Foundation
 public enum SandBox { 
     public static func enumerateContents(
         of path: String,
+        pass condition: (String) -> Bool,
         progress:(_ path: String,
                   _ level: Int,
+                  _ mgr: FileManager,
                   _ stop: inout Bool) throws -> Void) rethrows {
         
         let manager = FileManager.default
@@ -24,7 +26,8 @@ public enum SandBox {
                 return
             }
             guard isDirectory.boolValue else {
-                return try progress(path, innerLevel, &stop)
+                guard condition(path) else { return }
+                return try progress(path, innerLevel, manager, &stop)
             }
             let contents = try manager.contentsOfDirectory(atPath: path)
             for item in contents where !item.hasPrefix(".") {
@@ -76,16 +79,37 @@ public enum SandBox {
         try FileManager.default.createDirectory(at: fileUrl, withIntermediateDirectories: true, attributes: nil)
     }
     
-    public static func moveItem(atPath: String, toPath: String) throws {
-        try FileManager.default.moveItem(atPath: atPath, toPath: toPath)
+    public static func moveItem(at path: String, to folder: String) throws {
+        if path.hasPrefix(folder) { return }
+        let dstPath = (folder as NSString).appendingPathComponent((path as NSString).lastPathComponent)
+        try FileManager.default.moveItem(atPath: path, toPath: dstPath)
     }
-    public static func renameFile(atPath path: String, to name: String) throws {
+    public static func copyItem(at path: String, to folder: String) throws {
+        if path.hasPrefix(folder) { return }
+        let dstPath = (folder as NSString).appendingPathComponent((path as NSString).lastPathComponent)
+        try FileManager.default.copyItem(atPath: path, toPath: dstPath)
+    }
+    
+    @discardableResult
+    public static func renameFile(atPath path: String, newName closure: (_ filename: String) -> String?) throws -> Bool {
         let mgr = FileManager.default
-        guard mgr.fileExists(atPath: path) else { return }
+        guard mgr.fileExists(atPath: path) else { return false }
         let nsfilename = (path as NSString).lastPathComponent as NSString
         let filename = nsfilename.deletingPathExtension
-        let newpath = path.replacingOccurrences(of: filename, with: name)
+        guard let newname = closure(filename), !newname.isEmpty else { return false }
+        let newpath = path.replacingOccurrences(of: filename, with: newname)
         try mgr.moveItem(atPath: path, toPath: newpath)
+        return true
+    }
+    public static func replaceFileContent(at path: String, use map: [String: String]) throws {
+        let url = URL(fileURLWithPath: path)
+        let data = try Data(contentsOf: url)
+        guard var string = String(data: data, encoding: .utf8) else { return }
+        
+        for (key, value) in map {
+            string = string.replacingOccurrences(of: key, with: value)
+        }
+        try string.data(using: .utf8)?.write(to: url, options: .atomic)
     }
     public static func write(data: Data, toPath: String) throws {
         try data.write(to: URL(fileURLWithPath: toPath), options: .atomic)

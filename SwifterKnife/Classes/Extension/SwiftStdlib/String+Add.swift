@@ -526,6 +526,14 @@ public extension String {
         guard !hasPrefix(prefix) else { return self }
         return prefix + self
     }
+    
+    func replacing(use map: [String: String]) -> String {
+        var string = self
+        for (key, value) in map {
+            string = string.replacingOccurrences(of: key, with: value)
+        }
+        return string
+    }
 }
 
 // MARK: - Initializers
