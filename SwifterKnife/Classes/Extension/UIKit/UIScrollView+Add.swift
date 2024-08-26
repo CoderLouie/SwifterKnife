@@ -335,6 +335,16 @@ public extension UIScrollView {
         return directions
     }
 }
+extension UIScrollView {
+    public static var one: UIScrollView {
+        UIScrollView().then { s in
+            s.showsVerticalScrollIndicator = false
+            s.showsHorizontalScrollIndicator = false
+            s.contentInsetAdjustmentBehavior = .never
+            s.backgroundColor = .clear
+        }
+    }
+}
 
 @available(iOS 11.0, *)
 public protocol BatchUpdatable {

@@ -258,6 +258,7 @@ public extension UIView {
             CATransaction.commit()
         }
     
+    /*
     enum PresentToward {
         case up, down, left, right
         fileprivate var isHorizontal: Bool {
@@ -309,6 +310,7 @@ public extension UIView {
         }
         UIView.animate(withDuration: duration, animations: animation, completion: completion)
     }
+    */
 }
 
 // MARK: - Search
@@ -318,7 +320,7 @@ public extension UIView {
     /// Search all superviews until a view with the condition is found.
     ///
     /// - Parameter predicate: predicate to evaluate on superviews.
-    func ancestorView<T: UIView>(where predicate: (T) -> Bool) -> T? {
+    func ancestorView<T: UIView>(where predicate: (T) -> Bool = { _ in true }) -> T? {
         for view in sequence(first: self, next: \.superview) {
             if let typeView = view as? T,
                predicate(typeView) {

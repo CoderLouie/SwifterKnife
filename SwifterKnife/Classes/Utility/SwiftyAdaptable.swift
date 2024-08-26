@@ -211,6 +211,13 @@ public extension UIDesignReference {
               withoutHeaderHeight: 797,
               bodyHeight: 763)
     }
+    
+    static var iPhone15: UIDesignReference {
+        .init(width: 393,
+              height: 852,
+              withoutHeaderHeight: 793,
+              bodyHeight: 759)
+    }
 }
 public extension UIDesignReference {
     var uiwidth: ScreenAdaptor {
@@ -353,10 +360,10 @@ public extension String {
         let res = rect.size.adaptive(tramsform: \.pixCeil)
         return res
     }
-    func aspectFitSize(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
+    func aspectFitSize(for font: UIFont, maxWidth: CGFloat = .greatestFiniteMagnitude, model: NSLineBreakMode = .byWordWrapping) -> CGSize {
         aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model)
     }
-    func aspectFitHeight(for font: UIFont, maxWidth: CGFloat, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
+    func aspectFitHeight(for font: UIFont, maxWidth: CGFloat = .greatestFiniteMagnitude, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {
         aspectFitSize(for: font, limitSize: CGSize(width: maxWidth, height: .greatestFiniteMagnitude), model: model).height
     }
     func aspectFitWidth(for font: UIFont, model: NSLineBreakMode = .byWordWrapping) -> CGFloat {

@@ -89,16 +89,15 @@ public enum SandBox {
         let dstPath = (folder as NSString).appendingPathComponent((path as NSString).lastPathComponent)
         try FileManager.default.copyItem(atPath: path, toPath: dstPath)
     }
-    
+     
     @discardableResult
-    public static func renameFile(atPath path: String, newName closure: (_ filename: String) -> String?) throws -> Bool {
+    public static func renameFile(at url: URL, newName closure: (_ filename: String) -> String?) throws -> Bool {
         let mgr = FileManager.default
-        guard mgr.fileExists(atPath: path) else { return false }
-        let nsfilename = (path as NSString).lastPathComponent as NSString
-        let filename = nsfilename.deletingPathExtension
+        guard mgr.fileExists(atPath: url.path) else { return false }
+        let filename = url.lastPathComponent
         guard let newname = closure(filename), !newname.isEmpty else { return false }
-        let newpath = path.replacingOccurrences(of: filename, with: newname)
-        try mgr.moveItem(atPath: path, toPath: newpath)
+        let newurl = url.deletingLastPathComponent().appendingPathComponent(newname)
+        try mgr.moveItem(at: url, to: newurl)
         return true
     }
     public static func replaceFileContent(at path: String, use map: [String: String]) throws {
@@ -113,6 +112,9 @@ public enum SandBox {
     }
     public static func write(data: Data, toPath: String) throws {
         try data.write(to: URL(fileURLWithPath: toPath), options: .atomic)
+    }
+    public static func read(at srcPath: String, writeTo detPath: String) throws {
+        try Data(contentsOf: URL(fileURLWithPath: srcPath)).write(to: URL(fileURLWithPath: detPath))
     }
     
     /// 如果path不存在会抛出错误

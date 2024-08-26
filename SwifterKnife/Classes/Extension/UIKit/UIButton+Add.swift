@@ -59,34 +59,35 @@ extension UIEvent {
 }
 
 fileprivate final class ClosureTarget {
-    fileprivate let closure: (UIControl, UIEvent) -> Void
+    fileprivate let closure: (Any, Any) -> Void
     fileprivate var event: UIControl.Event
     
-    fileprivate init(event: UIControl.Event, closure: @escaping (UIControl, UIEvent) -> Void) {
+    fileprivate init(event: UIControl.Event, closure: @escaping (Any, Any) -> Void) {
         self.closure = closure
         self.event = event
     }
-    @objc fileprivate func onDidClick(_ sender: UIControl, _ event: UIEvent) {
+    @objc fileprivate func onDidClick(_ sender: Any, _ event: UIEvent) {
         closure(sender, event)
+    }
+    @objc fileprivate func onTap(_ sender: Any) {
+        closure(sender, 1)
     }
 }
 public protocol TargetAction: AnyObject {
     func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event)
     func removeTarget(_ target: Any?, action: Selector?, for controlEvents: UIControl.Event)
 }
+extension UIGestureRecognizer: TargetAction {
+    public func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {
+        addTarget(target, action: action)
+    }
+    public func removeTarget(_ target: Any?, action: Selector?, for controlEvents: UIControl.Event) {
+        removeTarget(target, action: action)
+    }
+}
 
 private var controlClosureTargetKey: UInt8 = 0
 extension TargetAction {
-    public func addClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
-        if event.isEmpty { return }
-        let wrap = ClosureTarget(event: event) { control, event in
-            guard let sender = control as? Self else { return }
-            closure(sender, event)
-        }
-        addTarget(wrap, action: #selector(ClosureTarget.onDidClick(_:_:)), for: event)
-        closureTargets.add(wrap)
-    }
-
     public func removeClosures(for event: UIControl.Event) {
         if event.isEmpty { return }
         let targets = self.closureTargets
@@ -117,8 +118,16 @@ extension TargetAction {
         return array
     }
 }
-extension TargetAction {
-    
+extension TargetAction where Self: UIControl {
+    public func addClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
+        if event.isEmpty { return }
+        let wrap = ClosureTarget(event: event) { control, event in
+            guard let sender = control as? Self else { return }
+            closure(sender, event as! UIEvent)
+        }
+        addTarget(wrap, action: #selector(ClosureTarget.onDidClick(_:_:)), for: event)
+        closureTargets.add(wrap)
+    }
     public func setClosure(for event: UIControl.Event, closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
         removeClosures(for: event)
         addClosure(for: event, closure: closure)
@@ -129,6 +138,25 @@ extension TargetAction {
     }
     public func setTouchUpInsideClosure(_ closure: @escaping (_ sender: Self, _ event: UIEvent) -> Void) {
         setClosure(for: .touchUpInside, closure: closure)
+    }
+}
+
+extension TargetAction where Self: UIGestureRecognizer {
+    public func addClosure(_ closure: @escaping (_ sender: Self) -> Void) {
+        let event: UIControl.Event = .touchUpInside
+        let wrap = ClosureTarget(event: event) { sender, _ in
+            guard let sender = sender as? Self else { return }
+            closure(sender)
+        }
+        addTarget(wrap, action: #selector(ClosureTarget.onTap(_:)), for: event)
+        closureTargets.add(wrap)
+    }
+    public func setClosure(_ closure: @escaping (_ sender: Self) -> Void) {
+        removeClosures(for: .touchUpInside)
+        addClosure(closure)
+    }
+    public func removeClosures() {
+        removeClosures(for: .touchUpInside)
     }
 }
 

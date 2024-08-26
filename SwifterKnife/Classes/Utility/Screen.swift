@@ -72,12 +72,18 @@ import UIKit
     }
     // 44 + 20 ---- (44/50) + 44
     @objc public static var navbarH: CGFloat {
-        safeAreaT + 44
+        safeAreaT + _navbarH
+    }
+    @objc public static var navbarCenterY: CGFloat {
+        Screen.safeAreaT + (_navbarH * 0.5)
     }
     // 49 --- 49 + 34
     @objc public static var tabbarH: CGFloat {
-        safeAreaB + 49
+        safeAreaB + _tabbarH
     }
+    
+    @objc public static var _tabbarH: CGFloat { 49 }
+    @objc public static var _navbarH: CGFloat { 44 }
     
     @objc public static var delegateWindow: UIWindow? {
         UIApplication.shared.delegate?.window ?? nil

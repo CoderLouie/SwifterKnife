@@ -8,6 +8,12 @@
 import UIKit
  
 public enum App {
+    public static var nowTimes: Int {
+        Int(Date().timeIntervalSince1970)
+    }
+    public static var nowTimems: Int {
+        Int(round(Date().timeIntervalSince1970 * 1000))
+    }
     
     public static func exit() {
         Darwin.exit(0)

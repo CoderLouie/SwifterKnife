@@ -11,6 +11,16 @@ import UIKit
 
 public extension UIColor {
  
+    func isEqualToColor(_ other: UIColor?, includeAlpha: Bool = false) -> Bool {
+        guard let c = other else { return false }
+        let sRGBA = rgbComponents
+        let oRGBA = c.rgbComponents
+        let rgbIsEqual = sRGBA.red == oRGBA.red &&
+        sRGBA.green == oRGBA.green &&
+        sRGBA.blue == oRGBA.blue
+        guard rgbIsEqual else { return false }
+        return includeAlpha ? (abs(sRGBA.alpha - oRGBA.alpha) < 0.01) : true
+    }
     /// RGB components for a Color (between 0 and 255).
     ///
     ///     UIColor.red.rgbComponents.red -> 255
@@ -68,13 +78,16 @@ public extension UIColor {
 
 // MARK: - Initializers
 public extension UIColor {
+    static func create(_ white: CGFloat, _ alpha: CGFloat) -> UIColor {
+        return UIColor(gray: white, alpha: alpha)
+    }
     static func create(_ rgba: CGFloat...) -> UIColor {
         guard rgba.count > 2 else { fatalError() }
         let alpha = rgba.count > 3 ? rgba[3] : 1.0
         return UIColor(r: rgba[0], g: rgba[1], b: rgba[2], a: alpha)
     }
     static func create(_ hexString: String, alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor(hexString: hexString, alpha: alpha)
+        return UIColor(hexString: hexString, alpha: alpha)!
     }
     /// Create Color from RGB values with optional transparency.
     ///
@@ -106,7 +119,7 @@ public extension UIColor {
     /// - Parameters:
     ///   - hexString: hexadecimal string (examples: EDE7F6, 0xEDE7F6, #EDE7F6, #0ff, 0xF0F, ..).
     ///   - transparency: optional transparency value (default is 1).
-    convenience init(hexString: String, alpha: CGFloat = 1) {
+    convenience init?(hexString: String, alpha: CGFloat = 1) {
         var string = ""
         let lowercaseHexString = hexString.lowercased()
         if lowercaseHexString.hasPrefix("0x") {
@@ -124,16 +137,28 @@ public extension UIColor {
         }
 
         guard let hexValue = Int(string, radix: 16) else {
-            fatalError()
+//            fatalError()
+            return nil
         }
 
         var trans = alpha
         if trans < 0 { trans = 0 }
         if trans > 1 { trans = 1 }
 
-        let red = (hexValue >> 16) & 0xFF
-        let green = (hexValue >> 8) & 0xFF
-        let blue = hexValue & 0xFF
-        self.init(r: CGFloat(red), g: CGFloat(green), b: CGFloat(blue), a: alpha)
+        
+        let hasAlpha = string.count == 8
+        
+        // rgba or argb
+        var start = 0
+        if hasAlpha {
+            trans = CGFloat((hexValue >> start) & 0xFF) / 255.0
+            start += 8
+        }
+        let blue = (hexValue >> start) & 0xFF
+        start += 8
+        let green = (hexValue >> start) & 0xFF
+        start += 8
+        let red = (hexValue >> start) & 0xFF
+        self.init(r: CGFloat(red), g: CGFloat(green), b: CGFloat(blue), a: trans)
     }
 }

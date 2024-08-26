@@ -32,6 +32,10 @@ public extension CGSize {
     var standardized: CGSize {
         return CGSize(width: abs(width), height: abs(height))
     }
+    
+    var reversed: CGSize {
+        CGSize(width: height, height: width)
+    }
 }
 
 

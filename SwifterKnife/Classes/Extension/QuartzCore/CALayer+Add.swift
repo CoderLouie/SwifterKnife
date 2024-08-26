@@ -7,6 +7,8 @@
 
 import QuartzCore
 
+// usesEvenOddFillRule https://www.jianshu.com/p/c7dc1d231a54
+
 // MARK: - Properties
 
 public extension CALayer {

@@ -37,7 +37,7 @@ open class TextField: UITextField {
 }
 
 
-open class Input: UITextField {
+open class Input: TextField {
     override open var text: String? {
         didSet {
             if oldValue != text {

@@ -113,6 +113,7 @@ extension NSObject: Then {}
 extension CGPoint: Then {}
 extension CGRect: Then {}
 extension CGSize: Then {}
+extension CGAffineTransform: Then {}
 #endif
 
 extension Array: Then {}

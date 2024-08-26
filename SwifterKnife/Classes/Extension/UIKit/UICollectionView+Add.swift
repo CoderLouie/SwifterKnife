@@ -55,12 +55,48 @@ open class CollectionHeaderView: UIView {
     }
 }
 
-
+public extension UICollectionViewFlowLayout {
+    /*
+     https://www.jianshu.com/p/ffafb589539e
+     与滚动方向相同的间距是minimumLineSpacing
+     垂直的是minimumInteritemSpacing
+     
+     水平滚动时：cell从上倒下，从左到右排列
+     垂直滚动时：cell从左到右，从上倒下排列
+     */
+    public func makeItemSize(_ maxDimension: CGFloat, count: Int) {
+        let inset = sectionInset
+        let n = CGFloat(count)
+        let contentD: CGFloat
+        let space: CGFloat
+        if scrollDirection == .vertical {
+            contentD = maxDimension - inset.left - inset.right
+        } else {
+            contentD = maxDimension - inset.top - inset.bottom
+        }
+        let wh = CGFloat(Int((contentD - (n - 1) * minimumInteritemSpacing) / n))
+        itemSize = CGSize(width: wh, height: wh)
+    }
+}
 public extension UICollectionView {
+    public func commonConfig() {
+        backgroundColor = .clear
+        contentInsetAdjustmentBehavior = .never
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+    }
     convenience init(layout: (UICollectionViewFlowLayout) -> Void) {
         let flowLayout = UICollectionViewFlowLayout()
         layout(flowLayout)
         self.init(frame: .zero, collectionViewLayout: flowLayout)
+    }
+    
+    static func create(layout: (UICollectionViewFlowLayout) -> Void) -> UICollectionView {
+        let flowLayout = UICollectionViewFlowLayout()
+        layout(flowLayout)
+        let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        view.commonConfig()
+        return view
     }
     var theFlowLayout: UICollectionViewFlowLayout? {
         collectionViewLayout as? UICollectionViewFlowLayout

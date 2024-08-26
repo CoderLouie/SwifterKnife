@@ -30,17 +30,17 @@ public extension LocalizedKeyRepresentable {
     }
     
     var i18n: String {
-        i18n(using: .main)
+        i18n(using: Lan.main.current)
     }
-    func i18n(using lan: Lan) -> String {
+    func i18n(using language: Language) -> String {
         let key = key
-        if let path = lan.bundle.path(forResource: lan.current.rawValue, ofType: "lproj"),
+        if let path = bundle.path(forResource: language.rawValue, ofType: "lproj"),
               let bundle = Bundle(path: path)  {
             return bundle.localizedString(forKey: key, value: nil, table: table)
         }
         return key
     }
-    func i18nFormat(with args: CVarArg..., using lan: Lan = .main) -> String {
+    func i18nFormat(with args: CVarArg..., using lan: Language = Lan.main.current) -> String {
         return String(format: i18n(using: lan), arguments: args)
     }
 }

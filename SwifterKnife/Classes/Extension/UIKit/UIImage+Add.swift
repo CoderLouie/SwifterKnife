@@ -4,7 +4,7 @@
 //
 //  Created by liyang on 2021/10/19.
 //
- 
+
 import UIKit
 
 // MARK: - Properties
@@ -14,33 +14,33 @@ public extension UIImage {
     var bytesSize: Int {
         return jpegData(compressionQuality: 1)?.count ?? 0
     }
-
+    
     /// Size in kilo bytes of UIImage.
     var kilobytesSize: Int {
         return (jpegData(compressionQuality: 1)?.count ?? 0) / 1024
     }
-
+    
     /// UIImage with .alwaysOriginal rendering mode.
     var original: UIImage {
         return withRenderingMode(.alwaysOriginal)
     }
-
+    
     /// UIImage with .alwaysTemplate rendering mode.
     var template: UIImage {
         return withRenderingMode(.alwaysTemplate)
     }
- 
+    
     /// Average color for this image.
     func averageColor() -> UIColor? {
         // https://stackoverflow.com/questions/26330924
         guard let ciImage = ciImage ?? CIImage(image: self) else { return nil }
-
+        
         // CIAreaAverage returns a single-pixel image that contains the average color for a given region of an image.
         let parameters = [kCIInputImageKey: ciImage, kCIInputExtentKey: CIVector(cgRect: ciImage.extent)]
         guard let outputImage = CIFilter(name: "CIAreaAverage", parameters: parameters)?.outputImage else {
             return nil
         }
-
+        
         // After getting the single-pixel image from the filter extract pixel's RGBA8 data
         var bitmap = [UInt8](repeating: 0, count: 4)
         let workingColorSpace: Any = cgImage?.colorSpace ?? NSNull()
@@ -51,7 +51,7 @@ public extension UIImage {
                        bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
                        format: .RGBA8,
                        colorSpace: nil)
-
+        
         // Convert pixel data to UIColor
         return UIColor(red: CGFloat(bitmap[0]) / 255.0,
                        green: CGFloat(bitmap[1]) / 255.0,
@@ -71,7 +71,7 @@ public extension UIImage {
         guard let data = jpegData(compressionQuality: quality) else { return nil }
         return UIImage(data: data)
     }
-
+    
     func aspectFillToSize(_ size: CGSize, model: UIView.ContentMode = .center) -> UIImage? {
         if size.width < 0.01 || size.height < 0.01 { return nil }
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
@@ -121,7 +121,7 @@ public extension UIImage {
     func compressedData(quality: CGFloat = 0.5) -> Data? {
         return jpegData(compressionQuality: quality)
     }
-
+    
     /// UIImage Cropped to CGRect.
     ///
     /// - Parameter rect: CGRect to crop UIImage to.
@@ -132,7 +132,7 @@ public extension UIImage {
         guard let image = cgImage?.cropping(to: scaledRect) else { return self }
         return UIImage(cgImage: image, scale: scale, orientation: imageOrientation)
     }
-
+    
     /// UIImage scaled to height with respect to aspect ratio.
     ///
     /// - Parameters:
@@ -150,7 +150,7 @@ public extension UIImage {
             draw(in: rect)
         }
     }
-
+    
     /// UIImage scaled to width with respect to aspect ratio.
     ///
     /// - Parameters:
@@ -168,7 +168,7 @@ public extension UIImage {
             draw(in: rect)
         }
     }
-
+    
     /// Creates a copy of the receiver rotated by the given angle.
     ///
     ///     // Rotate the image by 180°
@@ -178,27 +178,27 @@ public extension UIImage {
     /// - Returns: A new image rotated by the given angle.
     func rotated(by angle: Measurement<UnitAngle>) -> UIImage? {
         let radians = CGFloat(angle.converted(to: .radians).value)
-
+        
         let destRect = CGRect(origin: .zero, size: size)
             .applying(CGAffineTransform(rotationAngle: radians))
         let roundedDestRect = CGRect(x: destRect.origin.x.rounded(),
                                      y: destRect.origin.y.rounded(),
                                      width: destRect.width.rounded(),
                                      height: destRect.height.rounded())
-
+        
         let format = UIGraphicsImageRendererFormat()
         format.scale = scale
         return UIGraphicsImageRenderer(size: roundedDestRect.size, format: format).image {
             let contextRef = $0.cgContext
             contextRef.translateBy(x: roundedDestRect.width / 2, y: roundedDestRect.height / 2)
             contextRef.rotate(by: radians)
-
+            
             self.draw(in: CGRect(origin: CGPoint(x: -self.size.width / 2,
                                                  y: -self.size.height / 2),
                                  size: self.size))
         }
     }
-
+    
     /// Creates a copy of the receiver rotated by the given angle (in radians).
     ///
     ///     // Rotate the image by 180°
@@ -213,7 +213,7 @@ public extension UIImage {
                                      y: destRect.origin.y.rounded(),
                                      width: destRect.width.rounded(),
                                      height: destRect.height.rounded())
-
+        
         let format = UIGraphicsImageRendererFormat()
         format.scale = scale
         return UIGraphicsImageRenderer(size: roundedDestRect.size, format: format).image {
@@ -226,7 +226,7 @@ public extension UIImage {
                                  size: self.size))
         }
     }
-
+    
     /// UIImage filled with color
     ///
     /// - Parameter color: color to fill image with.
@@ -240,7 +240,7 @@ public extension UIImage {
             context.fill(CGRect(origin: .zero, size: size))
         }
     }
-
+    
     /// UIImage tinted with color.
     ///
     /// - Parameters:
@@ -250,7 +250,7 @@ public extension UIImage {
     /// - Returns: UIImage tinted with given color.
     func tint(_ color: UIColor, blendMode: CGBlendMode, alpha: CGFloat = 1.0) -> UIImage {
         let drawRect = CGRect(origin: .zero, size: size)
-
+        
         let format = UIGraphicsImageRendererFormat()
         format.scale = scale
         return UIGraphicsImageRenderer(size: size, format: format).image { context in
@@ -259,7 +259,7 @@ public extension UIImage {
             draw(in: drawRect, blendMode: blendMode, alpha: alpha)
         }
     }
-
+    
     /// UImage with background color.
     ///
     /// - Parameters:
@@ -274,7 +274,7 @@ public extension UIImage {
             draw(at: .zero)
         }
     }
-
+    
     /// UIImage with rounded corners.
     ///
     /// - Parameters:
@@ -288,7 +288,7 @@ public extension UIImage {
         } else {
             cornerRadius = maxRadius
         }
-
+        
         let format = UIGraphicsImageRendererFormat()
         format.scale = scale
         return UIGraphicsImageRenderer(size: size, format: format).image { _ in
@@ -297,14 +297,14 @@ public extension UIImage {
             self.draw(in: rect)
         }
     }
-
+    
     /// Base 64 encoded PNG data of the image.
     ///
     /// - Returns: Base 64 encoded PNG data of the image as a String.
     func pngBase64String() -> String? {
         return pngData()?.base64EncodedString()
     }
-
+    
     /// Base 64 encoded JPEG data of the image.
     ///
     /// - Parameter: compressionQuality: The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality).
@@ -338,7 +338,7 @@ public extension UIImage {
     convenience init(color: UIColor) {
         self.init(color: color, size: CGSize(width: 1, height: 1))
     }
-
+    
     /// Create a new image from a base 64 string.
     ///
     /// - Parameters:
@@ -365,30 +365,33 @@ public extension UIImage {
         let tmp = size
         return stretchableImage(withLeftCapWidth: Int(tmp.width * x), topCapHeight: Int(tmp.height * y))
     }
+    
     static func fileNamed(_ fileName: String,
-                          in bundleClass: AnyClass? = nil) -> UIImage? {
-        UIImage(fileNamed: fileName, in: bundleClass)
+                          scaled: Bool = true,
+                          in bundle: Bundle = .main) -> UIImage? {
+        let url = bundle.bundleURL.appendingPathComponent(fileName)
+        return create(url, scaled: scaled)
     }
     
-    convenience init?(fileNamed name: String,
-                      in bundleClass: AnyClass? = nil) {
-        guard !name.hasSuffix("/") else { return nil }
-        let nspath = name as NSString
+    static func create(_ filePath: String?, scaled: Bool = true) -> UIImage? {
+        create(filePath.map(URL.init(fileURLWithPath:)), scaled: scaled)
+    }
+    static func create(_ fileURL: URL?, scaled: Bool = true) -> UIImage? {
+        guard let url = fileURL else { return nil }
+        let res = url.deletingPathExtension().path
+        let ext = url.pathExtension
+        let exts = ext.isEmpty ? [".png", ".jpg", "", ".jpeg", ".gif"] : [".\(ext)"]
         
-        let bundle = bundleClass.map { Bundle(for: $0) } ?? Bundle.main
-        let res = nspath.deletingPathExtension
-        let ext = nspath.pathExtension
-        let exts = ext.isEmpty ? ["", "png", "jpeg", "jpg", "gif", "webp", "apng"] : [ext]
+        var scales: [(Int, String)] = Bundle.preferredScales.map { ($0, "@\($0)x") }
+        if scaled { scales.append((1, "")) }
+        else { scales.insert((1, ""), at: 0) }
         
-        let scales = Bundle.preferredScales + [nil]
-        for scale in scales {
-            let s = scale ?? 1
-            let scaledName = scale.map { res + "@\($0)x" } ?? res
+        for (s, scale) in scales {
+            let prefix = res + scale
             for e in exts {
-                if let path = bundle.path(forResource: scaledName, ofType: e),
-                   let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
-                    self.init(data: data, scale: CGFloat(s))
-                    return
+                let path = prefix + e
+                if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+                    return UIImage(data: data, scale: CGFloat(s))
                 }
             }
         }

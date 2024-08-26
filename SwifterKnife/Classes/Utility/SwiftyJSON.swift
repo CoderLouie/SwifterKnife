@@ -72,7 +72,10 @@ public enum JSON {
     
     public init(filePath: String) throws {
         let url = URL(fileURLWithPath: filePath)
-        let data = try Data(contentsOf: url)
+        try self.init(fileURL: url)
+    }
+    public init(fileURL: URL) throws {
+        let data = try Data(contentsOf: fileURL)
         try self.init(data: data, options: [])
     }
     /**
@@ -569,7 +572,7 @@ extension JSON {
         }
     }
     
-    public subscript(multiKeys keys: String...) -> JSON {
+    public subscript(multi keys: String...) -> JSON {
         get { self[multiKeys: keys] }
         set { self[multiKeys: keys] = newValue }
     }
@@ -816,6 +819,19 @@ extension JSON { // : Swift.Bool
 }
 
 
+// MARK: - Rect
+extension JSON {
+    public var rect: CGRect? {
+        guard let x = self[key: "x"].float,
+              let y = self[key: "y"].float,
+              let w = self[key: "width"].float,
+              let h = self[key: "height"].float else {
+                  return nil
+              }
+        return CGRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(w), height: CGFloat(h))
+    }
+}
+
 // MARK: - String
 
 extension JSON {
@@ -937,6 +953,15 @@ extension JSON {
     public var float: Float? {
         get {
             return number?.floatValue
+        }
+        set {
+            number = newValue.map(NSNumber.init)
+        }
+    }
+    public var cgfloat: CGFloat? {
+        get {
+            guard let v = number?.doubleValue else { return nil }
+            return CGFloat(v)
         }
         set {
             number = newValue.map(NSNumber.init)

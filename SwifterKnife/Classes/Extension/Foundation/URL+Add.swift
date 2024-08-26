@@ -148,6 +148,12 @@ public extension URL {
     }
 }
 
+public extension URL {
+    static func + (lhs: URL, rhs: String) -> URL {
+        lhs.appendingPathComponent(rhs)
+    }
+}
+
 
 extension HTTPURLResponse {
     /// 响应时间

@@ -90,3 +90,13 @@ extension Equatable {
         array.contains { $0 == self }
     }
 }
+
+extension RawRepresentable {
+    public static func create(_ rawValue: RawValue) -> Self? {
+        .init(rawValue: rawValue)
+    }
+    public static func create(_ rawValue: RawValue?) -> Self? {
+        guard let v = rawValue else { return nil }
+        return .init(rawValue: v)
+    }
+}

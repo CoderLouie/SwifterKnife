@@ -12,7 +12,10 @@ public extension CGRect {
 
     /// Return center of rect
     var center: CGPoint { CGPoint(x: midX, y: midY) }
-
+    
+    var bounds: CGRect {
+        CGRect(origin: .zero, size: size)
+    }
 }
 
 // MARK: - Initializers

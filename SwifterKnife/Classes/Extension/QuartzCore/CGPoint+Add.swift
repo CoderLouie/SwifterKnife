@@ -44,6 +44,12 @@ public extension CGPoint {
 // MARK: - Operators
 public extension CGPoint {
 
+    static func + (lhs: CGPoint, rhs: (x: CGFloat, y: CGFloat)) -> CGPoint {
+        return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+    }
+    static func += (lhs: inout CGPoint, rhs: (x: CGFloat, y: CGFloat)) {
+        lhs = lhs + rhs
+    }
     /// Add two CGPoints.
     ///
     ///     let point1 = CGPoint(x: 10, y: 10)
