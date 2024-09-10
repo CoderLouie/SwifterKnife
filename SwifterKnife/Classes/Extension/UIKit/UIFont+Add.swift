@@ -21,4 +21,14 @@ public extension UIFont {
     static func bold(_ size: CGFloat) -> UIFont {
         UIFont.systemFont(ofSize: size, weight: .bold)
     }
+    
+    @discardableResult
+    static func regist(from url: URL) -> String? {
+        guard let fontData = CGDataProvider(url: url as CFURL),
+            let fontRef = CGFont(fontData) else { return nil }
+        CTFontManagerRegisterGraphicsFont(fontRef, nil)
+//        guard let name = fontRef.fullName as? String, !name.isEmpty else { return nil }
+//        return UIFont(name: name, size: 20)?.familyName
+        return fontRef.fullName as? String
+    }
 }

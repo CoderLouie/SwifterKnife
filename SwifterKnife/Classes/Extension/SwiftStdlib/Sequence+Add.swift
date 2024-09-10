@@ -9,7 +9,7 @@ public extension Sequence {
     
     func typedFirst<T>() -> T? {
         first { $0 is T } as? T
-    } 
+    }
     
     func firstMap<T>(where predicate: (Self.Element) throws -> T?) rethrows -> T? {
         for element in self {

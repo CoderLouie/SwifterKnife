@@ -52,6 +52,15 @@ public enum SandBox {
         return (exists, isDirectory.boolValue)
     }
     
+    public static func isDirectory(_ url: URL) -> Bool {
+        return isDirectory(url.path)
+    }
+    public static func isDirectory(_ path: String) -> Bool {
+        let manager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard manager.fileExists(atPath: path, isDirectory: &isDirectory) else { return false }
+        return isDirectory.boolValue
+    }
     /*
      如果path是文件夹：存在则会清空文件夹，不存在则会创建路径
      如果path是文件 ：存在则会删除，不存在则会创建文件所在路径
@@ -206,6 +215,53 @@ public enum SandBox {
             if let res = passMap(fileURL) { return (fileURL, res) }
         }
         return nil
+    }
+    public static func deepSearch(
+        in fold: URL,
+        pass condition: (_ fileURL: URL, _ level: Int) throws -> Bool) rethrows -> URL? {
+        
+        let manager = FileManager.default
+        var isDirectory: ObjCBool = false
+        
+        func enumerateContents(of url: URL, innerLevel: Int) throws -> URL? {
+            let path = url.path
+            guard manager.fileExists(atPath: path, isDirectory: &isDirectory) else {
+                return nil
+            }
+            guard isDirectory.boolValue else {
+                if try condition(url, innerLevel) { return url }
+                return nil
+            }
+            let contents = try manager.contentsOfDirectory(atPath: path)
+            for item in contents where !item.hasPrefix(".") {
+                if let res = try enumerateContents(of: url + item, innerLevel: innerLevel + 1) { return res }
+            }
+            return nil
+        }
+        return try enumerateContents(of: fold, innerLevel: 0)
+    }
+    
+    public static func deepAllFiles(
+        in fold: URL, pass condition: (_ fileURL: URL, _ level: Int) throws -> Bool) rethrows -> [URL] {
+        let manager = FileManager.default
+        var isDirectory: ObjCBool = false
+        var res: [URL] = []
+        func enumerateContents(of url: URL, innerLevel: Int) throws {
+            let path = url.path
+            guard manager.fileExists(atPath: path, isDirectory: &isDirectory) else { return }
+            guard isDirectory.boolValue else {
+                if try condition(url, innerLevel) {
+                    res.append(url)
+                }
+                return
+            }
+            let contents = try manager.contentsOfDirectory(atPath: path)
+            for item in contents where !item.hasPrefix(".") {
+                try enumerateContents(of: url + item, innerLevel: innerLevel + 1)
+            }
+        }
+        try enumerateContents(of: fold, innerLevel: 0)
+        return res
     }
     
     public static func allFiles(in directory: String, isInclude: (_ fileURL: URL) -> Bool) -> [URL] {

@@ -91,10 +91,10 @@ public extension UICollectionView {
         self.init(frame: .zero, collectionViewLayout: flowLayout)
     }
     
-    static func create(layout: (UICollectionViewFlowLayout) -> Void) -> UICollectionView {
+    static func create(layout: (UICollectionViewFlowLayout) -> Void) -> Self {
         let flowLayout = UICollectionViewFlowLayout()
         layout(flowLayout)
-        let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        let view = Self(frame: .zero, collectionViewLayout: flowLayout)
         view.commonConfig()
         return view
     }

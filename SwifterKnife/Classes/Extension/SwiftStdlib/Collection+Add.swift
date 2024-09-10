@@ -205,6 +205,12 @@ public extension Collection {
     }
 }
 
+extension Collection where Element: AnyObject {
+    public func firstIndexIdentify(of obj: AnyObject) -> Index? {
+        firstIndex { $0 === obj }
+    }
+}
+
 extension Collection {
     public subscript(cycle index: Index) -> Element {
         self[self.index(startIndex, offsetBy: distance(from: startIndex, to: index) % count)]

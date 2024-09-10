@@ -553,7 +553,7 @@ extension JSON {
             }
         }
     }
-    public subscript(multiKeys keys: [String]) -> JSON {
+    public subscript(multi keys: [String]) -> JSON {
         get {
             guard case .dictionary(let dict) = self else {
                 return orError(.wrongType)
@@ -573,8 +573,8 @@ extension JSON {
     }
     
     public subscript(multi keys: String...) -> JSON {
-        get { self[multiKeys: keys] }
-        set { self[multiKeys: keys] = newValue }
+        get { self[multi: keys] }
+        set { self[multi: keys] = newValue }
     }
     
     public func searchIgnoreCase(_ keys: String...) -> JSON {
