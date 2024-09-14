@@ -13,7 +13,7 @@ import SwifterKnife
 fileprivate class ScreenLogWindow: UIWindow {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        windowLevel = UIWindow.Level.init(UIWindow.Level.alert.rawValue + 2)
+        windowLevel = UIWindow.Level.init(UIWindow.Level.alert.rawValue + 5)
     }
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let res = super.hitTest(point, with: event)
@@ -269,6 +269,7 @@ fileprivate class ScreenLogView: UIView {
     private var panGes: UIPanGestureRecognizer!
     private unowned var popoverButton: UIButton!
     private unowned var container: UIView!
+    private lazy var contentEdge = CGRect(x: 0, y: Screen.safeAreaT, width: Screen.width, height: Screen.height - Screen.safeAreaT - Screen.safeAreaB).inset(by: .init(inset: 20.fit))
 }
 extension ScreenLogView {
     func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
@@ -343,9 +344,14 @@ extension ScreenLogView {
         switch gesture.state {
         case .changed:
             let trans = gesture.translation(in: self)
-            popoverButton.transform.assign {
-                $0.concatenating(.init(translationX: trans.x, y: trans.y))
-            }
+            var center = popoverButton.center
+            center.x += trans.x
+            center.y += trans.y
+            if center.x >= contentEdge.maxX { center.x = contentEdge.maxX }
+            if center.x <= contentEdge.minX { center.x = contentEdge.minX }
+            if center.y <= contentEdge.minY { center.y = contentEdge.minY }
+            if center.y >= contentEdge.maxY { center.y = contentEdge.maxY }
+            popoverButton.center = center
             gesture.setTranslation(.zero, in: self)
         default: break
         }
