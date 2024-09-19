@@ -13,12 +13,13 @@ import SwifterKnife
 fileprivate class ScreenLogWindow: UIWindow {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        windowLevel = UIWindow.Level.init(UIWindow.Level.alert.rawValue + 5)
+        // UITextEffectsWindow 10
+        windowLevel = UIWindow.Level.init(9)
     }
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let res = super.hitTest(point, with: event)
         if res === self { return nil }
-        if res === rootViewController?.view.superview { return nil }
+//        if res === subviews.first { return nil }
         return res
     }
     required init?(coder: NSCoder) {
@@ -26,21 +27,16 @@ fileprivate class ScreenLogWindow: UIWindow {
     }
 }
 
+fileprivate let screenLogView = ScreenLogView(frame: UIScreen.main.bounds)
 fileprivate let logWindow: UIWindow = {
     let frame = UIScreen.main.bounds
     let window = ScreenLogWindow(frame: frame)
     window.isHidden = true
-    let view = ScreenLogView(frame: frame)
+    let view = screenLogView
     window.addSubview(view)
     return window
 }()
-fileprivate var screenLogView: ScreenLogView {
-    logWindow.subviews.first as! ScreenLogView
-}
 
-public enum ScreenLogLevel: CaseIterable {
-    case error, info, normal, warn
-}
 fileprivate class MenuItem {
     let title: String
     var isSelected: Bool = false
@@ -59,6 +55,7 @@ fileprivate class ScreenLogItem {
         self.level = level
         self.content = content
     }
+    private(set) lazy var address = unsafeBitCast(self, to: Int.self)
 }
 
 fileprivate class _TitleControl: UIControl {
@@ -87,14 +84,19 @@ fileprivate class _TitleControl: UIControl {
 }
 
 fileprivate class _ToolControl: _TitleControl {
-    override var normalTitleColor: UIColor { UIColor(gray: 255, alpha: 0.7) }
+    override var normalTitleColor: UIColor { UIColor(gray: 255, alpha: 0.5) }
     override var selectedTitleColor: UIColor { .white }
     override var intrinsicContentSize: CGSize {
         CGSize(width: label.intrinsicContentSize.width + 20.fit, height: 30.fit)
     }
+    override var isSelected: Bool {
+        didSet {
+            layer.borderColor = label.textColor.cgColor
+        }
+    }
     override func setup() {
         super.setup()
-        addBorder(color: UIColor(gray: 255, alpha: 0.7), radius: 4, width: 1)
+        addBorder(color: normalTitleColor, radius: 4, width: 1)
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
@@ -194,9 +196,21 @@ fileprivate class ScreenLogView: UIView {
         let clearControl = _ToolControl().then {
             toolbar.addSubview($0)
             $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
+            $0.isSelected = true
             $0.label.text = "Clear"
             $0.snp.makeConstraints { make in
                 make.trailing.equalTo(-space)
+                make.centerY.equalToSuperview()
+            }
+        }
+        _ToolControl().do {
+            toolbar.addSubview($0)
+            $0.tag = 1
+            $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
+            $0.isSelected = true
+            $0.label.text = "Prev"
+            $0.snp.makeConstraints { make in
+                make.trailing.equalTo(clearControl.snp.leading).offset(-space)
                 make.centerY.equalToSuperview()
             }
         }
@@ -222,19 +236,29 @@ fileprivate class ScreenLogView: UIView {
             $0.backgroundColor = .clear
             $0.alwaysBounceVertical = true
             $0.textColor = .white
+            $0.textContainerInset = .zero
+            $0.textContainer.lineFragmentPadding = 0
             container.addSubview($0)
             $0.snp.makeConstraints { make in
-                make.top.leading.trailing.equalToSuperview().inset(space)
+                make.leading.trailing.equalToSuperview().inset(space)
+                make.top.equalTo(space * 0.5)
                 make.bottom.equalTo(toolbar.snp.top)
                 make.height.equalTo(Screen.height * 0.4)
             }
         }
         popoverButton = UIButton().then {
             addSubview($0)
+            $0.setTitle("D", for: .normal)
+            $0.setTitleColor(.white, for: .normal)
+            $0.titleLabel?.font = .systemFont(ofSize: 16).fit
             $0.frame.size = CGSize(width: 32, height: 32).fit
             $0.center = CGPoint(x: 50.fit, y: Screen.height * 0.7)
-            $0.backgroundColor = UIColor(gray: 0, alpha: 0.5)
+            $0.backgroundColor = UIColor(gray: 0, alpha: 0.7)
             $0.addBorder(color: UIColor(gray: 255, alpha: 0.7), radius: 16.fit, width: 1)
+            $0.layer.shadowColor = UIColor.black.cgColor // 阴影颜色
+            $0.layer.shadowOpacity = 0.4 // 阴影透明度
+            $0.layer.shadowRadius = 2
+            $0.layer.shadowOffset = CGSize(width: 2, height: 2) // 阴影偏移量
             $0.addTarget(self, action: #selector(handlePopoverTouchEvent), for: .touchUpInside)
             
             longGes = UILongPressGestureRecognizer(target: self, action: #selector(longGestureAction(_:)))
@@ -246,17 +270,31 @@ fileprivate class ScreenLogView: UIView {
         }
     }
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if isDismissMenu { return self }
         let res = super.hitTest(point, with: event)
+        
         if let r = res, let m = menuView, !r.isDescendant(of: m) {
-            menuView?.removeFromSuperview()
-            menuView = nil
+            isDismissMenu = true
+            UIView.animate(withDuration: 0.2) {
+                m.alpha = 0
+            } completion: { _ in
+                self.menuView?.removeFromSuperview()
+                self.menuView = nil
+                self.isDismissMenu = false
+            }
+//            if let c = r as? _ToolControl {
+//                c.cancelTracking(with: event)
+//            }
             return self
         }
         if res === self { return nil }
         return res
     }
+    private var isDismissMenu = false
     private var menuView: _MenuView?
     private var items: [ScreenLogItem] = []
+    private var showingItems: [ScreenLogItem] = []
+    private var itemTagMap: [String: [ScreenLogItem]] = [:]
     private var allTags: Set<String> = []
     private var levelItems: [MenuItem] = ScreenLogLevel.allCases.map { MenuItem(title: "\($0)") }
     private var tagItems: [MenuItem] = []
@@ -277,6 +315,8 @@ extension ScreenLogView {
         items.append(item)
         
         for t in item.tags.sorted() {
+            itemTagMap[t, default: []].append(item)
+            
             if allTags.contains(t) { continue }
             allTags.insert(t)
             tagItems.append(MenuItem(title: t))
@@ -289,8 +329,9 @@ extension ScreenLogView {
         if !selLevels.isEmpty, !selLevels.contains("\(item.level)") { return }
         let selTags = Set(tagItems.filter(\.isSelected).map(\.title))
         if !selTags.isEmpty, item.tags.intersection(selTags).isEmpty { return }
+        showingItems.append(item)
         if textView.text.isEmpty {
-            textView.text += string
+            textView.text = string
         } else {
             textView.text += "\n\(string)"
         }
@@ -304,11 +345,11 @@ extension ScreenLogView {
     }
     @objc private func toolbarButtonDidClick(_ sender: UIControl) {
         if sender === levelControl ||
-            sender == tagControl {
+            sender === tagControl {
             let isLevel = sender === levelControl
             let items = isLevel ? levelItems : tagItems
             menuView = _MenuView(menus: items) { [unowned self] in
-                self.onMenuSelectedItemChange(isLevel)
+                self.onMenuSelectedItemChange()
             }.then {
                 addSubview($0)
                 $0.snp.makeConstraints { make in
@@ -317,16 +358,57 @@ extension ScreenLogView {
                 }
             }
         } else {
-            allTags = []
-            tagItems = []
-            levelItems.forEach { $0.isSelected = false }
-            textView.text = ""
+            if showingItems.isEmpty { return }
+            if sender.tag == 0 {
+                for i in showingItems {
+                    for t in i.tags {
+                        if var map = itemTagMap[t] {
+                            map.removeAll { $0 === i }
+                            if map.isEmpty {
+                                allTags.remove(t)
+                                tagItems.removeAll { $0.title == t }
+                            }
+                            itemTagMap[t] = map
+                        }
+                    }
+                }
+                tagControl.isSelected = (tagItems.first(where: \.isSelected) != nil) ?? false
+                
+                let ptrs = Set(showingItems.map(\.address))
+                items.removeAll { ptrs.contains($0.address) }
+                showingItems = []
+//                levelItems.forEach { $0.isSelected = false }
+                textView.text = ""
+            } else if sender.tag == 1 {
+                let n = showingItems.count
+                let last = showingItems.removeLast()
+                for t in last.tags {
+                    if var map = itemTagMap[t] {
+                        map.removeAll { $0 === last }
+                        if map.isEmpty {
+                            allTags.remove(t)
+                            tagItems.removeAll { $0.title == t }
+                        }
+                        itemTagMap[t] = map
+                    }
+                }
+                tagControl.isSelected = (tagItems.first(where: \.isSelected) != nil) ?? false
+                items.removeAll { $0 === last }
+                if let t = textView.text {
+                    let n1 = last.content.count
+                    // \n
+                    let mapN = n == 1 ? n1 : n1 + 1
+                    textView.text.removeLast(mapN)
+                }
+            }
         }
     }
-    private func onMenuSelectedItemChange(_ isLevel: Bool) {
+    private func onMenuSelectedItemChange() {
         let selTags = Set(tagItems.filter(\.isSelected).map(\.title))
+        tagControl.isSelected = !selTags.isEmpty
         let selLevels = Set(levelItems.filter(\.isSelected).map(\.title))
-        let showingItems = items.filter {
+        levelControl.isSelected = !selLevels.isEmpty
+        showingItems = items.filter {
             if !selTags.isEmpty, $0.tags.intersection(selTags).isEmpty { return false }
             if !selLevels.isEmpty, !selLevels.contains("\($0.level)") { return false }
             return true
@@ -358,8 +440,18 @@ extension ScreenLogView {
     }
 }
 
+public enum ScreenLogLevel: Int, CaseIterable {
+    case normal, info, warn, success, error
+    
+    public init(int: Int) {
+        self = Self.init(rawValue: int) ?? .normal
+    }
+    public init<T: RawRepresentable>(raw: T) where T.RawValue == Int {
+        self.init(int: raw.rawValue)
+    }
+}
 public enum ScreenLog {
     public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        screenLogView.log(string, level: level, tags: tags)
+        screenLogView.log(Console.timeString + " " + string, level: level, tags: tags)
     }
 }

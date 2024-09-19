@@ -18,10 +18,11 @@ public enum Console {
     
     private static let dataFmt: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.timeZone = .init(identifier: "Asia/Shanghai")
         formatter.dateFormat = "HH:mm:ss.SSS"
         return formatter
     }()
-    private static var timeString: String {
+    public static var timeString: String {
         return dataFmt.string(from: Date())
     }
     
