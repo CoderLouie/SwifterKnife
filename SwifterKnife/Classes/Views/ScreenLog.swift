@@ -11,26 +11,6 @@ import SwifterKnife
 
 
 fileprivate class ScreenLogWindow: UIWindow {
-    
-    enum CustomTouchPhase {
-        case begin, ended, other
-    }
-    var myTouchPhase: CustomTouchPhase = .other
-    
-    override func sendEvent(_ event: UIEvent) {
-        defer { super.sendEvent(event) }
-        guard event.type == .touches else { return }
-        guard let touch = event.allTouches?.randomElement() else {
-            return
-        }
-        let phase = touch.phase
-        if phase == .began {
-            myTouchPhase = .begin
-        } else if phase == .ended {
-            myTouchPhase = .ended
-        }
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
 //        let level = UIWindow.Level.normal.rawValue + 9
@@ -44,7 +24,10 @@ fileprivate class ScreenLogWindow: UIWindow {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let res = super.hitTest(point, with: event)
         if res === self { return nil }
-        if res === screenLogView { return nil }
+        if res === screenLogView {
+            screenLogView.textView.hiddenPopMenu()
+            return nil
+        }
         return res
     }
     required init?(coder: NSCoder) {
@@ -216,6 +199,9 @@ fileprivate class _LogTextView: UITextView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        hiddenPopMenu()
+    }
     private func setup() {
         backgroundColor = .clear
         tintColor = .create("#FFE500")
@@ -226,25 +212,11 @@ fileprivate class _LogTextView: UITextView {
         textColor = .white
         inputDelegate = self
     }
-    @objc private func myCopy(_ sender: Any?) {
-        copy(sender)
-    }
-    @objc private func mySelectAll(_ sender: Any?) {
-        selectAll(sender)
-    }
-    @objc private func copyLine(_ sender: Any?) {
-        let v: ScreenLogView? = ancestorView()
-        v?.copyLine(sender)
-    }
-    @objc private func deleteLine(_ sender: Any?) {
-        let v: ScreenLogView? = ancestorView()
-        v?.deleteLine(sender)
-    }
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
     }
     private(set) weak var popMenu: _PopMenu?
-    
+    private var selectionChangedWorkItem: DispatchWorkItem?
     var selectedRect: CGRect? {
         guard let text = text as? NSString,
               text.length > 0 else { return nil }
@@ -274,45 +246,53 @@ fileprivate class _LogTextView: UITextView {
 }
 
 extension _LogTextView: UITextInputDelegate {
-    func hiddenPopMenu() {
-        guard popMenu != nil else { return }
+    @discardableResult
+    func justHiddenPopMenu() -> Bool {
+        guard popMenu != nil else { return false }
         popMenu?.removeFromSuperview()
         popMenu = nil
+        return true
+    }
+    func hiddenPopMenu() {
+        guard justHiddenPopMenu() else { return }
         let range = selectedRange
         if range.length == 0 { return }
         selectedRange = .zero
     }
     func textWillChange(_ textInput: UITextInput?) { }
-    
     func textDidChange(_ textInput: UITextInput?) { }
     
     func selectionWillChange(_ textInput: UITextInput?) {
-
-        guard logWindow.myTouchPhase == .begin else { return }
-        logWindow.myTouchPhase = .other
-//        print("11 selectionWillChange")
-        hiddenPopMenu()
+        justHiddenPopMenu()
     }
     func selectionDidChange(_ textInput: UITextInput?) {
-//        guard hasBuilt else { return }
+        selectionChangedWorkItem?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            self?.textSelectionDidChange()
+        }
+        selectionChangedWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: item)
+    }
+    private func textSelectionDidChange() {
         guard let rect = selectedRect, !rect.isEmpty else {
-            hiddenPopMenu()
+            justHiddenPopMenu()
             return
         }
-        guard logWindow.myTouchPhase == .ended else { return }
-        logWindow.myTouchPhase = .other
-//        print("11 selectionDidChange")
+         
+        justHiddenPopMenu()
         let view = screenLogView
         let r1 = self.convert(rect, to: view)
         popMenu = _PopMenu { [unowned self] tag in
-            self.hiddenPopMenu()
             switch tag {
-            case 0: self.deleteLine(nil)
-            case 1: self.mySelectAll(nil)
-            case 2: self.myCopy(nil)
-            case 3: self.copyLine(nil)
+            case 0: screenLogView.deleteLine(nil)
+            case 1:
+                self.selectAll(nil)
+                return
+            case 2: self.copy(nil)
+            case 3: screenLogView.copyLine(nil)
             default: break
             }
+            self.hiddenPopMenu()
         }.then { this in
             view.addSubview(this)
             let space = 10.fit
@@ -329,7 +309,6 @@ extension _LogTextView: UITextInputDelegate {
             if deltaX < -minDelta { deltaX = -minDelta }
             if deltaX > minDelta { deltaX = minDelta }
             cons.update(offset: deltaX)
-//            print("")
         }
     }
 }
@@ -449,33 +428,15 @@ fileprivate class ScreenLogView: UIView {
             panGes.require(toFail: longGes)
         }
     }
-//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-//        if isDismissMenu { return self }
-//        let res = super.hitTest(point, with: event)
-//        
-//        if let r = res, let m = menuView, !r.isDescendant(of: m) {
-//            isDismissMenu = true
-//            UIView.animate(withDuration: 0.2) {
-//                m.alpha = 0
-//            } completion: { _ in
-//                self.menuView?.removeFromSuperview()
-//                self.menuView = nil
-//                self.isDismissMenu = false
-//            }
-//            return self
-//        }
-//        if res === self { return nil }
-//        return res
-//    }
     
     
-    @objc func copyLine(_ sender: Any?) {
+    func copyLine(_ sender: Any?) {
         let items = selectedItems
         guard !items.isEmpty else { return }
         let log = items.map(\.content).joined(separator: "\n")
         log.copyToPasteboard()
     }
-    @objc func deleteLine(_ sender: Any?) {
+    func deleteLine(_ sender: Any?) {
         let items = selectedItems
         guard !items.isEmpty else { return }
         for i in items {
@@ -515,9 +476,7 @@ fileprivate class ScreenLogView: UIView {
         return res
     }
     
-    private var isDismissMenu = false
     private(set) var popContainer: _PopContainer!
-    private weak var menuView: _MenuView?
     private var items: [ScreenLogItem] = []
     private var showingItems: [ScreenLogItem] = []
     private var itemTagMap: [String: [ScreenLogItem]] = [:]
@@ -575,9 +534,9 @@ extension ScreenLogView {
             sender === tagControl {
             let isLevel = sender === levelControl
             let items = isLevel ? levelItems : tagItems
-            menuView = _MenuView(menus: items) { [unowned self] in
+            _MenuView(menus: items) { [unowned self] in
                 self.onMenuSelectedItemChange()
-            }.then {
+            }.do {
                 popContainer.addSubview($0)
                 $0.snp.makeConstraints { make in
                     make.leading.equalTo(isLevel ? 0 : 30.fit)
