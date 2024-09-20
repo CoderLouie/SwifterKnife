@@ -13,8 +13,16 @@ import SwifterKnife
 fileprivate class ScreenLogWindow: UIWindow {
     override init(frame: CGRect) {
         super.init(frame: frame)
+//        windowLevel = UIWindow.Level.init(9)
+//        let level = UIWindow.Level.normal.rawValue + 9
+        let level = UIWindow.Level.alert.rawValue + 5
+        windowLevel = UIWindow.Level(rawValue: level)
+        
+        isHidden = true
+        let view = screenLogView
         // UITextEffectsWindow 10
-        windowLevel = UIWindow.Level.init(9)
+//        view.textView.isSelectable = windowLevel.rawValue < UIWindow.Level.normal.rawValue + 10
+        addSubview(view)
     }
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let res = super.hitTest(point, with: event)
@@ -28,14 +36,7 @@ fileprivate class ScreenLogWindow: UIWindow {
 }
 
 fileprivate let screenLogView = ScreenLogView(frame: UIScreen.main.bounds)
-fileprivate let logWindow: UIWindow = {
-    let frame = UIScreen.main.bounds
-    let window = ScreenLogWindow(frame: frame)
-    window.isHidden = true
-    let view = screenLogView
-    window.addSubview(view)
-    return window
-}()
+fileprivate let logWindow = ScreenLogWindow(frame: UIScreen.main.bounds)
 
 fileprivate class MenuItem {
     let title: String
@@ -149,6 +150,63 @@ fileprivate class _MenuView: UIView {
         onChange?()
     }
 }
+fileprivate class _LogTextView: UITextView {
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        setup()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    private func setup() {
+        backgroundColor = .clear
+        tintColor = .create("#FFE500")
+        textContainerInset = .zero
+        textContainer.lineFragmentPadding = 0
+        isEditable = false
+        alwaysBounceVertical = true
+        textColor = .white
+        let item1 = UIMenuItem(title: "删除行", action: #selector(deleteLine(_:)))
+        let item2 = UIMenuItem(title: "全选", action: #selector(mySelectAll(_:)))
+        let item3 = UIMenuItem(title: "复制", action: #selector(myCopy(_:)))
+        let item4 = UIMenuItem(title: "复制行", action: #selector(copyLine(_:)))
+        UIMenuController.shared.do {
+            $0.menuItems = [item1, item2, item3, item4]
+            $0.isMenuVisible = false
+        }
+    }
+    @objc private func myCopy(_ sender: Any?) {
+        copy(sender)
+    }
+    @objc private func mySelectAll(_ sender: Any?) {
+        selectAll(sender)
+    }
+    @objc private func copyLine(_ sender: Any?) {
+        let v: ScreenLogView? = ancestorView()
+        v?.copyLine(sender)
+    }
+    @objc private func deleteLine(_ sender: Any?) {
+        let v: ScreenLogView? = ancestorView()
+        v?.deleteLine(sender)
+    }
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(myCopy(_:)) ||
+            action == #selector(mySelectAll(_:)) ||
+            action == #selector(copyLine(_:)) ||
+            action == #selector(deleteLine(_:)) {
+            return true
+        }
+        return false
+    }
+//    override func target(forAction action: Selector, withSender sender: Any?) -> Any? {
+//        if action == #selector(copyLine(_:)) ||
+//            action == #selector(deleteLine(_:)) {
+//            return superview?.perform(action, with: sender)
+//            return nil
+//        }
+//        return super.target(forAction: action, withSender: sender)
+//    }
+}
 fileprivate class ScreenLogView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -215,29 +273,9 @@ fileprivate class ScreenLogView: UIView {
             }
         }
         let font = UIFont(name: "Menlo", size: 12)?.fit
-//        UITextField().do {
-//            $0.font = font
-//            $0.textColor = .white
-//            toolbar.addSubview($0)
-//            $0.borderStyle = .line
-//            $0.attributedPlaceholder = NSAttributedString(string: "Search...", attributes: [.foregroundColor: UIColor(gray: 255, alpha: 0.8), .font: font])
-//            $0.isEnabled = false
-//            $0.snp.makeConstraints { make in
-//                make.leading.equalTo(tagControl.snp.trailing).offset(space)
-//                make.trailing.equalTo(clearControl.snp.leading).offset(-space)
-//                make.height.equalTo(30.fit)
-//                make.centerY.equalToSuperview()
-//            }
-//        }
         
-        textView = UITextView().then {
+        textView = _LogTextView().then {
             $0.font = font
-            $0.isEditable = false
-            $0.backgroundColor = .clear
-            $0.alwaysBounceVertical = true
-            $0.textColor = .white
-            $0.textContainerInset = .zero
-            $0.textContainer.lineFragmentPadding = 0
             container.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview().inset(space)
@@ -282,14 +320,59 @@ fileprivate class ScreenLogView: UIView {
                 self.menuView = nil
                 self.isDismissMenu = false
             }
-//            if let c = r as? _ToolControl {
-//                c.cancelTracking(with: event)
-//            }
             return self
         }
         if res === self { return nil }
         return res
     }
+    
+    
+    @objc func copyLine(_ sender: Any?) {
+        let items = selectedItems
+        guard !items.isEmpty else { return }
+        let log = items.map(\.content).joined(separator: "\n")
+        log.copyToPasteboard()
+    }
+    @objc func deleteLine(_ sender: Any?) {
+        let items = selectedItems
+        guard !items.isEmpty else { return }
+        for i in items {
+            for t in i.tags {
+                if var map = itemTagMap[t] {
+                    map.removeAll { $0 === i }
+                    if map.isEmpty {
+                        allTags.remove(t)
+                        tagItems.removeAll { $0.title == t }
+                    }
+                    itemTagMap[t] = map
+                }
+            }
+        }
+        tagControl.isSelected = (tagItems.first(where: \.isSelected) != nil) ?? false
+        
+        let ptrs = Set(items.map(\.address))
+        showingItems.removeAll { ptrs.contains($0.address) }
+        self.items.removeAll { ptrs.contains($0.address) }
+        textView.text = showingItems.map(\.content).joined(separator: "\n")
+    }
+    private var selectedItems: [ScreenLogItem] {
+        let range = textView.selectedRange
+        guard range.location != NSNotFound, range.length > 0 else { return [] }
+        let r = (range.location..<range.location + range.length)
+        var res: [ScreenLogItem] = []
+        var current = 0
+        for item in showingItems {
+            let n = item.content.count
+            let tmp = (current..<current + n)
+            current += n
+            if tmp.lowerBound >= r.upperBound { return res }
+            if tmp.overlaps(r) {
+                res.append(item)
+            }
+        }
+        return res
+    }
+    
     private var isDismissMenu = false
     private var menuView: _MenuView?
     private var items: [ScreenLogItem] = []
@@ -300,7 +383,7 @@ fileprivate class ScreenLogView: UIView {
     private var tagItems: [MenuItem] = []
     
     private unowned var toolbar: UIView!
-    private unowned var textView: UITextView!
+    private(set) unowned var textView: UITextView!
     private unowned var tagControl: UIControl!
     private unowned var levelControl: UIControl!
     private var longGes: UILongPressGestureRecognizer!
