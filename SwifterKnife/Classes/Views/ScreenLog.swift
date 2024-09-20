@@ -11,23 +11,40 @@ import SwifterKnife
 
 
 fileprivate class ScreenLogWindow: UIWindow {
+    
+    enum CustomTouchPhase {
+        case begin, ended, other
+    }
+    var myTouchPhase: CustomTouchPhase = .other
+    
+    override func sendEvent(_ event: UIEvent) {
+        defer { super.sendEvent(event) }
+        guard event.type == .touches else { return }
+        guard let touch = event.allTouches?.randomElement() else {
+            return
+        }
+        let phase = touch.phase
+        if phase == .began {
+            myTouchPhase = .begin
+        } else if phase == .ended {
+            myTouchPhase = .ended
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        windowLevel = UIWindow.Level.init(9)
 //        let level = UIWindow.Level.normal.rawValue + 9
         let level = UIWindow.Level.alert.rawValue + 5
         windowLevel = UIWindow.Level(rawValue: level)
         
         isHidden = true
         let view = screenLogView
-        // UITextEffectsWindow 10
-//        view.textView.isSelectable = windowLevel.rawValue < UIWindow.Level.normal.rawValue + 10
         addSubview(view)
     }
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let res = super.hitTest(point, with: event)
         if res === self { return nil }
-//        if res === subviews.first { return nil }
+        if res === screenLogView { return nil }
         return res
     }
     required init?(coder: NSCoder) {
@@ -116,6 +133,17 @@ fileprivate class _MenuControl: _TitleControl {
         }
     }
 }
+fileprivate class _PopMenuControl: _TitleControl {
+    override var intrinsicContentSize: CGSize {
+        CGSize(width: label.intrinsicContentSize.width + 20.fit, height: 30.fit)
+    }
+    override func setup() {
+        super.setup()
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+}
 fileprivate class _MenuView: UIView {
     private var menus: [MenuItem] = []
     private var onChange: (() -> Void)?
@@ -150,6 +178,36 @@ fileprivate class _MenuView: UIView {
         onChange?()
     }
 }
+fileprivate class _PopMenu: UIView {
+    private var onClick: ((Int) -> Void)?
+    convenience init(onClick: @escaping (Int) -> Void) {
+        self.init(frame: .zero)
+        backgroundColor = .white
+        addCorner(radius: 4)
+        self.onClick = onClick
+        
+        let actions = ["删除行","全选","复制","复制行"]
+        UIStackView.horizontal {
+            actions.enumerated().map { (idx, title) in
+                _PopMenuControl().then {
+                    $0.tag = idx
+                    $0.label.text = title
+                    $0.addTarget(self, action: #selector(onMenuControlClick(_:)), for: .touchUpInside)
+                }
+            }
+        }.do {
+            $0.alignment = .fill
+            $0.distribution = .fill
+            addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+    }
+    @objc private func onMenuControlClick(_ sender: _MenuControl) {
+        onClick?(sender.tag)
+    }
+}
 fileprivate class _LogTextView: UITextView {
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -166,14 +224,7 @@ fileprivate class _LogTextView: UITextView {
         isEditable = false
         alwaysBounceVertical = true
         textColor = .white
-        let item1 = UIMenuItem(title: "删除行", action: #selector(deleteLine(_:)))
-        let item2 = UIMenuItem(title: "全选", action: #selector(mySelectAll(_:)))
-        let item3 = UIMenuItem(title: "复制", action: #selector(myCopy(_:)))
-        let item4 = UIMenuItem(title: "复制行", action: #selector(copyLine(_:)))
-        UIMenuController.shared.do {
-            $0.menuItems = [item1, item2, item3, item4]
-            $0.isMenuVisible = false
-        }
+        inputDelegate = self
     }
     @objc private func myCopy(_ sender: Any?) {
         copy(sender)
@@ -190,22 +241,107 @@ fileprivate class _LogTextView: UITextView {
         v?.deleteLine(sender)
     }
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if action == #selector(myCopy(_:)) ||
-            action == #selector(mySelectAll(_:)) ||
-            action == #selector(copyLine(_:)) ||
-            action == #selector(deleteLine(_:)) {
-            return true
-        }
         return false
     }
-//    override func target(forAction action: Selector, withSender sender: Any?) -> Any? {
-//        if action == #selector(copyLine(_:)) ||
-//            action == #selector(deleteLine(_:)) {
-//            return superview?.perform(action, with: sender)
-//            return nil
-//        }
-//        return super.target(forAction: action, withSender: sender)
-//    }
+    private(set) weak var popMenu: _PopMenu?
+    
+    var selectedRect: CGRect? {
+        guard let text = text as? NSString,
+              text.length > 0 else { return nil }
+        
+        guard let textRange = selectedTextRange else {
+            return nil
+        }
+        let range = selectedRange
+        guard range.isValid else { return nil }
+        
+        let rect1 = caretRect(for: textRange.start)
+        let rect2 = caretRect(for: textRange.end)
+        
+        var origin: CGPoint = CGPoint(x: 0, y: rect1.minY)
+        var size: CGSize = .zero
+        if rect1.minY == rect2.minY {
+            origin.x = rect1.minX
+            size.width = rect2.minX - rect1.maxX
+            size.height = rect1.height
+        } else {
+            origin.x = 0
+            size.width = bounds.width
+            size.height = rect2.maxY - rect1.minY
+        }
+        return CGRect(origin: origin, size: size)
+    }
+}
+
+extension _LogTextView: UITextInputDelegate {
+    func hiddenPopMenu() {
+        guard popMenu != nil else { return }
+        popMenu?.removeFromSuperview()
+        popMenu = nil
+        let range = selectedRange
+        if range.length == 0 { return }
+        selectedRange = .zero
+    }
+    func textWillChange(_ textInput: UITextInput?) { }
+    
+    func textDidChange(_ textInput: UITextInput?) { }
+    
+    func selectionWillChange(_ textInput: UITextInput?) {
+
+        guard logWindow.myTouchPhase == .begin else { return }
+        logWindow.myTouchPhase = .other
+//        print("11 selectionWillChange")
+        hiddenPopMenu()
+    }
+    func selectionDidChange(_ textInput: UITextInput?) {
+//        guard hasBuilt else { return }
+        guard let rect = selectedRect, !rect.isEmpty else {
+            hiddenPopMenu()
+            return
+        }
+        guard logWindow.myTouchPhase == .ended else { return }
+        logWindow.myTouchPhase = .other
+//        print("11 selectionDidChange")
+        let view = screenLogView
+        let r1 = self.convert(rect, to: view)
+        popMenu = _PopMenu { [unowned self] tag in
+            self.hiddenPopMenu()
+            switch tag {
+            case 0: self.deleteLine(nil)
+            case 1: self.mySelectAll(nil)
+            case 2: self.myCopy(nil)
+            case 3: self.copyLine(nil)
+            default: break
+            }
+        }.then { this in
+            view.addSubview(this)
+            let space = 10.fit
+            var cons: Constraint!
+            this.snp.makeConstraints { make in
+                make.bottom.equalTo(view.snp.top).offset(r1.minY - space)
+                cons = make.centerX.equalToSuperview().constraint
+            }
+            view.layoutIfNeeded()
+            let r = view.bounds
+            let r2 = this.frame
+            var deltaX = r1.center.x - r2.center.x
+            let minDelta = r.center.x - (r2.width * 0.5 + space)
+            if deltaX < -minDelta { deltaX = -minDelta }
+            if deltaX > minDelta { deltaX = minDelta }
+            cons.update(offset: deltaX)
+//            print("")
+        }
+    }
+}
+fileprivate class _PopContainer: UIView {
+    override func didAddSubview(_ subview: UIView) {
+        super.didAddSubview(subview)
+        isHidden = false
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        removeSubviews()
+        isHidden = true
+    }
 }
 fileprivate class ScreenLogView: UIView {
     override init(frame: CGRect) {
@@ -284,6 +420,12 @@ fileprivate class ScreenLogView: UIView {
                 make.height.equalTo(Screen.height * 0.4)
             }
         }
+        popContainer = _PopContainer().then {
+            $0.frame = bounds
+            $0.backgroundColor = .clear
+            $0.isHidden = true
+            addSubview($0)
+        }
         popoverButton = UIButton().then {
             addSubview($0)
             $0.setTitle("D", for: .normal)
@@ -307,24 +449,24 @@ fileprivate class ScreenLogView: UIView {
             panGes.require(toFail: longGes)
         }
     }
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if isDismissMenu { return self }
-        let res = super.hitTest(point, with: event)
-        
-        if let r = res, let m = menuView, !r.isDescendant(of: m) {
-            isDismissMenu = true
-            UIView.animate(withDuration: 0.2) {
-                m.alpha = 0
-            } completion: { _ in
-                self.menuView?.removeFromSuperview()
-                self.menuView = nil
-                self.isDismissMenu = false
-            }
-            return self
-        }
-        if res === self { return nil }
-        return res
-    }
+//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        if isDismissMenu { return self }
+//        let res = super.hitTest(point, with: event)
+//        
+//        if let r = res, let m = menuView, !r.isDescendant(of: m) {
+//            isDismissMenu = true
+//            UIView.animate(withDuration: 0.2) {
+//                m.alpha = 0
+//            } completion: { _ in
+//                self.menuView?.removeFromSuperview()
+//                self.menuView = nil
+//                self.isDismissMenu = false
+//            }
+//            return self
+//        }
+//        if res === self { return nil }
+//        return res
+//    }
     
     
     @objc func copyLine(_ sender: Any?) {
@@ -374,7 +516,8 @@ fileprivate class ScreenLogView: UIView {
     }
     
     private var isDismissMenu = false
-    private var menuView: _MenuView?
+    private(set) var popContainer: _PopContainer!
+    private weak var menuView: _MenuView?
     private var items: [ScreenLogItem] = []
     private var showingItems: [ScreenLogItem] = []
     private var itemTagMap: [String: [ScreenLogItem]] = [:]
@@ -383,7 +526,7 @@ fileprivate class ScreenLogView: UIView {
     private var tagItems: [MenuItem] = []
     
     private unowned var toolbar: UIView!
-    private(set) unowned var textView: UITextView!
+    private(set) unowned var textView: _LogTextView!
     private unowned var tagControl: UIControl!
     private unowned var levelControl: UIControl!
     private var longGes: UILongPressGestureRecognizer!
@@ -425,6 +568,7 @@ extension ScreenLogView {
 extension ScreenLogView {
     @objc private func handlePopoverTouchEvent() {
         container.isHidden.toggle()
+        textView.hiddenPopMenu()
     }
     @objc private func toolbarButtonDidClick(_ sender: UIControl) {
         if sender === levelControl ||
@@ -434,7 +578,7 @@ extension ScreenLogView {
             menuView = _MenuView(menus: items) { [unowned self] in
                 self.onMenuSelectedItemChange()
             }.then {
-                addSubview($0)
+                popContainer.addSubview($0)
                 $0.snp.makeConstraints { make in
                     make.leading.equalTo(isLevel ? 0 : 30.fit)
                     make.bottom.equalTo(-Screen.safeAreaB - 44.fit)
@@ -503,6 +647,7 @@ extension ScreenLogView {
         if gesture.state == .began {
             Haptic.impact(.medium).generate()
             logWindow.isHidden = true
+            textView.hiddenPopMenu()
         }
     }
     @objc func panGestureAction(_ gesture: UIPanGestureRecognizer) {
