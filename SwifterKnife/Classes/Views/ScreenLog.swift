@@ -9,13 +9,18 @@ import UIKit
 import SnapKit
 import SwifterKnife
 
+extension UIWindow.Level {
+    
+    public static func + (lhs: UIWindow.Level, rhs: RawValue) -> UIWindow.Level {
+        .init(rawValue: lhs.rawValue + rhs)
+    }
+}
 
 fileprivate class ScreenLogWindow: UIWindow {
     override init(frame: CGRect) {
         super.init(frame: frame)
 //        let level = UIWindow.Level.normal.rawValue + 9
-        let level = UIWindow.Level.alert.rawValue + 5
-        windowLevel = UIWindow.Level(rawValue: level)
+        windowLevel = .alert + 5
         
         isHidden = true
         let view = screenLogView
@@ -132,8 +137,8 @@ fileprivate class _MenuView: UIView {
     private var onChange: (() -> Void)?
     convenience init(menus: [MenuItem], onChange: @escaping () -> Void) {
         self.init(frame: .zero)
-        backgroundColor = .white
-        addCorner(radius: 4)
+//        backgroundColor = .white
+//        addCorner(radius: 4)
         self.menus = menus
         self.onChange = onChange
         
@@ -215,7 +220,7 @@ fileprivate class _LogTextView: UITextView {
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
     }
-    private(set) weak var popMenu: _PopMenu?
+    private(set) weak var popMenu: UIView?
     private var selectionChangedWorkItem: DispatchWorkItem?
     var selectedRect: CGRect? {
         guard let text = text as? NSString,
@@ -223,6 +228,10 @@ fileprivate class _LogTextView: UITextView {
         
         guard let textRange = selectedTextRange else {
             return nil
+        }
+        let rects = selectionRects(for: textRange)
+        if rects.count == 1 {
+            return rects[0].rect
         }
         let range = selectedRange
         guard range.isValid else { return nil }
@@ -280,9 +289,7 @@ extension _LogTextView: UITextInputDelegate {
         }
          
         justHiddenPopMenu()
-        let view = screenLogView
-        let r1 = self.convert(rect, to: view)
-        popMenu = _PopMenu { [unowned self] tag in
+        let menuView = _PopMenu { [unowned self] tag in
             switch tag {
             case 0: screenLogView.deleteLine(nil)
             case 1:
@@ -293,22 +300,9 @@ extension _LogTextView: UITextInputDelegate {
             default: break
             }
             self.hiddenPopMenu()
-        }.then { this in
-            view.addSubview(this)
-            let space = 10.fit
-            var cons: Constraint!
-            this.snp.makeConstraints { make in
-                make.bottom.equalTo(view.snp.top).offset(r1.minY - space)
-                cons = make.centerX.equalToSuperview().constraint
-            }
-            view.layoutIfNeeded()
-            let r = view.bounds
-            let r2 = this.frame
-            var deltaX = r1.center.x - r2.center.x
-            let minDelta = r.center.x - (r2.width * 0.5 + space)
-            if deltaX < -minDelta { deltaX = -minDelta }
-            if deltaX > minDelta { deltaX = minDelta }
-            cons.update(offset: deltaX)
+        }
+        popMenu = PopContainer().then {
+            $0.show(menuView, on: screenLogView, from: self, rect: rect, config: { _ in })
         }
     }
 }
@@ -534,15 +528,10 @@ extension ScreenLogView {
             sender === tagControl {
             let isLevel = sender === levelControl
             let items = isLevel ? levelItems : tagItems
-            _MenuView(menus: items) { [unowned self] in
+            let menuView = _MenuView(menus: items) { [unowned self] in
                 self.onMenuSelectedItemChange()
-            }.do {
-                popContainer.addSubview($0)
-                $0.snp.makeConstraints { make in
-                    make.leading.equalTo(isLevel ? 0 : 30.fit)
-                    make.bottom.equalTo(-Screen.safeAreaB - 44.fit)
-                }
             }
+            PopContainer().show(menuView, on: popContainer, from: sender) { _ in }
         } else {
             if showingItems.isEmpty { return }
             if sender.tag == 0 {
