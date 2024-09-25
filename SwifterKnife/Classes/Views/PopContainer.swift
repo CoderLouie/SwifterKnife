@@ -82,10 +82,9 @@ public final class PopContainer: UIView {
         self.snp.makeConstraints { make in
             make.top.leading.equalTo(100)
         }
-        self.layoutIfNeeded()
+        parentView.layoutIfNeeded()
         let selfSize = self.bounds.size
         
-        let top = dir == .up ? sourceRect.maxX + arrowOffset : sourceRect.minY  - arrowOffset - selfSize.height
         let popInset = cfg.popAreaInset
         let roundLineSpace: CGFloat = cfg.minSpaceBetweenCornerAndArrow
         let sourceRectMidx = sourceRect.midX
@@ -95,11 +94,11 @@ public final class PopContainer: UIView {
         var left = sourceRectMidx - selfSize.width * 0.5
         if left >= popInset.left {
             let max = parentSize.width - popInset.right
-            if left > max - selfSize.width { left = max - selfSize.width }
-            if arrowX > max - limit { arrowX = max - limit }
+            left = min(left, max - selfSize.width)
+            arrowX = min(arrowX, max - limit)
         } else {
             left = popInset.left
-            if arrowX < popInset.left + limit { arrowX = popInset.left + limit }
+            arrowX = max(arrowX, popInset.left + limit)
         }
         arrowX -= left
         
@@ -168,6 +167,8 @@ public final class PopContainer: UIView {
         }
         contentView.backgroundColor = .clear
         backgroundColor = .clear
+        
+        let top = dir == .up ? sourceRect.maxX + arrowOffset : sourceRect.minY  - arrowOffset - selfSize.height
         self.snp.updateConstraints { make in
             make.leading.equalTo(left)
             make.top.equalTo(top)

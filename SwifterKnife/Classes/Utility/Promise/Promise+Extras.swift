@@ -38,26 +38,7 @@ fileprivate func PromiseRetry<T>(
     }
 }
 
-public enum Promises {
-    
-    public static func tryAll<T>(_ promises: [Promise<T>]) -> Promise<[T]> {
-        return Promise<[T]> { fulfill, reject in
-            guard !promises.isEmpty else { fulfill([]);
-                return
-            }
-            for promise in promises {
-                promise.then { val in
-                    if promises.allSatisfy(\.isFulfilled) {
-                        fulfill(promises.compactMap(\.value))
-                    }
-                } onRejected: { error in
-                    if promises.allSatisfy(\.isFulfilled) {
-                        fulfill(promises.compactMap(\.value))
-                    }
-                }
-            }
-        }
-    }
+public enum Promises { 
     
     /// Wait for all the promises you give it to fulfill, and once they have, fulfill itself
     /// with the array of all fulfilled values.

@@ -88,7 +88,7 @@ public extension Associable where Self: AnyObject {
 extension NSObject: Associable {}
  */
 
-
+/*
 public protocol Associable {}
 
 /// Policies related to associative references.
@@ -193,7 +193,37 @@ public func synchronizd<T>(_ lock: AnyObject, closure: () -> T) -> T {
     objc_sync_exit(lock)
     return result
 }
+*/
 
+public protocol Associable {}
+
+fileprivate var obj_associated_key: Int8 = 0
+extension Associable where Self: AnyObject {
+    private var pocket: NSMutableDictionary {
+        if let dict = objc_getAssociatedObject(self, &obj_associated_key) as? NSMutableDictionary {
+            return dict
+        }
+        let dict = NSMutableDictionary()
+        objc_setAssociatedObject(self, &obj_associated_key, dict, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return dict
+    } 
+    
+    public subscript<Value>(key: Any, default defaultValue: @autoclosure () -> Value) -> Value {
+        get {
+            if let val = pocket[key] as? Value { return val }
+            let val = defaultValue()
+            pocket[key] = val
+            return val
+        }
+        set {
+            pocket[key] = newValue
+        }
+    }
+    public subscript<Value>(key: Any) -> Value? {
+        get { pocket[key] as? Value }
+        set { pocket[key] = newValue }
+    }
+}
 
 //extension NSObject {
 //    @discardableResult
