@@ -158,17 +158,19 @@ public final class PopContainer: UIView {
             path.addLine(to: CGPoint(x: arrowX + arrowW2, y: y2))
         }
         path.close()
-        let bgColor = contentView.backgroundColor ?? self.backgroundColor
+        let bgColor = self.backgroundColor
         shapeLayer.do {
             $0.path = path.cgPath
             $0.fillColor = bgColor?.cgColor
             $0.strokeColor = cfg.outlineColor?.cgColor
             $0.lineWidth = cfg.outlineWidth
+//            $0.lineCap = .round
+//            $0.lineJoin = .round
         }
         contentView.backgroundColor = .clear
         backgroundColor = .clear
         
-        let top = dir == .up ? sourceRect.maxX + arrowOffset : sourceRect.minY  - arrowOffset - selfSize.height
+        let top = dir == .up ? sourceRect.maxY + arrowOffset : sourceRect.minY  - arrowOffset - selfSize.height
         self.snp.updateConstraints { make in
             make.leading.equalTo(left)
             make.top.equalTo(top)
