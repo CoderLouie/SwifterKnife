@@ -80,8 +80,8 @@ fileprivate enum TestCase: String, CaseIterable {
             let num1 = int * v
 //            let nums = [0, 2, 4, 7, 6]
 //            nums.forEach(slice: 2) { print($0) }
-            print(AssociationKey.current())
-            print(AssociationKey.current())
+//            print(AssociationKey.current())
+//            print(AssociationKey.current())
             print(token)
 //            let nums = Array(0...5)
 //            print(nums.shuffledOfLength(8))

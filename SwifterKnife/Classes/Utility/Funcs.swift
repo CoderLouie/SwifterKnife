@@ -130,9 +130,9 @@ public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T?) rethrows -> T
  */
 
 
-public func sk_pick<T>(_ condition: @escaping @autoclosure () -> Bool, _ type: T.Type) -> (_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T {
-    { condition() ? $0() : $1() }
-}
+//public func sk_pick<T>(_ condition: @escaping @autoclosure () -> Bool, _ type: T.Type) -> (_ ifTrue: @autoclosure () -> T, _ ifFalse: @autoclosure () -> T) -> T {
+//    { condition() ? $0() : $1() }
+//}
 
 
 //public extension Bool {

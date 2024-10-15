@@ -62,6 +62,9 @@ extension CFTimeInterval {
     public var coseTime: CFTimeInterval {
         CACurrentMediaTime() - self
     }
+    public var coseTimeDesc: String {
+        String(format: "%.02f", CACurrentMediaTime() - self)
+    }
 }
 
 

@@ -168,6 +168,14 @@ public extension UIImage {
             draw(in: rect)
         }
     }
+    func scaled(toSize size: CGSize, scale: CGFloat? = nil) -> UIImage? {
+        let rect = CGRect(origin: .zero, size: size)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = scale ?? self.scale
+        return UIGraphicsImageRenderer(size: size, format: format).image { _ in
+            draw(in: rect)
+        }
+    }
     
     /// Creates a copy of the receiver rotated by the given angle.
     ///

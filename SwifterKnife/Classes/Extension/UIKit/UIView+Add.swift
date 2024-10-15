@@ -58,7 +58,15 @@ public extension UIView {
 // MARK: - Properties
 
 public extension UIView {
-    /// Take screenshot of view (if applicable).
+    var fixScreenshot: UIImage? {
+        let size = layer.frame.size
+        guard size != .zero else { return nil }
+        var s = CGSize(width: floor(size.width) - 2, height: floor(size.height) - 2)
+        return UIGraphicsImageRenderer(size: s).image { context in
+            layer.render(in: context.cgContext)
+        }
+    }
+    /// Take screenshot of view (if applicable). 可能会有白边
     var screenshot: UIImage? {
         let size = layer.frame.size
         guard size != .zero else { return nil }

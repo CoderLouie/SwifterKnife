@@ -500,7 +500,8 @@ extension ScreenLogView {
             allTags.insert(t)
             tagItems.append(MenuItem(title: t))
         }
-        if logWindow.isHidden {
+        if UIApplication.shared.applicationState != .inactive,
+           logWindow.isHidden {
             logWindow.isHidden = false
         }
         
@@ -628,6 +629,12 @@ public enum ScreenLogLevel: Int, CaseIterable {
 }
 public enum ScreenLog {
     public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        screenLogView.log(Console.timeString + " " + string, level: level, tags: tags)
+        if Thread.isMainThread {
+            screenLogView.log(Console.timeString + " " + string, level: level, tags: tags)
+        } else {
+            DispatchQueue.main.async {
+                screenLogView.log(Console.timeString + " " + string, level: level, tags: tags)
+            }
+        }
     }
 }

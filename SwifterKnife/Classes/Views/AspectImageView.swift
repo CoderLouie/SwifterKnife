@@ -42,21 +42,15 @@ open class AspectFitView: UIView {
             addSubview($0)
         }
     }
-    open var imageContentModel: UIView.ContentMode = .top
+    open var imageContentModel: UIView.ContentMode = .center
     open override func layoutSubviews() {
         super.layoutSubviews()
+        guard let s = imgView.image?.size else { return }
         let bounds = bounds
         let inset = contentInset
         let rect = bounds.inset(by: inset)
-        guard let ratio = imgView.image?.size.whRatio else { return }
-        let size: CGSize
-        if ratio < 1 {
-            size = CGSize(width: rect.height * ratio, height: rect.height)
-        } else {
-            size = CGSize(width: rect.width, height: rect.width / ratio)
-        }
         imgView.contentMode = .scaleAspectFit
-        var frame = rect.resizing(to: size, model: .scaleAspectFit).pixelate
+        var frame = rect.resizing(to: s, model: .scaleAspectFit).pixelate
         switch imageContentModel {
         case .top:
             frame.origin.y = inset.top

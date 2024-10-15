@@ -184,8 +184,8 @@ class ViewController: UIViewController {
         control = GradientControl().then {
             $0.gradientComponent = .border(4)
             $0.backgroundColor = .lightGray
-            $0.gradientColors = [UIColor(hexString: "#FFCA70"),
-                                 UIColor(hexString: "#FFAF28")]
+            $0.gradientColors = [UIColor(hexString: "#FFCA70")!,
+                                 UIColor(hexString: "#FFAF28")!]
             $0.roundedWay = .dynamic(.horizontal)
             view.addSubview($0)
             $0.snp.makeConstraints { make in
@@ -289,24 +289,24 @@ class ViewController: UIViewController {
 //        s.inArray([.step2])
     }
     private func testchoose2() {
-        let choose = sk_pick(School.isChina, String.self)
-        print("1")
-        let str = choose("zh", "en")
-        print("2")
-        print(str)
-        _isChina = false
-        print("3")
-        print(str, choose("zh", "en"))
-        print("4")
+//        let choose = sk_pick(School.isChina, String.self)
+//        print("1")
+//        let str = choose("zh", "en")
+//        print("2")
+//        print(str)
+//        _isChina = false
+//        print("3")
+//        print(str, choose("zh", "en"))
+//        print("4")
     }
 
     private func testchoose1() {
-        var isMal = true
-        let choose = sk_pick(isMal, String.self)
-        let str = choose("man", "woman")
-        print(str)
-        isMal = false
-        print(str, choose("man", "woman"))
+//        var isMal = true
+//        let choose = sk_pick(isMal, String.self)
+//        let str = choose("man", "woman")
+//        print(str)
+//        isMal = false
+//        print(str, choose("man", "woman"))
     }
     
     override func didReceiveMemoryWarning() {
@@ -376,8 +376,7 @@ fileprivate extension Promise {
 // MARK: - Async
 private extension ViewController {
     func otherTest4() {
-        UIColor.blue.alpha
-        let icon = UIImage(fileNamed: "h2000")
+        let icon: UIImage? = .fileNamed("h2000")
 //        ManagedBufferPointer
         var num = 3
         num <>= 5...7
@@ -638,7 +637,7 @@ extension ViewController {
         
         let img1View = UIImageView().then { this in
             this.contentMode = .scaleAspectFill
-            this.image = UIImage(fileNamed: "banner_home_1aging")
+            this.image = .fileNamed("banner_home_1aging")
             view.addSubview(this)
             this.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview().inset(40)
