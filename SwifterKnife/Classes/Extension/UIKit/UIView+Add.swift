@@ -62,9 +62,10 @@ public extension UIView {
         let size = layer.frame.size
         guard size != .zero else { return nil }
         var s = CGSize(width: floor(size.width) - 2, height: floor(size.height) - 2)
-        return UIGraphicsImageRenderer(size: s).image { context in
+        let data = UIGraphicsImageRenderer(size: s).pngData { context in
             layer.render(in: context.cgContext)
         }
+        return UIImage(data: data)
     }
     /// Take screenshot of view (if applicable). 可能会有白边
     var screenshot: UIImage? {

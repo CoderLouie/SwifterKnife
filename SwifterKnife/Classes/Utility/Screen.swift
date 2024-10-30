@@ -60,6 +60,11 @@ import UIKit
         }
     }
     
+    @objc public static var bodyRect: CGRect {
+        let inset = safeAreaInsets
+        let y = inset.top
+        return CGRect(x: 0, y: y, width: width, height: height - y - inset.bottom)
+    }
     @objc public static var bodyH: CGFloat {
         let inset = safeAreaInsets
         return height - inset.top - inset.bottom

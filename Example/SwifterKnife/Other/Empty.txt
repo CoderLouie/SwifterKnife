@@ -1,1 +1,30 @@
+vAGPnxGGnpzbkW+fnMq7Z4R7HcSjl7/8hZo/KBw5/b1Rdxu6eQamhiN9wenw2fhY+772/w9VjY34eBXl5uL6FO4nYye7sDwHjt1T4t3OYLlzLPQenui2uBdjOl3SB5l/aaagv8NtzzOszGY836Kk94LwZtLZrxo6zIu9uWi5BS3u6Ff5fRMTPjzXZ63kx+EOUj0/XmyGcvBaHW7Vl5SdYKKc82cX958BF3fl8AaDeB9/MMft+GJrhceqDwyMouchlcJgBdnEdSFVF1TTXWognH2VZHlJdz1UP44l+pkire8=
 
+
+
+vAGPnxGGnpzbkW+fnMq7Z4R7HcSjl7/8hZo/KBw5/b1Rdxu6eQamhiN9wenw2fhY+772/w9VjY34eBXl5uL6FO4nYye7sDwHjt1T4t3OYLlzLPQenui2uBdjOl3SB5l/aaagv8NtzzOszGY836Kk94LwZtLZrxo6zIu9uWi5BS3u6Ff5fRMTPjzXZ63kx+EOUj0/XmyGcvBaHW7Vl5SdYKKc82cX958BF3fl8AaDeB9/MMft+GJrhceqDwyMouchlcJgBdnEdSFVF1TTXWognH2VZHlJdz1UP44l+pkire8=
+
+
+
+
+
+
+
+******* Request Info *******
+请求路径：POST http://global.api.unbing.cn/api/userFeedback/feedback/userFeedbackHistory
+请求头：{"Content-Type":"application/json","local":"zh_CN","notice":"700","sign":"a4c30658a2863904210e23b870b57bc82f698be192dadacf6d018d84f94f52544409b49b54113d4b9c03add6b8164568a2b562ce958a8a19dec231c7bffb93c4","time":"1729133884925"}
+请求体：AOzapd2W5CA8VgaVhOW3S2WfIuU8gOJ7JQDw-kiQkSEPrXzxKBUjKUFO1HQCpz3zxa68_ls7lKW8vw1vurOy26qoe6sh56MbmyzUuCRVK0gLQ883cDYpAcLJyMVcerw3-6L_yxLUv9O5bmFk8nfKa_7rrKVZ0dYm6tBZLbYOzwJthgjhcVHXsbuolvvn-ppt
+******* Response Info *******
+响应信息：Status Code: 200, Data Length: 372
+请求成功：
+处理后数据：{"data":[{"feedbackStatus":0,"feedbackType":null,"id":29798,"messageStatus":1,"readStatus":1,"time":1727169371000},{"feedbackStatus":0,"feedbackType":null,"id":29797,"messageStatus":1,"readStatus":1,"time":1727169359000}]}
+
+
+
+==========RequestInfo==========
+请求路径：POST http://global.api.unbing.cn/api/userFeedback/feedback/userFeedbackHistory
+请求头：{content-type: application/json, local: zh_CN, notice: 700, sign: a4c30658a2863904210e23b870b57bc82f698be192dadacf6d018d84f94f52544409b49b54113d4b9c03add6b8164568a2b562ce958a8a19dec231c7bffb93c4, time: 1729133884925}
+请求体：AOzapd2W5CA8VgaVhOW3S2WfIuU8gOJ7JQDw-kiQkSEPrXzxKBUjKUFO1HQCpz3zxa68_ls7lKW8vw1vurOy26qoe6sh56MbmyzUuCRVK0gLQ883cDYpAcLJyMVcerw3-6L_yxLUv9O5bmFk8nfKa_7rrKVZ0dYm6tBZLbYOzwJthgjhcVHXsbuolvvn-ppt
+==========ResponseInfo==========
+响应信息：Status Code: 404, Data Length: 186
+数据：{timestamp: 1729135330503, status: 404, error: Not Found, message: /api/userFeedback/feedback/userFeedbackHistory, path: /api/userFeedback/feedback/userFeedbackHistory}

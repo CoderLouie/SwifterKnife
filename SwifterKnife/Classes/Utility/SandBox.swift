@@ -264,20 +264,17 @@ public enum SandBox {
         return res
     }
     
-    public static func allFiles(in directory: String, isInclude: (_ fileURL: URL) -> Bool) -> [URL] {
-        let keys: [URLResourceKey] = [.isDirectoryKey]
-        guard let enumerator = FileManager.default.enumerator(at: URL(fileURLWithPath: directory), includingPropertiesForKeys: keys, options: .skipsHiddenFiles, errorHandler: nil) else {
-            return []
-        }
+    public static func allFiles(in fold: URL, isInclude: (_ fileURL: URL) -> Bool) -> [URL] {
+        let manager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard let contents = try? manager.contentsOfDirectory(atPath: fold.path) else { return [] }
         var res: [URL] = []
-        while let next = enumerator.nextObject() {
-            guard let fileURL = next as? URL,
-            let values = try? fileURL.resourceValues(forKeys: Set(keys)) else { continue }
-            guard let v = values.allValues[.isDirectoryKey] as? Bool, !v else {
-                continue
-            }
-            if isInclude(fileURL) {
-                res.append(fileURL)
+        for item in contents where !item.hasPrefix(".") {
+            let url = fold.appendingPathComponent(item)
+            guard manager.fileExists(atPath: fold.path, isDirectory: &isDirectory) else { continue }
+            if isDirectory.boolValue { continue }
+            if isInclude(url) {
+                res.append(url)
             }
         }
         return res
