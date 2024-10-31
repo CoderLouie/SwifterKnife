@@ -58,6 +58,14 @@ public extension UIView {
 // MARK: - Properties
 
 public extension UIView {
+    var screenshotOldWay: UIImage? {
+        let scale = UIScreen.main.scale
+        let bounds = bounds
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        drawHierarchy(in: bounds, afterScreenUpdates: false)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
     var fixScreenshot: UIImage? {
         let size = layer.frame.size
         guard size != .zero else { return nil }

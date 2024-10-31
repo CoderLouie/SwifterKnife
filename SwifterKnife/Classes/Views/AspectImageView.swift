@@ -13,7 +13,8 @@ fileprivate extension CGRect {
     }
 }
 
-open class AspectFitView: UIView {
+
+open class AspectFitContainer: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,27 +30,18 @@ open class AspectFitView: UIView {
             setNeedsLayout()
         }
     }
-    public var image: UIImage? {
-        get { imgView.image }
-        set {
-            imgView.image = newValue
-            setNeedsLayout()
-        }
-    }
     open func setup() {
-        imgView = UIImageView().then {
-            $0.contentMode = .scaleAspectFit
-            addSubview($0)
-        }
     }
     open var imageContentModel: UIView.ContentMode = .center
     open override func layoutSubviews() {
         super.layoutSubviews()
-        guard let s = imgView.image?.size else { return }
+        guard let child = subviews.first else { return }
+        let s = ratioSize ?? child.intrinsicContentSize
+        if s.width <= 0 || s.height <= 0 { return }
+        
         let bounds = bounds
         let inset = contentInset
         let rect = bounds.inset(by: inset)
-        imgView.contentMode = .scaleAspectFit
         var frame = rect.resizing(to: s, model: .scaleAspectFit).pixelate
         switch imageContentModel {
         case .top:
@@ -62,7 +54,25 @@ open class AspectFitView: UIView {
             frame.origin.y = rect.maxY - frame.size.height
         default: break
         }
-        imgView.frame = frame
+        child.frame = frame
+    }
+    public var ratioSize: CGSize?
+}
+
+
+open class AspectFitView: AspectFitContainer {
+    public var image: UIImage? {
+        get { imgView.image }
+        set {
+            imgView.image = newValue
+            setNeedsLayout()
+        }
+    }
+    open override func setup() {
+        imgView = UIImageView().then {
+            $0.contentMode = .scaleAspectFit
+            addSubview($0)
+        }
     }
     private(set) public unowned var imgView: UIImageView!
 }
