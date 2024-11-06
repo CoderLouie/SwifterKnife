@@ -33,9 +33,12 @@ open class AspectFitContainer: UIView {
     open func setup() {
     }
     open var imageContentModel: UIView.ContentMode = .center
+    open var contentView: UIView? {
+        subviews.first
+    }
     open override func layoutSubviews() {
         super.layoutSubviews()
-        guard let child = subviews.first else { return }
+        guard let child = contentView else { return }
         let s = ratioSize ?? child.intrinsicContentSize
         if s.width <= 0 || s.height <= 0 { return }
         
@@ -65,9 +68,11 @@ open class AspectFitView: AspectFitContainer {
         get { imgView.image }
         set {
             imgView.image = newValue
+            ratioSize = newValue?.size
             setNeedsLayout()
         }
     }
+    open override var contentView: UIView? { imgView }
     open override func setup() {
         imgView = UIImageView().then {
             $0.contentMode = .scaleAspectFit

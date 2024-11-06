@@ -92,12 +92,12 @@ public extension UIView {
     
     /// Get view's parent view controller
     var parentViewController: UIViewController? {
-        weak var parentResponder: UIResponder? = self
-        while parentResponder != nil {
-            parentResponder = parentResponder!.next
-            if let viewController = parentResponder as? UIViewController {
-                return viewController
+        var responder: UIResponder? = next
+        while let r = responder {
+            if let vc = r as? UIViewController {
+                return vc
             }
+            responder = r.next
         }
         return nil
     }
