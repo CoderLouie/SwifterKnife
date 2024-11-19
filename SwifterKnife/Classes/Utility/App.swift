@@ -160,12 +160,16 @@ public enum App {
         openURL(url)
     }
     
-    public static func openURLString(_ urlString: String?, completion: ((Bool) -> Void)? = nil) {
+    @discardableResult
+    public static func openURLString(_ urlString: String?, completion: ((Bool) -> Void)? = nil) -> Bool? {
         openURL(urlString.flatMap(URL.init(string:)), completion: completion)
     }
-    public static func openURL(_ url: URL?, completion: ((Bool) -> Void)? = nil) {
-        guard let url = url else { completion?(false); return }
+    @discardableResult
+    public static func openURL(_ url: URL?, completion: ((Bool) -> Void)? = nil) -> Bool? {
+        guard let url = url else { completion?(false); return nil }
+        guard UIApplication.shared.canOpenURL(url) else { return false }
         UIApplication.shared.open(url, options: [:], completionHandler: completion)
+        return true
     }
      
 //    public static var appID: String = ""

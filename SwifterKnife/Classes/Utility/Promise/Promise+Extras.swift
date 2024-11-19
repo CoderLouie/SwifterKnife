@@ -372,7 +372,7 @@ extension Promise {
     }
 }
  
-extension Promises {
+public extension Promises {
     static func downloadImage(from urlString: String) -> Promise<UIImage> {
         Promise.create { fulfill, reject in
             guard let url = URL(string: urlString) else {
@@ -406,7 +406,7 @@ extension Promises {
         }
     }
     
-    static func download(from urlString: String, destination: @escaping (URL) -> String) -> Promise<URL> {
+    static func download(from urlString: String, destination: @escaping (URL, URL) -> String) -> Promise<URL> {
         return Promise.create { fulfill, reject in
             guard let url = URL(string: urlString) else {
                 reject(PromiseError.missed)
@@ -421,7 +421,7 @@ extension Promises {
                     reject(PromiseError.missed)
                     return
                 }
-                let path = destination(cacheUrl)
+                let path = destination(cacheUrl, url)
                 let destURL = URL(fileURLWithPath: path)
                 let mgr = FileManager.default
                 guard destURL.isFileURL else {
