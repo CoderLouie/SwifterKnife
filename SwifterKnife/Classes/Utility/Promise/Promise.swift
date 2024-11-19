@@ -338,6 +338,23 @@ public final class Promise<Value> {
             }, onRejected: reject)
         }
     }
+    public func settled<NewValue>(
+        on queue: ExecutionContext = DispatchQueue.main,
+        transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<(Value, NewValue?)> {
+        return Promise<(Value, NewValue?)> { fulfill, reject in
+            self.then(on: queue, onFulfilled: { val1 in
+                do {
+                    try transform(val1).then(on: queue) { val2 in
+                        fulfill((val1, val2))
+                    } onRejected: { err in
+                        fulfill((val1, nil))
+                    }
+                } catch {
+                    fulfill((val1, nil))
+                }
+            }, onRejected: reject)
+        }
+    }
     public func reduce<Next, Result>(
         on queue: ExecutionContext = DispatchQueue.main,
         transform: @escaping (Value) throws -> Promise<Next>,
