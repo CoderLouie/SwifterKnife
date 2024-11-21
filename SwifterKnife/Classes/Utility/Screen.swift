@@ -87,8 +87,8 @@ import UIKit
         safeAreaB + _tabbarH
     }
     
-    @objc public static var _tabbarH: CGFloat { 49 }
-    @objc public static var _navbarH: CGFloat { 44 }
+    @objc public static var _tabbarH: CGFloat = 49
+    @objc public static var _navbarH: CGFloat = 44
     
     @objc public static var delegateWindow: UIWindow? {
         UIApplication.shared.delegate?.window ?? nil

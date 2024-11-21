@@ -373,9 +373,10 @@ extension Promise {
 }
  
 public extension Promises {
-    static func downloadImage(from urlString: String) -> Promise<UIImage> {
+    static func downloadImage(from urlString: String?) -> Promise<UIImage> {
         Promise.create { fulfill, reject in
-            guard let url = URL(string: urlString) else {
+            guard let str = urlString,
+                  let url = URL(string: str) else {
                 reject(PromiseError.missed)
                 return
             }
@@ -383,6 +384,25 @@ public extension Promises {
                 let data = try Data(contentsOf: url)
                 if let img = UIImage(data: data) {
                     fulfill(img)
+                } else {
+                    reject(PromiseError.missed)
+                }
+            } catch {
+                reject(error)
+            }
+        }
+    }
+    static func downloadImages(from urlString: String?) -> Promise<(String, UIImage)> {
+        Promise.create { fulfill, reject in
+            guard let str = urlString,
+                  let url = URL(string: str) else {
+                reject(PromiseError.missed)
+                return
+            }
+            do {
+                let data = try Data(contentsOf: url)
+                if let img = UIImage(data: data) {
+                    fulfill((str, img))
                 } else {
                     reject(PromiseError.missed)
                 }
