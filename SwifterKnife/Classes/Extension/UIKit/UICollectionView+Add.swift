@@ -120,6 +120,26 @@ public extension UICollectionView {
     func visibleCells(in section: Int) -> [UICollectionViewCell] {
         return visibleCells.filter { indexPath(for: $0)?.section == section }
     }
+    func deselectAll(animated: Bool = true) {
+        guard let paths = indexPathsForSelectedItems, !paths.isEmpty else { return }
+        for path in paths {
+            deselectItem(at: path, animated: animated)
+        }
+    }
+    /// 刷新后，仍然选中原来的indexpath，最好保证刷新前后，数据源数量不变
+    func situReloadData() {
+        guard let paths = indexPathsForSelectedItems, !paths.isEmpty else { reloadData(); return }
+        reloadData()
+        var map: [Int: Int] = [:]
+        for s in (0..<numberOfSections) {
+            map[s] = numberOfItems(inSection: s)
+        }
+        for path in paths {
+            guard let max = map[path.section], path.item < max else { continue }
+            selectItem(at: path, animated: false, scrollPosition: .centeredHorizontally)
+        }
+    }
+    
     
     var headerView: CollectionHeaderView? {
         get { subviews.first as? CollectionHeaderView }

@@ -145,6 +145,35 @@ public enum Promises {
         }
     }
 
+    public static func settled<T, U>(
+        _ first: Promise<T>,
+        _ second: Promise<U>) -> Promise<(T?, U?)> {
+        return Promise<(T?, U?)> { fulfill, reject in
+            let resolver: (Any) -> Void = { _ in
+                if first.isCompleted, second.isCompleted {
+                    fulfill((first.value, second.value))
+                }
+            }
+            first.then(onFulfilled: resolver, onRejected: resolver)
+            second.then(onFulfilled: resolver, onRejected: resolver)
+        }
+    }
+    public static func settled<T, U, V>(
+        _ first: Promise<T>,
+        _ second: Promise<U>,
+        _ thrid: Promise<V>) -> Promise<(T?, U?, V?)> {
+        return Promise<(T?, U?, V?)> { fulfill, reject in
+            let resolver: (Any) -> Void = { _ in
+                if first.isCompleted, second.isCompleted, thrid.isCompleted {
+                    fulfill((first.value, second.value, thrid.value))
+                }
+            }
+            first.then(onFulfilled: resolver, onRejected: resolver)
+            second.then(onFulfilled: resolver, onRejected: resolver)
+            thrid.then(onFulfilled: resolver, onRejected: resolver)
+        }
+    }
+    
     public static func zip<T, U>(
         _ first: Promise<T>,
         _ second: Promise<U>) -> Promise<(T, U)> {
@@ -374,7 +403,7 @@ extension Promise {
  
 public extension Promises {
     static func downloadImage(from urlString: String?) -> Promise<UIImage> {
-        Promise.create { fulfill, reject in
+        Promise.create(queue: .global()) { fulfill, reject in
             guard let str = urlString,
                   let url = URL(string: str) else {
                 reject(PromiseError.missed)
@@ -393,7 +422,7 @@ public extension Promises {
         }
     }
     static func downloadImages(from urlString: String?) -> Promise<(String, UIImage)> {
-        Promise.create { fulfill, reject in
+        Promise.create(queue: .global()) { fulfill, reject in
             guard let str = urlString,
                   let url = URL(string: str) else {
                 reject(PromiseError.missed)
@@ -412,7 +441,7 @@ public extension Promises {
         }
     }
     static func downloadImage(from url: URL) -> Promise<UIImage> {
-        Promise.create { fulfill, reject in
+        Promise.create(queue: .global()) { fulfill, reject in
             do {
                 let data = try Data(contentsOf: url)
                 if let img = UIImage(data: data) {
