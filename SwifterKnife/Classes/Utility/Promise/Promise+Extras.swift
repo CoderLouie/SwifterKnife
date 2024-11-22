@@ -145,6 +145,19 @@ public enum Promises {
         }
     }
 
+    public static func settledResults<T, U>(
+        _ first: Promise<T>,
+        _ second: Promise<U>) -> Promise<(Result<T, Swift.Error>, Result<U, Swift.Error>)> {
+        return Promise { fulfill, reject in
+            let resolver: (Any) -> Void = { _ in
+                if first.isCompleted, second.isCompleted {
+                    fulfill((first.result!, second.result!))
+                }
+            }
+            first.then(onFulfilled: resolver, onRejected: resolver)
+            second.then(onFulfilled: resolver, onRejected: resolver)
+        }
+    }
     public static func settled<T, U>(
         _ first: Promise<T>,
         _ second: Promise<U>) -> Promise<(T?, U?)> {
