@@ -117,7 +117,7 @@ enum State<Value>: CustomStringConvertible {
         }
         return nil
     }
-    var result: Result<Value, Swift.Error>? {
+    var result: SomeValue<Value>? {
         switch self {
         case let .fulfilled(value):
             return .success(value)
@@ -288,9 +288,9 @@ public final class Promise<Value> {
     /**
      调用这个方法的线程和将来调用fulfill或者reject方法不能是同一个线程，否则会死锁
      */
-    public func awaitCompleted() -> Swift.Result<Value, Swift.Error> {
+    public func awaitCompleted() -> SomeValue<Value> {
         let semaphore = DispatchSemaphore(value: 0)
-        var result: Result<Value, Swift.Error> = .failure(PromiseError.timeout)
+        var result: SomeValue<Value> = .failure(PromiseError.timeout)
         then(on: DispatchQueue.promiseAwait) { value in
             result = .success(value)
             semaphore.signal()
@@ -340,17 +340,17 @@ public final class Promise<Value> {
     }
     public func settled<NewValue>(
         on queue: ExecutionContext = DispatchQueue.main,
-        transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<(Value, NewValue?)> {
-        return Promise<(Value, NewValue?)> { fulfill, reject in
+        transform: @escaping (Value) throws -> Promise<NewValue>) -> Promise<(Value, SomeValue<NewValue>)> {
+        return Promise<(Value, SomeValue<NewValue>)> { fulfill, reject in
             self.then(on: queue, onFulfilled: { val1 in
                 do {
                     try transform(val1).then(on: queue) { val2 in
-                        fulfill((val1, val2))
+                        fulfill((val1, .success(val2)))
                     } onRejected: { err in
-                        fulfill((val1, nil))
+                        fulfill((val1, .failure(err)))
                     }
                 } catch {
-                    fulfill((val1, nil))
+                    fulfill((val1, .failure(error)))
                 }
             }, onRejected: reject)
         }
@@ -538,7 +538,7 @@ public final class Promise<Value> {
         }
     }
     
-    public var result: Result<Value, Swift.Error>? {
+    public var result: SomeValue<Value>? {
         lockQueue.sync {
             return state.result
         }
@@ -653,4 +653,4 @@ public typealias DataPromise = Promise<Data>
 public typealias DictPromise = Promise<[String: Any]>
 public typealias ArrayPromise<Element> = Promise<[Element]>
 public typealias JSONPromise = Promise<JSON>
-
+public typealias SomeValue<T> = Swift.Result<T, any Swift.Error>

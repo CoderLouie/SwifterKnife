@@ -145,9 +145,9 @@ public enum Promises {
         }
     }
 
-    public static func settledResults<T, U>(
+    public static func settled<T, U>(
         _ first: Promise<T>,
-        _ second: Promise<U>) -> Promise<(Result<T, Swift.Error>, Result<U, Swift.Error>)> {
+        _ second: Promise<U>) -> Promise<(SomeValue<T>, SomeValue<U>)> {
         return Promise { fulfill, reject in
             let resolver: (Any) -> Void = { _ in
                 if first.isCompleted, second.isCompleted {
@@ -158,27 +158,14 @@ public enum Promises {
             second.then(onFulfilled: resolver, onRejected: resolver)
         }
     }
-    public static func settled<T, U>(
-        _ first: Promise<T>,
-        _ second: Promise<U>) -> Promise<(T?, U?)> {
-        return Promise<(T?, U?)> { fulfill, reject in
-            let resolver: (Any) -> Void = { _ in
-                if first.isCompleted, second.isCompleted {
-                    fulfill((first.value, second.value))
-                }
-            }
-            first.then(onFulfilled: resolver, onRejected: resolver)
-            second.then(onFulfilled: resolver, onRejected: resolver)
-        }
-    }
     public static func settled<T, U, V>(
         _ first: Promise<T>,
         _ second: Promise<U>,
-        _ thrid: Promise<V>) -> Promise<(T?, U?, V?)> {
-        return Promise<(T?, U?, V?)> { fulfill, reject in
+        _ thrid: Promise<V>) -> Promise<(SomeValue<T>, SomeValue<U>, SomeValue<V>)> {
+        return Promise { fulfill, reject in
             let resolver: (Any) -> Void = { _ in
                 if first.isCompleted, second.isCompleted, thrid.isCompleted {
-                    fulfill((first.value, second.value, thrid.value))
+                    fulfill((first.result!, second.result!, thrid.result!))
                 }
             }
             first.then(onFulfilled: resolver, onRejected: resolver)
