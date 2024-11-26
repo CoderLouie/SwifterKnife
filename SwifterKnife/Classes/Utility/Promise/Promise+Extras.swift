@@ -59,17 +59,17 @@ public enum Promises {
         }
     }
 
-    public static func allSettled<T>(_ promises: [Promise<T>]) -> Promise<[T?]> {
-        return Promise<[T?]> { fulfill, reject in
+    public static func allSettled<T>(_ promises: [Promise<T>]) -> Promise<[SomeValue<T>]> {
+        return Promise<[SomeValue<T>]> { fulfill, reject in
             guard !promises.isEmpty else { fulfill([]);
                 return
             }
             let N = promises.count
             var n = 0
-            var array: [T?] = .init(repeating: nil, count: N)
+            var array: [SomeValue<T>] = .init(repeating: .failure(PromiseError.empty), count: N)
             for (i, promise) in promises.enumerated() {
                 promise.finallyRes { result in
-                    array[i] = try? result.get()
+                    array[i] = result
                     n += 1
                     if n == N {
                         fulfill(array)

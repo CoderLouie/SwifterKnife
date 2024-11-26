@@ -896,12 +896,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = NW3KV7KHV6;
+						DevelopmentTeam = 3VZYV6W78T;
 						LastSwiftMigration = 1250;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = NW3KV7KHV6;
+						DevelopmentTeam = 3VZYV6W78T;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -1358,7 +1358,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NW3KV7KHV6;
+				DEVELOPMENT_TEAM = 3VZYV6W78T;
 				INFOPLIST_FILE = SwifterKnife/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1380,7 +1380,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NW3KV7KHV6;
+				DEVELOPMENT_TEAM = 3VZYV6W78T;
 				INFOPLIST_FILE = SwifterKnife/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1398,7 +1398,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 66AD0774B768CA5616FA9D43 /* Pods-SwifterKnife_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = NW3KV7KHV6;
+				DEVELOPMENT_TEAM = 3VZYV6W78T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1421,7 +1421,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B5D06ABA521BC071EFBF94D /* Pods-SwifterKnife_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = NW3KV7KHV6;
+				DEVELOPMENT_TEAM = 3VZYV6W78T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
