@@ -68,6 +68,14 @@ public extension UIColor {
         }()
         return String(format: "#%02X%02X%02X", components[0], components[1], components[2])
     }
+    var ahexString: String {
+        let components: [Int] = {
+            let comps = cgColor.components!.map { Int($0 * 255.0) }
+            guard comps.count != 4 else { return comps }
+            return [comps[0], comps[0], comps[0], comps[1]]
+        }()
+        return String(format: "#%02X%02X%02X%02X", components[0], components[1], components[2], components[3])
+    }
 
     /// Alpha of Color (read-only).
     var alpha: CGFloat {

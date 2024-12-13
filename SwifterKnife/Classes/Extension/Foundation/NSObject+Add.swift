@@ -199,7 +199,7 @@ public protocol Associable {}
 
 fileprivate var obj_associated_key: Int8 = 0
 extension Associable where Self: AnyObject {
-    private var pocket: NSMutableDictionary {
+    public var pocket: NSMutableDictionary {
         if let dict = objc_getAssociatedObject(self, &obj_associated_key) as? NSMutableDictionary {
             return dict
         }

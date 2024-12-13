@@ -822,13 +822,13 @@ extension JSON { // : Swift.Bool
 // MARK: - Rect
 extension JSON {
     public var rect: CGRect? {
-        guard let x = self[key: "x"].float,
-              let y = self[key: "y"].float,
-              let w = self[key: "width"].float,
-              let h = self[key: "height"].float else {
+        guard let x = self[key: "x"].cgfloat,
+              let y = self[key: "y"].cgfloat,
+              let w = self[key: "width"].cgfloat,
+              let h = self[key: "height"].cgfloat else {
                   return nil
               }
-        return CGRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(w), height: CGFloat(h))
+        return CGRect(x: x, y: y, width: w, height: h)
     }
 }
 
@@ -958,15 +958,6 @@ extension JSON {
             number = newValue.map(NSNumber.init)
         }
     }
-    public var cgfloat: CGFloat? {
-        get {
-            guard let v = number?.doubleValue else { return nil }
-            return CGFloat(v)
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
     
     public var floatValue: Float {
         get {
@@ -974,6 +965,16 @@ extension JSON {
         }
         set {
             numberValue = NSNumber(value: newValue)
+        }
+    }
+    
+    public var cgfloat: CGFloat? {
+        get {
+            guard let v = number?.doubleValue else { return nil }
+            return CGFloat(v)
+        }
+        set {
+            number = newValue.map(NSNumber.init)
         }
     }
     

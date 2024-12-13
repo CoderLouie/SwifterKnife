@@ -126,6 +126,10 @@ public extension UICollectionView {
             deselectItem(at: path, animated: animated)
         }
     }
+    func deleteSelectedItems() {
+        guard let paths = indexPathsForSelectedItems, !paths.isEmpty else { return }
+        deleteItems(at: paths)
+    }
     /// 刷新后，仍然选中原来的indexpath，最好保证刷新前后，数据源数量不变
     func situReloadData() {
         guard let paths = indexPathsForSelectedItems, !paths.isEmpty else { reloadData(); return }

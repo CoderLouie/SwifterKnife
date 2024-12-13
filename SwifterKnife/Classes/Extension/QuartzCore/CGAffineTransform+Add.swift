@@ -17,8 +17,15 @@ public extension CGAffineTransform {
         return CGPoint(x: tx, y: ty)
     }
     
-    var scale: CGPoint {
-        return CGPoint(x: a, y: d)
+//    var scale: CGPoint {
+//        return CGPoint(x: a, y: d)
+//    }
+    
+    var scaleX: CGFloat {
+        sqrt(a * a + c * c)
+    }
+    var scaleY: CGFloat {
+        sqrt(b * b + d * d)
     }
     
     static func from(_ fromRect: CGRect, to toRect: CGRect) -> CGAffineTransform {
