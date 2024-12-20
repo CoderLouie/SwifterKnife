@@ -417,7 +417,13 @@ public extension UIView {
 }
 
 public extension UIView {
-    
+    @discardableResult
+    func addTap(_ closure: @escaping (_ sender: UITapGestureRecognizer) -> Void) -> UITapGestureRecognizer {
+        let tap = UITapGestureRecognizer()
+        tap.addClosure(closure)
+        addGestureRecognizer(tap)
+        return tap
+    }
     func addTap(target: Any?, action: Selector?) {
         addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }

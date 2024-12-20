@@ -75,7 +75,7 @@ public extension CGRect {
 public extension CGRect {
     func resizing(to size: CGSize, model: UIView.ContentMode) -> CGRect {
         var rect = standardized
-        var size = size.standardized
+        var size = size.abs
         let center = rect.center
         
         switch model {
@@ -143,5 +143,17 @@ public extension CGRect {
     
     static func * (lhs: CGRect, scalar: CGFloat) -> CGRect {
         return CGRect(origin: lhs.origin * scalar, size: lhs.size * scalar)
+    }
+}
+extension CGRect {
+    
+    /// 是否近视相等
+    static func ~=(lhs: Self, rhs: Self) -> Bool {
+        lhs.equal(to: rhs, comparator: ~=, at: \.origin.x, \.origin.y, \.size.width, \.size.height)
+    }
+    
+    /// 是否近视不相等
+    static func !~=(lhs: Self, rhs: Self) -> Bool {
+        return !(lhs ~= rhs)
     }
 }

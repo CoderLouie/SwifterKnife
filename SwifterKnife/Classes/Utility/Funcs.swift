@@ -146,23 +146,23 @@ public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T?) rethrows -> T
 /// if the original closure would return nil.
 ///
 /// - SeeAlso: https://github.com/Thomvis/Construct/blob/main/Construct/Foundation/Memoize.swift
-public func replayNonNil<A, B>(_ f: @escaping (A) -> B?) -> (A) -> B? {
-    var memo: B?
-    return {
-        if let res = f($0) {
-            memo = res
-            return res
-        }
-        return memo
-    }
-}
+//public func replayNonNil<A, B>(_ f: @escaping (A) -> B?) -> (A) -> B? {
+//    var memo: B?
+//    return {
+//        if let res = f($0) {
+//            memo = res
+//            return res
+//        }
+//        return memo
+//    }
+//}
 
 /// Creates a closure (T?) -> T? that returns last non-`nil` T passed to it.
 ///
 /// - SeeAlso: https://github.com/Thomvis/Construct/blob/main/Construct/Foundation/Memoize.swift
-public func replayNonNil<T>() -> (T?) -> T? {
-    replayNonNil { $0 }
-}
+//public func replayNonNil<T>() -> (T?) -> T? {
+//    replayNonNil { $0 }
+//}
 
 
 public func cost(_ work: @escaping (Double) -> Void) -> () -> Void {
@@ -194,4 +194,29 @@ public func cost<T, V, P>(_ work: @escaping (T, V, P, Double) -> Void) -> (T, V,
    return { work($0, $1, $2, CACurrentMediaTime() - now) }
 }
 
+ 
 
+#if swift(>=5.9)
+
+extension Then where Self: Any {
+    public func pairs<each U>(_ keyPath: repeat KeyPath<Self, each U>) -> (repeat each U) {
+        (repeat (self[keyPath: each keyPath]))
+    }
+}
+
+//public func propertiesEqual<R, each P>(lhs: R, rhs: R,
+//                                       comparator: (repeat each P) -> Bool,
+//                                       keypath: repeat KeyPath<R, each P>) -> Bool {
+////    for k in keypath {
+////
+////    }
+//    let vals = (repeat (lhs[keyPath: each keypath], rhs[keyPath: each keypath]))
+//    for (c, p) in repeat (vals, each comparator) {
+//        
+//    }
+////    for (l, r) in {
+////        
+////    }
+//}
+
+#endif

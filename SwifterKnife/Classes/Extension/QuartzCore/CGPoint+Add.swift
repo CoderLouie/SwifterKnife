@@ -149,5 +149,16 @@ public extension CGPoint {
     static func * (scalar: CGFloat, point: CGPoint) -> CGPoint {
         return CGPoint(x: point.x * scalar, y: point.y * scalar)
     }
+}
 
+extension CGPoint {
+    /// 是否近视相等
+    static func ~=(lhs: Self, rhs: Self) -> Bool {
+        lhs.equal(to: rhs, comparator: ~=, at: \.x, \.y)
+    }
+    
+    /// 是否近视不相等
+    static func !~=(lhs: Self, rhs: Self) -> Bool {
+        return !(lhs ~= rhs)
+    }
 }

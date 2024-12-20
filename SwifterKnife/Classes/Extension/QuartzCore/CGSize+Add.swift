@@ -29,8 +29,8 @@ public extension CGSize {
         return min(width, height)
     }
 
-    var standardized: CGSize {
-        return CGSize(width: abs(width), height: abs(height))
+    var abs: CGSize {
+        return CGSize(width: Swift.abs(width), height: Swift.abs(height))
     }
     
     var reversed: CGSize {
@@ -247,3 +247,14 @@ public extension CGSize {
 
 }
 
+extension CGSize {
+    /// 是否近视相等
+    static func ~=(lhs: Self, rhs: Self) -> Bool {
+        lhs.equal(to: rhs, comparator: ~=, at: \.width, \.height)
+    }
+    
+    /// 是否近视不相等
+    static func !~=(lhs: Self, rhs: Self) -> Bool {
+        return !(lhs ~= rhs)
+    }
+}

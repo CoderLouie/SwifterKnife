@@ -314,6 +314,14 @@ public enum SandBox {
             try manager.removeItem(atPath: srcPath)
         }
     }
+    
+    func createTemporaryDirectory() throws -> URL {
+        let mgr = FileManager.default
+        return try mgr.url(for: .itemReplacementDirectory,
+                           in: .userDomainMask,
+                           appropriateFor: mgr.temporaryDirectory,
+                           create: true)
+    }
 }
  
 /*

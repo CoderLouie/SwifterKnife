@@ -69,22 +69,24 @@ extension CFTimeInterval {
 
 
 public extension FloatingPoint where Self: CVarArg {
-
-  /** Formatted representation
-
-   @code
-
-   let someDouble = 3.14159265359, someDoubleFormat = ".3"
-   print("The floating point number \(someDouble) formatted with \"\(someDoubleFormat)\"
-   looks like \(someDouble(someDoubleFormat))")
-   // The floating point number 3.14159265359 formatted with ".3" looks like 3.142
-
-   @endcode
-   */
-  func formatted(_ format: String) -> String {
-    return String(format: "%\(format)f", self)
-  }
-
+    
+    /** Formatted representation
+     
+     @code
+     
+     let someDouble = 3.14159265359, someDoubleFormat = ".3"
+     print("The floating point number \(someDouble) formatted with \"\(someDoubleFormat)\"
+     looks like \(someDouble(someDoubleFormat))")
+     // The floating point number 3.14159265359 formatted with ".3" looks like 3.142
+     
+     @endcode
+     */
+    func formatted(_ format: String) -> String {
+        return String(format: "%\(format)f", self)
+    }
+    func stringAsFixed(_ fractionDigits: Int = 2) -> String {
+        return String(format: "%.\(fractionDigits)f", self)
+    }
 }
 
 
@@ -122,3 +124,8 @@ public extension CGFloat {
 
     var sign: CGFloat { return self < 0.0 ? -1.0 : 1.0 }
 }
+
+
+//public protocol ApproximatelyEquatable {
+//    func approximatelyEqualTo(_ rhs: Self) -> Bool
+//}

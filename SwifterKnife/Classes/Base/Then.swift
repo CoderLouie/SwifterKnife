@@ -65,6 +65,13 @@ extension Then where Self: Any {
     public func `do`(_ block: (Self) throws -> Void) rethrows {
         try block(self)
     }
+    
+    public func equal<P>(to other: Self, comparator: (P, P) -> Bool, at keyPaths: KeyPath<Self, P>...) -> Bool {
+        for path in keyPaths {
+            guard comparator(self[keyPath: path], other[keyPath: path]) else { return false }
+        }
+        return true
+    }
 }
 
 
