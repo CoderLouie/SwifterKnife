@@ -23,6 +23,7 @@ public final class PopContainer: UIView {
         // 圆角和箭头起始点之间的最小水平间距
         public var minSpaceBetweenCornerAndArrow: CGFloat = 2
         
+        public var bgColor: UIColor? = nil
         public var outlineColor: UIColor? = nil
         public var outlineWidth: CGFloat = 0
         public var outlineRadius: CGFloat = 5
@@ -158,7 +159,7 @@ public final class PopContainer: UIView {
             path.addLine(to: CGPoint(x: arrowX + arrowW2, y: y2))
         }
         path.close()
-        let bgColor = self.backgroundColor
+        let bgColor = cfg.bgColor ?? self.backgroundColor
         shapeLayer.do {
             $0.path = path.cgPath
             $0.fillColor = bgColor?.cgColor
@@ -178,3 +179,11 @@ public final class PopContainer: UIView {
         return cfg
     }
 }
+/*
+ override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+     guard let touch = touches.first else { return }
+     if hitTest(touch.location(in: self), with: event) === self {
+         dismiss {}
+     }
+ }
+ */

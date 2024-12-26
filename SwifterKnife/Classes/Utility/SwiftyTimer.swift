@@ -93,7 +93,22 @@ extension Timer {
             block()
         }
     }
-    
+    public class func new<O: AnyObject>(every interval: TimeInterval,
+                          associate obj: O,
+                          firesImmediately: Bool = false,
+                          _ block: @escaping (O) -> Void) -> Timer {
+        var fireDate = CFAbsoluteTimeGetCurrent()
+        if !firesImmediately { fireDate += interval }
+        
+        return CFRunLoopTimerCreateWithHandler(
+            kCFAllocatorDefault, fireDate, interval, 0, 0) { [weak obj] tt in
+            guard let o = obj else {
+                if let t = tt { CFRunLoopTimerInvalidate(t) }
+                return
+            }
+            block(o)
+        }
+    }
     /// Create a timer that will call `block` repeatedly in specified time intervals.
     /// (This variant also passes the timer instance to the block)
     ///
@@ -119,13 +134,14 @@ extension Timer {
     ///
     /// By default, the timer is scheduled on the current run loop for the default mode.
     /// Specify `runLoop` or `modes` to override these defaults.
-    
-    public func start(onRunLoop runLoop: RunLoop = .current, modes: RunLoop.Mode...) {
+    @discardableResult
+    public func start(onRunLoop runLoop: RunLoop = .current, modes: RunLoop.Mode...) -> Timer {
         let modes = modes.isEmpty ? [.default] : modes
         
         for mode in modes {
             runLoop.add(self, forMode: mode)
         }
+        return self
     }
 }
 

@@ -9,13 +9,6 @@ import UIKit
 import SnapKit
 import SwifterKnife
 
-extension UIWindow.Level {
-    
-    public static func + (lhs: UIWindow.Level, rhs: RawValue) -> UIWindow.Level {
-        .init(rawValue: lhs.rawValue + rhs)
-    }
-}
-
 fileprivate class ScreenLogWindow: UIWindow {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,8 +23,7 @@ fileprivate class ScreenLogWindow: UIWindow {
         let res = super.hitTest(point, with: event)
         if res === self { return nil }
         if res === screenLogView {
-            screenLogView.textView.hiddenPopMenu()
-            return nil
+            return screenLogView.textView.hiddenPopMenu() ? res  : nil
         }
         return res
     }
@@ -262,11 +254,13 @@ extension _LogTextView: UITextInputDelegate {
         popMenu = nil
         return true
     }
-    func hiddenPopMenu() {
-        guard justHiddenPopMenu() else { return }
+    @discardableResult
+    func hiddenPopMenu() -> Bool {
+        guard justHiddenPopMenu() else { return false }
         let range = selectedRange
-        if range.length == 0 { return }
+        if range.length == 0 { return false }
         selectedRange = .zero
+        return true
     }
     func textWillChange(_ textInput: UITextInput?) { }
     func textDidChange(_ textInput: UITextInput?) { }
@@ -283,12 +277,11 @@ extension _LogTextView: UITextInputDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: item)
     }
     private func textSelectionDidChange() {
+        justHiddenPopMenu()
         guard let rect = selectedRect, !rect.isEmpty else {
-            justHiddenPopMenu()
             return
         }
          
-        justHiddenPopMenu()
         let menuView = _PopMenu { [unowned self] tag in
             switch tag {
             case 0: screenLogView.deleteLine(nil)
@@ -307,13 +300,8 @@ extension _LogTextView: UITextInputDelegate {
     }
 }
 fileprivate class _PopContainer: UIView {
-    override func didAddSubview(_ subview: UIView) {
-        super.didAddSubview(subview)
-        isHidden = false
-    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        removeSubviews()
-        isHidden = true
+        removeFromSuperview()
     }
 }
 fileprivate class ScreenLogView: UIView {
@@ -333,7 +321,7 @@ fileprivate class ScreenLogView: UIView {
                 make.leading.bottom.trailing.equalToSuperview()
             }
         }
-        toolbar = UIView().then {
+        let toolbar = UIView().then {
             container.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
@@ -393,12 +381,6 @@ fileprivate class ScreenLogView: UIView {
                 make.height.equalTo(Screen.height * 0.4)
             }
         }
-        popContainer = _PopContainer().then {
-            $0.frame = bounds
-            $0.backgroundColor = .clear
-            $0.isHidden = true
-            addSubview($0)
-        }
         popoverButton = UIButton().then {
             addSubview($0)
             $0.setTitle("D", for: .normal)
@@ -445,7 +427,7 @@ fileprivate class ScreenLogView: UIView {
                 }
             }
         }
-        tagControl.isSelected = (tagItems.first(where: \.isSelected) != nil) ?? false
+        tagControl.isSelected = tagItems.contains(where: \.isSelected)
         
         let ptrs = Set(items.map(\.address))
         showingItems.removeAll { ptrs.contains($0.address) }
@@ -454,7 +436,7 @@ fileprivate class ScreenLogView: UIView {
     }
     private var selectedItems: [ScreenLogItem] {
         let range = textView.selectedRange
-        guard range.location != NSNotFound, range.length > 0 else { return [] }
+        guard range.isValid else { return [] }
         let r = (range.location..<range.location + range.length)
         var res: [ScreenLogItem] = []
         var current = 0
@@ -469,16 +451,14 @@ fileprivate class ScreenLogView: UIView {
         }
         return res
     }
-    
-    private(set) var popContainer: _PopContainer!
+     
     private var items: [ScreenLogItem] = []
     private var showingItems: [ScreenLogItem] = []
     private var itemTagMap: [String: [ScreenLogItem]] = [:]
     private var allTags: Set<String> = []
     private var levelItems: [MenuItem] = ScreenLogLevel.allCases.map { MenuItem(title: "\($0)") }
     private var tagItems: [MenuItem] = []
-    
-    private unowned var toolbar: UIView!
+     
     private(set) unowned var textView: _LogTextView!
     private unowned var tagControl: UIControl!
     private unowned var levelControl: UIControl!
@@ -529,13 +509,19 @@ extension ScreenLogView {
             sender === tagControl {
             let isLevel = sender === levelControl
             let items = isLevel ? levelItems : tagItems
+            guard !items.isEmpty else { return }
             let menuView = _MenuView(menus: items) { [unowned self] in
                 self.onMenuSelectedItemChange()
             }
-            PopContainer().show(menuView, on: popContainer, from: sender) { _ in }
+            let container = _PopContainer().then {
+                $0.frame = bounds
+                $0.backgroundColor = .clear
+                addSubview($0)
+            }
+            PopContainer().show(menuView, on: container, from: sender) { _ in }
         } else {
             if showingItems.isEmpty { return }
-            if sender.tag == 0 {
+            if sender.tag == 0 { // clear
                 for i in showingItems {
                     for t in i.tags {
                         if var map = itemTagMap[t] {
@@ -548,7 +534,7 @@ extension ScreenLogView {
                         }
                     }
                 }
-                tagControl.isSelected = (tagItems.first(where: \.isSelected) != nil) ?? false
+                tagControl.isSelected = tagItems.contains(where: \.isSelected)
                 
                 let ptrs = Set(showingItems.map(\.address))
                 items.removeAll { ptrs.contains($0.address) }
@@ -568,7 +554,7 @@ extension ScreenLogView {
                         itemTagMap[t] = map
                     }
                 }
-                tagControl.isSelected = (tagItems.first(where: \.isSelected) != nil) ?? false
+                tagControl.isSelected = tagItems.contains(where: \.isSelected)
                 items.removeAll { $0 === last }
                 if let t = textView.text {
                     let n1 = last.content.count

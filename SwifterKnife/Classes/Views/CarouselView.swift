@@ -22,8 +22,8 @@ import Foundation
 
 open class CarouselViewCell: UIView {
     fileprivate unowned var carouselView: CarouselView!
-    public override init(frame: CGRect) {
-        super.init(frame: .zero)
+    public required override init(frame: CGRect) {
+        super.init(frame: frame)
         setup()
     }
     public required init?(coder: NSCoder) {
@@ -172,18 +172,21 @@ open class CarouselView: UIView {
         }
     }
     
+    private var cellCls: CarouselViewCell.Type!
     private var isFirstLayout = true
     open override func layoutSubviews() {
         super.layoutSubviews()
         
+        let bounds = self.bounds
+        guard !bounds.isEmpty else { return }
         guard isFirstLayout else { return }
         isFirstLayout = false
         
-        let bounds = self.bounds
         // scroll
         scrollView.frame = bounds
         scrollView.contentInset = .zero
         
+        let curFrame: CGRect, nextFrame: CGRect
         if isHorizontal {
             let width = bounds.width
             side = width
@@ -192,8 +195,8 @@ open class CarouselView: UIView {
             scrollView.contentOffset = CGPoint(x: width, y: 0)
             
             // cells
-            currentCell.frame = CGRect(origin: CGPoint(x: width, y: 0), size: bounds.size)
-            nextCell.frame = CGRect(origin: CGPoint(x: width * 2, y: 0), size: bounds.size)
+            curFrame = CGRect(origin: CGPoint(x: width, y: 0), size: bounds.size)
+            nextFrame = CGRect(origin: CGPoint(x: width * 2, y: 0), size: bounds.size)
         } else {
             let height = bounds.height
             side = height
@@ -202,8 +205,18 @@ open class CarouselView: UIView {
             scrollView.contentOffset = CGPoint(x: 0, y: height)
             
             // cells
-            currentCell.frame = CGRect(origin: CGPoint(x: 0, y: height), size: bounds.size)
-            nextCell.frame = CGRect(origin: CGPoint(x: 0, y: height * 2), size: bounds.size)
+            curFrame = CGRect(origin: CGPoint(x: 0, y: height), size: bounds.size)
+            nextFrame = CGRect(origin: CGPoint(x: 0, y: height * 2), size: bounds.size)
+        }
+        currentCell = cellCls.init(frame: curFrame).then {
+            $0.carouselView = self
+            $0.clipsToBounds = true
+            scrollView.addSubview($0)
+        }
+        nextCell = cellCls.init(frame: nextFrame).then {
+            $0.carouselView = self
+            $0.clipsToBounds = true
+            scrollView.addSubview($0)
         }
         
         delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
@@ -253,22 +266,12 @@ extension CarouselView {
     public func backward() {
         scrollView.setContentOffset(.zero, animated: true)
     }
-    
     /// 注册cell
     public func register<T: CarouselViewCell>(_ cellClass: T.Type) {
         if !isFirstLayout {
             fatalError("this method can only be called onece!!!")
         }
-        currentCell = T().then {
-            $0.carouselView = self
-            $0.clipsToBounds = true
-            scrollView.addSubview($0)
-        }
-        nextCell = T().then {
-            $0.carouselView = self
-            $0.clipsToBounds = true
-            scrollView.addSubview($0)
-        }
+        cellCls = cellClass
     }
 }
 
