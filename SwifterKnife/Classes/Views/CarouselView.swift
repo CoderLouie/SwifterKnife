@@ -47,11 +47,7 @@ open class CarouselView: UIView {
         $0.showsHorizontalScrollIndicator = false
         $0.isPagingEnabled = true
         $0.delegate = self
-        if #available(iOS 11.0, *) {
-            $0.contentInsetAdjustmentBehavior = .never
-        } else {
-            // Fallback on earlier versions
-        }
+        $0.contentInsetAdjustmentBehavior = .never
         addSubview($0)
     }
     
@@ -87,13 +83,14 @@ open class CarouselView: UIView {
     private var nextIndex = -1
     private unowned var nextCell: CarouselViewCell!
     /// 数据源数量
-    open var itemsCount: Int = 0 {
-        willSet {
-            guard newValue > 1 else {
-                fatalError("the items count should be at least 2")
-            }
-        }
+    open var itemsCount: Int = 2 {
+//        willSet {
+//            guard newValue > 1 else {
+//                fatalError("the items count should be at least 2")
+//            }
+//        }
         didSet {
+            if itemsCount < 2 { return }
             if itemsCount == oldValue { return }
             if isFirstLayout { return }
             
@@ -349,7 +346,7 @@ public extension ATPageViewDelegate {
 
 public final class ATPageView: UIView {
     public override init(frame: CGRect) {
-        layout = UICollectionViewFlowLayout().then {
+        let layout = UICollectionViewFlowLayout().then {
             $0.scrollDirection = .horizontal
             $0.minimumLineSpacing = 0
             $0.minimumInteritemSpacing = 0
@@ -377,7 +374,6 @@ public final class ATPageView: UIView {
     }
     public weak var delegate: ATPageViewDelegate?
     public var itemsCount = 0
-    
     
     private var _selectedIndex: Int = 0
     public var selectedIndex: Int {
@@ -410,7 +406,9 @@ public final class ATPageView: UIView {
     }
     
     private let collectionView: UICollectionView
-    public let layout: UICollectionViewFlowLayout
+    public var layout: UICollectionViewFlowLayout {
+        collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+    }
 }
 extension ATPageView: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

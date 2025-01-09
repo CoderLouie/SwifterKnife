@@ -21,6 +21,17 @@ fileprivate class BottomBar: UIView {
     private func setup() {
         backgroundColor = .cyan
         layoutMargins = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 55)
+//        DispatchQueue.main.after(3) {
+//            self.layoutMargins.bottom = 30
+//        }
+//        insetsLayoutMarginsFromSafeArea = false
+        let grayV = UIView().then {
+            $0.backgroundColor = .lightGray
+            addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.edges.equalToSuperviewMargin()
+            }
+        }
         
         let redView = UIView().then {
             addSubview($0)
@@ -118,9 +129,7 @@ class HomeViewController: BaseViewController {
         return ()
         
 //        let width = view.bounds.width - 60
-//        print(label.frame, label.fittingSize(withRequiredWidth: width), label.compressedSize)
-        
-        
+//        print(label.frame, label.fittingSize(withRequiredWidth: width), label.compressedSize) 
         
 //        view.resignFirstResponder()
 //        view.endEditing(true)

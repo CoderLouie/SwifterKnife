@@ -53,7 +53,7 @@ public final class ScrollStackView: UIScrollView {
         super.layoutMargins = .zero
         container.snp.remakeConstraints { make in
 //            make.edges.equalToSuperview()
-            make.edges.equalTo(self.snp.margins)
+            make.directionalEdges.equalTo(self.snp.directionalMargins)
             stackWidthCons = make.width.equalToSuperview().constraint
             stackHeightCons = make.height.equalToSuperview().constraint
         }

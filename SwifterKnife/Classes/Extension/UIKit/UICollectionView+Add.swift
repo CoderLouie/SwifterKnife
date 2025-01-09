@@ -68,7 +68,6 @@ public extension UICollectionViewFlowLayout {
         let inset = sectionInset
         let n = CGFloat(count)
         let contentD: CGFloat
-        let space: CGFloat
         if scrollDirection == .vertical {
             contentD = maxDimension - inset.left - inset.right
         } else {

@@ -36,6 +36,7 @@ open class AspectFitContainer: UIView {
     open var contentView: UIView? {
         subviews.first
     }
+    open var didLayoutContentView: ((UIView, CGRect) -> Void)?
     open override func layoutSubviews() {
         super.layoutSubviews()
         guard let child = contentView else { return }
@@ -58,6 +59,7 @@ open class AspectFitContainer: UIView {
         default: break
         }
         child.frame = frame
+        didLayoutContentView?(child, frame)
     }
     public var ratioSize: CGSize?
 }

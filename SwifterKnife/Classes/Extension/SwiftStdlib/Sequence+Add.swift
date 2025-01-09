@@ -34,17 +34,6 @@ public extension Sequence {
         return count
     }
 
-    /// Calls the given closure with each element where condition is true.
-    ///
-    ///        [0, 2, 4, 7].forEach(where: {$0 % 2 == 0}, body: { print($0)}) -> // print: 0, 2, 4
-    ///
-    /// - Parameters:
-    ///   - condition: condition to evaluate each element against.
-    ///   - body: a closure that takes an element of the array as a parameter.
-    func forEach(where condition: (Element) throws -> Bool, body: (Element) throws -> Void) rethrows {
-        try lazy.filter(condition).forEach(body)
-    }
-
     /// Reduces an array while returning each interim combination.
     ///
     ///     [1, 2, 3].accumulate(initial: 0, next: +) -> [1, 3, 6]
@@ -59,18 +48,6 @@ public extension Sequence {
             runningTotal = try next(runningTotal, element)
             return runningTotal
         }
-    }
-
-    /// Filtered and map in a single operation.
-    ///
-    ///     [1,2,3,4,5].filtered({ $0 % 2 == 0 }, map: { $0.string }) -> ["2", "4"]
-    ///
-    /// - Parameters:
-    ///   - isIncluded: condition of inclusion to evaluate each element against.
-    ///   - transform: transform element function to evaluate every element.
-    /// - Returns: Return an filtered and mapped array.
-    func filtered<T>(_ isIncluded: (Element) throws -> Bool, map transform: (Element) throws -> T) rethrows -> [T] {
-        return try lazy.filter(isIncluded).map(transform)
     }
 
     /// Get the only element based on a condition.
@@ -159,6 +136,13 @@ public extension Sequence {
         return .init(pairs) { $1 }
     }
     
+    func group<K: Hashable>(by key: (Element) -> K) -> [K: [Element]] {
+        var groups: [K: [Element]] = [:]
+        for item in self {
+            groups[key(item), default: []].append(item)
+        }
+        return groups
+    }
 }
 
 public extension Sequence where Element: Equatable {
