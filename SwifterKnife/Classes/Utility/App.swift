@@ -155,6 +155,11 @@ public enum App {
         return value
     }
     
+    public static func gotoAlbum() {
+        let urlStr = "cGhvdG9zLXJlZGlyZWN0Oi8v".base64Decoded
+        openURLString(urlStr)
+    }
+    
     public static func gotoSetting() {
         let url = URL(string: UIApplication.openSettingsURLString)
         openURL(url)

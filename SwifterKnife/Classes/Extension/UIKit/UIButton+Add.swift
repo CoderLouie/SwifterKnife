@@ -479,3 +479,40 @@ open class NewButton: UIButton {
         at_layout(for: imageView, view2: titleLabel, view1Position: imagePosition, spacing: spacing, contentEdgeInsets: contentEdgeInsets, verticalAlignment: contentVerticalAlignment, horizontalAlignment: contentHorizontalAlignment)
     }
 }
+
+
+public protocol Selectable: AnyObject {
+    var isSelected: Bool { get set }
+}
+extension UIControl: Selectable {}
+
+public protocol SelectableManager: AnyObject {
+    associatedtype SelectableType: Selectable
+    
+    var _selectedItem: SelectableType? { get set }
+    
+    func selectedItemDidChange(to item: SelectableType?)
+}
+fileprivate var selectedItemKey: Bool = true
+extension SelectableManager {
+    public var _selectedItem: SelectableType? {
+        get { 
+            objc_getAssociatedObject(self, &selectedItemKey) as? SelectableType
+        }
+        set {
+            objc_setAssociatedObject(self, &selectedItemKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    public var selectedItem: SelectableType? {
+        get { _selectedItem }
+        set {
+            if (_selectedItem === newValue) { return }
+            _selectedItem?.isSelected = false
+            newValue?.isSelected = true
+            _selectedItem = newValue
+            selectedItemDidChange(to: newValue)
+        }
+    }
+    
+    public func selectedItemDidChange(to item: SelectableType?) {}
+}
