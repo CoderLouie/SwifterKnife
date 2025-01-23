@@ -237,7 +237,7 @@ public typealias WeakSet<O: AnyObject> = WrapCollection<Set<WeakBox<O>>>
 
 
 
-
+/*
 // MARK: - Dictionary
 
 public struct WrapDictionary<Key: Hashable, Container: WrapContainerType> {
@@ -316,3 +316,4 @@ public extension WrapDictionary where Container.WrapType: OptionalType {
     }
 }
 public typealias WeakDictionary<Key: Hashable, O: AnyObject> = WrapDictionary<Key, WeakBox<O>>
+*/
