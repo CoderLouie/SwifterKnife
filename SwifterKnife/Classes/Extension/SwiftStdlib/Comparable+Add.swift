@@ -84,6 +84,13 @@ extension Hashable {
         if let v = map[self] { return v }
         return nil
     }
+    public func lazyPick<T>(in map: [Self: () -> T]) -> T? {
+        map[self]?()
+    }
+    public func lazyPick<T>(in map: [Self: () -> T?]) -> T? {
+        if let v = map[self] { return v() }
+        return nil
+    }
 }
 extension Equatable {
     public func inArray(_ array: Array<Self>) -> Bool {

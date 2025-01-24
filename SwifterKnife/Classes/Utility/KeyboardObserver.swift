@@ -195,6 +195,7 @@ extension UIView {
             if isPresented {
                 if let delta = self.keyboardAvoidingSpace {
                     self.transform = self.transform.translatedBy(x: 0, y: -delta)
+                    self.keyboardAvoidingSpace = nil
                 }
                 guard let closure = self.keyboardKeepSpaceClosure else {
                     return
