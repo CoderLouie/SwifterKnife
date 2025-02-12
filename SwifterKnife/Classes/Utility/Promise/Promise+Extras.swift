@@ -403,7 +403,7 @@ extension Promise {
  
 public extension Promises {
     static func downloadImage(from urlString: String?) -> Promise<UIImage> {
-        Promise.create(queue: .global()) { fulfill, reject in
+        Promise.create { fulfill, reject in
             guard let str = urlString,
                   let url = URL(string: str) else {
                 reject(PromiseError.missed)
@@ -422,7 +422,7 @@ public extension Promises {
         }
     }
     static func downloadImages(from urlString: String?) -> Promise<(String, UIImage)> {
-        Promise.create(queue: .global()) { fulfill, reject in
+        Promise.create { fulfill, reject in
             guard let str = urlString,
                   let url = URL(string: str) else {
                 reject(PromiseError.missed)
@@ -441,7 +441,7 @@ public extension Promises {
         }
     }
     static func downloadImage(from url: URL) -> Promise<UIImage> {
-        Promise.create(queue: .global()) { fulfill, reject in
+        Promise.create { fulfill, reject in
             do {
                 let data = try Data(contentsOf: url)
                 if let img = UIImage(data: data) {
