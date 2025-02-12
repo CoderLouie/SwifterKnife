@@ -36,7 +36,7 @@ public final class PopContainer: UIView {
         shapeLayer = CAShapeLayer().then {
             layer.addSublayer($0)
         }
-        backgroundColor = .white
+        super.backgroundColor = .clear
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -159,17 +159,17 @@ public final class PopContainer: UIView {
             path.addLine(to: CGPoint(x: arrowX + arrowW2, y: y2))
         }
         path.close()
-        let bgColor = cfg.bgColor ?? self.backgroundColor
         shapeLayer.do {
             $0.path = path.cgPath
-            $0.fillColor = bgColor?.cgColor
+            if let c = cfg.bgColor {
+                $0.fillColor = c.cgColor
+            }
             $0.strokeColor = cfg.outlineColor?.cgColor
             $0.lineWidth = cfg.outlineWidth
 //            $0.lineCap = .round
 //            $0.lineJoin = .round
         }
         contentView.backgroundColor = .clear
-        backgroundColor = .clear
         
         let top = dir == .up ? sourceRect.maxY + arrowOffset : sourceRect.minY  - arrowOffset - selfSize.height
         self.snp.updateConstraints { make in
