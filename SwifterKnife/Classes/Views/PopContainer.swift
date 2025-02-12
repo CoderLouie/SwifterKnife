@@ -178,6 +178,10 @@ public final class PopContainer: UIView {
         }
         return cfg
     }
+    public override var backgroundColor: UIColor? {
+        get { shapeLayer.fillColor.map(UIColor.init) }
+        set { shapeLayer.fillColor = newValue?.cgColor }
+    }
 }
 /*
  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
