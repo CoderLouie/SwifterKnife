@@ -37,14 +37,7 @@ open class TextField: UITextField {
 }
 
 
-open class Input: TextField {
-    override open var text: String? {
-        didSet {
-            if oldValue != text {
-                onTextDidChange?(self)
-            }
-        }
-    }
+open class Input: TextField { 
     
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0

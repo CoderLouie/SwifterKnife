@@ -29,9 +29,10 @@ public extension CGAffineTransform {
     }
     
     static func from(_ fromRect: CGRect, to toRect: CGRect) -> CGAffineTransform {
-        let moveTrans = CGAffineTransform(translationX: toRect.midX - fromRect.midX, y: toRect.midY - fromRect.midY)
-        let scaleTrans = CGAffineTransform(scaleX: toRect.width / fromRect.width, y: toRect.height / fromRect.height)
-        return moveTrans.concatenating(scaleTrans)
+//        let moveTrans = CGAffineTransform(translationX: toRect.midX - fromRect.midX, y: toRect.midY - fromRect.midY)
+//        let scaleTrans = CGAffineTransform(scaleX: toRect.width / fromRect.width, y: toRect.height / fromRect.height)
+//        return moveTrans.concatenating(scaleTrans)
+        return .init(toRect.width / fromRect.width, 0, 0, toRect.height / fromRect.height, toRect.midX - fromRect.midX, toRect.midY - fromRect.midY)
     }
 }
 

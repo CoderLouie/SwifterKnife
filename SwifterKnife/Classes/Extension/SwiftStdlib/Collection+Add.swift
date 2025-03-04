@@ -206,8 +206,9 @@ public extension Collection {
 }
 
 extension Collection where Element: AnyObject {
-    public func firstIndexIdentify(of obj: AnyObject) -> Index? {
-        firstIndex { $0 === obj }
+    public func firstIndexIdentify(of obj: Element?) -> Index? {
+        guard let o = obj else { return nil }
+        return firstIndex { $0 === o }
     }
 }
 
