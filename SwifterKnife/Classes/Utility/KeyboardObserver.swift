@@ -217,10 +217,13 @@ extension UIView {
     /// 键盘遮挡的距离
     private var keyboardAvoidingSpace: CGFloat? {
         get {
-            objc_getAssociatedObject(self, &keyboardAvoidingSpaceKey) as? CGFloat
+            if let num = objc_getAssociatedObject(self, &keyboardAvoidingSpaceKey) as? NSNumber {
+                return CGFloat(num.doubleValue)
+            }
+            return nil
         }
         set {
-            objc_setAssociatedObject(self, &keyboardAvoidingSpaceKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, &keyboardAvoidingSpaceKey, newValue.map { NSNumber(floatLiteral: Double($0)) }, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
 }
