@@ -430,7 +430,7 @@ public extension Promises {
                 } else {
                     reject(urlError("cannot download image from \(url.absoluteString)"))
                 }
-            }
+            }.resume()
         }
     }
     
