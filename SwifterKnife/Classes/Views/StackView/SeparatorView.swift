@@ -55,11 +55,19 @@ open class SeparatorView: UIView {
         backgroundColor = .systemSeparatorLine
         
         // 容易被拉伸
-        setContentHuggingPriority(.defaultLow, for: .horizontal)
-        setContentHuggingPriority(.defaultLow, for: .vertical)
-        
-        // 容易被压缩
-        setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+//        setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        setContentHuggingPriority(.defaultLow, for: .vertical)
+//        
+//        // 容易被压缩
+//        setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+//        setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+    }
+    // 抗拉伸，值越小越容易被拉伸
+    open override func contentHuggingPriority(for axis: NSLayoutConstraint.Axis) -> UILayoutPriority {
+        self.axis == axis ? .defaultLow - 2 : .required + 2
+    }
+    // 抗压缩，值越小越容易被压缩
+    open override func contentCompressionResistancePriority(for axis: NSLayoutConstraint.Axis) -> UILayoutPriority {
+        self.axis == axis ? .defaultLow - 2 : .required + 2
     }
 }

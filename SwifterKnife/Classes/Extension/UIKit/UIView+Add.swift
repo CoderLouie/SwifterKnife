@@ -561,6 +561,7 @@ public func ~=(pattern: UIView, value: (superview: UIView, point: CGPoint, event
 }
  
 
+/*
 private struct Identifier<Type>: Hashable {
     let rawValue: String
 }
@@ -658,3 +659,4 @@ extension XConfiguration {
         .init(id: #function) { _ in }
     }
 }
+*/

@@ -403,54 +403,33 @@ extension Promise {
  
 public extension Promises {
     static func downloadImage(from urlString: String?) -> Promise<UIImage> {
-        Promise.create { fulfill, reject in
-            guard let str = urlString,
-                  let url = URL(string: str) else {
-                reject(PromiseError.missed)
-                return
-            }
-            do {
-                let data = try Data(contentsOf: url)
-                if let img = UIImage(data: data) {
-                    fulfill(img)
-                } else {
-                    reject(PromiseError.missed)
-                }
-            } catch {
-                reject(error)
-            }
+        guard let str = urlString,
+              let url = URL(string: str) else {
+            return .reject(urlError("url \(urlString ?? "nil") is invalid"))
         }
+        return _downloadImage(from: url) { img, _ in img }
     }
     static func downloadImages(from urlString: String?) -> Promise<(String, UIImage)> {
-        Promise.create { fulfill, reject in
-            guard let str = urlString,
-                  let url = URL(string: str) else {
-                reject(PromiseError.missed)
-                return
-            }
-            do {
-                let data = try Data(contentsOf: url)
-                if let img = UIImage(data: data) {
-                    fulfill((str, img))
-                } else {
-                    reject(PromiseError.missed)
-                }
-            } catch {
-                reject(error)
-            }
+        guard let str = urlString,
+              let url = URL(string: str) else {
+            return .reject(urlError("url \(urlString ?? "nil") is invalid"))
         }
+        return _downloadImage(from: url) { img, url in (url.absoluteString, img) }
     }
     static func downloadImage(from url: URL) -> Promise<UIImage> {
+        _downloadImage(from: url) { img, _ in img }
+    }
+    private static func _downloadImage<T>(from url: URL, mapResult: @escaping (UIImage, URL) -> T) -> Promise<T> {
         Promise.create { fulfill, reject in
-            do {
-                let data = try Data(contentsOf: url)
-                if let img = UIImage(data: data) {
-                    fulfill(img)
+            URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+                if let err = error {
+                    reject(err)
+                } else if let data,
+                          let image = UIImage(data: data) {
+                    fulfill(mapResult(image, url))
                 } else {
-                    reject(PromiseError.missed)
+                    reject(urlError("cannot download image from \(url.absoluteString)"))
                 }
-            } catch {
-                reject(error)
             }
         }
     }
@@ -488,6 +467,12 @@ public extension Promises {
                 }
             }.resume()
         }
+    }
+    
+    
+    
+    public static func urlError(_ desc: String) -> NSError {
+        NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: [NSLocalizedDescriptionKey: desc])
     }
 }
  
