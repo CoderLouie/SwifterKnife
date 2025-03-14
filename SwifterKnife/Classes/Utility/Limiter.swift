@@ -136,12 +136,15 @@ public final class DebouncedLimiter {
     }
 }
 
-public func debounced(delay: TimeInterval, queue: DispatchQueue = .main, action: @escaping (() -> Void)) -> () -> Void {
+public func debounced<T>(delay: TimeInterval, queue: DispatchQueue = .main, action: @escaping ((T) -> Void)) -> (job: (T) -> Void, item: DispatchWorkItem?) {
     var workItem: DispatchWorkItem?
     
-    return {
+    let job = { param in
         workItem?.cancel()
-        workItem = DispatchWorkItem(block: action)
+        workItem = DispatchWorkItem {
+            action(param)
+        }
         queue.asyncAfter(deadline: .now() + delay, execute: workItem!)
     }
+    return (job, workItem)
 }

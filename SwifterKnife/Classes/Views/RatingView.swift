@@ -137,9 +137,6 @@ public class RatingView: UIView {
             _minProgress = progress
             if _progress < _minProgress {
                 _progress = _minProgress
-                beginEditingGrade?(self)
-                gradeDidChange?(self)
-                endEditingGrade?(self)
             }
         }
     }
@@ -159,8 +156,42 @@ public class RatingView: UIView {
                 right = right.nearestMultiple(a)
             }
             _progress = left + right
-            let width = (starSize.width + margin) * CGFloat(left) + CGFloat(right) * starSize.width
+            var width = (starSize.width + margin) * CGFloat(left) + CGFloat(right) * starSize.width
+            if right == 0, width > margin {
+                width -= margin
+            }
             frontView.frame.size.width = width
+        }
+    }
+    
+    public private(set) var isEditing = false
+    public private(set) var isAnimating = false
+    
+    @discardableResult
+    public func beginIndicatorAnimation(animations: @escaping (Bool) -> Void) -> Bool {
+        if isAnimating { return false }
+        isAnimating = true
+        frontView.alpha = 0
+        doAnimation(true, animations: animations)
+        return true
+    }
+    
+    @discardableResult
+    public func stopAnimation() -> Bool {
+        guard isAnimating else { return false }
+        isAnimating = false
+        return true
+    }
+    private func doAnimation(_ show: Bool, animations: @escaping (Bool) -> Void) {
+        if !isAnimating { frontView.alpha = 1; return }
+        
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            guard let this = self else { return }
+            if !this.isAnimating { this.frontView.alpha = 1; return }
+            this.frontView.alpha = show ? 1 : 0
+            animations(show)
+        } completion: { [weak self] _ in
+            self?.doAnimation(!show, animations: animations)
         }
     }
     
@@ -177,6 +208,7 @@ public class RatingView: UIView {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isEditing = true
         if isPanEnable {
             beginEditingGrade?(self)
         } else {
@@ -184,15 +216,17 @@ public class RatingView: UIView {
             beginEditingGrade?(self)
             gradeDidChange?(self)
             endEditingGrade?(self)
+            isEditing = false
         }
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isPanEnable else { return }
         if handleTouches(touches) {
             gradeDidChange?(self)
-        } 
+        }
     }
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        defer { isEditing = false }
         guard isPanEnable else { return }
         if handleTouches(touches) {
             gradeDidChange?(self)
