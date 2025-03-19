@@ -180,6 +180,7 @@ public class RatingView: UIView {
     public func stopAnimation() -> Bool {
         guard isAnimating else { return false }
         isAnimating = false
+        frontView.alpha = 1
         return true
     }
     private func doAnimation(_ show: Bool, animations: @escaping (Bool) -> Void) {
@@ -232,6 +233,9 @@ public class RatingView: UIView {
             gradeDidChange?(self)
         }
         endEditingGrade?(self)
+    }
+    public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isEditing = false
     }
     
     /// 返回结果表示_progress 有无发生改变

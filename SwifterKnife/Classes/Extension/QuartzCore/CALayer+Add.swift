@@ -56,4 +56,12 @@ public extension CAGradientLayer {
             return colors.map(UIColor.init(cgColor:))
         }
     } 
+    var uilocations: [CGFloat] {
+        get { locations?.compactMap { CGFloat($0.doubleValue) } ?? [] }
+        set {
+            locations = newValue.map {
+                NSNumber(floatLiteral: Double($0))
+            }
+        }
+    }
 }

@@ -124,6 +124,26 @@ public func &&-> <T>(lhs: Bool, rhs: @autoclosure () throws -> T?) rethrows -> T
     return lhs ? try rhs() : nil
 }
 
+public final class WeakProxy: NSObject {
+    private weak var target: NSObjectProtocol?
+
+    public init(_ target: NSObjectProtocol) {
+        self.target = target
+        super.init()
+    }
+
+    public override func responds(to aSelector: Selector!) -> Bool {
+        guard let target = target else {
+            return super.responds(to: aSelector)
+        }
+        return target.responds(to: aSelector)
+    }
+
+    public override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        return target
+    }
+}
+
 /*
  rax、rdx常作为函数返回值使用
  register read/d rax 方便查看方法调用返回值 /d是10进制 /x是16进制
