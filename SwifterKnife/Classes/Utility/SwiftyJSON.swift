@@ -1582,8 +1582,11 @@ fileprivate enum Nested {
                       let idx2 = subItem.firstIndex(of: "]") {
                     guard let i = Int(subItem[subItem.index(after: idx1)..<idx2]) else { return nil }
                     
-                    guard let array = data as? [Any], array.indices.contains(i) else { return nil }
-                    data = array[i]
+                    guard let array = data as? [Any], !array.isEmpty else { return nil }
+                    let n = array.count
+                    guard (-n..<n).contains(i) else { return nil }
+                    if i >= 0 { data = array[i] }
+                    else { data = array[n + i] }
                     transformIfNeed(&data)
                     subItem = String(subItem[subItem.index(after: idx2)...])
                 }

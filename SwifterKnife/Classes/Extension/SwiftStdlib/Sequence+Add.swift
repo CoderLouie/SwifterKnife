@@ -111,6 +111,12 @@ public extension Sequence {
         return sorted { compare($0[keyPath: keyPath], $1[keyPath: keyPath]) }
     }
  
+    func max<T: Comparable>(by keyPath: KeyPath<Element, T>) -> Element? {
+        max { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+    }
+    func min<T: Comparable>(by keyPath: KeyPath<Element, T>) -> Element? {
+        min { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+    }
 
     /// Sum of a `AdditiveArithmetic` property of each `Element` in a `Sequence`.
     ///
