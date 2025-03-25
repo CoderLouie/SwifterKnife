@@ -13,12 +13,14 @@ public extension FloatingPoint {
 
     /// Ceil of number.
     var ceil: Self {
-        return Foundation.ceil(self)
+//        return Foundation.ceil(self)
+        return rounded(.up)
     }
     
     /// Floor of number.
     var floor: Self {
-        return Foundation.floor(self)
+//        return Foundation.floor(self)
+        return rounded(.down)
     }
     /// Radian value of degree input.
     var degreesToRadians: Self {

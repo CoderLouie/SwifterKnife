@@ -68,7 +68,7 @@ fileprivate extension Double {
     }
 }
 
-public class RatingView: UIView {
+public class RatingControl: UIControl {
     
     public init(count: Int,
          normalImage: UIImage?,
@@ -90,9 +90,15 @@ public class RatingView: UIView {
         addSubview(frontView)
     }
     
-    public var beginEditingGrade: ((RatingView) -> Void)?
-    public var endEditingGrade: ((RatingView) -> Void)?
-    public var gradeDidChange: ((RatingView) -> Void)?
+    private init() {
+        fatalError("init() has not been implemented")
+    }
+    override private init(frame: CGRect) {
+        fatalError("init(frame:) has not been implemented")
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     public override var contentMode: UIView.ContentMode {
         set {
@@ -163,8 +169,7 @@ public class RatingView: UIView {
             frontView.frame.size.width = width
         }
     }
-    
-    public private(set) var isEditing = false
+     
     public private(set) var isAnimating = false
     
     @discardableResult
@@ -208,40 +213,34 @@ public class RatingView: UIView {
         return (starSize.width + margin) * CGFloat(left) + CGFloat(right) * starSize.width
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isEditing = true
-        if isPanEnable {
-            beginEditingGrade?(self)
-        } else {
-            handleTouches(touches)
-            beginEditingGrade?(self)
-            gradeDidChange?(self)
-            endEditingGrade?(self)
-            isEditing = false
-        }
+    public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        guard handleTouches(touch) else { return isPanEnable }
+        sendActions(for: .editingDidBegin)
+        if isPanEnable { return true }
+        sendActions(for: .valueChanged)
+        sendActions(for: .editingChanged)
+        sendActions(for: .editingDidEnd)
+        return false
     }
-    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isPanEnable else { return }
-        if handleTouches(touches) {
-            gradeDidChange?(self)
+    public override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        if handleTouches(touch) {
+            sendActions(for: .valueChanged)
+            sendActions(for: .editingChanged)
         }
+        return true
     }
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        defer { isEditing = false }
-        guard isPanEnable else { return }
-        if handleTouches(touches) {
-            gradeDidChange?(self)
+    public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        if let t = touch, handleTouches(t) {
+            sendActions(for: .valueChanged)
+            sendActions(for: .editingChanged)
         }
-        endEditingGrade?(self)
-    }
-    public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isEditing = false
+        sendActions(for: .editingDidEnd)
     }
     
     /// 返回结果表示_progress 有无发生改变
     @discardableResult
-    private func handleTouches(_ touches: Set<UITouch>) -> Bool {
-        guard let x = touches.randomElement()?.location(in: self).x else { return false }
+    private func handleTouches(_ touch: UITouch) -> Bool {
+        let x = touch.location(in: self).x
         
         let step = starSize.width + margin
         var int = Int(x / step)
@@ -290,14 +289,4 @@ public class RatingView: UIView {
     private let starSize: CGSize
     private let backView: StarsView
     private let frontView: StarsView
-    
-    private init() {
-        fatalError("init() has not been implemented")
-    }
-    override private init(frame: CGRect) {
-        fatalError("init(frame:) has not been implemented")
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }

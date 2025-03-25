@@ -659,7 +659,7 @@ extension ViewController {
                 make.centerY.equalToSuperview().offset(-50)
             }
         }
-        let ratingView = RatingView(
+        let ratingView = RatingControl(
             count: 5,
             normalImage: UIImage(named: "img_star_inactive"),
             highlightedImage: UIImage(named: "img_star_active"),
@@ -673,8 +673,8 @@ extension ViewController {
                 }
             }
         label.text = "\(ratingView.grade)"
-        ratingView.gradeDidChange = {
-            label.text = "\($0.grade)"
+        ratingView.addClosure(for: .valueChanged) { sender, event in
+            label.text = "\(sender.grade)"
         }
 //        ratingView.endEditingGrade = {
 //            label.text = "\($0.grade)"
