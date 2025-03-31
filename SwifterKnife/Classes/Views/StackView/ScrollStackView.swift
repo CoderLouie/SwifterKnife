@@ -121,6 +121,41 @@ public final class ScrollStackView: UIScrollView {
         return self
     }
     
+    /**
+     $0 -1计算不出内容尺寸大小；0按内容尺寸决定滚动范围，不可滚动；1按maxSide决定滚动范围，可滚动
+     $1是否是更新约束
+     */
+    @discardableResult
+    public func makeCompressed(_ maxSide: CGFloat?) -> (Int, Bool) {
+        let size = container.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        if size.width <= 0 || size.height <= 0 { return (-1, false) }
+        let side: CGFloat, result: Int
+        if let max = maxSide, size.height > max {
+            side = max; result = 1
+            alwaysBounceVertical = true
+        } else {
+            side = size.height; result = 0
+            alwaysBounceVertical = false
+        }
+        let isV = isVertical
+        let isUpdate: Bool
+        if let t = findConstraint(attribute: isV ? .height : .width) {
+            t.constant = side
+            isUpdate = true
+        } else {
+            isUpdate = false
+            self.snp.makeConstraints { make in
+                if isV {
+                    make.height.equalTo(side)
+                } else {
+                    make.width.equalTo(side)
+                }
+            }
+        }
+        
+        return (result, isUpdate)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
