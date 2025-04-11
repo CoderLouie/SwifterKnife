@@ -1,39 +1,13 @@
 //
-//  ScreenLog.swift
+//  LogViewController.swift
 //  SwifterKnife
 //
-//  Created by liyang on 2024/9/14.
+//  Created by liyang on 2025/4/11.
 //
 
 import UIKit
 import SnapKit
-import SwifterKnife
 
-fileprivate class ScreenLogWindow: UIWindow {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-//        let level = UIWindow.Level.normal.rawValue + 9
-        windowLevel = .alert + 5
-        
-        isHidden = true
-        let view = screenLogView
-        addSubview(view)
-    }
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let res = super.hitTest(point, with: event)
-        if res === self { return nil }
-        if res === screenLogView {
-            return screenLogView.textView.hiddenPopMenu() ? res  : nil
-        }
-        return res
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-fileprivate let screenLogView = ScreenLogView(frame: UIScreen.main.bounds)
-fileprivate let logWindow = ScreenLogWindow(frame: UIScreen.main.bounds)
 
 fileprivate class MenuItem {
     let title: String
@@ -43,7 +17,7 @@ fileprivate class MenuItem {
         self.isSelected = false
     }
 }
-fileprivate class ScreenLogItem {
+fileprivate class LogItem {
     let tags: Set<String>
     let level: ScreenLogLevel
     let content: String
@@ -129,8 +103,6 @@ fileprivate class _MenuView: UIView {
     private var onChange: (() -> Void)?
     convenience init(menus: [MenuItem], onChange: @escaping () -> Void) {
         self.init(frame: .zero)
-//        backgroundColor = .white
-//        addCorner(radius: 4)
         self.menus = menus
         self.onChange = onChange
         
@@ -284,20 +256,23 @@ extension _LogTextView: UITextInputDelegate {
          
         let menuView = _PopMenu { [unowned self] tag in
             switch tag {
-            case 0: screenLogView.deleteLine(nil)
+            case 0: self.logView?.deleteLine(nil)
             case 1:
                 self.selectAll(nil)
                 return
             case 2: self.copy(nil)
-            case 3: screenLogView.copyLine(nil)
+            case 3: self.logView?.copyLine(nil)
             default: break
             }
             self.hiddenPopMenu()
         }
         popMenu = PopContainer().then {
             $0.backgroundColor = .white
-            $0.show(menuView, on: screenLogView, from: self, rect: rect, config: { _ in })
+            $0.show(menuView, on: logView!, from: self, rect: rect, config: { _ in })
         }
+    }
+    private var logView: _LogView? {
+        superview as? _LogView
     }
 }
 fileprivate class _PopContainer: UIView {
@@ -305,7 +280,7 @@ fileprivate class _PopContainer: UIView {
         removeFromSuperview()
     }
 }
-fileprivate class ScreenLogView: UIView {
+fileprivate class _LogView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -314,19 +289,11 @@ fileprivate class ScreenLogView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     private func setup() {
-        container = UIView().then {
-            $0.backgroundColor = UIColor(gray: 0, alpha: 0.8)
-            $0.isHidden = true
+        let toolbar = UIView().then {
             addSubview($0)
             $0.snp.makeConstraints { make in
-                make.leading.bottom.trailing.equalToSuperview()
-            }
-        }
-        let toolbar = UIView().then {
-            container.addSubview($0)
-            $0.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(-Screen.safeAreaB)
+                make.bottom.equalTo(0)
                 make.height.equalTo(44.fit)
             }
         }
@@ -374,35 +341,12 @@ fileprivate class ScreenLogView: UIView {
         
         textView = _LogTextView().then {
             $0.font = font
-            container.addSubview($0)
+            addSubview($0)
             $0.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview().inset(space)
                 make.top.equalTo(space * 0.5)
                 make.bottom.equalTo(toolbar.snp.top)
-                make.height.equalTo(Screen.height * 0.4)
             }
-        }
-        popoverButton = UIButton().then {
-            addSubview($0)
-            $0.setTitle("D", for: .normal)
-            $0.setTitleColor(.white, for: .normal)
-            $0.titleLabel?.font = .systemFont(ofSize: 16).fit
-            $0.frame.size = CGSize(width: 32, height: 32).fit
-            $0.center = CGPoint(x: 50.fit, y: Screen.height * 0.7)
-            $0.backgroundColor = UIColor(gray: 0, alpha: 0.7)
-            $0.addBorder(color: UIColor(gray: 255, alpha: 0.7), radius: 16.fit, width: 1)
-            $0.layer.shadowColor = UIColor.black.cgColor // 阴影颜色
-            $0.layer.shadowOpacity = 0.4 // 阴影透明度
-            $0.layer.shadowRadius = 2
-            $0.layer.shadowOffset = CGSize(width: 2, height: 2) // 阴影偏移量
-            $0.addTarget(self, action: #selector(handlePopoverTouchEvent), for: .touchUpInside)
-            
-            longGes = UILongPressGestureRecognizer(target: self, action: #selector(longGestureAction(_:)))
-            $0.addGestureRecognizer(longGes)
-            panGes = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-            $0.addGestureRecognizer(panGes)
-            
-            panGes.require(toFail: longGes)
         }
     }
     
@@ -418,13 +362,16 @@ fileprivate class ScreenLogView: UIView {
         guard !items.isEmpty else { return }
         for i in items {
             for t in i.tags {
-                if var map = itemTagMap[t] {
-                    map.removeAll { $0 === i }
-                    if map.isEmpty {
+                if var array = itemTagMap[t] {
+                    array.removeAll { $0 === i }
+                    if array.isEmpty {
                         allTags.remove(t)
                         tagItems.removeAll { $0.title == t }
+                        itemTagMap[t] = nil
+                    } else {
+                        itemTagMap[t] = array
                     }
-                    itemTagMap[t] = map
+                    
                 }
             }
         }
@@ -435,11 +382,11 @@ fileprivate class ScreenLogView: UIView {
         self.items.removeAll { ptrs.contains($0.address) }
         textView.text = showingItems.map(\.content).joined(separator: "\n")
     }
-    private var selectedItems: [ScreenLogItem] {
+    private var selectedItems: [LogItem] {
         let range = textView.selectedRange
         guard range.isValid else { return [] }
         let r = (range.location..<range.location + range.length)
-        var res: [ScreenLogItem] = []
+        var res: [LogItem] = []
         var current = 0
         for item in showingItems {
             let n = item.content.count
@@ -453,25 +400,20 @@ fileprivate class ScreenLogView: UIView {
         return res
     }
      
-    private var items: [ScreenLogItem] = []
-    private var showingItems: [ScreenLogItem] = []
-    private var itemTagMap: [String: [ScreenLogItem]] = [:]
+    private var items: [LogItem] = []
+    private var showingItems: [LogItem] = []
+    private var itemTagMap: [String: [LogItem]] = [:]
     private var allTags: Set<String> = []
-    private var levelItems: [MenuItem] = ScreenLogLevel.allCases.map { MenuItem(title: "\($0)") }
+    private let levelItems = ScreenLogLevel.allCases.map { MenuItem(title: "\($0)") }
     private var tagItems: [MenuItem] = []
      
     private(set) unowned var textView: _LogTextView!
     private unowned var tagControl: UIControl!
     private unowned var levelControl: UIControl!
-    private var longGes: UILongPressGestureRecognizer!
-    private var panGes: UIPanGestureRecognizer!
-    private unowned var popoverButton: UIButton!
-    private unowned var container: UIView!
-    private lazy var contentEdge = CGRect(x: 0, y: Screen.safeAreaT, width: Screen.width, height: Screen.height - Screen.safeAreaT - Screen.safeAreaB).inset(by: .init(inset: 20.fit))
 }
-extension ScreenLogView {
+extension _LogView {
     func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        let item = ScreenLogItem(tags: tags, level: level, content: string)
+        let item = LogItem(tags: tags, level: level, content: string)
         items.append(item)
         
         for t in item.tags.sorted() {
@@ -480,10 +422,6 @@ extension ScreenLogView {
             if allTags.contains(t) { continue }
             allTags.insert(t)
             tagItems.append(MenuItem(title: t))
-        }
-        if UIApplication.shared.applicationState != .inactive,
-           logWindow.isHidden {
-            logWindow.isHidden = false
         }
         
         let selLevels = Set(levelItems.filter(\.isSelected).map(\.title))
@@ -500,11 +438,7 @@ extension ScreenLogView {
 }
 
 
-extension ScreenLogView {
-    @objc private func handlePopoverTouchEvent() {
-        container.isHidden.toggle()
-        textView.hiddenPopMenu()
-    }
+extension _LogView {
     @objc private func toolbarButtonDidClick(_ sender: UIControl) {
         if sender === levelControl ||
             sender === tagControl {
@@ -581,30 +515,6 @@ extension ScreenLogView {
         }
         textView.text = showingItems.map(\.content).joined(separator: "\n")
     }
-    
-    @objc func longGestureAction(_ gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began {
-            Haptic.impact(.medium).generate()
-            logWindow.isHidden = true
-            textView.hiddenPopMenu()
-        }
-    }
-    @objc func panGestureAction(_ gesture: UIPanGestureRecognizer) {
-        switch gesture.state {
-        case .changed:
-            let trans = gesture.translation(in: self)
-            var center = popoverButton.center
-            center.x += trans.x
-            center.y += trans.y
-            if center.x >= contentEdge.maxX { center.x = contentEdge.maxX }
-            if center.x <= contentEdge.minX { center.x = contentEdge.minX }
-            if center.y <= contentEdge.minY { center.y = contentEdge.minY }
-            if center.y >= contentEdge.maxY { center.y = contentEdge.maxY }
-            popoverButton.center = center
-            gesture.setTranslation(.zero, in: self)
-        default: break
-        }
-    }
 }
 
 public enum ScreenLogLevel: Int, CaseIterable {
@@ -617,14 +527,31 @@ public enum ScreenLogLevel: Int, CaseIterable {
         self.init(int: raw.rawValue)
     }
 }
-public enum ScreenLog {
-    public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
+
+
+class LogViewController: _BaseViewController {
+    func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
         if Thread.isMainThread {
-            screenLogView.log(Console.timeString + " " + string, level: level, tags: tags)
+            logView.log(Console.timeString + " " + string, level: level, tags: tags)
         } else {
             DispatchQueue.main.async {
-                screenLogView.log(Console.timeString + " " + string, level: level, tags: tags)
+                self.logView.log(Console.timeString + " " + string, level: level, tags: tags)
             }
         }
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        logView = _LogView().then {
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.leading.trailing.equalTo(0)
+                make.bottom.equalTo(-Screen.tabbarH - 20)
+                make.top.equalTo(Screen.navbarH + 20)
+            }
+        }
+    }
+    private unowned var logView: _LogView!
 }
+ 
+

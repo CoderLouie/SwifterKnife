@@ -7,9 +7,97 @@
 
 import UIKit
 
+class _BaseViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .create("#0D0D0D")
+        
+        view.isOpaque = false
+        
+        let centerY = Screen.navbarCenterY
+        
+        func createButton(_ title: String, _ closure: @escaping () -> Void) {
+            UIButton().do {
+                $0.setTitle(title, for: .normal)
+                $0.setTitleColor(.white, for: .normal)
+                $0.titleLabel?.font = .semibold(14).fit
+                $0.addTouchUpInsideClosure { sender, event in
+                    closure()
+                }
+                view.addSubview($0)
+                $0.snp.makeConstraints { make in
+                    make.leading.equalTo(16.fit)
+                    make.centerY.equalTo(centerY)
+                }
+            }
+        }
+        if isModal {
+            createButton("关闭") {
+                self.dismiss(animated: true)
+            }
+        } else if navigationController?.viewControllers.count ?? 0 > 1 {
+            createButton("返回") {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+        if let t = title, !t.isEmpty {
+            UILabel().then {
+                view.addSubview($0)
+                $0.textColor = .white
+                $0.font = .medium(18).fit
+                $0.text = t
+                $0.snp.makeConstraints { make in
+                    make.centerY.equalTo(centerY)
+                    make.centerX.equalToSuperview()
+                }
+            }
+        }
+    }
+}
+
+
+fileprivate class _NavigationController: UINavigationController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setNavigationBarHidden(true, animated: false)
+    }
+} 
+
+fileprivate class _TabBarController: UITabBarController {
+     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tabBar.do { bar in
+            let font = UIFont.semibold(16).fit
+            UITabBarItem.appearance(whenContainedInInstancesOf: [Self.self]).do {
+                $0.titlePositionAdjustment.vertical = -15.6667
+                $0.setTitleTextAttributes(
+                    [.font: font,
+                     .foregroundColor: UIColor(gray: 255, alpha: 0.4)], for: .normal)
+                $0.setTitleTextAttributes(
+                    [.font: font,
+                     .foregroundColor: UIColor.white], for: .selected)
+            }
+            bar.tintColor = .white
+            bar.isTranslucent = true
+            bar.barStyle = .black
+        } 
+          
+        addChild(LogViewController.self, "日志")
+        addChild(OptionsViewController.self, "选项")
+    }
+    
+    @discardableResult
+    private func addChild<T: UIViewController>(_ viewController: T.Type, _ title: String?) -> T {
+        let vc = T()
+        vc.title = title
+        addChild(_NavigationController(rootViewController: vc))
+        return vc
+    }
+}
+
 
 extension UIWindow.Level {
-    
     public static func + (lhs: UIWindow.Level, rhs: RawValue) -> UIWindow.Level {
         .init(rawValue: lhs.rawValue + rhs)
     }
@@ -22,13 +110,15 @@ class SKWindow: UIWindow {
         
         isHidden = true
         
+        rootViewController = _TabBarController()
         
         container = UIView().then {
-            $0.backgroundColor = UIColor(gray: 0, alpha: 0.8)
             $0.isHidden = true
+            $0.tag = 999
+            $0.backgroundColor = UIColor(gray: 0, alpha: 0.9)
             addSubview($0)
             $0.snp.makeConstraints { make in
-                make.leading.bottom.trailing.equalToSuperview()
+                make.edges.equalToSuperview()
             }
         }
         popoverButton = UIButton().then {
@@ -63,22 +153,37 @@ class SKWindow: UIWindow {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        DispatchQueue.main.async {
+            self.use_canvas_ifneeded()
+        }
+    }
+     
+    private func use_canvas_ifneeded() {
+        for view in subviews {
+            if view === container { continue }
+            if view === popoverButton { continue }
+            if view.superview === container { continue }
+            container.addSubview(view)
+        }
+    }
+    
     private unowned var container: UIView!
     private unowned var popoverButton: UIButton!
-    private lazy var contentEdge = CGRect(x: 0, y: Screen.safeAreaT, width: Screen.width, height: Screen.height - Screen.safeAreaT - Screen.safeAreaB).inset(by: .init(inset: 20.fit))
+    private lazy var contentEdge = Screen.bodyRect.inset(by: UIEdgeInsets(inset: 20))
 }
 
 extension SKWindow {
     
     @objc private func handlePopoverTouchEvent() {
         container.isHidden.toggle()
-//        textView.hiddenPopMenu()
     }
     @objc func longGestureAction(_ gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             Haptic.impact(.medium).generate()
-//            logWindow.isHidden = true
-//            textView.hiddenPopMenu()
+            container.isHidden = true
         }
     }
     @objc func panGestureAction(_ gesture: UIPanGestureRecognizer) {
@@ -99,41 +204,21 @@ extension SKWindow {
     }
 }
 
-public extension UIWindow {
-
-    /**
-     Set the rootViewController on this UIWindow instance.
-
-     - parameter viewController: The view controller to set
-     - parameter animated:       Whether or not to animate the transition, animation is a cross-fade
-     - parameter completion:     Completion block to be invoked after the transition finishes
-     */
-    @nonobjc func setRootViewController(_ viewController: UIViewController, animated: Bool, completion: @escaping () -> Void = {}) {
-        let previousRootViewController = rootViewController
-        let updateViewController = {
-            // Disabling animation prevents layout and visual issues during the transition
-            UIView.performWithoutAnimation {
-                self.rootViewController = viewController
-            }
+public enum SKS {
+    fileprivate static var window = SKWindow(frame: UIScreen.main.bounds)
+    
+    public static var isEnable: Bool {
+        get { !window.isHidden }
+        set {
+            window.isHidden = !newValue
         }
-        let removePreviousAndExecuteCompletion = { (_: Bool) in
-            // If a view controller is currently presented, it must be dismissed as a separate step
-            // than the swapping of the root VC of the window.
-            // Failure to do this appears to result in a retain cycle in the orphaned VC stack.
-            previousRootViewController?.dismiss(animated: false, completion: nil)
-            previousRootViewController?.view.removeFromSuperview()
-            completion()
-        }
-        if animated && previousRootViewController != nil {
-            UIView.transition(with: self,
-                              duration: 0.3,
-                              options: .transitionCrossDissolve,
-                              animations: updateViewController,
-                              completion: removePreviousAndExecuteCompletion)
-        }
-        else {
-            updateViewController()
-            removePreviousAndExecuteCompletion(true)
-        }
+    }
+    
+    public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
+        guard let tabvc = window.rootViewController as? UITabBarController else { return }
+        guard let logvc = (tabvc.viewControllers?.first as? UINavigationController)?.viewControllers.first as? LogViewController else { return }
+        logvc.loadViewIfNeeded()
+//        window.isHidden = false
+        logvc.log(string, level: level, tags: tags)
     }
 }
