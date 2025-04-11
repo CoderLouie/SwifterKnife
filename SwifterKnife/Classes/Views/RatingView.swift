@@ -216,9 +216,9 @@ public class RatingControl: UIControl {
     public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         guard handleTouches(touch) else { return isPanEnable }
         sendActions(for: .editingDidBegin)
-        if isPanEnable { return true }
         sendActions(for: .valueChanged)
         sendActions(for: .editingChanged)
+        if isPanEnable { return true }
         sendActions(for: .editingDidEnd)
         return false
     }

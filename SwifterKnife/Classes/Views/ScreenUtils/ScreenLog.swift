@@ -295,12 +295,13 @@ extension _LogTextView: UITextInputDelegate {
             self.hiddenPopMenu()
         }
         popMenu = PopContainer().then {
+            $0.backgroundColor = .white
             $0.show(menuView, on: screenLogView, from: self, rect: rect, config: { _ in })
         }
     }
 }
 fileprivate class _PopContainer: UIView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         removeFromSuperview()
     }
 }
@@ -518,7 +519,10 @@ extension ScreenLogView {
                 $0.backgroundColor = .clear
                 addSubview($0)
             }
-            PopContainer().show(menuView, on: container, from: sender) { _ in }
+            PopContainer().do {
+                $0.backgroundColor = .white
+                $0.show(menuView, on: container, from: sender) { _ in }
+            }
         } else {
             if showingItems.isEmpty { return }
             if sender.tag == 0 { // clear

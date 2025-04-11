@@ -44,6 +44,8 @@ open class AspectFitContainer: UIView {
         if s.width <= 0 || s.height <= 0 { return }
         
         let bounds = bounds
+        if bounds.isEmpty { return }
+        
         let inset = contentInset
         let rect = bounds.inset(by: inset)
         var frame = rect.resizing(to: s, model: .scaleAspectFit).pixelate
