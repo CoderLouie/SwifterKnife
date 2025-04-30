@@ -27,6 +27,7 @@ public final class PopContainer: UIView {
         public var outlineColor: UIColor? = nil
         public var outlineWidth: CGFloat = 0
         public var outlineRadius: CGFloat = 5
+        public var arrowRadius: CGFloat = 0
         
         public var direction: ArrowDirection?
     }
@@ -103,6 +104,7 @@ public final class PopContainer: UIView {
         }
         arrowX -= left
         
+        let arrowRadius = cfg.arrowRadius
         let path = UIBezierPath()
         if dir == .up {
             let y1: CGFloat = arrowH
@@ -114,8 +116,12 @@ public final class PopContainer: UIView {
             let rl: CGFloat = x1 + radius// radiusLeft
             let rr: CGFloat = x2 - radius// radiusRight
             
-            path.move(to: CGPoint(x: arrowX, y: 0))
-            path.addLine(to: CGPoint(x: arrowX - arrowW2, y: y1))
+            if arrowRadius > 0 {
+                path.move(to: CGPoint(x: arrowX - arrowW2, y: y1))
+            } else {
+                path.move(to: CGPoint(x: arrowX, y: 0))
+                path.addLine(to: CGPoint(x: arrowX - arrowW2, y: y1))
+            }
             
             path.addLine(to: CGPoint(x: rl, y: y1))
             path.addArc(withCenter: CGPoint(x: rl, y: rt), radius: radius, startAngle: 1.5 * .pi, endAngle: .pi, clockwise: false)
@@ -130,6 +136,16 @@ public final class PopContainer: UIView {
             path.addArc(withCenter: CGPoint(x: rr, y: rt), radius: radius, startAngle: 0, endAngle: .pi * 1.5, clockwise: false)
             
             path.addLine(to: CGPoint(x: arrowX + arrowW2, y: y1))
+            
+            if arrowRadius > 0 {
+                let angle2 = atan(arrowW2 / arrowH)
+                let maxRadius = arrowH * sin(angle2)
+                let usingRadius = min(arrowRadius, maxRadius)
+                let center = CGPoint(x: arrowX, y: usingRadius / sin(angle2))
+                let startAngle = -angle2
+                let endAngle = startAngle - .pi + angle2 * 2
+                path.addArc(withCenter: center, radius: usingRadius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+            }
         } else {
             let h: CGFloat = selfSize.height
             let y1: CGFloat = 0
@@ -141,8 +157,12 @@ public final class PopContainer: UIView {
             let rl: CGFloat = x1 + radius
             let rr: CGFloat = x2 - radius
             
-            path.move(to: CGPoint(x: arrowX, y: h));
-            path.addLine(to: CGPoint(x: arrowX - arrowW2, y: y2))
+            if arrowRadius > 0 {
+                path.move(to: CGPoint(x: arrowX - arrowW2, y: y2))
+            } else {
+                path.move(to: CGPoint(x: arrowX, y: h));
+                path.addLine(to: CGPoint(x: arrowX - arrowW2, y: y2))
+            }
             
             path.addLine(to: CGPoint(x: rl, y: y2))
             path.addArc(withCenter: CGPoint(x: rl, y: rb), radius: radius, startAngle: .pi * 0.5, endAngle: .pi, clockwise: true)
@@ -157,6 +177,16 @@ public final class PopContainer: UIView {
             path.addArc(withCenter: CGPoint(x: rr, y: rb), radius: radius, startAngle: 0, endAngle: .pi * 0.5, clockwise: true)
             
             path.addLine(to: CGPoint(x: arrowX + arrowW2, y: y2))
+            
+            if arrowRadius > 0 {
+                let angle2 = atan(arrowW2 / arrowH)
+                let maxRadius = arrowH * sin(angle2)
+                let usingRadius = min(arrowRadius, maxRadius)
+                let center = CGPoint(x: arrowX, y: h - usingRadius / sin(angle2))
+                let startAngle = angle2
+                let endAngle = startAngle + .pi - angle2 * 2
+                path.addArc(withCenter: center, radius: usingRadius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
+            }
         }
         path.close()
         shapeLayer.do {

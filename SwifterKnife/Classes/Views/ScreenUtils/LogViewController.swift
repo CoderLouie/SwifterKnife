@@ -542,7 +542,7 @@ class LogViewController: _BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        logView = _LogView().then {
+        logView.do {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.leading.trailing.equalTo(0)
@@ -551,7 +551,7 @@ class LogViewController: _BaseViewController {
             }
         }
     }
-    private unowned var logView: _LogView!
+    private var logView = _LogView()
 }
  
 

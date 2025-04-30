@@ -80,7 +80,7 @@ extension _SKFoldVC {
             $0.snp.makeConstraints { make in
                 make.top.equalTo(Screen.navbarH)
                 make.horizontalSpace(16.fit)
-                make.bottom.equalTo(0)
+                make.bottom.equalTo(-Screen.tabbarH)
             }
         }
     }

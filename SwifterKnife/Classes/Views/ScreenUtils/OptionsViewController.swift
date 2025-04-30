@@ -8,20 +8,13 @@
 import UIKit
 import SnapKit
 
-fileprivate enum SKOptions: String, CaseIterable {
-    case sandbox = "查看沙盒"
-    
-    func perform(from vc: OptionsViewController) {
-        switch self {
-            
-        case .sandbox:
-            Haptic.impact(.medium).generate()
-            let newvc = _SKFoldVC()
-            newvc.title = "Sandbox"
-            newvc.parentPath = NSHomeDirectory()
-            vc.navigationController?.pushViewController(newvc, animated: true)
-        }
-    }
+public protocol SKSOptionHandler {
+    func addOption(_ title: String, action: @escaping (_ vc: UIViewController) -> Void)
+}
+
+fileprivate struct SKOptions {
+    let title: String
+    let action: (_ vc: UIViewController) -> Void
 }
 
 class SKCaseCell: UITableViewCell, Reusable {
@@ -71,23 +64,41 @@ class OptionsViewController: _BaseViewController {
     }
     
     private unowned var tableView: UITableView!
-    private lazy var items: [SKOptions] = SKOptions.allCases
+    private var items: [SKOptions] = [
+        .init(title: "查看沙盒") { vc in
+            Haptic.impact(.medium).generate()
+            let newvc = _SKFoldVC()
+            newvc.title = "Sandbox"
+            newvc.parentPath = NSHomeDirectory()
+            vc.navigationController?.pushViewController(newvc, animated: true)
+        }
+    ]
 }
 
 // MARK: - Delegate
+extension OptionsViewController: SKSOptionHandler {
+    func addOption(_ title: String, action: @escaping (UIViewController) -> Void) {
+        items.append(.init(title: title, action: action))
+    }
+    func reloadIfNeeded() {
+        if isViewLoaded {
+            tableView.reloadData()
+        }
+    }
+}
 extension OptionsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         items.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: SKCaseCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.textLabel?.text = String(format: "%02d. ", indexPath.row) + items[indexPath.row].rawValue
+        cell.textLabel?.text = String(format: "%02d. ", indexPath.row) + items[indexPath.row].title
         return cell
     }
 }
 extension OptionsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        items[indexPath.row].perform(from: self)
+        items[indexPath.row].action(self)
     }
 }

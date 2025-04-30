@@ -61,7 +61,7 @@ fileprivate class _NavigationController: UINavigationController {
         super.viewDidLoad()
         setNavigationBarHidden(true, animated: false)
     }
-} 
+}
 
 fileprivate class _TabBarController: UITabBarController {
      
@@ -81,7 +81,7 @@ fileprivate class _TabBarController: UITabBarController {
             bar.tintColor = .white
             bar.isTranslucent = true
             bar.barStyle = .black
-        } 
+        }
           
         addChild(LogViewController.self, "日志")
         addChild(OptionsViewController.self, "选项")
@@ -183,7 +183,7 @@ extension SKWindow {
     @objc func longGestureAction(_ gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             Haptic.impact(.medium).generate()
-            container.isHidden = true
+            isHidden = true
         }
     }
     @objc func panGestureAction(_ gesture: UIPanGestureRecognizer) {
@@ -205,20 +205,30 @@ extension SKWindow {
 }
 
 public enum SKS {
-    fileprivate static var window = SKWindow(frame: UIScreen.main.bounds)
+    private static var _window: SKWindow? = nil
+    private static var window: SKWindow {
+        _window ?<< SKWindow(frame: UIScreen.main.bounds)
+    }
+    
+    private static func rootVC(at index: Int) -> UIViewController? {
+        guard let tabvc = _window?.rootViewController as? UITabBarController else { return nil }
+        return (tabvc.viewControllers?[safe: index] as? UINavigationController)?.viewControllers.first
+    }
     
     public static var isEnable: Bool {
-        get { !window.isHidden }
+        get { !(_window?.isHidden ?? true) }
         set {
             window.isHidden = !newValue
         }
     }
     
     public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        guard let tabvc = window.rootViewController as? UITabBarController else { return }
-        guard let logvc = (tabvc.viewControllers?.first as? UINavigationController)?.viewControllers.first as? LogViewController else { return }
-        logvc.loadViewIfNeeded()
-//        window.isHidden = false
+        guard let logvc = rootVC(at: 0) as? LogViewController else { return }
         logvc.log(string, level: level, tags: tags)
+    }
+    public static func makeScreenOptions(_ make: (_ maker: SKSOptionHandler) -> Void) {
+        guard let opvc = rootVC(at: 1) as? OptionsViewController else { return }
+        make(opvc)
+        opvc.reloadIfNeeded()
     }
 }
