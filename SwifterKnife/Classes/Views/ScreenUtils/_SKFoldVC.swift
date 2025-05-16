@@ -29,6 +29,12 @@ class _SKFoldVC: _BaseViewController {
         return str + " \(Int(round(Double(size) / 1024.0)))KB"
     }) ?? []
 }
+fileprivate extension String {
+    func xxtruncated() -> String {
+        if count <= 29 { return self }
+        return self[startIndex..<index(startIndex, offsetBy: 10)] + "..." + self[index(endIndex, offsetBy: -16)...]
+    }
+}
 // MARK: - Delegate
 extension _SKFoldVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -36,7 +42,7 @@ extension _SKFoldVC: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: SKCaseCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.textLabel?.text = items[indexPath.row]
+        cell.textLabel?.text = items[indexPath.row].xxtruncated()
         return cell
     }
 }

@@ -93,10 +93,12 @@ public enum SandBox {
         let dstPath = (folder as NSString).appendingPathComponent((path as NSString).lastPathComponent)
         try FileManager.default.moveItem(atPath: path, toPath: dstPath)
     }
-    public static func copyItem(at path: String, to folder: String) throws {
-        if path.hasPrefix(folder) { return }
+    @discardableResult
+    public static func copyItem(at path: String, to folder: String) throws -> String {
+        if path.hasPrefix(folder) { return path }
         let dstPath = (folder as NSString).appendingPathComponent((path as NSString).lastPathComponent)
         try FileManager.default.copyItem(atPath: path, toPath: dstPath)
+        return dstPath
     }
      
     @discardableResult

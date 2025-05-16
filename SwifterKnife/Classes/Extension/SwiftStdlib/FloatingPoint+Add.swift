@@ -92,7 +92,33 @@ public extension FloatingPoint where Self: CVarArg {
 }
 
 
-
+/*
+ .toNearestOrAwayFromZero (默认)
+ 四舍五入（学校常用的舍入方式）
+ 当小数部分正好为 0.5 时，向远离零的方向舍入
+ 示例：3.5 → 4.0, -3.5 → -4.0
+ 
+ .toNearestOrEven (银行家舍入法)
+ 向最近的整数舍入
+ 当小数部分正好为 0.5 时，向最近的偶数舍入
+ 示例：3.5 → 4.0, 4.5 → 4.0, -2.5 → -2.0
+ 
+ .up
+ 向正无穷方向舍入（向上取整）
+ 示例：3.2 → 4.0, -3.2 → -3.0
+ 
+ .down
+ 向负无穷方向舍入（向下取整）
+ 示例：3.8 → 3.0, -3.8 → -4.0
+ 
+ .towardZero
+ 向零方向舍入（截断小数部分）
+ 示例：3.8 → 3.0, -3.8 → -3.0
+ 
+ .awayFromZero
+ 远离零方向舍入
+ 示例：3.2 → 4.0, -3.2 → -4.0
+ */
 public extension BinaryFloatingPoint {
     var isInteger: Bool {
         return Darwin.floor(self) == self

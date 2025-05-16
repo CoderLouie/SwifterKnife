@@ -22,6 +22,17 @@ public struct Language: RawRepresentable, Equatable, Hashable {
     public var direction: Locale.LanguageDirection {
         Locale.characterDirection(forLanguage: rawValue)
     }
+    
+    
+    public static var preferredFirst: Language? {
+        guard let code = Locale.preferredLanguages.first else { return nil }
+        var cmps = (code as NSString).components(separatedBy: "-")
+        guard cmps.count > 1 else {
+            return .init(rawValue: code)
+        }
+        cmps.removeLast()
+        return .init(rawValue: cmps.joined(separator: "-"))
+    }
 }
 
 
@@ -101,19 +112,35 @@ public final class Lan {
             UserDefaults.standard.set(newValue?.rawValue, forKey: "CurrentLanguageCodeKey")
         }
     }
-    private var preferredLanguage: Language? {
+    public var preferredLanguage: Language? {
         guard let code = bundle.preferredLocalizations.first,
                 !code.isEmpty else {
             return nil
         }
         return Language(rawValue: code)
     }
-     
+    
+    public func bestMatch() -> String? {
+        let avails = bundle.localizations
+        if let code = bundle.preferredLocalizations.first ?? Locale.preferredLanguages.first {
+            let matches = avails.filter {
+                code.hasPrefix($0)
+            }
+            return matches.max { $0.count < $1.count }
+        }
+        return nil
+    }
+    
     private var _current: Language?
     public var current: Language {
         get {
             if let tmp = _current { return tmp }
-            let lan = cachedLanguage ?? preferredLanguage ?? `default`
+            let lan = cachedLanguage ?? {
+                if let code = bestMatch() {
+                    return .init(rawValue: code)
+                }
+                return `default`
+            }()
             _current = lan
             return lan
         }
@@ -127,4 +154,5 @@ public final class Lan {
             }
         }
     }
-} 
+}
+
