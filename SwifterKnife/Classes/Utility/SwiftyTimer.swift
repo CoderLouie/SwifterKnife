@@ -183,17 +183,16 @@ extension TimeInterval {
  
 public class DelayTimer {
     private var source: DispatchSourceTimer?
-    private var work: (() -> Void)?
+    private var work: ((TimeInterval) -> Void)?
     private var timestamp: CFTimeInterval = 0
     private var interval: TimeInterval
-    public init(after interval: TimeInterval, work: @escaping () -> Void) {
+    public init(after interval: TimeInterval, work: @escaping (TimeInterval) -> Void) {
         self.interval = interval
         self.work = work
-        self.source = makeTimer(interval)
+        self.source = makeTimer()
     }
-    private func makeTimer(_ interval: TimeInterval) -> DispatchSourceTimer {
+    private func makeTimer() -> DispatchSourceTimer {
         let source = DispatchSource.makeTimerSource(queue: .main)
-        source.schedule(deadline: .now() + interval, repeating: interval)
         source.setEventHandler { [weak self] in
             self?.fire()
         }
@@ -201,30 +200,34 @@ public class DelayTimer {
     }
     public func active() {
         timestamp = CACurrentMediaTime()
-        source?.activate()
+        source?.schedule(deadline: .now() + interval, repeating: interval)
+        source?.resume()
     }
     private func fire() {
         let closure = work
         work = nil
         invalid()
-        closure?() 
+        closure?(interval)
     }
-    public func pause() {
-        guard isValid else { return }
+    @discardableResult
+    public func pause() -> TimeInterval {
+        guard isValid else { return -1 }
         let cost = CACurrentMediaTime() - timestamp
         let left = interval - cost
-        guard left > 0 else { return }
+        guard left > 0 else { return -1 }
         invalid()
         interval = left
+        return left
     }
-    public func resume() {
-        guard isValid else { return }
-        guard interval > 0 else { return }
-        source = makeTimer(interval)
+    @discardableResult
+    public func resume() -> TimeInterval {
+        guard isPaused else { return -1 }
+        guard interval > 0 else { return -1 }
+        source = makeTimer()
         active()
+        return interval
     }
     public func invalid() {
-        work = nil
         source?.cancel()
         source = nil
     }
