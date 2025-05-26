@@ -181,3 +181,55 @@ extension TimeInterval {
     public var days: TimeInterval { return self * 3600 * 24 }
 }
  
+public class DelayTimer {
+    private var source: DispatchSourceTimer?
+    private var work: (() -> Void)?
+    private var timestamp: CFTimeInterval = 0
+    private var interval: TimeInterval
+    public init(after interval: TimeInterval, work: @escaping () -> Void) {
+        self.interval = interval
+        self.work = work
+        self.source = makeTimer(interval)
+    }
+    private func makeTimer(_ interval: TimeInterval) -> DispatchSourceTimer {
+        let source = DispatchSource.makeTimerSource(queue: .main)
+        source.schedule(deadline: .now() + interval, repeating: interval)
+        source.setEventHandler { [weak self] in
+            self?.fire()
+        }
+        return source
+    }
+    public func active() {
+        timestamp = CACurrentMediaTime()
+        source?.activate()
+    }
+    private func fire() {
+        let closure = work
+        work = nil
+        invalid()
+        closure?() 
+    }
+    public func pause() {
+        guard isValid else { return }
+        let cost = CACurrentMediaTime() - timestamp
+        let left = interval - cost
+        guard left > 0 else { return }
+        invalid()
+        interval = left
+    }
+    public func resume() {
+        guard isValid else { return }
+        guard interval > 0 else { return }
+        source = makeTimer(interval)
+        active()
+    }
+    public func invalid() {
+        work = nil
+        source?.cancel()
+        source = nil
+    }
+    public var isValid: Bool { source != nil && work != nil }
+    public var isPaused: Bool {
+        source == nil && work != nil
+    }
+}

@@ -39,7 +39,29 @@ fileprivate func PromiseRetry<T>(
 }
 
 public enum Promises { 
-    
+    public static func any<T>(_ promises: [Promise<T>], cond: @escaping (T) -> Bool) -> Promise<(Int, Bool)?> {
+        return Promise { fulfill, reject in
+            guard !promises.isEmpty else {
+                fulfill((-1, false))
+                return
+            }
+            for (idx, promise) in promises.enumerated() {
+                promise.then { val in
+                    if cond(val) {
+                        fulfill((idx, true))
+                        return
+                    }
+                    if promises.allSatisfy(\.isFulfilled) {
+                        fulfill((idx, false))
+                    }
+                } onRejected: { error in
+                    if promises.allSatisfy(\.isRejected) {
+                        fulfill(nil)
+                    }
+                }
+            }
+        }
+    }
     /// Wait for all the promises you give it to fulfill, and once they have, fulfill itself
     /// with the array of all fulfilled values.
     public static func all<T>(_ promises: [Promise<T>]) -> Promise<[T]> {
