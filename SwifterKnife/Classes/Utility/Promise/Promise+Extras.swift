@@ -39,7 +39,7 @@ fileprivate func PromiseRetry<T>(
 }
 
 public enum Promises { 
-    public static func any<T>(_ promises: [Promise<T>], cond: @escaping (T) -> Bool) -> Promise<(Int, Bool)?> {
+    public static func any<T>(_ promises: [Promise<T>], cond: @escaping (Int, T) -> Bool) -> Promise<(Int, Bool)?> {
         return Promise { fulfill, reject in
             guard !promises.isEmpty else {
                 fulfill((-1, false))
@@ -47,7 +47,7 @@ public enum Promises {
             }
             for (idx, promise) in promises.enumerated() {
                 promise.then { val in
-                    if cond(val) {
+                    if cond(idx, val) {
                         fulfill((idx, true))
                         return
                     }

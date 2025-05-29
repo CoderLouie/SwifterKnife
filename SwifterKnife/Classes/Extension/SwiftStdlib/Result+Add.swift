@@ -51,6 +51,15 @@ public extension Result {
             onFailure(error)
         }
     }
+    func typeMap<T>(onSuccess: (Success) -> T,
+                onFailure: (Failure) -> T) -> T {
+        switch self {
+        case let .success(value):
+            onSuccess(value)
+        case let .failure(error):
+            onFailure(error)
+        }
+    }
     
     /// Evaluates the specified closure when the `Result` is a success, passing the unwrapped value as a parameter.
     ///

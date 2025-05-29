@@ -156,3 +156,14 @@ public final class Lan {
     }
 }
 
+extension Lan {
+    public static var locale: String {
+        guard let lan = Locale.preferredLanguages.first else {
+            return ""
+        }
+        var cmps = lan.components(separatedBy: CharacterSet(charactersIn: "-"))
+        if cmps.count == 1 { return lan }
+        cmps.removeLast()
+        return cmps.joined(separator: "-")
+    }
+}
