@@ -186,6 +186,7 @@ public class DelayTimer {
     private var work: ((TimeInterval) -> Void)?
     private var timestamp: CFTimeInterval = 0
     private var interval: TimeInterval
+    private var pauseCount = 0
     public init(after interval: TimeInterval, work: @escaping (TimeInterval) -> Void) {
         self.interval = interval
         self.work = work
@@ -211,6 +212,10 @@ public class DelayTimer {
     }
     @discardableResult
     public func pause() -> TimeInterval {
+        if isPaused {
+            pauseCount += 1
+            return -1
+        }
         guard isValid else { return -1 }
         let cost = CACurrentMediaTime() - timestamp
         let left = interval - cost
@@ -221,6 +226,10 @@ public class DelayTimer {
     }
     @discardableResult
     public func resume() -> TimeInterval {
+        if pauseCount > 0 {
+            pauseCount -= 1
+            return -1
+        }
         guard isPaused else { return -1 }
         guard interval > 0 else { return -1 }
         source = makeTimer()
