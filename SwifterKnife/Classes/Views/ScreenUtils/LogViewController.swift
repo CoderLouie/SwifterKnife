@@ -219,6 +219,10 @@ fileprivate class _LogTextView: UITextView {
 }
 
 extension _LogTextView: UITextInputDelegate {
+    @available(iOS 18.4, *)
+    func conversationContext(_ context: UIConversationContext?, didChange textInput: (any UITextInput)?) {
+    }
+    
     @discardableResult
     func justHiddenPopMenu() -> Bool {
         guard popMenu != nil else { return false }
