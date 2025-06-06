@@ -47,6 +47,23 @@ extension _SKFoldVC: UITableViewDataSource {
     }
 }
 import QuickLook
+/*
+extension _SKFoldVC: QLPreviewControllerDelegate {
+    func previewController(_ controller: QLPreviewController, editingModeFor previewItem: any QLPreviewItem) -> QLPreviewItemEditingMode {
+//        if let url = previewItem.previewItemURL, url.pathExtension == "json" {
+//            var json = try? JSON(fileURL: url)
+//            json?["layers"].arrayObject?.removeLast()
+//            if let data = try? json?.rawData(options: [.prettyPrinted]) {
+//                try? data.write(to: url)
+//            }
+//        }
+        return .updateContents
+    }
+    func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: any QLPreviewItem, at modifiedContentsURL: URL) {
+        
+    }
+}
+*/
 extension _SKFoldVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

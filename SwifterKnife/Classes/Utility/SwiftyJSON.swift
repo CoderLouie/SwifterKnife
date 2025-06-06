@@ -210,11 +210,11 @@ public enum JSON {
         if type == other.type {
             switch self {
             case .dictionary:
-                for (key, _) in other {
-                    try self[key].merge(with: other[key], typecheck: false)
+                for (key, value) in other {
+                    try self[key: key].merge(with: value, typecheck: false)
                 }
             case .array:
-                self = JSON(arrayValue + other.arrayValue)
+                self = JSON(arrayObjs + other.arrayObjs)
             default:
                 self = other
             }
@@ -457,7 +457,7 @@ extension JSON {
      
      Example:
      
-     ```
+     ```swift
      let json = JSON(data)
      let path = [9,"list","person","name"]
      let name = json[path]
@@ -535,10 +535,14 @@ extension JSON {
      Find a json in the complex data structures by using array of Int and/or String as path.
      
      - parameter path: The target json's path. Example:
-     
+     ```swift
      let name = json[9,"list","person","name"]
+     ```
      
-     The same as: let name = json[9]["list"]["person"]["name"]
+     The same as:
+     ```swift
+     let name = json[9]["list"]["person"]["name"]
+     ```
      
      - returns: Return a json found by the path or a null json with error
      */
@@ -678,8 +682,7 @@ extension JSON: Swift.ExpressibleByFloatLiteral {
 }
 extension JSON: Swift.ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (String, Any)...) {
-        let dictionary = elements.reduce(into: [String: Any](), { $0[$1.0] = $1.1})
-        self = .dictionary(dictionary)
+        self = .dictionary(.init(elements, uniquingKeysWith: { $1 }))
     }
 }
 extension JSON: Swift.ExpressibleByArrayLiteral {
@@ -792,6 +795,10 @@ extension JSON {
             else { self = .null }
         }
     }
+    public var arrayObjs: [Any] {
+        get { arrayObject ?? [] }
+        set { self = .array(newValue) }
+    }
 }
 
 // MARK: - Dictionary
@@ -801,11 +808,7 @@ extension JSON {
     //Optional [String : JSON]
     public var dictionary: [String: JSON]? {
         if case .dictionary(let dict) = self {
-            var d = [String: JSON](minimumCapacity: dict.count)
-            dict.forEach { pair in
-                d[pair.key] = JSON(pair.value)
-            }
-            return d
+            return dict.mapValues(JSON.init(_:))
         }
 //        if case .string(let string) = self {
 //            return JSON(parseJSON: string).dictionary
@@ -831,6 +834,10 @@ extension JSON {
             if let v = newValue { self = .dictionary(v) }
             else { self = .null }
         }
+    }
+    public var dictionaryObj: [String: Any] {
+        get { dictionaryObject ?? [:] }
+        set { self = .dictionary(newValue) }
     }
 }
 
