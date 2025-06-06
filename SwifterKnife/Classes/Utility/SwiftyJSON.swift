@@ -111,30 +111,7 @@ public enum JSON {
             self.init(jsonObject: object)
         }
     }
-    
-    /**
-     Parses the JSON string into a JSON object
      
-     - parameter json: the JSON string
-     
-     - returns: the created JSON object
-     */
-    public init(parseJSON jsonString: String) {
-        let str = jsonString.trimmed
-        guard str.hasPrefix("{") || str.hasPrefix("[") else {
-            self = .error(.invalidJSON)
-            return
-        }
-        if let data = str.data(using: .utf8) {
-            do {
-                try self.init(data: data)
-            } catch {
-                self = .error(.invalidJSON)
-            }
-        } else {
-            self = .null
-        }
-    }
     
     /**
      Creates a JSON using the object.
@@ -158,6 +135,13 @@ public enum JSON {
                 self = .number(number)
             }
         case let string as String:
+            let str = string.trimmed
+            if str.hasPrefix("{") || str.hasPrefix("["),
+               let data = str.data(using: .utf8),
+               let j = try? JSON(data: data) {
+                self = j
+                return
+            }
             self = .string(string)
         case let arr as [Any]:
             self = .array(arr)
@@ -489,49 +473,6 @@ extension JSON {
     }
     
     /**
-     ["bags": [
-         1, 2, [["a", "b", "c",
- """
- ["A","B","C"]
- """],
- """
- {"name":["xiao","ming"],"xing":["hua","ha"]}
- """]]]
-     json[nested: "bags[2][1].xing[0]"] -> ("xing", JSON("hua"))
-     */
-    public subscript(nested key: String) -> Element {
-        guard let val = useNestedValue() else {
-            return ("", JSON(error: .wrongType))
-        }
-        guard let pair = Nested.sub(from: val, key: key) else {
-            return ("", .error(.notExist))
-        }
-        return (pair.key, JSON(pair.value))
-    }
-    public func pickNested(keys: String...) -> [String: Any] {
-        guard let val = useNestedValue() else {
-            return [:]
-        }
-        return keys.reduce(into: [String: Any]()) { result, key in
-            guard let pair = Nested.sub(from: val, key: key) else { return }
-            result[pair.key] = pair.value
-        }
-    }
-    private func useNestedValue() -> Any? {
-        switch self {
-        case .dictionary, .array, .string:
-            var val = rawValue
-            if let _ = val as? String,
-               !Nested.transformIfNeed(&val) {
-                return nil
-            }
-            return val
-        case .number, .bool: return nil
-        case .null, .error: return nil
-        }
-    }
-    
-    /**
      Find a json in the complex data structures by using array of Int and/or String as path.
      
      - parameter path: The target json's path. Example:
@@ -549,36 +490,6 @@ extension JSON {
     public subscript(path: JSONSubscriptType...) -> JSON {
         get { self[path] }
         set { self[path] = newValue }
-    }
-    
-    public subscript(parse key: String) -> JSON {
-        guard case .dictionary(let dict) = self else {
-            return orError(.wrongType)
-        }
-        if let o = dict[key] {
-            if let str = o as? String {
-                let parseV = JSON(parseJSON: str)
-                return parseV.isValid ? parseV : .string(str)
-            }
-            return JSON(o)
-        } else {
-            return .error(.notExist)
-        }
-    }
-    public subscript(parse index: Int) -> JSON {
-        guard case .array(let array) = self else {
-            return orError(.wrongType)
-        }
-        if array.indices.contains(index) {
-            let o = array[index]
-            if let str = o as? String {
-                let parseV = JSON(parseJSON: str)
-                return parseV.isValid ? parseV : .string(str)
-            }
-            return JSON(o)
-        } else {
-            return .error(.indexOutOfBounds)
-        }
     }
     
     public subscript(caseInsensitive key: String) -> JSON {
@@ -1559,74 +1470,3 @@ extension JSON {
     }
 }
 
-
-fileprivate enum Nested {
-    @discardableResult
-    static func transformIfNeed(_ json: inout Any) -> Bool {
-        guard let str = (json as? String)?.trimmed else { return false }
-        guard str.hasPrefix("{") || str.hasPrefix("[") else { return false }
-        guard let data = str.data(using: .utf8),
-              let o = try? JSONSerialization.jsonObject(with: data) else { return false }
-        json = o
-        return true
-    }
-    static func sub(from json: Any, key: String) -> (key: String, value: Any)? {
-        var data: Any = json
-        var retKey = ""
-        for item in key.components(separatedBy: .init(charactersIn: ".")) {
-            if item.isEmpty { continue }
-            if let idx = item.firstIndex(of: "[") {
-                let subKey = String(item[..<idx])
-                if !subKey.isEmpty {
-                    guard let dict = data as? [String: Any],
-                          let o = dict[subKey] else { return nil }
-                    retKey = subKey
-                    data = o
-                    transformIfNeed(&data)
-                }
-                var subItem = String(item[idx...])
-                while let idx1 = subItem.firstIndex(of: "["),
-                      let idx2 = subItem.firstIndex(of: "]") {
-                    guard let i = Int(subItem[subItem.index(after: idx1)..<idx2]) else { return nil }
-                    
-                    guard let array = data as? [Any], !array.isEmpty else { return nil }
-                    let n = array.count
-                    guard (-n..<n).contains(i) else { return nil }
-                    if i >= 0 { data = array[i] }
-                    else { data = array[n + i] }
-                    transformIfNeed(&data)
-                    subItem = String(subItem[subItem.index(after: idx2)...])
-                }
-            } else {
-                guard let dict = data as? [String: Any],
-                      let o = dict[item] else { return nil }
-                data = o
-                transformIfNeed(&data)
-                retKey = item
-            }
-        }
-        return (retKey, data)
-    }
-}
-extension Dictionary where Key == String, Value == Any {
-    public subscript(nested key: Key) -> Element? {
-        return Nested.sub(from: self, key: key)
-    }
-    public func pickNested(keys: Key...) -> [Key: Value] {
-        keys.reduce(into: [Key: Value]()) { result, key in
-            guard let pair = self[nested: key] else { return }
-            result[pair.key] = pair.value
-        }
-    }
-}
-extension Array where Element == Any {
-    public subscript(nested key: String) -> (key: String, value: Any)? {
-        return Nested.sub(from: self, key: key)
-    }
-    public func pickNested(keys: String...) -> [String: Any] {
-        keys.reduce(into: [String: Any]()) { result, key in
-            guard let pair = self[nested: key] else { return }
-            result[pair.key] = pair.value
-        }
-    }
-}

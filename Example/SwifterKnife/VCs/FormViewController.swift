@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwifterKnife
 
 class TitleCell: FormTouchCell {
     override func setup() {
@@ -80,14 +81,10 @@ class FormViewController: BaseViewController {
         super.setupViews()
         
         let age = 10
-        let newAge = buildResult {
-//            if age > 20 { 30 }
-//            else { 10 }
-            switch age {
-            case 30: 20
-            case 10..<30: 10
-            default: 5
-            }
+        let newAge = switch age {
+        case 30: 20
+        case 10..<30: 10
+        default: 5
         }
         
         let _: NSAttributedString = attributed {

@@ -209,8 +209,8 @@ fileprivate enum TestCase: String, CaseIterable {
 //            vc.navigationController?.pushViewController(nextVc, animated: true)
             let num: Int? = 3
             print("\(op: num, or: "none")")
-            testConsole()
-            testJSON()
+//            testConsole()
+            testJSON2()
 //            Haptic.vibrate()
             
 //            let a: Int?? = Optional<Int>.some(3)
@@ -262,6 +262,20 @@ fileprivate enum TestCase: String, CaseIterable {
 //        weaArr.append(.init())
 //        let vc = weaArr[weak: 10]
     }
+    private func testJSON2() {
+        let dict: [String: Any] = ["bags": [
+            1, 2, [["a", "b", "c",
+    """
+    ["A","B","C"]
+    """],
+    """
+    {"name":["xiao","ming"],"xing":["hua","ha"]}
+    """]]]
+        let json = JSON(dict)
+        // ("xing", JSON("hua"))
+        let p1 = json["bags", 2, 1, "xing", 0]
+        print(p1)
+    }
     private func testJSON() {
 //        let str = """
 //{"error_code":0,"data":{"task_id":6,"graphics_type":43,"status":3,"process_result":"{\"error_code\":0,\"data\":{\"request_id\":\"vd.43.9a4c89f798daaee66095514fa03f4221174ef83c\",\"result_list\":[{\"style_code\":\"c57c2afd03a144e5\",\"strength\":0.0,\"generate_size\":1,\"image_list\":[\"http://osscdn-va.changxinteam.com/graphics2/portrait/temp/2023-12-13/2c50454d-1c0f-4464-9e41-79d3815f5004.jpg\"]}]}}"}}
@@ -277,7 +291,7 @@ fileprivate enum TestCase: String, CaseIterable {
         ]
         let json = JSON(dict)
         let dataJSON = json["data"]
-        let resultJSON = dataJSON[parse: "process_result"]
+        let resultJSON = dataJSON["process_result"]
         let resultDataJSON = resultJSON["data"]
         print(resultJSON["error_code"].intValue,
               resultDataJSON["request_id"].stringValue,
