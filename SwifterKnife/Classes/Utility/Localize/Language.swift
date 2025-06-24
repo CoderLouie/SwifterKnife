@@ -14,9 +14,25 @@ public struct Language: RawRepresentable, Equatable, Hashable {
         self.rawValue = rawValue
     }
     
+    public func displayName(use localeIdentifier: String) -> String? {
+        return NSLocale(localeIdentifier: localeIdentifier).displayName(forKey: .identifier, value: rawValue)
+    }
+    
     public var displayName: String? {
-        let locale = NSLocale(localeIdentifier: rawValue)
-        return locale.displayName(forKey: .identifier, value: rawValue)
+        return displayName(use: rawValue)
+    }
+    
+    public var code: String? {
+        guard let zhname = displayName(use: "zh-Hans"),
+              let enname = displayName(use: "en") else {
+            return nil
+        }
+        let fname = rawValue.replacingOccurrences(of: "-", with: "")
+        return
+"""
+/// \(zhname) \(enname)
+static var \(fname): Language { .init(rawValue: "\(rawValue)") }
+"""
     }
     
     public var direction: Locale.LanguageDirection {
@@ -120,13 +136,13 @@ public final class Lan {
         return Language(rawValue: code)
     }
     
-    public func bestMatch() -> String? {
+    public func bestMatch(for code: String? = nil) -> Language? {
         let avails = bundle.localizations
-        if let code = bundle.preferredLocalizations.first ?? Locale.preferredLanguages.first {
+        if let code = code ?? bundle.preferredLocalizations.first ?? Locale.preferredLanguages.first {
             let matches = avails.filter {
                 code.hasPrefix($0)
             }
-            return matches.max { $0.count < $1.count }
+            return matches.max { $0.count < $1.count }.map { Language(rawValue: $0) }
         }
         return nil
     }
@@ -135,12 +151,7 @@ public final class Lan {
     public var current: Language {
         get {
             if let tmp = _current { return tmp }
-            let lan = cachedLanguage ?? {
-                if let code = bestMatch() {
-                    return .init(rawValue: code)
-                }
-                return `default`
-            }()
+            let lan = cachedLanguage ?? bestMatch() ?? `default`
             _current = lan
             return lan
         }
@@ -153,6 +164,12 @@ public final class Lan {
                 NotificationCenter.default.post(name: Self.didChangeNotification, object: nil, userInfo: nil)
             }
         }
+    }
+}
+
+extension Lan {
+    public func generateCodeString() -> String {
+        available().compactMap(\.code).joined(separator: "\n")
     }
 }
 

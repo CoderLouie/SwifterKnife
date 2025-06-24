@@ -229,6 +229,15 @@ public extension Sequence where Element: AdditiveArithmetic {
     }
 }
 
+extension Sequence {
+    public func toRaws<R: RawRepresentable>() -> [R] where R.RawValue == Element {
+        compactMap { R(rawValue: $0) }
+    }
+    public func toRaws<R: RawRepresentable>() -> [R] where Element == Optional<R.RawValue>  {
+        compactMap { R.create($0) }
+    }
+}
+
 @inlinable public func indexSequence<T>(first: T, next: @escaping (Int, T) -> T?) -> UnfoldFirstSequence<T> {
     var index = 0
     return sequence(first: first) {

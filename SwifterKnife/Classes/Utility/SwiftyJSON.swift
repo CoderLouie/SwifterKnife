@@ -136,7 +136,8 @@ public enum JSON {
             }
         case let string as String:
             let str = string.trimmed
-            if str.hasPrefix("{") || str.hasPrefix("["),
+            if ((str.hasPrefix("{") && str.hasSuffix("}")) ||
+                (str.hasPrefix("[") && str.hasSuffix("]"))),
                let data = str.data(using: .utf8),
                let j = try? JSON(data: data) {
                 self = j
