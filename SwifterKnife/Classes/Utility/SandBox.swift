@@ -274,17 +274,20 @@ public enum SandBox {
         return res
     }
     
-    public static func allFiles(in fold: URL, isInclude: (_ fileURL: URL) -> Bool) -> [URL] {
+    public static func allFiles<T>(in fold: URL, isInclude: (_ fileURL: URL) -> T?) -> [T] {
         let manager = FileManager.default
         var isDirectory: ObjCBool = false
-        guard let contents = try? manager.contentsOfDirectory(atPath: fold.path) else { return [] }
-        var res: [URL] = []
+        let contents = (try? manager.contentsOfDirectory(atPath: fold.path).sorted {
+            $0.localizedStandardCompare($1) == .orderedAscending
+        }) ?? []
+        if contents.isEmpty { return [] }
+        var res: [T] = []
         for item in contents where !item.hasPrefix(".") {
             let url = fold.appendingPathComponent(item)
-            guard manager.fileExists(atPath: fold.path, isDirectory: &isDirectory) else { continue }
+            guard manager.fileExists(atPath: url.path, isDirectory: &isDirectory) else { continue }
             if isDirectory.boolValue { continue }
-            if isInclude(url) {
-                res.append(url)
+            if let item = isInclude(url) {
+                res.append(item)
             }
         }
         return res

@@ -40,3 +40,5 @@ extension Noticeable where Self: RawRepresentable, Self.RawValue == String {
         .init(rawValue: rawValue)
     }
 }
+
+

@@ -84,17 +84,12 @@ open class CarouselView: UIView {
     private unowned var nextCell: CarouselViewCell!
     /// 数据源数量
     open var itemsCount: Int = 2 {
-//        willSet {
-//            guard newValue > 1 else {
-//                fatalError("the items count should be at least 2")
-//            }
-//        }
         didSet {
             if itemsCount < 2 { return }
             if itemsCount == oldValue { return }
             if isFirstLayout { return }
             
-            targetIndex = nil
+            targetParam = nil
             currentIndex = 0
             nextIndex = 1
             
@@ -117,7 +112,7 @@ open class CarouselView: UIView {
     }
     
     private var side: CGFloat = 0
-    private var targetIndex: Int?
+    private var targetParam: (Int, Bool)?
     
     fileprivate func didTouchCell(_ cell: CarouselViewCell) {
         delegate?.carouselView?(self, didSelect: cell, at: currentIndex)
@@ -133,9 +128,10 @@ open class CarouselView: UIView {
         didSet {
             guard oldValue != direction else { return }
             guard direction != .none else { return }
+            print("[SetDirection] \(direction)")
             switch direction {
             case .forward:
-                nextIndex = targetIndex ?? (currentIndex + 1)
+                nextIndex = targetParam?.0 ?? (currentIndex + 1)
                 if nextIndex >= itemsCount {
                     nextIndex = 0
                 }
@@ -149,7 +145,7 @@ open class CarouselView: UIView {
             case .fastForward:
                 reset()
             case .backward:
-                nextIndex = targetIndex ?? (currentIndex - 1)
+                nextIndex = targetParam?.0 ?? (currentIndex - 1)
                 if nextIndex < 0 {
                     nextIndex = itemsCount - 1
                 }
@@ -215,9 +211,12 @@ open class CarouselView: UIView {
             $0.clipsToBounds = true
             scrollView.addSubview($0)
         }
-        
-        delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
-        delegate?.carouselView?(self, didAppear: currentCell, at: currentIndex)
+        if let p = targetParam {
+            scrollToIndex(p.0, animated: p.1)
+        } else {
+            delegate?.carouselView?(self, willAppear: currentCell, at: currentIndex)
+            delegate?.carouselView?(self, didAppear: currentCell, at: currentIndex)
+        }
     }
 }
 
@@ -241,27 +240,40 @@ extension CarouselView {
     }
     
     /// 滚动到指定位置
-    public func scrollToIndex(_ index: Int) {
+    public func scrollToIndex(_ index: Int, animated: Bool = true) {
         guard index >= 0 else { return }
         let idx = index % itemsCount
         guard currentIndex != idx else { return }
-        targetIndex = idx
+        targetParam = (idx, animated)
+        if isFirstLayout { return }
         if idx > currentIndex {
-            forward()
+            forward(animated: animated)
         } else {
-            backward()
+            backward(animated: animated)
+        }
+        guard !animated else { return }
+        let offset = isHorizontal ?
+            scrollView.contentOffset.x :
+            scrollView.contentOffset.y
+         
+        if offset > side {
+            direction = .forward
+        } else if offset < side {
+            direction = .backward
+        }
+        scrollingDidEnd()
+    }
+    
+    public func forward(animated: Bool) {
+        if isHorizontal {
+            scrollView.setContentOffset(CGPoint(x: side * 2, y: 0), animated: animated)
+        } else {
+            scrollView.setContentOffset(CGPoint(x: 0, y: side * 2), animated: animated)
         }
     }
     
-    public func forward() {
-        if isHorizontal {
-            scrollView.setContentOffset(CGPoint(x: side * 2, y: 0), animated: true)
-        } else {
-            scrollView.setContentOffset(CGPoint(x: 0, y: side * 2), animated: true)
-        }
-    }
-    public func backward() {
-        scrollView.setContentOffset(.zero, animated: true)
+    public func backward(animated: Bool) {
+        scrollView.setContentOffset(.zero, animated: animated)
     }
     /// 注册cell
     public func register<T: CarouselViewCell>(_ cellClass: T.Type) {
@@ -292,6 +304,8 @@ extension CarouselView: UIScrollViewDelegate {
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let p = targetParam, !p.1 { return }
+        
         guard scrollView.contentSize != .zero else {
             return
         }
@@ -329,7 +343,7 @@ extension CarouselView: UIScrollViewDelegate {
             scrollView.contentOffset = CGPoint(x: 0, y: side)
         }
         
-        targetIndex = nil
+        targetParam = nil
     }
 }
 
@@ -442,3 +456,4 @@ extension ATPageView: UICollectionViewDataSource {
         return cell
     }
 }
+

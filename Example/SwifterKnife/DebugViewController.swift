@@ -47,7 +47,13 @@ fileprivate class TestCaseCell: UITableViewCell, Reusable {
     }
 }
  
+
+fileprivate var cancel: AnyCancellable?
+import Combine
+extension DispatchWorkItem: Combine.Cancellable {}
 fileprivate enum TestCase: String, CaseIterable {
+    case combine
+    case cancell
     case negative = "敏感词汇"
     case shuffled
     case watermark
@@ -73,6 +79,18 @@ fileprivate enum TestCase: String, CaseIterable {
 //        let b = pick(in: [.codable: "a", .permission: "b"])
 //        "".filePath(under: .document)
         switch self {
+        case .combine:
+            cancel = AnyPublisher<Int, NetError>.callback { promise in
+                DispatchQueue.main.afterItem(3) {
+                    promise(.success(8))
+                }
+            }.print().sink { com in
+//                print("receive finish", com)
+            } receiveValue: { val in
+//                print("receive val", val)
+            }
+        case .cancell:
+            cancel?.cancel()
         case .shuffled:
             let v: Double = 3.0
             let int = 5
