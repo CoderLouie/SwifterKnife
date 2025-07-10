@@ -138,7 +138,7 @@ public final class Lan {
     
     public func bestMatch(for code: String? = nil) -> Language? {
         let avails = bundle.localizations
-        if let code = code ?? bundle.preferredLocalizations.first ?? Locale.preferredLanguages.first {
+        if let code = code ?? bundle.preferredLocalizations.first {
             let matches = avails.filter {
                 code.hasPrefix($0)
             }
@@ -171,8 +171,16 @@ extension Lan {
     public func generateCodeString() -> String {
         available().compactMap(\.code).joined(separator: "\n")
     }
+    public static var device: String? {
+        let key = "AppleLanguages"
+        let codes = UserDefaults.standard.array(forKey: key)
+        UserDefaults.standard.removeObject(forKey: key)
+        let val = Locale.preferredLanguages.first
+        UserDefaults.standard.set(codes, forKey: key)
+        return val
+    }
 }
-
+ 
 extension Lan {
     public static var locale: String {
         guard let lan = Locale.preferredLanguages.first else {
@@ -184,3 +192,4 @@ extension Lan {
         return cmps.joined(separator: "-")
     }
 }
+
