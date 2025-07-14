@@ -29,7 +29,10 @@ public extension CGRect {
         let origin = CGPoint(x: center.x - size.width / 2.0, y: center.y - size.height / 2.0)
         self.init(origin: origin, size: size)
     }
-
+    
+    init(top: CGFloat, left: CGFloat, bottom: CGFloat, right: CGFloat) {
+        self.init(x: left, y: top, width: right - left, height: bottom - top)
+    }
 }
 
 // MARK: - Methods

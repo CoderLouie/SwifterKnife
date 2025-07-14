@@ -8,7 +8,6 @@
 public enum JSONError: Int, Swift.Error {
     case unsupportedType = 999
     case indexOutOfBounds = 900
-    case elementTooDeep = 902
     case wrongType = 901
     case notExist = 500
     case invalidJSON = 490
@@ -35,8 +34,6 @@ extension JSONError: CustomNSError {
             return [NSLocalizedDescriptionKey: "Dictionary key does not exist."]
         case .invalidJSON:
             return [NSLocalizedDescriptionKey: "JSON is invalid."]
-        case .elementTooDeep:
-            return [NSLocalizedDescriptionKey: "Element too deep. Increase maxObjectDepth and make sure there is no reference loop."]
         }
     }
 }
