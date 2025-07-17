@@ -86,7 +86,7 @@ extension UIGestureRecognizer: TargetAction {
     }
 }
 
-private var controlClosureTargetKey: UInt8 = 0
+private var controlClosureTargetKey = false
 extension TargetAction {
     public func removeClosures(for event: UIControl.Event) {
         if event.isEmpty { return }
@@ -481,38 +481,60 @@ open class NewButton: UIButton {
 }
 
 
-public protocol Selectable: AnyObject {
+public protocol Selectable: TargetAction {
     var isSelected: Bool { get set }
 }
 extension UIControl: Selectable {}
 
 public protocol SelectableManager: AnyObject {
-    associatedtype SelectableType: Selectable
+    associatedtype Control: Selectable
     
-    var _selectedItem: SelectableType? { get set }
+    var _selectedControl: Control? { get set }
+    var isDeselectedEnable: Bool { get }
     
-    func selectedItemDidChange(to item: SelectableType?)
+    func selectedControlDidChange(from: Control?, to: Control?)
 }
-fileprivate var selectedItemKey: Bool = true
+fileprivate var selectedControlKey = true
 extension SelectableManager {
-    public var _selectedItem: SelectableType? {
-        get { 
-            objc_getAssociatedObject(self, &selectedItemKey) as? SelectableType
+    public var isDeselectedEnable: Bool { false }
+    
+    public var _selectedControl: Control? {
+        get {
+            objc_getAssociatedObject(self, &selectedControlKey) as? Control
         }
         set {
-            objc_setAssociatedObject(self, &selectedItemKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-    public var selectedItem: SelectableType? {
-        get { _selectedItem }
-        set {
-            if (_selectedItem === newValue) { return }
-            _selectedItem?.isSelected = false
-            newValue?.isSelected = true
-            _selectedItem = newValue
-            selectedItemDidChange(to: newValue)
+            objc_setAssociatedObject(self, &selectedControlKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     
-    public func selectedItemDidChange(to item: SelectableType?) {}
+    public func selectedItemDidChange(from: Control?, to: Control?) {}
+}
+extension SelectableManager {
+    
+    public func addTouchEvent(for control: Control?) {
+        control?.addTarget(closureTargets, action: #selector(ClosureTarget.onDidClick(_:_:)), for: .touchUpInside)
+    }
+    private var closureTargets: ClosureTarget {
+        if let obj = objc_getAssociatedObject(self, &controlClosureTargetKey) as? ClosureTarget {
+            return obj
+        }
+        let array = ClosureTarget(event: .touchUpInside) { [unowned self] sender, _ in
+            guard let newVal = sender as? Control else { return }
+            let oldVal = _selectedControl
+            if (oldVal === newVal) {
+                if isDeselectedEnable {
+                    oldVal?.isSelected = false
+                    _selectedControl = nil
+                    selectedItemDidChange(from: oldVal, to: nil)
+                }
+                return
+            }
+            oldVal?.isSelected = false
+            newVal.isSelected = true
+            _selectedControl = newVal
+            selectedItemDidChange(from: oldVal, to: newVal)
+        }
+        objc_setAssociatedObject(self, &controlClosureTargetKey, array, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return array
+    }
 }

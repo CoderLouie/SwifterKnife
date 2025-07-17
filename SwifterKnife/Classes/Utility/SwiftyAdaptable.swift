@@ -60,6 +60,22 @@ extension SwiftyAdaptable where Self: CGFloatConvertable {
         tramsform(cgfloatValue)
     }
 }
+extension SwiftyAdaptable {
+    public var sfloor: TargetType {
+        adaptive { $0.rounded(.down) }
+    }
+    public var sceil: TargetType {
+        adaptive { $0.rounded(.up) }
+    }
+}
+extension SwiftyAdaptable where TargetType: Equatable {
+    public func equalFloor(to other: Self) -> Bool {
+        sfloor == other.sfloor
+    }
+    public func equalCeil(to other: Self) -> Bool {
+        sceil == other.sceil
+    }
+}
 
 extension Int: SwiftyAdaptable {}
 extension Double: SwiftyAdaptable {}

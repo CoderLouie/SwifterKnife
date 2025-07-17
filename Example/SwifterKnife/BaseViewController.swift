@@ -16,6 +16,8 @@ class BaseViewController: UIViewController {
         setupViews()
     }
     func setupViews() {
+        let s = CGRect.zero
+        let f = s.sfloor
     }
     deinit {
         Console.logFunc(whose: self)

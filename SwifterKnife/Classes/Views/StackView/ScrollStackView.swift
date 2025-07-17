@@ -130,14 +130,16 @@ public final class ScrollStackView: UIScrollView {
         let size = container.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         if size.width <= 0 || size.height <= 0 { return (-1, false) }
         let side: CGFloat, result: Int
+        let isV = isVertical
+        alwaysBounceVertical = false
+        alwaysBounceHorizontal = false
         if let max = maxSide, size.height > max {
             side = max; result = 1
-            alwaysBounceVertical = true
+            if isV { alwaysBounceVertical = true }
+            else { alwaysBounceHorizontal = true }
         } else {
-            side = size.height; result = 0
-            alwaysBounceVertical = false
+            side = isV ? size.height : size.width; result = 0
         }
-        let isV = isVertical
         let isUpdate: Bool
         if let t = findConstraint(attribute: isV ? .height : .width) {
             t.constant = side
