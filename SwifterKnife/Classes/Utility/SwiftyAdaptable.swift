@@ -61,6 +61,12 @@ extension SwiftyAdaptable where Self: CGFloatConvertable {
     }
 }
 extension SwiftyAdaptable {
+    public var even: TargetType {
+        adaptive {
+            let int = Int($0)
+            return int % 2 == 1 ? CGFloat(int - 1) : CGFloat(int)
+        }
+    }
     public var sfloor: TargetType {
         adaptive { $0.rounded(.down) }
     }

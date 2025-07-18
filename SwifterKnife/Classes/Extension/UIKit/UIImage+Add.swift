@@ -157,13 +157,13 @@ public extension UIImage {
     ///   - toWidth: new width.
     ///   - opaque: flag indicating whether the bitmap is opaque.
     /// - Returns: optional scaled UIImage (if applicable).
-    func scaled(toWidth: CGFloat, opaque: Bool = false) -> UIImage? {
-        let scale = toWidth / size.width
-        let newHeight = size.height * scale
-        let size = CGSize(width: toWidth, height: newHeight)
+    func scaled(toWidth: CGFloat, scale: CGFloat? = nil, opaque: Bool = false) -> UIImage? {
+        let s = toWidth / size.width
+        let toHeight = size.height * s
+        let size = CGSize(width: toWidth, height: toHeight).even
         let rect = CGRect(origin: .zero, size: size)
         let format = UIGraphicsImageRendererFormat()
-        format.scale = self.scale
+        format.scale = scale ?? self.scale
         return UIGraphicsImageRenderer(size: size, format: format).image { _ in
             draw(in: rect)
         }
