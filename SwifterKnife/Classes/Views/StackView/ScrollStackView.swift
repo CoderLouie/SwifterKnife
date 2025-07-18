@@ -133,12 +133,13 @@ public final class ScrollStackView: UIScrollView {
         let isV = isVertical
         alwaysBounceVertical = false
         alwaysBounceHorizontal = false
-        if let max = maxSide, size.height > max {
+        let ss = (isV ? size.height : size.width)
+        if let max = maxSide, ss > max {
             side = max; result = 1
             if isV { alwaysBounceVertical = true }
             else { alwaysBounceHorizontal = true }
         } else {
-            side = isV ? size.height : size.width; result = 0
+            side = ss; result = 0
         }
         let isUpdate: Bool
         if let t = findConstraint(attribute: isV ? .height : .width) {
@@ -156,6 +157,26 @@ public final class ScrollStackView: UIScrollView {
         }
         
         return (result, isUpdate)
+    }
+    
+    
+   @discardableResult
+    public func makeFill(_ maxSide: CGFloat) -> Bool? {
+        let size = container.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        if size.width <= 0 || size.height <= 0 { return nil }
+        let isV = isVertical
+        let ss = (isV ? size.height : size.width)
+        let inset = isV ?
+        (contentInset.top + contentInset.bottom) :
+        (contentInset.left + contentInset.right)
+        let max = maxSide - inset
+        if ss <= max {
+            container.snp.makeConstraints { make in
+                make.width.equalTo(max)
+            }
+            return true
+        }
+        return false
     }
     
     required init?(coder: NSCoder) {

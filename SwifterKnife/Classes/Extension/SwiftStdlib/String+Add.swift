@@ -705,9 +705,7 @@ extension String {
 
 //https://www.jianshu.com/p/17fab783bfad
 
-
 extension String.StringInterpolation {
-
     public mutating func appendInterpolation<T>(op value: T?, or defValue: @autoclosure () -> String = "nil") {
         if let val = value {
             appendInterpolation(val)

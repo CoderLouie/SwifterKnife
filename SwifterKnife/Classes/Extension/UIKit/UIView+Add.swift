@@ -585,6 +585,29 @@ public extension UIVisualEffectView {
     }
 }
 
+extension UILabel {
+    /// Set the label line height multiple.
+    ///
+    /// The natural line height of the receiver is multiplied by this factor (if positive)
+    /// before being constrained by minimum and maximum line height.
+    ///
+    /// - Parameter lineHeight: The line height multiple that will be applied to the label.
+    public func setLineHeight(_ lineHeight: CGFloat) {
+        guard let text = self.text, !text.isEmpty else { return }
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1.0
+        paragraphStyle.lineHeightMultiple = lineHeight
+        paragraphStyle.alignment = textAlignment
+        paragraphStyle.lineBreakMode = lineBreakMode
+        
+        let attrString = NSMutableAttributedString(string: text)
+        let range = NSRange(location: 0, length: attrString.length)
+        attrString.addAttribute(.font, value: font!, range: range)
+        attrString.addAttribute(.paragraphStyle, value: paragraphStyle, range: range)
+        attributedText = attrString
+    }
+}
+
 /*
 class XXView: UIView {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
