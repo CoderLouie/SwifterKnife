@@ -277,7 +277,6 @@ public enum Index<T: Any>: Comparable {
     }
 }
 
-public typealias JSONIndex = Index<JSON>
 public typealias JSONRawIndex = Index<Any>
 
 extension JSON: Swift.Collection {
@@ -329,14 +328,14 @@ extension JSON: Swift.Collection {
             if case .array(let array) = self {
                 return (String(idx), JSON(array[idx]))
             } else {
-                return ("", JSON.null)
+                return ("", .null)
             }
         case .dictionary(let idx):
             if case .dictionary(let dict) = self {
                 let pair = dict[idx]
                 return (pair.key, JSON(pair.value))
             } else {
-                return ("", JSON.null)
+                return ("", .null)
             }
         default: return ("", JSON.null)
         }
@@ -432,6 +431,10 @@ extension JSON {
                 self[key: key] = newValue
             }
         }
+    }
+    
+    public func containsKey(_ key: JSONSubscriptType) -> Bool {
+        self[sub: key].isValid
     }
     
     /**
@@ -558,6 +561,9 @@ extension JSON {
         case .error, .null: return false
         default: return true
         }
+    }
+    public var isInvalid: Bool {
+        !isValid
     }
 }
 
@@ -1309,12 +1315,12 @@ extension JSON: Codable {
                     object = try? container.decode(doubleType)
                 case let stringType as String.Type:
                     object = try? container.decode(stringType)
-                case let jsonValueArrayType as [JSON].Type:
-                    if let arr = try? container.decode(jsonValueArrayType) {
+                case let jsonArrayType as [JSON].Type:
+                    if let arr = try? container.decode(jsonArrayType) {
                         object = arr.map(\.object)
                     }
-                case let jsonValueDictType as [String: JSON].Type:
-                    if let dict = try? container.decode(jsonValueDictType) {
+                case let jsonDictType as [String: JSON].Type:
+                    if let dict = try? container.decode(jsonDictType) {
                         object = dict.mapValues(\.object)
                     }
                 default: break
@@ -1325,6 +1331,7 @@ extension JSON: Codable {
     }
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
+        let object = self.object
         if object is NSNull {
             try container.encodeNil()
             return
@@ -1355,11 +1362,11 @@ extension JSON: Codable {
         case let stringValue as String:
             try container.encode(stringValue)
         case is [Any]:
-            let jsonValueArray = array ?? []
-            try container.encode(jsonValueArray)
+            let jsonArray = array ?? []
+            try container.encode(jsonArray)
         case is [String: Any]:
-            let jsonValueDictValue = dictionary ?? [:]
-            try container.encode(jsonValueDictValue)
+            let jsonDictValue = dictionary ?? [:]
+            try container.encode(jsonDictValue)
         default:
             break
         }
