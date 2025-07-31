@@ -58,28 +58,33 @@ public extension UIView {
 // MARK: - Properties
 
 public extension UIView {
-    var screenshotOldWay: UIImage? {
-        let scale = UIScreen.main.scale
-        let bounds = bounds
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        drawHierarchy(in: bounds, afterScreenUpdates: false)
-        return UIGraphicsGetImageFromCurrentImageContext()
+    private var intBounds: CGRect {
+        return bounds.with {
+            $0.size.width = floor($0.size.width)
+            $0.size.height = floor($0.size.height)
+        }
     }
-    var fixScreenshot: UIImage? {
-        let size = layer.frame.size
-        guard size != .zero else { return nil }
-        var s = CGSize(width: floor(size.width) - 2, height: floor(size.height) - 2)
-        let data = UIGraphicsImageRenderer(size: s).pngData { context in
+    func imageOfDrawHierarchy(_ updates: Bool = false) -> UIImage? {
+        let bounds = intBounds
+        if bounds.isEmpty { return nil }
+        let img = UIGraphicsImageRenderer(bounds: bounds).image { context in
+            drawHierarchy(in: bounds, afterScreenUpdates: updates)
+        }
+        return img
+    }
+    var pngScreenshot: UIImage? {
+        let bounds = intBounds
+        if bounds.isEmpty { return nil }
+        let data = UIGraphicsImageRenderer(bounds: bounds).pngData { context in
             layer.render(in: context.cgContext)
         }
         return UIImage(data: data)
     }
-    /// Take screenshot of view (if applicable). 可能会有白边
+    /// Take screenshot of view (if applicable)
     var screenshot: UIImage? {
-        let size = layer.frame.size
-        guard size != .zero else { return nil }
-        return UIGraphicsImageRenderer(size: size).image { context in
+        let bounds = intBounds
+        if bounds.isEmpty { return nil }
+        return UIGraphicsImageRenderer(bounds: bounds).image { context in
             layer.render(in: context.cgContext)
         }
     }
