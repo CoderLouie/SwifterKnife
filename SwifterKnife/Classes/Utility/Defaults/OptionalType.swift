@@ -29,10 +29,15 @@ public protocol OptionalType: ExpressibleByNilLiteral {
 //    init(_ some: Wrapped)
 }
 
-extension Optional: OptionalType {
+public protocol OptionalInitType: OptionalType {
+    init(_ some: Wrapped)
+}
+
+extension Optional: OptionalInitType {
     public var value: Optional<Wrapped> { self }
 }
 
+/*
 extension OptionalType {
     public func safedesc(or placeholder: @autoclosure () -> String = "nil") -> String {
         if case .some(let wrapper) = value {
@@ -53,3 +58,4 @@ extension Sequence where Element: OptionalType {
         return String(describing: array)
     }
 }
+*/

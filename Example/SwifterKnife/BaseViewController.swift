@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwifterKnife
 
 class BaseViewController: UIViewController {
     
@@ -18,6 +19,16 @@ class BaseViewController: UIViewController {
     func setupViews() {
         let s = CGRect.zero
         let f = s.sfloor
+        
+        var weakMap = WeakDictionary<String, UIViewController>()
+        
+        for (k, v) in weakMap.compacted {
+            
+        }
+        
+        weakMap["1"] = self
+        
+        let vc = weakMap["1"]
     }
     deinit {
         Console.logFunc(whose: self)

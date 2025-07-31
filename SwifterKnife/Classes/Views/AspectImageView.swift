@@ -52,12 +52,20 @@ open class AspectFitContainer: UIView {
         switch imageContentModel {
         case .top:
             frame.origin.y = inset.top
+        case .bottom:
+            frame.origin.y = rect.maxY - frame.size.height
         case .left:
             frame.origin.x = inset.left
         case .right:
             frame.origin.x = rect.maxX - frame.size.width
-        case .bottom:
-            frame.origin.y = rect.maxY - frame.size.height
+        case .topLeft:
+            frame.origin = CGPoint(x: inset.left, y: inset.top)
+        case .topRight:
+            frame.origin = CGPoint(x: rect.maxX - frame.size.width, y: inset.top)
+        case .bottomLeft:
+            frame.origin = CGPoint(x: inset.left, y: rect.maxY - frame.size.height)
+        case .bottomRight:
+            frame.origin = CGPoint(x: rect.maxX - frame.size.width, y: rect.maxY - frame.size.height)
         default: break
         }
         child.frame = frame

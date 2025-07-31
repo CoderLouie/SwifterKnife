@@ -705,11 +705,26 @@ extension String {
 
 //https://www.jianshu.com/p/17fab783bfad
 
-extension String.StringInterpolation {
-    public mutating func appendInterpolation<T>(op value: T?, or defValue: @autoclosure () -> String = "nil") {
-        if let val = value {
+extension DefaultStringInterpolation {
+    /*
+     var token: Int? = nil
+     print("\(token, or: "-")")
+     // Prints "-"
+     token = 0
+     print("\(token, or: "-")")
+     // Prints "0"
+     print("\(token, or: "-", where: { $0 > 0} )")
+     // Prints "-"
+     */
+    
+    public mutating func appendInterpolation<T>(
+        op value: T?,
+        or defValue: @autoclosure () -> String = "nil",
+        where predicate: ((T) throws -> Bool)? = nil) rethrows {
+        switch value {
+        case let .some(val) where try predicate?(val) != false:
             appendInterpolation(val)
-        } else {
+        default:
             appendInterpolation(defValue())
         }
     }

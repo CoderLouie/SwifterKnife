@@ -12,6 +12,8 @@ public protocol WrapContainerType {
     var wrapValue: WrapType { get }
     init(_ wrapValue: WrapType)
 }
+
+
 public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable, CustomStringConvertible {
     public static func == (lhs: WeakBox<O>, rhs: WeakBox<O>) -> Bool {
         switch (lhs.wrapValue, rhs.wrapValue) {
@@ -40,7 +42,7 @@ public struct WeakBox<O: AnyObject>: WrapContainerType, Hashable, CustomStringCo
         }
         return "nil"
     }
-}
+} 
 
 
 // MARK: - WrapCollection
@@ -237,7 +239,6 @@ public typealias WeakSet<O: AnyObject> = WrapCollection<Set<WeakBox<O>>>
 
 
 
-/*
 // MARK: - Dictionary
 
 public struct WrapDictionary<Key: Hashable, Container: WrapContainerType> {
@@ -252,14 +253,18 @@ public struct WrapDictionary<Key: Hashable, Container: WrapContainerType> {
         _buffer = .init(minimumCapacity: minimumCapacity)
     }
 }
-extension WrapDictionary: Sequence { }
+extension WrapDictionary: Sequence {
+    public func makeIterator() -> Dictionary<Key, Container.WrapType>.Iterator {
+        _buffer.mapValues(\.wrapValue).makeIterator()
+    }
+}
 
 extension WrapDictionary: Collection {
     
     public func index(after i: Dictionary<Key, Container>.Index) -> Dictionary<Key, Container>.Index {
         _buffer.index(after: i)
     }
-    public subscript(position: Dictionary<Key, Container>.Index) -> (Key, Container.WrapType) {
+    public subscript(position: Dictionary<Key, Container>.Index) -> Dictionary<Key, Container.WrapType>.Element {
         let pair = _buffer[position]
         return (pair.key, pair.value.wrapValue)
     }
@@ -307,13 +312,31 @@ extension WrapDictionary {
     }
 }
 
+
 public extension WrapDictionary where Container.WrapType: OptionalType {
     mutating func compact() {
         _buffer = _buffer.filter { $0.value.wrapValue.value != nil }
     }
-    var compacted: [Container.WrapType.Wrapped] {
-        Array(_buffer.compactMapValues(\.wrapValue.value).values)
+    var compacted: Dictionary<Key, Container.WrapType.Wrapped> {
+        _buffer.compactMapValues(\.wrapValue.value)
+    }
+    
+    subscript(key: Key) -> Container.WrapType.Wrapped? {
+        _buffer[key]?.wrapValue.value
+    }
+}
+
+public extension WrapDictionary where Container.WrapType: OptionalInitType {
+    subscript(key: Key) -> Container.WrapType.Wrapped? {
+        get { _buffer[key]?.wrapValue.value }
+        set {
+            if let val = newValue {
+                _buffer[key] = Container(Container.WrapType(val))
+            } else {
+                _buffer.removeValue(forKey: key)
+            }
+        }
     }
 }
 public typealias WeakDictionary<Key: Hashable, O: AnyObject> = WrapDictionary<Key, WeakBox<O>>
-*/
+
