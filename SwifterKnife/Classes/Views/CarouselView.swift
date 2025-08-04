@@ -349,7 +349,8 @@ extension CarouselView: UIScrollViewDelegate {
 
 
 public protocol ATPageViewDelegate: AnyObject {
-    func pageView(_ pageView: ATPageView, configCell cell: UICollectionViewCell, at index: Int)
+    func pageView(_ pageView: ATPageView, cellAtIndex: Int) -> ATPageView.Cell
+    
     func pageView(_ pageView: ATPageView, didClickCell cell: UICollectionViewCell, at index: Int)
     func pageView(_ pageView: ATPageView, didSelectCell cell: UICollectionViewCell, at index: Int)
 }
@@ -372,13 +373,21 @@ public final class ATPageView: UIView {
             $0.backgroundColor = .clear
             $0.isPagingEnabled = true
             $0.decelerationRate = .fast
-            $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
+            $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCollectionViewCell")
         }
         super.init(frame: .zero)
         addSubview(collectionView)
         collectionView.delegate = self
         collectionView.dataSource = self
     }
+    public typealias Cell = UICollectionViewCell & Reusable
+    public func registerCellType(_ cellType: Cell.Type) {
+        collectionView.register(cellType: cellType)
+    }
+    public func dequeueReusableCell<T: Cell>(for index: Int) -> T {
+        collectionView.dequeueReusableCell(for: IndexPath(item: index, section: 0), cellType: T.self)
+    }
+    
     public var isHorizontalScroll: Bool {
         layout.scrollDirection == .horizontal
     }
@@ -451,9 +460,8 @@ extension ATPageView: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-        delegate?.pageView(self, configCell: cell, at: indexPath.item)
-        return cell
+        delegate?.pageView(self, cellAtIndex: indexPath.item) ??
+        collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCollectionViewCell", for: indexPath)
     }
 }
 
