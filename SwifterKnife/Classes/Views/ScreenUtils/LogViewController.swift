@@ -535,13 +535,7 @@ public enum ScreenLogLevel: Int, CaseIterable {
 
 class LogViewController: _BaseViewController {
     func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        if Thread.isMainThread {
-            logView.log(Console.timeString + " " + string, level: level, tags: tags)
-        } else {
-            DispatchQueue.main.async {
-                self.logView.log(Console.timeString + " " + string, level: level, tags: tags)
-            }
-        }
+        logView.log(Console.timeString + " " + string, level: level, tags: tags) 
     }
     
     override func viewDidLoad() {

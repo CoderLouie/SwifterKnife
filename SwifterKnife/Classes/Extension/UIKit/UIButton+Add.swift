@@ -169,6 +169,22 @@ public extension UIControl {
 }
 
 public extension UIButton {
+    var normalImage: UIImage? {
+        get { image(for: .normal) }
+        set {
+            setImage(newValue, for: .normal)
+        }
+    }
+    var normalTitle: String? {
+        get { title(for: .normal) }
+        set { setTitle(newValue, for: .normal) }
+    }
+    var normalTitleColor: UIColor? {
+        get { titleColor(for: .normal) }
+        set {
+            setTitleColor(newValue, for: .normal)
+        }
+    }
     /// Center align title text and image.
     /// - Parameters:
     ///   - imageAboveText: set true to make image above title text, default is false, image on left of text.

@@ -149,11 +149,15 @@ public extension URL {
 }
 
 public extension URL {
+    /// URL("https://www.apple.com")
+    init(_ string: StaticString) {
+        self.init(string: "\(string)")!
+    }
+    
     static func + (lhs: URL, rhs: String) -> URL {
         lhs.appendingPathComponent(rhs)
     }
 }
-
 
 extension HTTPURLResponse {
     /// 响应时间

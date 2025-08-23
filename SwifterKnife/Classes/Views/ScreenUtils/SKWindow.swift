@@ -223,12 +223,26 @@ public enum SKS {
     }
     
     public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        guard let logvc = rootVC(at: 0) as? LogViewController else { return }
-        logvc.log(string, level: level, tags: tags)
+        let ops = {
+            guard let logvc = rootVC(at: 0) as? LogViewController else { return }
+            logvc.log(string, level: level, tags: tags)
+        }
+        if Thread.isMainThread {
+            ops()
+        } else {
+            DispatchQueue.main.async(execute: ops)
+        }
     }
     public static func makeScreenOptions(_ make: (_ maker: SKSOptionHandler) -> Void) {
-        guard let opvc = rootVC(at: 1) as? OptionsViewController else { return }
-        make(opvc)
-        opvc.reloadIfNeeded()
+        let ops = {
+            guard let opvc = rootVC(at: 1) as? OptionsViewController else { return }
+            make(opvc)
+            opvc.reloadIfNeeded()
+        }
+        if Thread.isMainThread {
+            ops()
+        } else {
+            DispatchQueue.main.async(execute: ops)
+        }
     }
 }

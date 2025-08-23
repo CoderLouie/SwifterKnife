@@ -349,7 +349,7 @@ extension CarouselView: UIScrollViewDelegate {
 
 
 public protocol ATPageViewDelegate: AnyObject {
-    func pageView(_ pageView: ATPageView, cellAtIndex: Int) -> ATPageView.Cell
+    func pageView(_ pageView: ATPageView, cellAtIndex index: Int) -> ATPageView.Cell
     
     func pageView(_ pageView: ATPageView, didClickCell cell: UICollectionViewCell, at index: Int)
     func pageView(_ pageView: ATPageView, didSelectCell cell: UICollectionViewCell, at index: Int)
@@ -403,12 +403,12 @@ public final class ATPageView: UIView {
         get { _selectedIndex }
         set {
             guard newValue != _selectedIndex else { return }
-            _selectedIndex = newValue
             scrollToIndex(newValue, animated: hasLayout)
         }
     }
     
     public func scrollToIndex(_ index: Int, animated: Bool) {
+        if !animated { _selectedIndex = index }
         collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: isHorizontalScroll ? .centeredHorizontally : .centeredVertically, animated: animated)
     }
     public func forward() {
@@ -416,6 +416,11 @@ public final class ATPageView: UIView {
     }
     public func backward() {
         selectedIndex -= 1
+    }
+    
+    var isScrollEnabled: Bool {
+        get { collectionView.isScrollEnabled }
+        set { collectionView.isScrollEnabled = newValue }
     }
     
     private var hasLayout = false
