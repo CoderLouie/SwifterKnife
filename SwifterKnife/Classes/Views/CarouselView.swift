@@ -418,7 +418,7 @@ public final class ATPageView: UIView {
         selectedIndex -= 1
     }
     
-    var isScrollEnabled: Bool {
+    public var isScrollEnabled: Bool {
         get { collectionView.isScrollEnabled }
         set { collectionView.isScrollEnabled = newValue }
     }
