@@ -44,6 +44,8 @@ open class Input: TextField {
     
     public var onReturnKeyPressed: ((Input) -> Void)?
     public var onTextDidChange: ((Input) -> Void)?
+    public var onMaxLength: ((Input) -> Void)?
+
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,6 +69,7 @@ open class Input: TextField {
             let endIndex = text.index(text.startIndex, offsetBy: maxLength)
             self.text = String(text[..<endIndex])
             undoManager?.removeAllActions()
+            onMaxLength?(self)
             return
         }
         onTextDidChange?(self)
