@@ -128,7 +128,7 @@ open class CarouselView: UIView {
         didSet {
             guard oldValue != direction else { return }
             guard direction != .none else { return }
-            print("[SetDirection] \(direction)")
+//            print("[SetDirection] \(direction)")
             switch direction {
             case .forward:
                 nextIndex = targetParam?.0 ?? (currentIndex + 1)

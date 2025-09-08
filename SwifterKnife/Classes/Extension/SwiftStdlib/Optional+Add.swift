@@ -125,6 +125,7 @@ public extension Optional {
         }
     }
     
+    @discardableResult
     func modify(_ work: (inout Wrapped) throws -> Void) rethrows -> Optional {
         switch self {
         case .some(var x):
@@ -132,6 +133,10 @@ public extension Optional {
             return .some(x)
         case .none: return .none
         }
+    }
+    mutating func sktake() -> Optional {
+        defer { self = nil }
+        return self
     }
 }
 public extension Optional where Wrapped: Swift.Error {

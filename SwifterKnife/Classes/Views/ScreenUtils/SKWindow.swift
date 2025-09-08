@@ -225,7 +225,7 @@ public enum SKS {
     public static func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
         let ops = {
             guard let logvc = rootVC(at: 0) as? LogViewController else { return }
-            logvc.log(string, level: level, tags: tags)
+            logvc.log(string + "\n", level: level, tags: tags)
         }
         if Thread.isMainThread {
             ops()
