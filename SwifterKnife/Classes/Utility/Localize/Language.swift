@@ -142,16 +142,25 @@ public final class Lan {
             let matches = avails.filter {
                 code.hasPrefix($0)
             }
-            return matches.max { $0.count < $1.count }.map { Language(rawValue: $0) }
+            let val = matches.max { $0.count < $1.count }.map { Language(rawValue: $0) }
+            return val
         }
         return nil
     }
     
+    public var loadDefalutClosure: ((Lan) -> Language?)?
     private var _current: Language?
     public var current: Language {
         get {
             if let tmp = _current { return tmp }
-            let lan = cachedLanguage ?? bestMatch() ?? `default`
+            if let lan = cachedLanguage { return lan }
+            let lan: Language
+            if let closure = loadDefalutClosure {
+                lan = closure(self) ?? `default`
+            } else {
+                lan = bestMatch() ?? `default`
+            }
+            cachedLanguage = lan
             _current = lan
             return lan
         }
@@ -171,13 +180,16 @@ extension Lan {
     public func generateCodeString() -> String {
         available().compactMap(\.code).joined(separator: "\n")
     }
-    public static var device: String? {
+    public static var devices: [String] {
         let key = "AppleLanguages"
         let codes = UserDefaults.standard.array(forKey: key)
         UserDefaults.standard.removeObject(forKey: key)
-        let val = Locale.preferredLanguages.first
+        let val = Locale.preferredLanguages
         UserDefaults.standard.set(codes, forKey: key)
         return val
+    }
+    public static var device: String? {
+        Lan.devices.first
     }
 }
  
