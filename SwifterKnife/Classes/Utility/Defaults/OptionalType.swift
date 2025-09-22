@@ -25,7 +25,7 @@
 
 public protocol OptionalType: ExpressibleByNilLiteral {
     associatedtype Wrapped
-    var value: Optional<Wrapped> { get }
+    var skopValue: Optional<Wrapped> { get }
 //    init(_ some: Wrapped)
 }
 
@@ -34,7 +34,7 @@ public protocol OptionalInitType: OptionalType {
 }
 
 extension Optional: OptionalInitType {
-    public var value: Optional<Wrapped> { self }
+    public var skopValue: Optional<Wrapped> { self }
 }
 
 /*

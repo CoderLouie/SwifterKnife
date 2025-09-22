@@ -138,12 +138,12 @@ extension WrapCollection: LazyCollectionProtocol { }
 
 public extension WrapCollection where Collection.Element.WrapType: OptionalType {
     var compacted: [Collection.Element.WrapType.Wrapped] {
-        _buffer.compactMap(\.wrapValue.value)
+        _buffer.compactMap(\.wrapValue.skopValue)
     }
 }
 public extension WrapCollection where Collection.Element.WrapType: OptionalType, Collection: ExpressibleByArrayLiteral {
     mutating func compact() {
-        let keeped = _buffer.filter { $0.wrapValue.value != nil }
+        let keeped = _buffer.filter { $0.wrapValue.skopValue != nil }
         self = .init(containers: keeped)
     }
 }
@@ -315,20 +315,20 @@ extension WrapDictionary {
 
 public extension WrapDictionary where Container.WrapType: OptionalType {
     mutating func compact() {
-        _buffer = _buffer.filter { $0.value.wrapValue.value != nil }
+        _buffer = _buffer.filter { $0.value.wrapValue.skopValue != nil }
     }
     var compacted: Dictionary<Key, Container.WrapType.Wrapped> {
-        _buffer.compactMapValues(\.wrapValue.value)
+        _buffer.compactMapValues(\.wrapValue.skopValue)
     }
     
     subscript(key: Key) -> Container.WrapType.Wrapped? {
-        _buffer[key]?.wrapValue.value
+        _buffer[key]?.wrapValue.skopValue
     }
 }
 
 public extension WrapDictionary where Container.WrapType: OptionalInitType {
     subscript(key: Key) -> Container.WrapType.Wrapped? {
-        get { _buffer[key]?.wrapValue.value }
+        get { _buffer[key]?.wrapValue.skopValue }
         set {
             if let val = newValue {
                 _buffer[key] = Container(Container.WrapType(val))
