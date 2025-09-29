@@ -106,6 +106,13 @@ extension UIWindow.Level {
 class SKWindow: UIWindow {
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        if #available(iOS 13, *) {
+            NotificationCenter.default.addObserver(forName: UIScene.willConnectNotification, object: nil, queue: nil) { [weak self] notify in
+                self?.windowScene = notify.object as? UIWindowScene
+            }
+        }
+        
         windowLevel = .alert + 5
         
         isHidden = true
