@@ -242,6 +242,7 @@ extension CarouselView {
     /// 滚动到指定位置
     public func scrollToIndex(_ index: Int, animated: Bool = true) {
         guard index >= 0 else { return }
+        if itemsCount == 0 { return }
         let idx = index % itemsCount
         guard currentIndex != idx else { return }
         targetParam = (idx, animated)

@@ -109,7 +109,9 @@ class SKWindow: UIWindow {
         
         if #available(iOS 13, *) {
             NotificationCenter.default.addObserver(forName: UIScene.willConnectNotification, object: nil, queue: nil) { [weak self] notify in
-                self?.windowScene = notify.object as? UIWindowScene
+                guard let this = self,
+                        this.windowScene == nil else { return }
+                this.windowScene = notify.object as? UIWindowScene
             }
         }
         
