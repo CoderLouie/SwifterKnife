@@ -103,7 +103,7 @@ public extension UIScrollView {
         if bounds.width > contentS.width + inset.right { return }
         
         var off = contentOffset
-        off.y = max(0, contentS.width - bounds.width) + inset.right
+        off.x = max(0, contentS.width - bounds.width) + inset.right
         setContentOffset(off, animated: animated)
     }
 
