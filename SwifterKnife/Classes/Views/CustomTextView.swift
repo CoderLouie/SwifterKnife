@@ -21,6 +21,7 @@ open class PlaceholderTextView: UITextView {
     public var onTextDidChange: ((PlaceholderTextView) -> Void)?
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0
+    public var onMaxLength: ((PlaceholderTextView) -> Void)?
     
     // Trim white space and newline characters when end editing. Default is true
     open var trimWhiteSpaceWhenEndEditing: Bool = true
@@ -73,10 +74,12 @@ open class PlaceholderTextView: UITextView {
         super.draw(rect)
         
         if text.isEmpty {
-            let xValue = textContainerInset.left + textContainer.lineFragmentPadding
-            let yValue = textContainerInset.top
-            let width = rect.size.width - xValue - textContainerInset.right
-            let height = rect.size.height - yValue - textContainerInset.bottom
+            let inset = textContainerInset
+            let linePadding = textContainer.lineFragmentPadding
+            let xValue = inset.left + linePadding
+            let yValue = inset.top
+            let width = rect.size.width - xValue - inset.right - linePadding
+            let height = rect.size.height - yValue - inset.bottom
             let placeholderRect = CGRect(x: xValue, y: yValue, width: width, height: height)
             
             if let attributedPlaceholder = attributedPlaceholder {
@@ -121,6 +124,7 @@ open class PlaceholderTextView: UITextView {
             let endIndex = text.index(text.startIndex, offsetBy: maxLength)
             self.text = String(text[..<endIndex])
             undoManager?.removeAllActions()
+            onMaxLength?(self)
             return
         }
         setNeedsDisplay()
@@ -142,6 +146,7 @@ open class GrowingTextView: UITextView {
     
     // Maximum length of text. 0 means no limit.
     open var maxLength: Int = 0
+    public var onMaxLength: ((GrowingTextView) -> Void)?
     
     // Trim white space and newline characters when end editing. Default is true
     open var trimWhiteSpaceWhenEndEditing: Bool = true
@@ -259,10 +264,12 @@ open class GrowingTextView: UITextView {
         super.draw(rect)
         
         if text.isEmpty {
-            let xValue = textContainerInset.left + textContainer.lineFragmentPadding
-            let yValue = textContainerInset.top
-            let width = rect.size.width - xValue - textContainerInset.right
-            let height = rect.size.height - yValue - textContainerInset.bottom
+            let inset = textContainerInset
+            let linePadding = textContainer.lineFragmentPadding
+            let xValue = inset.left + linePadding
+            let yValue = inset.top
+            let width = rect.size.width - xValue - inset.right - linePadding
+            let height = rect.size.height - yValue - inset.bottom
             let placeholderRect = CGRect(x: xValue, y: yValue, width: width, height: height)
             
             if let attributedPlaceholder = attributedPlaceholder {
@@ -305,6 +312,8 @@ open class GrowingTextView: UITextView {
                 let endIndex = text.index(text.startIndex, offsetBy: maxLength)
                 text = String(text[..<endIndex])
                 undoManager?.removeAllActions()
+                onMaxLength?(self)
+                return
             }
             setNeedsDisplay()
         }
