@@ -123,7 +123,7 @@ extension UIEdgeInsets: SwiftyAdaptable {
 //    }
 //}
 extension UIFont {
-    @objc public var fit: UIFont {
+    public var fit: UIFont {
         let adaptor = UIDesignReference.stander.uiwidth
 //        return withSize(round(adaptor.map(pointSize)))
         return withSize(adaptor.mapPix(pointSize))

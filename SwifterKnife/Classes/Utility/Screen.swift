@@ -8,38 +8,37 @@
 import UIKit
 
 
-@objc public final class Screen: NSObject {
-    private override init() { }
+public enum Screen {
     
     private static let sw: CGFloat = UIScreen.main.bounds.width
     private static let sh: CGFloat = UIScreen.main.bounds.height
     
-    @objc public static var width: CGFloat { sw < sh ? sw : sh }
-    @objc public static var height: CGFloat { sw < sh ? sh : sw }
-    @objc public static var size: CGSize {
+    public static var width: CGFloat { sw < sh ? sw : sh }
+    public static var height: CGFloat { sw < sh ? sh : sw }
+    public static var size: CGSize {
         CGSize(width: width, height: height)
     }
-    @objc public static var bounds: CGRect {
+    public static var bounds: CGRect {
         CGRect(origin: .zero, size: size)
     }
-    @objc public static let scale = UIScreen.main.scale
+    public static let scale = UIScreen.main.scale
     
-    @objc public static var isIPad: Bool {
+    public static var isIPad: Bool {
 //        UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.pad
         UIDevice.current.userInterfaceIdiom == .pad
     }
-    @objc public static let isIPhoneXSeries: Bool = {
+    public static let isIPhoneXSeries: Bool = {
         let bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
         return bottomSafeInset > 0
     }()
     
     /// 当前是否是竖屏
-    @objc public static var isPortrait: Bool {
+    public static var isPortrait: Bool {
         return UIApplication.shared.statusBarOrientation.isPortrait
     }
     
     /// 安全区域刘海一侧的间距 (20/44/50) 也即状态栏高度
-    @objc public static var safeAreaT: CGFloat {
+    public static var safeAreaT: CGFloat {
         let inset = safeAreaInsets
         switch UIApplication.shared.statusBarOrientation {
         case .portrait, .portraitUpsideDown: return inset.top
@@ -50,7 +49,7 @@ import UIKit
     }
     
     /// 安全区域刘海对侧的间距 也即 HomeIndicator 高度
-    @objc public static var safeAreaB: CGFloat {
+    public static var safeAreaB: CGFloat {
         let inset = safeAreaInsets
         switch UIApplication.shared.statusBarOrientation {
         case .portrait, .portraitUpsideDown: return inset.bottom
@@ -60,41 +59,41 @@ import UIKit
         }
     }
     
-    @objc public static var bodyRect: CGRect {
+    public static var bodyRect: CGRect {
         let inset = safeAreaInsets
         let y = inset.top
         return CGRect(x: 0, y: y, width: width, height: height - y - inset.bottom)
     }
-    @objc public static var bodyH: CGFloat {
+    public static var bodyH: CGFloat {
         let inset = safeAreaInsets
         return height - inset.top - inset.bottom
     }
-    @objc public static var withoutHeaderH: CGFloat {
+    public static var withoutHeaderH: CGFloat {
         return height - safeAreaT
     }
-    @objc public static var withoutFooterH: CGFloat {
+    public static var withoutFooterH: CGFloat {
         return height - safeAreaB
     }
     // 44 + 20 ---- (44/50) + 44
-    @objc public static var navbarH: CGFloat {
+    public static var navbarH: CGFloat {
         safeAreaT + _navbarH
     }
-    @objc public static var navbarCenterY: CGFloat {
+    public static var navbarCenterY: CGFloat {
         Screen.safeAreaT + (_navbarH * 0.5)
     }
     // 49 --- 49 + 34
-    @objc public static var tabbarH: CGFloat {
+    public static var tabbarH: CGFloat {
         safeAreaB + _tabbarH
     }
     
-    @objc public static var _tabbarH: CGFloat = 49
-    @objc public static var _navbarH: CGFloat = 44
+    public static var _tabbarH: CGFloat = 49
+    public static var _navbarH: CGFloat = 44
     
-    @objc public static var delegateWindow: UIWindow? {
+    public static var delegateWindow: UIWindow? {
         UIApplication.shared.delegate?.window ?? nil
     }
     
-    @objc public static var currentWindow: UIWindow? {
+    public static var currentWindow: UIWindow? {
         delegateWindow ?? keyWindow
     }
     
@@ -105,7 +104,7 @@ import UIKit
             ($0 as? UIWindowScene) != nil
         } as? UIWindowScene
     }
-    @objc public static var keyWindow: UIWindow? {
+    public static var keyWindow: UIWindow? {
         if #available(iOS 13.0, *) {
             return activeWindowScene?.windows.first {
                 $0.isKeyWindow
@@ -131,7 +130,7 @@ import UIKit
 //    }
 
     
-    @objc public static var safeAreaInsets: UIEdgeInsets {
+    public static var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
             guard let window = currentWindow else { return .zero }
             if let inset = window.rootViewController?.view.safeAreaInsets,
@@ -143,7 +142,7 @@ import UIKit
         }
     }
     
-    @objc public static var frontViewController: UIViewController? {
+    public static var frontViewController: UIViewController? {
         guard let window = currentWindow,
               let rootVC = window.rootViewController else {
             return nil
@@ -151,7 +150,7 @@ import UIKit
         return rootVC.front()
     }
     
-    @objc public static var isRTL: Bool {
+    public static var isRTL: Bool {
         guard let window = currentWindow else {
             return false
         }
@@ -174,40 +173,7 @@ extension Screen {
         return _curFirstResponder as? UIView
     }
 }
-
-// MARK:- OC
-public extension Screen {
-    /// 像素化对齐
-    @objc static func pix(_ value: CGFloat) -> CGFloat {
-        value.pix
-    }
-    @objc static func pixFloor(_ value: CGFloat) -> CGFloat {
-        value.pixFloor
-    }
-    @objc static func pixRound(_ value: CGFloat) -> CGFloat {
-        value.pixRound
-    }
-    @objc static func pixCeil(_ value: CGFloat) -> CGFloat {
-        value.pixCeil
-    }
-    
-    @objc static func fit(_ value: CGFloat) -> CGFloat {
-        value.fit
-    }
-    @objc static func fitH(_ value: CGFloat) -> CGFloat {
-        value.fitH
-    }
-    @objc static func fitT(_ value: CGFloat) -> CGFloat {
-        value.fitT
-    }
-    @objc static func fitC(_ value: CGFloat) -> CGFloat {
-        value.fitC
-    }
-    /// 只有小屏幕手机才会是配高度 small
-    @objc static func fitS(_ value: CGFloat) -> CGFloat {
-        value.fitS
-    }
-}
+ 
  
 extension UIViewController {
     public func front() -> UIViewController {
