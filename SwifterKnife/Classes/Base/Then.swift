@@ -66,12 +66,14 @@ extension Then where Self: Any {
         try block(self)
     }
     
+    
     public func equal<P>(to other: Self, comparator: (P, P) -> Bool, at keyPaths: KeyPath<Self, P>...) -> Bool {
         for path in keyPaths {
             guard comparator(self[keyPath: path], other[keyPath: path]) else { return false }
         }
         return true
     }
+    
 }
 
 
@@ -89,7 +91,7 @@ extension Then where Self: AnyObject {
         try block(self)
         return self
     }
-    
+    /*
     public func weakify(_ code: @escaping (Self) -> Void) -> () -> Void {
         { [weak self] in
             guard let this = self else { return }
@@ -112,6 +114,7 @@ extension Then where Self: AnyObject {
             code(self, arg)
         }
     }
+    */
 }
 
 extension NSObject: Then {}

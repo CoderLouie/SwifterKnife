@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
  
 // 只用做布局，不做渲染，类似UIStackView
 open class VirtualView: UIView {
@@ -223,7 +222,7 @@ public final class SudokuView: UIView {
 }
 
 
-
+import SnapKit
 public extension ConstraintMaker {
     func horizontalSpace(_ space: CGFloat) {
         leading.equalTo(space)

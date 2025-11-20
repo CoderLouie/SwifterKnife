@@ -143,9 +143,9 @@ class CodableVC: BaseViewController {
 //        $closure.reset()
         _closure.reset()
         guard let v = blueView else { return }
-        DispatchQueue.main.async(execute: weakify {
-            print($0)
-        })
+//        DispatchQueue.main.async(execute: weakify {
+//            print($0)
+//        })
         v.bounds.origin.assign {
             if $0.x == 50 { $0.x = 0; $0.y = 0 }
             else { $0.x = 50; $0.y = 50 }

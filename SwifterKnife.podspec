@@ -30,6 +30,13 @@ Pod::Spec.new do |s|
   s.subspec 'Base' do |sp|
     sp.source_files = 'SwifterKnife/Classes/Base/*.swift'
   end
+  s.subspec 'Tiger' do |sp|
+    sp.dependency 'SwifterKnife/Base'
+    sp.source_files = 'SwifterKnife/Classes/Tiger/**/*.swift'
+  end
+#  s.subspec 'ScreenUtils' do |sp|
+#    sp.source_files = 'SwifterKnife/Classes/ScreenUtils/**/*.swift'
+#  end
   
   # Extension Extensions
   s.subspec 'Extension' do |sp|

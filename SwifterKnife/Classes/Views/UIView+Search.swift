@@ -90,7 +90,6 @@ public final class Animations {
 }
 
 /*
-import SnapKit
 
 fileprivate var my_animate_key: UInt8 = 0
 fileprivate var my_inset_key: UInt8 = 0

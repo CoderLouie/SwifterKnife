@@ -26,6 +26,15 @@
       "source_files": "SwifterKnife/Classes/Base/*.swift"
     },
     {
+      "name": "Tiger",
+      "dependencies": {
+        "SwifterKnife/Base": [
+
+        ]
+      },
+      "source_files": "SwifterKnife/Classes/Tiger/**/*.swift"
+    },
+    {
       "name": "Extension",
       "dependencies": {
         "SwifterKnife/Base": [

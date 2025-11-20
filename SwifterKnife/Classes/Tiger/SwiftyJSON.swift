@@ -132,7 +132,7 @@ public enum JSON {
                 self = .number(number)
             }
         case let string as String:
-            let str = string.trimmed
+            let str = string.trimmingCharacters(in: .whitespacesAndNewlines)
             if ((str.hasPrefix("{") && str.hasSuffix("}")) ||
                 (str.hasPrefix("[") && str.hasSuffix("]"))),
                let data = str.data(using: .utf8),

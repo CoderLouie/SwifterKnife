@@ -1,18 +1,9 @@
 //
-//  Promise+Extras.swift
-//  Promise
+//  Promise+Add.swift
+//  Pods
 //
-//  Created by Soroush Khanlou on 8/3/16.
+//  Created by liyang on 2025/11/20.
 //
-//
-
-import Foundation
-
-public enum PromiseError: Swift.Error {
-    case timeout
-    case missed
-    case empty
-}
 
 fileprivate func PromiseRetry<T>(
     _ promise: Promise<T>,
@@ -29,7 +20,7 @@ fileprivate func PromiseRetry<T>(
         innerPromise.then(on: queue) {
             promise.fulfill($0)
         } onRejected: { error in
-            queue.asyncAfter(deadline: .now() + interval) { 
+            queue.asyncAfter(deadline: .now() + interval) {
                 PromiseRetry(promise, onQueue: queue,  retryCount: retryCount + 1, delay: interval, dueError: error, generate: generate)
             }
         }
@@ -38,30 +29,7 @@ fileprivate func PromiseRetry<T>(
     }
 }
 
-public enum Promises { 
-    public static func any<T>(_ promises: [Promise<T>], cond: @escaping (Int, T) -> Bool) -> Promise<(Int, Bool)?> {
-        return Promise { fulfill, reject in
-            guard !promises.isEmpty else {
-                fulfill((-1, false))
-                return
-            }
-            for (idx, promise) in promises.enumerated() {
-                promise.then { val in
-                    if cond(idx, val) {
-                        fulfill((idx, true))
-                        return
-                    }
-                    if promises.allSatisfy(\.isFulfilled) {
-                        fulfill((idx, false))
-                    }
-                } onRejected: { error in
-                    if promises.allSatisfy(\.isRejected) {
-                        fulfill(nil)
-                    }
-                }
-            }
-        }
-    }
+public extension Promises {
     /// Wait for all the promises you give it to fulfill, and once they have, fulfill itself
     /// with the array of all fulfilled values.
     public static func all<T>(_ promises: [Promise<T>]) -> Promise<[T]> {
@@ -157,7 +125,7 @@ public enum Promises {
 
     public static func kickoff<T>(
         queue: DispatchQueue = .global(qos: .userInitiated),
-        block: @escaping () throws -> T) -> Promise<T> { 
+        block: @escaping () throws -> T) -> Promise<T> {
         return Promise.create(queue: queue) { fulfill, reject in
             do {
                 fulfill(try block())
@@ -261,15 +229,7 @@ public enum Promises {
     }
 }
 
-public struct IndexError: Swift.Error {
-    public let index: Int
-    public let error: Swift.Error
-    
-    public init(index: Int, error: Swift.Error) {
-        self.index = index
-        self.error = error
-    }
-}
+
 extension Promises {
     public static func asyncMap<Element, Value>(
         of array: [Element],
@@ -334,26 +294,6 @@ extension Promise {
         return promise
     }
 
-    @discardableResult
-    public func finally(
-        on queue: ExecutionContext = DispatchQueue.main,
-        onComplete: @escaping () -> Void) -> Promise<Value> {
-        return then(on: queue) { _ in
-            onComplete()
-        } onRejected: { _ in
-            onComplete()
-        }
-    }
-    @discardableResult
-    public func finallyRes(
-        on queue: ExecutionContext = DispatchQueue.main,
-        onComplete: @escaping (Result<Value, Swift.Error>) -> Void) -> Promise<Value> {
-        return then(on: queue) {
-            onComplete(.success($0))
-        } onRejected: {
-            onComplete(.failure($0))
-        }
-    }
 
     public func recover(
         _ recovery: @escaping (Error) throws -> Promise<Value>) -> Promise<Value> {
@@ -420,81 +360,6 @@ extension Promise {
                 onHit(castedError)
             }
         }
-    }
-}
- 
-public extension Promises {
-    static func downloadImage(from urlString: String?) -> Promise<UIImage> {
-        guard let str = urlString,
-              let url = URL(string: str) else {
-            return .reject(urlError("url \(urlString ?? "nil") is invalid"))
-        }
-        return _downloadImage(from: url) { img, _ in img }
-    }
-    static func downloadImages(from urlString: String?) -> Promise<(String, UIImage)> {
-        guard let str = urlString,
-              let url = URL(string: str) else {
-            return .reject(urlError("url \(urlString ?? "nil") is invalid"))
-        }
-        return _downloadImage(from: url) { img, url in (url.absoluteString, img) }
-    }
-    static func downloadImage(from url: URL) -> Promise<UIImage> {
-        _downloadImage(from: url) { img, _ in img }
-    }
-    private static func _downloadImage<T>(from url: URL, mapResult: @escaping (UIImage, URL) -> T) -> Promise<T> {
-        Promise.create { fulfill, reject in
-            URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-                if let err = error {
-                    reject(err)
-                } else if let data,
-                          let image = UIImage(data: data) {
-                    fulfill(mapResult(image, url))
-                } else {
-                    reject(urlError("cannot download image from \(url.absoluteString)"))
-                }
-            }.resume()
-        }
-    }
-    
-    static func download(from urlString: String, destination: @escaping (URL, URL) -> String) -> Promise<URL> {
-        return Promise.create { fulfill, reject in
-            guard let url = URL(string: urlString) else {
-                reject(PromiseError.missed)
-                return
-            }
-            URLSession.shared.downloadTask(with: url) { fileUrl, response, error in
-                if let err = error {
-                    reject(err)
-                    return
-                }
-                guard let cacheUrl = fileUrl else {
-                    reject(PromiseError.missed)
-                    return
-                }
-                let path = destination(cacheUrl, url)
-                let destURL = URL(fileURLWithPath: path)
-                let mgr = FileManager.default
-                guard destURL.isFileURL else {
-                    reject(PromiseError.missed)
-                    try? mgr.removeItem(at: cacheUrl)
-                    return
-                }
-                do {
-                    try SandBox.reset(path: path)
-                    try mgr.moveItem(at: cacheUrl, to: destURL)
-                    fulfill(destURL)
-                } catch {
-                    try? mgr.removeItem(at: cacheUrl)
-                    reject(error)
-                }
-            }.resume()
-        }
-    }
-    
-    
-    
-    public static func urlError(_ desc: String) -> NSError {
-        NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: [NSLocalizedDescriptionKey: desc])
     }
 }
  
