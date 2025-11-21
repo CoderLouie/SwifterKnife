@@ -61,11 +61,30 @@ public final class ScrollStackView: UIScrollView {
         super.layoutMargins = .zero
         stackWidthCons = container.widthAnchor.constraint(equalTo: self.widthAnchor, constant: 0)
         stackHeightCons = container.heightAnchor.constraint(equalTo: self.heightAnchor, constant: 0)
+        typealias LayoutAttr = NSLayoutConstraint.Attribute
+        typealias PairLayoutAttr = (from: LayoutAttr, to:  LayoutAttr)
+        let edgets: [PairLayoutAttr] = [
+            (.top, .topMargin),
+            (.bottom, .bottomMargin),
+            (.leading, .leadingMargin),
+            (.trailing, .trailingMargin),
+        ]
         container.doConstraints { make in
-            make.son.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor)
-            make.son.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor)
-            make.son.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
-            make.son.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
+//            make.son.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor)
+//            make.son.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor)
+//            make.son.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
+//            make.son.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
+            edgets.map { p in
+                NSLayoutConstraint(
+                    item: make.son,
+                    attribute: p.from,
+                    relatedBy: .equal,
+                    toItem: make.father,
+                    attribute: p.to,
+                    multiplier: 1.0,
+                    constant: 0
+                )
+            }
             stackWidthCons
             stackHeightCons
         }
