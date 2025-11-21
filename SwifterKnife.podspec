@@ -34,9 +34,14 @@ Pod::Spec.new do |s|
     sp.dependency 'SwifterKnife/Base'
     sp.source_files = 'SwifterKnife/Classes/Tiger/**/*.swift'
   end
-#  s.subspec 'ScreenUtils' do |sp|
-#    sp.source_files = 'SwifterKnife/Classes/ScreenUtils/**/*.swift'
-#  end
+  s.subspec 'ScreenUtils' do |sp|
+    sp.dependency 'SwifterKnife/Base'
+    sp.source_files = 'SwifterKnife/Classes/ScreenUtils/**/*.swift'
+  end
+  s.subspec 'Issued' do |sp|
+    sp.dependency 'SwifterKnife/Tiger'
+    sp.dependency 'SwifterKnife/ScreenUtils'
+  end
   
   # Extension Extensions
   s.subspec 'Extension' do |sp|
@@ -46,6 +51,7 @@ Pod::Spec.new do |s|
   
   # Utility Extensions
   s.subspec 'Utility' do |sp|
+    sp.dependency 'SwifterKnife/ScreenUtils'
     sp.source_files = 'SwifterKnife/Classes/Utility/**/*'
   end
   

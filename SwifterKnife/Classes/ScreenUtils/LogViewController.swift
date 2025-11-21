@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SnapKit
+
 
 
 fileprivate class MenuItem {
@@ -41,7 +41,7 @@ fileprivate class _TitleControl: UIControl {
     func setup() {
         label = UILabel().then {
             addSubview($0)
-            $0.font = .regular(12).fit
+            $0.font = .systemFont(ofSize: 12, weight: .regular)
             $0.textColor = normalTitleColor
         }
     }
@@ -56,10 +56,12 @@ fileprivate class _TitleControl: UIControl {
 }
 
 fileprivate class _ToolControl: _TitleControl {
-    override var normalTitleColor: UIColor { UIColor(gray: 255, alpha: 0.5) }
+    override var normalTitleColor: UIColor {
+        UIColor.white.withAlphaComponent(0.5)
+    }
     override var selectedTitleColor: UIColor { .white }
     override var intrinsicContentSize: CGSize {
-        CGSize(width: label.intrinsicContentSize.width + 20.fit, height: 30.fit)
+        CGSize(width: label.intrinsicContentSize.width + 20, height: 30)
     }
     override var isSelected: Bool {
         didSet {
@@ -68,33 +70,46 @@ fileprivate class _ToolControl: _TitleControl {
     }
     override func setup() {
         super.setup()
-        addBorder(color: normalTitleColor, radius: 4, width: 1)
-        label.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        layer.do {
+            $0.masksToBounds = true
+            $0.cornerRadius = 4
+            $0.borderWidth = 1
+            $0.borderColor = normalTitleColor.cgColor
         }
-        increaseContentPriority(50, for: .horizontal)
+        label.doConstraints { make in
+            make.centerEqualTo(0)
+        }
+        do {
+            let amount: Float = 50
+            let axis: NSLayoutConstraint.Axis = .horizontal
+            let val1 = contentHuggingPriority(for: axis).rawValue
+            setContentHuggingPriority(.init(rawValue: val1 + amount), for: axis)
+            let val2 = contentCompressionResistancePriority(for: axis).rawValue
+            setContentCompressionResistancePriority(.init(rawValue: val2 + amount), for: axis)
+        }
     }
 }
 fileprivate class _MenuControl: _TitleControl {
     override var intrinsicContentSize: CGSize {
-        CGSize(width: 100.fit, height: 30.fit)
+        CGSize(width: 100, height: 30)
     }
     override func setup() {
         super.setup()
-        label.snp.makeConstraints { make in
-            make.leading.equalTo(12.fit)
-            make.centerY.equalToSuperview()
+        label.doConstraints { make in
+            make.leadingEqualTo(12)
+            make.centerYEqualTo(0)
         }
     }
 }
 fileprivate class _PopMenuControl: _TitleControl {
     override var intrinsicContentSize: CGSize {
-        CGSize(width: label.intrinsicContentSize.width + 20.fit, height: 30.fit)
+        CGSize(width: label.intrinsicContentSize.width + 20, height: 30)
     }
     override func setup() {
         super.setup()
-        label.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        label.doConstraints { make in
+//            make.center.equalToSuperview()
+            make.centerEqualTo(0)
         }
     }
 }
@@ -106,21 +121,21 @@ fileprivate class _MenuView: UIView {
         self.menus = menus
         self.onChange = onChange
         
-        UIStackView.vertical {
-            menus.enumerated().map { (idx, item) in
-                _MenuControl().then {
-                    $0.tag = idx
-                    $0.isSelected = item.isSelected
-                    $0.label.text = item.title
-                    $0.addTarget(self, action: #selector(onMenuControlClick(_:)), for: .touchUpInside)
-                }
+        UIStackView(arrangedSubviews: menus.enumerated().map { (idx, item) in
+            _MenuControl().then {
+                $0.tag = idx
+                $0.isSelected = item.isSelected
+                $0.label.text = item.title
+                $0.addTarget(self, action: #selector(onMenuControlClick(_:)), for: .touchUpInside)
             }
-        }.do {
-            $0.alignment = .fill
-            $0.distribution = .fillEqually
-            addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
+        }).do { this in
+            this.axis = .vertical
+            this.alignment = .fill
+            this.distribution = .fillEqually
+            
+            addSubview(this)
+            this.doConstraints { make in
+                make.edgesEqualTo(0)
             }
         }
     }
@@ -135,24 +150,28 @@ fileprivate class _PopMenu: UIView {
     convenience init(onClick: @escaping (Int) -> Void) {
         self.init(frame: .zero)
         backgroundColor = .white
-        addCorner(radius: 4)
+//        addCorner(radius: 4)
+        layer.do {
+            $0.masksToBounds = true
+            $0.cornerRadius = 4
+        }
         self.onClick = onClick
         
         let actions = ["删除行","全选","复制","复制行"]
-        UIStackView.horizontal {
-            actions.enumerated().map { (idx, title) in
-                _PopMenuControl().then {
-                    $0.tag = idx
-                    $0.label.text = title
-                    $0.addTarget(self, action: #selector(onMenuControlClick(_:)), for: .touchUpInside)
-                }
+        UIStackView(arrangedSubviews: actions.enumerated().map { (idx, title) in
+            _PopMenuControl().then {
+                $0.tag = idx
+                $0.label.text = title
+                $0.addTarget(self, action: #selector(onMenuControlClick(_:)), for: .touchUpInside)
             }
-        }.do {
+        }).do {
+            $0.axis = .horizontal
             $0.alignment = .fill
             $0.distribution = .fill
             addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            $0.doConstraints { make in
+//                make.edges.equalToSuperview()
+                make.edgesEqualTo(0)
             }
         }
     }
@@ -173,7 +192,7 @@ fileprivate class _LogTextView: UITextView {
     }
     private func setup() {
         backgroundColor = .clear
-        tintColor = .create("#FFE500")
+        tintColor = UIColor(red: 255 / 255.0, green: 229 / 255.0, blue: 0 / 255.0, alpha: 1)
         textContainerInset = .zero
         textContainer.lineFragmentPadding = 0
         isEditable = false
@@ -198,7 +217,8 @@ fileprivate class _LogTextView: UITextView {
             return rects[0].rect
         }
         let range = selectedRange
-        guard range.isValid else { return nil }
+        guard range.location != NSNotFound,
+              range.length > 0 else { return nil }
         
         let rect1 = caretRect(for: textRange.start)
         let rect2 = caretRect(for: textRange.end)
@@ -235,7 +255,7 @@ extension _LogTextView: UITextInputDelegate {
         guard justHiddenPopMenu() else { return false }
         let range = selectedRange
         if range.length == 0 { return false }
-        selectedRange = .zero
+        selectedRange = NSRange(location: 0, length: 0)
         return true
     }
     func textWillChange(_ textInput: UITextInput?) { }
@@ -295,29 +315,34 @@ fileprivate class _LogView: UIView {
     private func setup() {
         let toolbar = UIView().then {
             addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(0)
-                make.height.equalTo(44.fit)
+            $0.doConstraints { make in
+//                make.leading.trailing.equalToSuperview()
+//                make.bottom.equalTo(0)
+//                make.height.equalTo(44)
+                make.horizontalEqualTo(0)
+                make.bottomEqualTo(0)
+                make.heightEqualTo(44)
             }
         }
-        let space = 12.fit
+        let space: CGFloat = 12
         levelControl = _ToolControl().then {
             toolbar.addSubview($0)
             $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
             $0.label.text = "Level"
-            $0.snp.makeConstraints { make in
-                make.leading.equalTo(space)
-                make.centerY.equalToSuperview()
+            $0.doConstraints { make in
+//                make.leading.equalTo(space)
+//                make.centerY.equalToSuperview()
+                make.leadingEqualTo(space)
+                make.centerYEqualTo(0)
             }
         }
         tagControl = _ToolControl().then {
             toolbar.addSubview($0)
             $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
             $0.label.text = "Tag"
-            $0.snp.makeConstraints { make in
-                make.leading.equalTo(levelControl.snp.trailing).offset(space)
-                make.centerY.equalToSuperview()
+            $0.doConstraints { make in
+                make.son.leadingAnchor.constraint(equalTo: levelControl.trailingAnchor, constant: space)
+                make.centerYEqualTo(0)
             }
         }
         let clearControl = _ToolControl().then {
@@ -325,9 +350,11 @@ fileprivate class _LogView: UIView {
             $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
             $0.isSelected = true
             $0.label.text = "Clear"
-            $0.snp.makeConstraints { make in
-                make.trailing.equalTo(-space)
-                make.centerY.equalToSuperview()
+            $0.doConstraints { make in
+//                make.trailing.equalTo(-space)
+//                make.centerY.equalToSuperview()
+                make.trailingEqualTo(-space)
+                make.centerYEqualTo(0)
             }
         }
         _ToolControl().do {
@@ -336,20 +363,25 @@ fileprivate class _LogView: UIView {
             $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
             $0.isSelected = true
             $0.label.text = "Prev"
-            $0.snp.makeConstraints { make in
-                make.trailing.equalTo(clearControl.snp.leading).offset(-space)
-                make.centerY.equalToSuperview()
+            $0.doConstraints { make in
+//                make.trailing.equalTo(clearControl.snp.leading).offset(-space)
+//                make.centerY.equalToSuperview()
+                make.son.trailingAnchor.constraint(equalTo: clearControl.leadingAnchor, constant: -space)
+                make.centerYEqualTo(0)
             }
         }
-        let font = UIFont(name: "Menlo", size: 12)?.fit
+        let font = UIFont(name: "Menlo", size: 12)
         
         textView = _LogTextView().then {
             $0.font = font
             addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview().inset(space)
-                make.top.equalTo(space * 0.5)
-                make.bottom.equalTo(toolbar.snp.top)
+            $0.doConstraints { make in
+//                make.leading.trailing.equalToSuperview().inset(space)
+//                make.top.equalTo(space * 0.5)
+//                make.bottom.equalTo(toolbar.snp.top)
+                make.horizontalEqualTo(space)
+                make.topEqualTo(space * 0.5)
+                make.son.bottomAnchor.constraint(equalTo: toolbar.topAnchor)
             }
         }
     }
@@ -359,7 +391,7 @@ fileprivate class _LogView: UIView {
         let items = selectedItems
         guard !items.isEmpty else { return }
         let log = items.map(\.content).joined(separator: "\n")
-        log.copyToPasteboard()
+        UIPasteboard.general.string = log
     }
     func deleteLine(_ sender: Any?) {
         let items = selectedItems
@@ -388,7 +420,8 @@ fileprivate class _LogView: UIView {
     }
     private var selectedItems: [LogItem] {
         let range = textView.selectedRange
-        guard range.isValid else { return [] }
+        guard range.location != NSNotFound,
+              range.length > 0 else { return [] }
         let r = (range.location..<range.location + range.length)
         var res: [LogItem] = []
         var current = 0
@@ -532,20 +565,33 @@ public enum ScreenLogLevel: Int, CaseIterable {
     }
 }
 
-
+fileprivate enum _Times {
+    private static let dataFmt: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = .init(identifier: "Asia/Shanghai")
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        return formatter
+    }()
+    static var now: String {
+        return dataFmt.string(from: Date())
+    }
+}
 class LogViewController: _BaseViewController {
     func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
-        logView.log(Console.timeString + " " + string, level: level, tags: tags) 
+        logView.log(_Times.now + " " + string, level: level, tags: tags)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         logView.do {
             view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.leading.trailing.equalTo(0)
-                make.bottom.equalTo(-Screen.tabbarH - 20)
-                make.top.equalTo(Screen.navbarH + 20)
+            $0.doConstraints { make in
+//                make.leading.trailing.equalTo(0)
+//                make.bottom.equalTo(-Screen.tabbarH - 20)
+//                make.top.equalTo(Screen.navbarH + 20)
+                make.horizontalEqualTo(0)
+                make.bottomEqualTo(-Screen.tabbarH - 20)
+                make.topEqualTo(Screen.navbarH + 20)
             }
         }
     }

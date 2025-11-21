@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 public protocol SKSOptionHandler {
     func addOption(_ title: String, action: @escaping (_ vc: UIViewController) -> Void)
@@ -17,7 +16,7 @@ fileprivate struct SKOptions {
     let action: (_ vc: UIViewController) -> Void
 }
 
-class SKCaseCell: UITableViewCell, Reusable {
+class SKCaseCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -28,8 +27,11 @@ class SKCaseCell: UITableViewCell, Reusable {
     }
     func setup() {
         backgroundColor = .clear
-        contentView.backgroundColor = .create("#252429")
-        contentView.addCorner(radius: 12.fit)
+        contentView.backgroundColor = UIColor(red: 37 / 255.0, green: 36 / 255.0, blue: 41 / 255.0, alpha: 1)
+        contentView.layer.do {
+            $0.masksToBounds = true
+            $0.cornerRadius = 12
+        }
         textLabel?.textColor = .white
         selectionStyle = .none
         selectedBackgroundView = UIView().then {
@@ -53,12 +55,14 @@ class OptionsViewController: _BaseViewController {
             $0.delegate = self
             $0.dataSource = self
             $0.rowHeight = 50
-            $0.register(cellType: SKCaseCell.self)
+//            $0.register(cellType: SKCaseCell.self)
+            $0.register(SKCaseCell.self, forCellReuseIdentifier: "SKCaseCell")
             view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.top.equalTo(Screen.navbarH)
-                make.horizontalSpace(16.fit)
-                make.bottom.equalTo(0)
+            $0.doConstraints { make in
+                make.topEqualTo(Screen.navbarH)
+                make.horizontalEqualTo(16)
+                make.bottomEqualTo(0)
+                
             }
         }
     }
@@ -66,7 +70,10 @@ class OptionsViewController: _BaseViewController {
     private unowned var tableView: UITableView!
     private var items: [SKOptions] = [
         .init(title: "查看沙盒") { vc in
-            Haptic.impact(.medium).generate()
+            UIImpactFeedbackGenerator(style: .medium).do {
+                $0.prepare()
+                $0.impactOccurred()
+            }
             let newvc = _SKFoldVC()
             newvc.title = "Sandbox"
             newvc.parentPath = NSHomeDirectory()
@@ -91,7 +98,7 @@ extension OptionsViewController: UITableViewDataSource {
         items.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: SKCaseCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: SKCaseCell = tableView.dequeueReusableCell(withIdentifier: "SKCaseCell", for: indexPath) as! SKCaseCell
         cell.textLabel?.text = String(format: "%02d. ", indexPath.row) + items[indexPath.row].title
         return cell
     }

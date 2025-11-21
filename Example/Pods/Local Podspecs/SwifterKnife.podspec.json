@@ -35,6 +35,15 @@
       "source_files": "SwifterKnife/Classes/Tiger/**/*.swift"
     },
     {
+      "name": "ScreenUtils",
+      "dependencies": {
+        "SwifterKnife/Base": [
+
+        ]
+      },
+      "source_files": "SwifterKnife/Classes/ScreenUtils/**/*.swift"
+    },
+    {
       "name": "Extension",
       "dependencies": {
         "SwifterKnife/Base": [
@@ -45,6 +54,11 @@
     },
     {
       "name": "Utility",
+      "dependencies": {
+        "SwifterKnife/ScreenUtils": [
+
+        ]
+      },
       "source_files": "SwifterKnife/Classes/Utility/**/*"
     },
     {

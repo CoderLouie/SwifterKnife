@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import SnapKit
-import SwifterKnife
 
 public final class PopContainer: UIView {
     public enum ArrowDirection {
@@ -46,7 +44,7 @@ public final class PopContainer: UIView {
     
     @discardableResult
     public func show(_ contentView: UIView, on view: UIView?, from sourceView: UIView?, rect targetRect: CGRect? = nil, config cfgClosure: (Config) -> Void) -> Config? {
-        guard let parentView: UIView = view ?? App.keyWindow else { return nil }
+        guard let parentView: UIView = view ?? Screen.keyWindow else { return nil }
         let parentBounds = parentView.bounds
         let parentSize = parentBounds.size
         let sourceRect: CGRect = {
@@ -78,12 +76,19 @@ public final class PopContainer: UIView {
         self.removeFromSuperview()
         addSubview(contentView)
         parentView.addSubview(self)
-        contentView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(inset)
+        contentView.doConstraints { make in
+            make.topEqualTo(inset.top)
+            make.leadingEqualTo(inset.left)
+            make.trailingEqualTo(-inset.right)
+            make.bottomEqualTo(-inset.bottom)
         }
-        self.snp.makeConstraints { make in
-            make.top.leading.equalTo(100)
+        let cons = self.doConstraints { make in
+            make.topEqualTo(100)
+            make.leadingEqualTo(100)
         }
+        let topCons = cons[0]
+        let leadingCons = cons[1]
+        
         parentView.layoutIfNeeded()
         let selfSize = self.bounds.size
         
@@ -202,10 +207,9 @@ public final class PopContainer: UIView {
         contentView.backgroundColor = .clear
         
         let top = dir == .up ? sourceRect.maxY + arrowOffset : sourceRect.minY  - arrowOffset - selfSize.height
-        self.snp.updateConstraints { make in
-            make.leading.equalTo(left)
-            make.top.equalTo(top)
-        }
+        topCons.constant = top
+        leadingCons.constant = left
+        
         return cfg
     }
     public override var backgroundColor: UIColor? {

@@ -19,15 +19,27 @@ class _SKFoldVC: _BaseViewController {
     private var previewPath = ""
     private unowned var tableView: UITableView!
     
-    private lazy var items = (try? FileManager.default.contentsOfDirectory(atPath: parentPath).compactMap { str -> String? in
-        if str.hasPrefix(".") { return nil }
-        let path = parentPath + "/" + str
-        if SandBox.isDirectory(path) { return "/" + str }
-        guard let attr = try? FileManager.default.attributesOfItem(atPath: path),
-              let size = attr[.size] as? Int else { return str }
+    private lazy var items: [String] = {
+        do {
+            let mgr = FileManager.default
+            var isDirectory: ObjCBool = false
+            return try mgr.contentsOfDirectory(atPath: parentPath).compactMap { str -> String? in
+                if str.hasPrefix(".") { return nil }
+                let path = parentPath + "/" + str
+                
+                let exists = mgr.fileExists(atPath: path, isDirectory: &isDirectory)
+                if !exists { return nil }
+                if isDirectory.boolValue { return "/" + str }
+                
+                let attr = try FileManager.default.attributesOfItem(atPath: path)
+                guard let size = attr[.size] as? Int else { return str }
+                return str + " \(Int(round(Double(size) / 1024.0)))KB"
+            }
+        } catch {
+            return []
+        }
         
-        return str + " \(Int(round(Double(size) / 1024.0)))KB"
-    }) ?? []
+    }()
 }
 fileprivate extension String {
     func xxtruncated() -> String {
@@ -41,7 +53,7 @@ extension _SKFoldVC: UITableViewDataSource {
         items.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: SKCaseCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SKCaseCell", for: indexPath) as! SKCaseCell
         cell.textLabel?.text = items[indexPath.row].xxtruncated()
         return cell
     }
@@ -75,7 +87,7 @@ extension _SKFoldVC: UITableViewDelegate {
             navigationController?.pushViewController(vc, animated: true)
             return
         }
-        previewPath = parentPath + "/" + (name.splitBy(charactersIn: " ").first ?? "")
+        previewPath = parentPath + "/" + (name.components(separatedBy: " ").first ?? "")
         let previewVC = QLPreviewController()
         previewVC.dataSource = self
         present(previewVC, animated: true)
@@ -97,14 +109,14 @@ extension _SKFoldVC {
             $0.tableFooterView = UIView()
             $0.delegate = self
             $0.dataSource = self
-            $0.rowHeight = 50
-            $0.register(cellType: SKCaseCell.self)
+            $0.rowHeight = 50 
+            $0.register(SKCaseCell.self, forCellReuseIdentifier: "SKCaseCell")
             view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.top.equalTo(Screen.navbarH)
-                make.horizontalSpace(16.fit)
-                make.bottom.equalTo(-Screen.tabbarH)
-            }
+            $0.doConstraints { make in
+                make.topEqualTo(Screen.navbarH)
+                make.horizontalEqualTo(16)
+                make.bottomEqualTo(-Screen.tabbarH)
+            } 
         }
     }
 }
