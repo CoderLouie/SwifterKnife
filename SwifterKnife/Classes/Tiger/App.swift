@@ -55,11 +55,6 @@ public enum App {
         UIApplication.shared.delegate?.window ?? nil
     }
     
-
-    public static var keyWindow: UIWindow? {
-        return Screen.keyWindow
-    }
-    
     /// 是否处于debug模式
     public static var isDebug: Bool {
         #if DEBUG
@@ -145,10 +140,10 @@ public enum App {
         return value
     }
     
-    public static func gotoAlbum() {
-        let urlStr = "cGhvdG9zLXJlZGlyZWN0Oi8v".base64Decoded
-        openURLString(urlStr)
-    }
+//    public static func gotoAlbum() {
+//        let urlStr = "cGhvdG9zLXJlZGlyZWN0Oi8v".base64Decoded
+//        openURLString(urlStr)
+//    }
     
     public static func gotoSetting() {
         let url = URL(string: UIApplication.openSettingsURLString)
