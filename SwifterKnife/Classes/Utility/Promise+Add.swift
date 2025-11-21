@@ -362,4 +362,78 @@ extension Promise {
         }
     }
 }
- 
+
+public extension Promises {
+   static func downloadImage(from urlString: String?) -> Promise<UIImage> {
+       guard let str = urlString,
+             let url = URL(string: str) else {
+           return .reject(urlError("url \(urlString ?? "nil") is invalid"))
+       }
+       return _downloadImage(from: url) { img, _ in img }
+   }
+   static func downloadImages(from urlString: String?) -> Promise<(String, UIImage)> {
+       guard let str = urlString,
+             let url = URL(string: str) else {
+           return .reject(urlError("url \(urlString ?? "nil") is invalid"))
+       }
+       return _downloadImage(from: url) { img, url in (url.absoluteString, img) }
+   }
+   static func downloadImage(from url: URL) -> Promise<UIImage> {
+       _downloadImage(from: url) { img, _ in img }
+   }
+   private static func _downloadImage<T>(from url: URL, mapResult: @escaping (UIImage, URL) -> T) -> Promise<T> {
+       Promise.create { fulfill, reject in
+           URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+               if let err = error {
+                   reject(err)
+               } else if let data,
+                         let image = UIImage(data: data) {
+                   fulfill(mapResult(image, url))
+               } else {
+                   reject(urlError("cannot download image from \(url.absoluteString)"))
+               }
+           }.resume()
+       }
+   }
+   
+   static func download(from urlString: String, destination: @escaping (URL, URL) -> String) -> Promise<URL> {
+       return Promise.create { fulfill, reject in
+           guard let url = URL(string: urlString) else {
+               reject(PromiseError.missed)
+               return
+           }
+           URLSession.shared.downloadTask(with: url) { fileUrl, response, error in
+               if let err = error {
+                   reject(err)
+                   return
+               }
+               guard let cacheUrl = fileUrl else {
+                   reject(PromiseError.missed)
+                   return
+               }
+               let path = destination(cacheUrl, url)
+               let destURL = URL(fileURLWithPath: path)
+               let mgr = FileManager.default
+               guard destURL.isFileURL else {
+                   reject(PromiseError.missed)
+                   try? mgr.removeItem(at: cacheUrl)
+                   return
+               }
+               do {
+                   try SandBox.reset(path: path)
+                   try mgr.moveItem(at: cacheUrl, to: destURL)
+                   fulfill(destURL)
+               } catch {
+                   try? mgr.removeItem(at: cacheUrl)
+                   reject(error)
+               }
+           }.resume()
+       }
+   }
+   
+   
+   
+   public static func urlError(_ desc: String) -> NSError {
+       NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: [NSLocalizedDescriptionKey: desc])
+   }
+}

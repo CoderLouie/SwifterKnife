@@ -59,15 +59,17 @@ public final class ScrollStackView: UIScrollView {
         insetsLayoutMarginsFromSafeArea = false
         
         super.layoutMargins = .zero
-        container.doConstraints { make in
-            make.son.leadingAnchor.constraint(equalTo: make.father.layoutMarginsGuide.leadingAnchor)
-            make.son.trailingAnchor.constraint(equalTo: make.father.layoutMarginsGuide.trailingAnchor)
-            make.son.topAnchor.constraint(equalTo: make.father.layoutMarginsGuide.topAnchor)
-            make.son.bottomAnchor.constraint(equalTo: make.father.layoutMarginsGuide.bottomAnchor)
-        }
         stackWidthCons = container.widthAnchor.constraint(equalTo: self.widthAnchor, constant: 0)
         stackHeightCons = container.heightAnchor.constraint(equalTo: self.heightAnchor, constant: 0)
-        NSLayoutConstraint.activate([stackWidthCons])
+        container.doConstraints { make in
+            make.son.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor)
+            make.son.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor)
+            make.son.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
+            make.son.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
+            stackWidthCons
+            stackHeightCons
+        }
+        stackHeightCons.deactivate()
     }
     
     public convenience override init(frame: CGRect) {
