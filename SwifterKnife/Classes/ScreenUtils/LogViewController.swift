@@ -170,7 +170,6 @@ fileprivate class _PopMenu: UIView {
             $0.distribution = .fill
             addSubview($0)
             $0.doConstraints { make in
-//                make.edges.equalToSuperview()
                 make.edgesEqualTo(0)
             }
         }
@@ -316,9 +315,6 @@ fileprivate class _LogView: UIView {
         let toolbar = UIView().then {
             addSubview($0)
             $0.doConstraints { make in
-//                make.leading.trailing.equalToSuperview()
-//                make.bottom.equalTo(0)
-//                make.height.equalTo(44)
                 make.horizontalEqualTo(0)
                 make.bottomEqualTo(0)
                 make.heightEqualTo(44)
@@ -330,8 +326,6 @@ fileprivate class _LogView: UIView {
             $0.addTarget(self, action: #selector(toolbarButtonDidClick(_:)), for: .touchUpInside)
             $0.label.text = "Level"
             $0.doConstraints { make in
-//                make.leading.equalTo(space)
-//                make.centerY.equalToSuperview()
                 make.leadingEqualTo(space)
                 make.centerYEqualTo(0)
             }
@@ -351,8 +345,6 @@ fileprivate class _LogView: UIView {
             $0.isSelected = true
             $0.label.text = "Clear"
             $0.doConstraints { make in
-//                make.trailing.equalTo(-space)
-//                make.centerY.equalToSuperview()
                 make.trailingEqualTo(-space)
                 make.centerYEqualTo(0)
             }
@@ -364,8 +356,6 @@ fileprivate class _LogView: UIView {
             $0.isSelected = true
             $0.label.text = "Prev"
             $0.doConstraints { make in
-//                make.trailing.equalTo(clearControl.snp.leading).offset(-space)
-//                make.centerY.equalToSuperview()
                 make.son.trailingAnchor.constraint(equalTo: clearControl.leadingAnchor, constant: -space)
                 make.centerYEqualTo(0)
             }
@@ -376,9 +366,6 @@ fileprivate class _LogView: UIView {
             $0.font = font
             addSubview($0)
             $0.doConstraints { make in
-//                make.leading.trailing.equalToSuperview().inset(space)
-//                make.top.equalTo(space * 0.5)
-//                make.bottom.equalTo(toolbar.snp.top)
                 make.horizontalEqualTo(space)
                 make.topEqualTo(space * 0.5)
                 make.son.bottomAnchor.constraint(equalTo: toolbar.topAnchor)
@@ -585,10 +572,7 @@ class LogViewController: _BaseViewController {
         super.viewDidLoad()
         logView.do {
             view.addSubview($0)
-            $0.doConstraints { make in
-//                make.leading.trailing.equalTo(0)
-//                make.bottom.equalTo(-Screen.tabbarH - 20)
-//                make.top.equalTo(Screen.navbarH + 20)
+            $0.doConstraints { make in 
                 make.horizontalEqualTo(0)
                 make.bottomEqualTo(-Screen.tabbarH - 20)
                 make.topEqualTo(Screen.navbarH + 20)

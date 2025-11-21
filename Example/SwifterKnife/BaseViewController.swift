@@ -34,3 +34,15 @@ class BaseViewController: UIViewController {
         Console.logFunc(whose: self)
     }
 }
+
+import SnapKit
+extension ConstraintMaker {
+    func horizontalSpace(_ space: CGFloat) {
+        leading.equalTo(space)
+        trailing.equalTo(-space)
+    }
+    func verticalSpace(_ space: CGFloat) {
+        top.equalTo(space)
+        bottom.equalTo(-space)
+    }
+}

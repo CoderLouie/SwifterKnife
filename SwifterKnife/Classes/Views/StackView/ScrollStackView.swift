@@ -6,7 +6,15 @@
 //
 
 import UIKit
-import SnapKit
+
+fileprivate extension NSLayoutConstraint {
+    func deactivate() {
+        NSLayoutConstraint.deactivate([self])
+    }
+    func activate() {
+        NSLayoutConstraint.activate([self])
+    }
+}
 
 /*
 -   axis(轴向) 属性决定了 stack 的朝向，只有垂直或水平
@@ -51,13 +59,15 @@ public final class ScrollStackView: UIScrollView {
         insetsLayoutMarginsFromSafeArea = false
         
         super.layoutMargins = .zero
-        container.snp.remakeConstraints { make in
-//            make.edges.equalToSuperview()
-            make.directionalEdges.equalTo(self.snp.directionalMargins)
-            stackWidthCons = make.width.equalToSuperview().constraint
-            stackHeightCons = make.height.equalToSuperview().constraint
+        container.doConstraints { make in
+            make.son.leadingAnchor.constraint(equalTo: make.father.layoutMarginsGuide.leadingAnchor)
+            make.son.trailingAnchor.constraint(equalTo: make.father.layoutMarginsGuide.trailingAnchor)
+            make.son.topAnchor.constraint(equalTo: make.father.layoutMarginsGuide.topAnchor)
+            make.son.bottomAnchor.constraint(equalTo: make.father.layoutMarginsGuide.bottomAnchor)
         }
-        stackHeightCons.deactivate()
+        stackWidthCons = container.widthAnchor.constraint(equalTo: self.widthAnchor, constant: 0)
+        stackHeightCons = container.heightAnchor.constraint(equalTo: self.heightAnchor, constant: 0)
+        NSLayoutConstraint.activate([stackWidthCons])
     }
     
     public convenience override init(frame: CGRect) {
@@ -102,8 +112,8 @@ public final class ScrollStackView: UIScrollView {
                 return
             }
             let inset = layoutMargins
-            stackWidthCons.update(offset: -(inset.left + inset.right))
-            stackHeightCons.update(offset: -(inset.top + inset.bottom))
+            stackWidthCons.constant = -(inset.left + inset.right)
+            stackHeightCons.constant = -(inset.top + inset.bottom)
         }
     }
     public override var contentInset: UIEdgeInsets {
@@ -112,8 +122,8 @@ public final class ScrollStackView: UIScrollView {
                 return
             }
             let inset = contentInset
-            stackWidthCons.update(offset: -(inset.left + inset.right))
-            stackHeightCons.update(offset: -(inset.top + inset.bottom))
+            stackWidthCons.constant = -(inset.left + inset.right)
+            stackHeightCons.constant = -(inset.top + inset.bottom)
         }
     }
     public func contentInset(_ inset: UIEdgeInsets) -> Self {
@@ -147,15 +157,14 @@ public final class ScrollStackView: UIScrollView {
             isUpdate = true
         } else {
             isUpdate = false
-            self.snp.makeConstraints { make in
+            self.doConstraints { make in
                 if isV {
-                    make.height.equalTo(side)
+                    make.heightEqualTo(side)
                 } else {
-                    make.width.equalTo(side)
+                    make.widthEqualTo(side)
                 }
             }
         }
-        
         return (result, isUpdate)
     }
     
@@ -171,8 +180,8 @@ public final class ScrollStackView: UIScrollView {
         (contentInset.left + contentInset.right)
         let max = maxSide - inset
         if ss <= max {
-            container.snp.makeConstraints { make in
-                make.width.equalTo(max)
+            container.doConstraints { make in
+                make.widthEqualTo(max)
             }
             return true
         }
@@ -191,8 +200,8 @@ public final class ScrollStackView: UIScrollView {
     }
     
     public private(set) var container: UIStackView!
-    private var stackHeightCons: Constraint!
-    private var stackWidthCons: Constraint!
+    private var stackHeightCons: NSLayoutConstraint!
+    private var stackWidthCons: NSLayoutConstraint!
 }
 
 

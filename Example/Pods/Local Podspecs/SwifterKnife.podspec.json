@@ -44,6 +44,17 @@
       "source_files": "SwifterKnife/Classes/ScreenUtils/**/*.swift"
     },
     {
+      "name": "Issued",
+      "dependencies": {
+        "SwifterKnife/Tiger": [
+
+        ],
+        "SwifterKnife/ScreenUtils": [
+
+        ]
+      }
+    },
+    {
       "name": "Extension",
       "dependencies": {
         "SwifterKnife/Base": [
@@ -68,9 +79,6 @@
 
         ],
         "SwifterKnife/Utility": [
-
-        ],
-        "SnapKit": [
 
         ]
       },

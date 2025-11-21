@@ -280,6 +280,13 @@ public struct SKConstraintMaker {
     public let father: UIView
     
     
+    public func heightEqualToSuperview() -> NSLayoutConstraint {
+        son.heightAnchor.constraint(equalTo: father.heightAnchor)
+    }
+    public func widthEqualToSuperview() -> NSLayoutConstraint {
+        son.widthAnchor.constraint(equalTo: father.widthAnchor)
+    }
+    
     public func heightEqualTo(_ val: CGFloat) -> NSLayoutConstraint {
         son.heightAnchor.constraint(equalToConstant: val)
     }

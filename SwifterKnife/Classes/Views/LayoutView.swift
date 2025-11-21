@@ -220,16 +220,3 @@ public final class SudokuView: UIView {
         }
     }
 }
-
-
-import SnapKit
-public extension ConstraintMaker {
-    func horizontalSpace(_ space: CGFloat) {
-        leading.equalTo(space)
-        trailing.equalTo(-space)
-    }
-    func verticalSpace(_ space: CGFloat) {
-        top.equalTo(space)
-        bottom.equalTo(-space)
-    }
-}
