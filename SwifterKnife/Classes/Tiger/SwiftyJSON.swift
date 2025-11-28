@@ -192,7 +192,7 @@ public enum JSON {
         if type == other.type {
             switch self {
             case .dictionary:
-                for (key, value) in other {
+                for (key, value) in other.dictionaryValue {
                     try self[key: key].merge(with: value, typecheck: false)
                 }
             case .array:
@@ -249,7 +249,7 @@ public enum JSON {
     }
 }
  
-
+/*
 public enum Index<T: Any>: Comparable {
     case array(Int)
     case dictionary(DictionaryIndex<String, T>)
@@ -341,6 +341,7 @@ extension JSON: Swift.Collection {
         }
     }
 }
+*/
 
 // MARK: - Subscript
 
@@ -567,45 +568,6 @@ extension JSON {
     }
 }
 
-// MARK: - LiteralConvertible
-
-extension JSON: Swift.ExpressibleByStringLiteral {
-    public init(stringLiteral value: StringLiteralType) {
-        self = .string(value)
-    }
-    public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
-        self = .string(value)
-    }
-    public init(unicodeScalarLiteral value: StringLiteralType) {
-        self = .string(value)
-    }
-}
-extension JSON: Swift.ExpressibleByIntegerLiteral {
-    public init(integerLiteral value: IntegerLiteralType) {
-        self = .number(NSNumber(value: value))
-    }
-}
-extension JSON: Swift.ExpressibleByBooleanLiteral {
-    public init(booleanLiteral value: BooleanLiteralType) {
-        self = .bool(value)
-    }
-}
-extension JSON: Swift.ExpressibleByFloatLiteral {
-    public init(floatLiteral value: FloatLiteralType) {
-        self = .number(NSNumber(value: value))
-    }
-}
-extension JSON: Swift.ExpressibleByDictionaryLiteral {
-    public init(dictionaryLiteral elements: (String, Any)...) {
-        self = .dictionary(.init(elements, uniquingKeysWith: { $1 }))
-    }
-}
-extension JSON: Swift.ExpressibleByArrayLiteral {
-    public init(arrayLiteral elements: Any...) {
-        self = .array(elements)
-    }
-}
-
 // MARK: - Raw
 
 extension JSON: Swift.RawRepresentable {
@@ -622,25 +584,16 @@ extension JSON: Swift.RawRepresentable {
     }
     
     public func rawData(options opt: JSONSerialization.WritingOptions = []) throws -> Data {
-        
-        guard JSONSerialization.isValidJSONObject(object) else {
-            throw JSONError.invalidJSON
-        }
-        var options: JSONSerialization.WritingOptions = [.sortedKeys]
-        if #available(iOS 13.0, *) {
-            options.insert(.withoutEscapingSlashes)
-        }
-        options.formUnion(opt)
-        return try JSONSerialization.data(withJSONObject: object, options: options)
-    } 
+        try JSON._data(of: object, opts: opt)
+    }
 }
 
 // MARK: - Printable, DebugPrintable
 
-extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+extension JSON: Swift.CustomStringConvertible {
     
     public var formatJSONString: String? {
-        guard let data = try? rawData(),
+        guard let data = try? JSON._data(of: object),
               let raw = String(data: data, encoding: .utf8) else { return nil }
         return raw
     }
@@ -658,22 +611,6 @@ extension JSON: Swift.CustomStringConvertible, Swift.CustomDebugStringConvertibl
             return "dictionary(\(json))"
         case .null: return "null"
         case let .error(error): return "error\(error.localizedDescription)"
-        }
-    }
-    
-    public var debugDescription: String {
-        switch self {
-        case let .number(num): return "number(\(num.description))"
-        case let .string(str): return "string(\(str.debugDescription))"
-        case let .bool(bool): return "bool(\(bool.description))"
-        case let .array(arr):
-            let json = formatJSONString ?? arr.debugDescription
-            return "array(\(json))"
-        case let .dictionary(dict):
-            let json = formatJSONString ?? dict.description
-            return "dictionary(\(json))"
-        case .null: return "null"
-        case let .error(error): return "error(\(error.localizedDescription))"
         }
     }
 }
@@ -983,155 +920,16 @@ extension JSON {
             numberValue = NSNumber(value: newValue)
         }
     }
-    
-    public var int8: Int8? {
-        get {
-            return number?.int8Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var int8Value: Int8 {
-        get {
-            return numberValue.int8Value
-        }
-        set {
-            numberValue = NSNumber(value: Int(newValue))
-        }
-    }
-    
-    public var uInt8: UInt8? {
-        get {
-            return number?.uint8Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var uInt8Value: UInt8 {
-        get {
-            return numberValue.uint8Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
-    
-    public var int16: Int16? {
-        get {
-            return number?.int16Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var int16Value: Int16 {
-        get {
-            return numberValue.int16Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
-    
-    public var uInt16: UInt16? {
-        get {
-            return number?.uint16Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var uInt16Value: UInt16 {
-        get {
-            return numberValue.uint16Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
-    
-    public var int32: Int32? {
-        get {
-            return number?.int32Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var int32Value: Int32 {
-        get {
-            return numberValue.int32Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
-    
-    public var uInt32: UInt32? {
-        get {
-            return number?.uint32Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var uInt32Value: UInt32 {
-        get {
-            return numberValue.uint32Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
-    
-    public var int64: Int64? {
-        get {
-            return number?.int64Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var int64Value: Int64 {
-        get {
-            return numberValue.int64Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
-    
-    public var uInt64: UInt64? {
-        get {
-            return number?.uint64Value
-        }
-        set {
-            number = newValue.map(NSNumber.init)
-        }
-    }
-    
-    public var uInt64Value: UInt64 {
-        get {
-            return numberValue.uint64Value
-        }
-        set {
-            numberValue = NSNumber(value: newValue)
-        }
-    }
 }
 
 // MARK: - Comparable
 
-extension JSON: Swift.Comparable {}
+extension NSNumber {
+    fileprivate var isBool: Bool {
+        String(cString: objCType) == "c"
+    }
+}
+extension JSON: Swift.Equatable {}
 
 public func == (lhs: JSON, rhs: JSON) -> Bool {
     
@@ -1151,239 +949,20 @@ public func == (lhs: JSON, rhs: JSON) -> Bool {
     }
 }
 
-public func <= (lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs, rhs) {
-    case let (.number(num1), .number(num2)):
-        return num1 <= num2
-    case let (.string(string1), .string(string2)):
-        return string1 <= string2
-    case let (.bool(bool1), .bool(bool2)):
-        return bool1 == bool2
-    case let (.array(array1), .array(array2)):
-        return array1 as NSArray == array2 as NSArray
-    case let (.dictionary(dict1), .dictionary(dict2)):
-        return dict1 as NSDictionary == dict2 as NSDictionary
-    case (.null, .null): return true
-    default: return false
-    }
-}
-
-public func >= (lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs, rhs) {
-    case let (.number(num1), .number(num2)):
-        return num1 >= num2
-    case let (.string(string1), .string(string2)):
-        return string1 >= string2
-    case let (.bool(bool1), .bool(bool2)):
-        return bool1 == bool2
-    case let (.array(array1), .array(array2)):
-        return array1 as NSArray == array2 as NSArray
-    case let (.dictionary(dict1), .dictionary(dict2)):
-        return dict1 as NSDictionary == dict2 as NSDictionary
-    case (.null, .null): return true
-    default: return false
-    }
-}
-
-public func > (lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs, rhs) {
-    case let (.number(num1), .number(num2)):
-        return num1 > num2
-    case let (.string(string1), .string(string2)):
-        return string1 > string2
-    default: return false
-    }
-}
-
-public func < (lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs, rhs) {
-    case let (.number(num1), .number(num2)):
-        return num1 < num2
-    case let (.string(string1), .string(string2)):
-        return string1 < string2
-    default: return false
-    }
-}
-
-
-// MARK: - NSNumber: Comparable
-
-extension NSNumber {
-    fileprivate var isBool: Bool {
-        String(cString: objCType) == "c"
-    }
-}
-
-func == (lhs: NSNumber, rhs: NSNumber) -> Bool {
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true): return false
-    case (true, false): return false
-    default: return lhs.compare(rhs) == .orderedSame
-    }
-}
-
-func != (lhs: NSNumber, rhs: NSNumber) -> Bool {
-    return !(lhs == rhs)
-}
-
-func < (lhs: NSNumber, rhs: NSNumber) -> Bool {
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true): return false
-    case (true, false): return false
-    default: return lhs.compare(rhs) == .orderedAscending
-    }
-}
-
-func > (lhs: NSNumber, rhs: NSNumber) -> Bool {
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true): return false
-    case (true, false): return false
-    default: return lhs.compare(rhs) == ComparisonResult.orderedDescending
-    }
-}
-
-func <= (lhs: NSNumber, rhs: NSNumber) -> Bool {
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true): return false
-    case (true, false): return false
-    default: return lhs.compare(rhs) != .orderedDescending
-    }
-}
-
-func >= (lhs: NSNumber, rhs: NSNumber) -> Bool {
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true): return false
-    case (true, false): return false
-    default: return lhs.compare(rhs) != .orderedAscending
-    }
-}
-
-// MARK: - JSON: Codable
-extension JSON: Codable {
-    private static var codableTypes: [Codable.Type] {
-        return [
-            Bool.self,
-            Int.self,
-            Int8.self,
-            Int16.self,
-            Int32.self,
-            Int64.self,
-            UInt.self,
-            UInt8.self,
-            UInt16.self,
-            UInt32.self,
-            UInt64.self,
-            Double.self,
-            String.self,
-            [JSON].self,
-            [String: JSON].self
-        ]
-    }
-    public init(from decoder: Decoder) throws {
-        var object: Any?
-        
-        if let container = try? decoder.singleValueContainer(), !container.decodeNil() {
-            for type in JSON.codableTypes {
-                if object != nil { break }
-                // try to decode value
-                switch type {
-                case let boolType as Bool.Type:
-                    object = try? container.decode(boolType)
-                case let intType as Int.Type:
-                    object = try? container.decode(intType)
-                case let int8Type as Int8.Type:
-                    object = try? container.decode(int8Type)
-                case let int32Type as Int32.Type:
-                    object = try? container.decode(int32Type)
-                case let int64Type as Int64.Type:
-                    object = try? container.decode(int64Type)
-                case let uintType as UInt.Type:
-                    object = try? container.decode(uintType)
-                case let uint8Type as UInt8.Type:
-                    object = try? container.decode(uint8Type)
-                case let uint16Type as UInt16.Type:
-                    object = try? container.decode(uint16Type)
-                case let uint32Type as UInt32.Type:
-                    object = try? container.decode(uint32Type)
-                case let uint64Type as UInt64.Type:
-                    object = try? container.decode(uint64Type)
-                case let doubleType as Double.Type:
-                    object = try? container.decode(doubleType)
-                case let stringType as String.Type:
-                    object = try? container.decode(stringType)
-                case let jsonArrayType as [JSON].Type:
-                    if let arr = try? container.decode(jsonArrayType) {
-                        object = arr.map(\.object)
-                    }
-                case let jsonDictType as [String: JSON].Type:
-                    if let dict = try? container.decode(jsonDictType) {
-                        object = dict.mapValues(\.object)
-                    }
-                default: break
-                }
-            }
-        }
-        self.init(object ?? NSNull())
-    }
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        let object = self.object
-        if object is NSNull {
-            try container.encodeNil()
-            return
-        }
-        switch object {
-        case let intValue as Int:
-            try container.encode(intValue)
-        case let int8Value as Int8:
-            try container.encode(int8Value)
-        case let int32Value as Int32:
-            try container.encode(int32Value)
-        case let int64Value as Int64:
-            try container.encode(int64Value)
-        case let uintValue as UInt:
-            try container.encode(uintValue)
-        case let uint8Value as UInt8:
-            try container.encode(uint8Value)
-        case let uint16Value as UInt16:
-            try container.encode(uint16Value)
-        case let uint32Value as UInt32:
-            try container.encode(uint32Value)
-        case let uint64Value as UInt64:
-            try container.encode(uint64Value)
-        case let doubleValue as Double:
-            try container.encode(doubleValue)
-        case let boolValue as Bool:
-            try container.encode(boolValue)
-        case let stringValue as String:
-            try container.encode(stringValue)
-        case is [Any]:
-            let jsonArray = array ?? []
-            try container.encode(jsonArray)
-        case is [String: Any]:
-            let jsonDictValue = dictionary ?? [:]
-            try container.encode(jsonDictValue)
-        default:
-            break
-        }
-    }
-}
-
 
 public extension JSON {
-    static func data(of object: Any?, prettify: Bool = false) -> Data? {
-        guard let obj = object else { return nil }
-        guard JSONSerialization.isValidJSONObject(obj) else { return nil }
+    private static func _data(of obj: Any, opts: JSONSerialization.WritingOptions = []) throws -> Data {
+        guard JSONSerialization.isValidJSONObject(obj) else { throw JSONError.invalidJSON }
         var options: JSONSerialization.WritingOptions = [.sortedKeys]
-        if prettify { options.insert(.prettyPrinted) }
         if #available(iOS 13.0, *) {
             options.insert(.withoutEscapingSlashes)
         }
-        return try? JSONSerialization.data(withJSONObject: obj, options: options)
+        options.formUnion(opts)
+        return try JSONSerialization.data(withJSONObject: obj, options: options)
+    }
+    static func data(of object: Any?, prettify: Bool = false) -> Data? {
+        guard let obj = object else { return nil }
+        return try? _data(of: obj, opts: prettify ? [.prettyPrinted] : [])
     }
     static func string(of object: Any?, prettify: Bool = false) -> String? {
         guard let data = data(of: object, prettify: prettify) else { return nil }

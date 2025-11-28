@@ -459,7 +459,7 @@ public final class Promise<Value> {
         _ s: Int,
         on queue: ExecutionContext = DispatchQueue.main) -> Promise<Value> {
         return mapError(on: queue) { error in
-            if let stepError = error as? StepError { 
+            if let stepError = error as? StepError {
                 return stepError
             }
             return StepError(step: s, error: error)
