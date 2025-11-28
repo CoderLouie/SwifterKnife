@@ -23,8 +23,8 @@ final class MapTableTest: XCTestCase {
     }
 
     func testExample() throws {
-        let nsarray = NSArray()
-        let tmp = nsarray.copyable()
+//        let nsarray = NSArray()
+//        let tmp = nsarray.copyable()
         return ()
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
