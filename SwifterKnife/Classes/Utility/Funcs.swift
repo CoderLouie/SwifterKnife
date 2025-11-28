@@ -7,6 +7,21 @@
 
 import Foundation  
 
+
+public protocol OptionalType: ExpressibleByNilLiteral {
+    associatedtype Wrapped
+    var skopValue: Optional<Wrapped> { get }
+//    init(_ some: Wrapped)
+}
+
+public protocol OptionalInitType: OptionalType {
+    init(_ some: Wrapped)
+}
+
+extension Optional: OptionalInitType {
+    public var skopValue: Optional<Wrapped> { self }
+}
+
 // https://github.com/vincent-pradeilles/swift-tips
 public func resultOf<T>(_ code: () -> T) -> T {
     return code()
@@ -50,7 +65,7 @@ public func || (lhs: Bool?, rhs: Bool?) -> Bool? {
         return nil
     }
 }
-
+/*
 public func parallel<T, U>(
     _ left: @autoclosure () -> T,
     _ right: @autoclosure () -> U) -> (T, U) {
@@ -67,7 +82,7 @@ public func parallel<T, U>(
     
     return (leftRes!, rightRes!)
 }
- 
+ */
 
 //public func until(_ condition: @autoclosure () -> Bool, statements: () -> Void) {
 //    while !condition() {
@@ -176,7 +191,7 @@ public final class WeakProxy: NSObject {
 //    replayNonNil { $0 }
 //}
 
-
+/*
 public func cost(_ work: @escaping (Double) -> Void) -> () -> Void {
    let now = CACurrentMediaTime()
    return { work(CACurrentMediaTime() - now) }
@@ -205,6 +220,7 @@ public func cost<T, V, P>(_ work: @escaping (T, V, P, Double) -> Void) -> (T, V,
    let now = CACurrentMediaTime()
    return { work($0, $1, $2, CACurrentMediaTime() - now) }
 }
+ */
 
  
 

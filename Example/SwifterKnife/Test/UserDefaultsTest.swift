@@ -9,6 +9,7 @@
 import Foundation
 import SwifterKnife
 
+/*
 enum Gender: String, DefaultsSerializable {
     case man, woman
 }
@@ -61,6 +62,10 @@ private func peekus() {
     let gs = Defaults[\.genders]
     let nilgs = Defaults[\.nilgenders]
     print(r, n, g, t, nilt, gs, nilgs)
+}
+*/
+private func peekus() {
+    
 }
 
 func userdefault_test_entry() {

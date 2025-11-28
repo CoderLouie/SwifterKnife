@@ -15,36 +15,36 @@ public extension Date {
     /// - threeLetters: 3 letter day abbreviation of day name.
     /// - oneLetter: 1 letter day abbreviation of day name.
     /// - full: Full day name.
-    enum DayNameStyle: String {
-
-        /// 3 letter day abbreviation of day name.
-        case threeLetters = "EEE"
-
-        /// 1 letter day abbreviation of day name.
-        case oneLetter = "EEEEE"
-
-        /// Full day name.
-        case full = "EEEE"
-
-    }
+//    enum DayNameStyle: String {
+//
+//        /// 3 letter day abbreviation of day name.
+//        case threeLetters = "EEE"
+//
+//        /// 1 letter day abbreviation of day name.
+//        case oneLetter = "EEEEE"
+//
+//        /// Full day name.
+//        case full = "EEEE"
+//
+//    }
 
     /// Month name format.
     ///
     /// - threeLetters: 3 letter month abbreviation of month name.
     /// - oneLetter: 1 letter month abbreviation of month name.
     /// - full: Full month name.
-    enum MonthNameStyle: String {
-
-        /// 3 letter month abbreviation of month name.
-        case threeLetters = "MMM"
-
-        /// 1 letter month abbreviation of month name.
-        case oneLetter = "MMMMM"
-
-        /// Full month name.
-        case full = "MMMM"
-
-    }
+//    enum MonthNameStyle: String {
+//
+//        /// 3 letter month abbreviation of month name.
+//        case threeLetters = "MMM"
+//
+//        /// 1 letter month abbreviation of month name.
+//        case oneLetter = "MMMMM"
+//
+//        /// Full month name.
+//        case full = "MMMM"
+//
+//    }
 
 }
 
@@ -676,13 +676,13 @@ public extension Date {
     ///
     /// - Parameter Style: style of day name (default is DayNameStyle.full).
     /// - Returns: day name string (example: W, Wed, Wednesday).
-    func dayName(ofStyle style: DayNameStyle = .full) -> String {
-        // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
-        let dateFormatter = DateFormatter()
-        let format = style.rawValue
-        dateFormatter.setLocalizedDateFormatFromTemplate(format)
-        return dateFormatter.string(from: self)
-    }
+//    func dayName(ofStyle style: DayNameStyle = .full) -> String {
+//        // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
+//        let dateFormatter = DateFormatter()
+//        let format = style.rawValue
+//        dateFormatter.setLocalizedDateFormatFromTemplate(format)
+//        return dateFormatter.string(from: self)
+//    }
 
     /// Month name from date.
     ///
@@ -692,13 +692,13 @@ public extension Date {
     ///
     /// - Parameter Style: style of month name (default is MonthNameStyle.full).
     /// - Returns: month name string (example: D, Dec, December).
-    func monthName(ofStyle style: MonthNameStyle = .full) -> String {
-        // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
-        let dateFormatter = DateFormatter()
-        let format = style.rawValue
-        dateFormatter.setLocalizedDateFormatFromTemplate(format)
-        return dateFormatter.string(from: self)
-    }
+//    func monthName(ofStyle style: MonthNameStyle = .full) -> String {
+//        // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
+//        let dateFormatter = DateFormatter()
+//        let format = style.rawValue
+//        dateFormatter.setLocalizedDateFormatFromTemplate(format)
+//        return dateFormatter.string(from: self)
+//    }
 
     /// get number of seconds between two date
     ///
