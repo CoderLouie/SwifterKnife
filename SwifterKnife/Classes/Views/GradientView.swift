@@ -120,7 +120,7 @@ open class GradientLabel: UIView {
             }
         }
         textSize.width = min(textSize.width, insetBounds.width)
-        textSize.height = min(textSize.height, insetBounds.height)
+        textSize.height = max(textSize.height, insetBounds.height)
         let textOrigin = CGPoint(x: (insetBounds.width - textSize.width) * textPosition.x + insetBounds.minX, y: (insetBounds.height - textSize.height) * textPosition.y + insetBounds.minY)
         label.frame = CGRect(origin: textOrigin, size: textSize)
         

@@ -29,6 +29,6 @@ public extension UIFont {
         CTFontManagerRegisterGraphicsFont(fontRef, nil)
 //        guard let name = fontRef.fullName as? String, !name.isEmpty else { return nil }
 //        return UIFont(name: name, size: 20)?.familyName
-        return fontRef.fullName as? String
+        return fontRef.postScriptName as? String
     }
 }
