@@ -149,6 +149,10 @@ public extension Sequence {
         }
         return groups
     }
+    func keyValues<K: Hashable>(with key: (Element) -> K,
+                            uniquingKeysWith combine: (Element, Element) throws -> Element = { $1 }) rethrows -> [K: Element] {
+        try .init(map { (key($0), $0) }, uniquingKeysWith: combine)
+    }
 }
 
 public extension Sequence where Element: Equatable {
