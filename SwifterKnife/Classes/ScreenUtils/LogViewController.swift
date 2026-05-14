@@ -178,6 +178,77 @@ fileprivate class _PopMenu: UIView {
         onClick?(sender.tag)
     }
 }
+fileprivate final class _SearchTextField: UITextField {
+    private let horizontalInset: CGFloat = 10
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setup() {
+        backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        textColor = .white
+        tintColor = UIColor(red: 255 / 255.0, green: 229 / 255.0, blue: 0 / 255.0, alpha: 1)
+        autocorrectionType = .no
+        autocapitalizationType = .none
+        clearButtonMode = .whileEditing
+        returnKeyType = .done
+        borderStyle = .none
+        layer.do {
+            $0.masksToBounds = true
+            $0.cornerRadius = 6
+            $0.borderWidth = 1
+            $0.borderColor = UIColor.white.withAlphaComponent(0.18).cgColor
+        }
+        let placeholderColor = UIColor.white.withAlphaComponent(0.45)
+        attributedPlaceholder = NSAttributedString(string: "Keyword", attributes: [
+            .foregroundColor: placeholderColor
+        ])
+    }
+    
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        bounds.insetBy(dx: horizontalInset, dy: 0)
+    }
+    
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        textRect(forBounds: bounds)
+    }
+    
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        textRect(forBounds: bounds)
+    }
+}
+fileprivate final class _SearchActionButton: UIButton {
+    override var isEnabled: Bool {
+        didSet {
+            alpha = isEnabled ? 1 : 0.45
+        }
+    }
+    
+    convenience init(title: String) {
+        self.init(type: .system)
+        setup(title: title)
+    }
+    
+    private func setup(title: String) {
+        setTitle(title, for: .normal)
+        setTitleColor(.white, for: .normal)
+        titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
+        backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        layer.do {
+            $0.masksToBounds = true
+            $0.cornerRadius = 6
+            $0.borderWidth = 1
+            $0.borderColor = UIColor.white.withAlphaComponent(0.18).cgColor
+        }
+        isEnabled = false
+    }
+}
 fileprivate class _LogTextView: UITextView {
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -304,12 +375,21 @@ fileprivate class _PopContainer: UIView {
     }
 }
 fileprivate class _LogView: UIView {
+    private let toolbarHeight: CGFloat = 44
+    private let searchBarHeight: CGFloat = 36
+    private let contentInsetSpacing: CGFloat = 8
+    private let displaySeparator = "\n"
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        registerForKeyboardNotifications()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     private func setup() {
         let toolbar = UIView().then {
@@ -317,7 +397,7 @@ fileprivate class _LogView: UIView {
             $0.doConstraints { make in
                 make.horizontalEqualTo(0)
                 make.bottomEqualTo(0)
-                make.heightEqualTo(44)
+                make.heightEqualTo(toolbarHeight)
             }
         }
         let space: CGFloat = 12
@@ -360,6 +440,64 @@ fileprivate class _LogView: UIView {
                 make.centerYEqualTo(0)
             }
         }
+        let searchContainer = UIView()
+        searchContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(searchContainer)
+        self.searchContainer = searchContainer
+        searchContainerBottomConstraint = searchContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -toolbarHeight)
+        NSLayoutConstraint.activate([
+            searchContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: space),
+            searchContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -space),
+            searchContainer.heightAnchor.constraint(equalToConstant: searchBarHeight),
+            searchContainerBottomConstraint!
+        ])
+        
+        let searchField = _SearchTextField(frame: .zero)
+        searchField.translatesAutoresizingMaskIntoConstraints = false
+        searchField.addTarget(self, action: #selector(searchFieldTextDidChange(_:)), for: .editingChanged)
+        searchField.delegate = self
+        searchContainer.addSubview(searchField)
+        self.searchField = searchField
+        
+        let countLabel = UILabel()
+        countLabel.translatesAutoresizingMaskIntoConstraints = false
+        countLabel.font = .systemFont(ofSize: 12, weight: .medium)
+        countLabel.textAlignment = .center
+        countLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+        countLabel.text = "0/0"
+        searchContainer.addSubview(countLabel)
+        searchCountLabel = countLabel
+        
+        let prevButton = _SearchActionButton(title: "Prev")
+        prevButton.translatesAutoresizingMaskIntoConstraints = false
+        prevButton.addTarget(self, action: #selector(goToPreviousMatch), for: .touchUpInside)
+        searchContainer.addSubview(prevButton)
+        previousMatchButton = prevButton
+        
+        let nextButton = _SearchActionButton(title: "Next")
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        nextButton.addTarget(self, action: #selector(goToNextMatch), for: .touchUpInside)
+        searchContainer.addSubview(nextButton)
+        nextMatchButton = nextButton
+        
+        NSLayoutConstraint.activate([
+            searchField.leadingAnchor.constraint(equalTo: searchContainer.leadingAnchor),
+            searchField.topAnchor.constraint(equalTo: searchContainer.topAnchor),
+            searchField.bottomAnchor.constraint(equalTo: searchContainer.bottomAnchor),
+            
+            countLabel.leadingAnchor.constraint(equalTo: searchField.trailingAnchor, constant: 8),
+            countLabel.centerYAnchor.constraint(equalTo: searchContainer.centerYAnchor),
+            countLabel.widthAnchor.constraint(equalToConstant: 44),
+            
+            prevButton.leadingAnchor.constraint(equalTo: countLabel.trailingAnchor, constant: 8),
+            prevButton.topAnchor.constraint(equalTo: searchContainer.topAnchor),
+            prevButton.bottomAnchor.constraint(equalTo: searchContainer.bottomAnchor),
+            
+            nextButton.leadingAnchor.constraint(equalTo: prevButton.trailingAnchor, constant: 8),
+            nextButton.trailingAnchor.constraint(equalTo: searchContainer.trailingAnchor),
+            nextButton.topAnchor.constraint(equalTo: searchContainer.topAnchor),
+            nextButton.bottomAnchor.constraint(equalTo: searchContainer.bottomAnchor)
+        ])
         let font = UIFont(name: "Menlo", size: 12)
         
         textView = _LogTextView().then {
@@ -368,16 +506,17 @@ fileprivate class _LogView: UIView {
             $0.doConstraints { make in
                 make.horizontalEqualTo(space)
                 make.topEqualTo(space * 0.5)
-                make.son.bottomAnchor.constraint(equalTo: toolbar.topAnchor)
+                make.son.bottomAnchor.constraint(equalTo: searchContainer.topAnchor, constant: -space * 0.5)
             }
         }
+        updateSearchControls()
     }
     
     
     func copyLine(_ sender: Any?) {
         let items = selectedItems
         guard !items.isEmpty else { return }
-        let log = items.map(\.content).joined(separator: "\n")
+        let log = items.map(\.content).joined(separator: displaySeparator)
         UIPasteboard.general.string = log
     }
     func deleteLine(_ sender: Any?) {
@@ -403,37 +542,51 @@ fileprivate class _LogView: UIView {
         let ptrs = Set(items.map(\.address))
         showingItems.removeAll { ptrs.contains($0.address) }
         self.items.removeAll { ptrs.contains($0.address) }
-        textView.text = showingItems.map(\.content).joined(separator: "\n")
+        refreshDisplayedLogs(resetCurrentMatch: currentSearchIndex != nil,
+                             scrollToCurrentMatch: currentSearchIndex != nil)
     }
     private var selectedItems: [LogItem] {
         let range = textView.selectedRange
         guard range.location != NSNotFound,
               range.length > 0 else { return [] }
-        let r = (range.location..<range.location + range.length)
+        let r = NSRange(location: range.location, length: range.length)
         var res: [LogItem] = []
         var current = 0
-        for item in showingItems {
-            let n = item.content.count
-            let tmp = (current..<current + n)
-            current += n
-            if tmp.lowerBound >= r.upperBound { return res }
-            if tmp.overlaps(r) {
+        let separatorLength = (displaySeparator as NSString).length
+        for (idx, item) in showingItems.enumerated() {
+            let length = (item.content as NSString).length
+            let itemRange = NSRange(location: current, length: length)
+            if NSIntersectionRange(itemRange, r).length > 0 {
                 res.append(item)
             }
+            current += length
+            if idx != showingItems.count - 1 {
+                current += separatorLength
+            }
+            if current >= NSMaxRange(r) { return res }
         }
         return res
     }
      
     private var items: [LogItem] = []
     private var showingItems: [LogItem] = []
+    private var searchKeyword = ""
+    private var searchRanges: [NSRange] = []
+    private var currentSearchIndex: Int?
     private var itemTagMap: [String: [LogItem]] = [:]
     private var allTags: Set<String> = []
     private let levelItems = ScreenLogLevel.allCases.map { MenuItem(title: "\($0)") }
     private var tagItems: [MenuItem] = []
      
     private(set) unowned var textView: _LogTextView!
+    private unowned var searchContainer: UIView!
+    private unowned var searchField: UITextField!
+    private unowned var searchCountLabel: UILabel!
+    private unowned var previousMatchButton: UIButton!
+    private unowned var nextMatchButton: UIButton!
     private unowned var tagControl: UIControl!
     private unowned var levelControl: UIControl!
+    private var searchContainerBottomConstraint: NSLayoutConstraint?
 }
 extension _LogView {
     func log(_ string: String, level: ScreenLogLevel = .normal, tags: [String] = []) {
@@ -448,22 +601,16 @@ extension _LogView {
             tagItems.append(MenuItem(title: t))
         }
         
-        let selLevels = Set(levelItems.filter(\.isSelected).map(\.title))
-        if !selLevels.isEmpty, !selLevels.contains("\(item.level)") { return }
-        let selTags = Set(tagItems.filter(\.isSelected).map(\.title))
-        if !selTags.isEmpty, item.tags.intersection(selTags).isEmpty { return }
+        if !shouldDisplay(item) { return }
         showingItems.append(item)
-        if textView.text.isEmpty {
-            textView.text = string
-        } else {
-            textView.text += "\n\(string)"
-        }
+        refreshDisplayedLogs(scrollToCurrentMatch: currentSearchIndex != nil)
     }
 }
 
 
 extension _LogView {
     @objc private func toolbarButtonDidClick(_ sender: UIControl) {
+        searchField.resignFirstResponder()
         if sender === levelControl ||
             sender === tagControl {
             let isLevel = sender === levelControl
@@ -502,9 +649,8 @@ extension _LogView {
                 items.removeAll { ptrs.contains($0.address) }
                 showingItems = []
 //                levelItems.forEach { $0.isSelected = false }
-                textView.text = ""
+                refreshDisplayedLogs(resetCurrentMatch: true)
             } else if sender.tag == 1 {
-                let n = showingItems.count
                 let last = showingItems.removeLast()
                 for t in last.tags {
                     if var map = itemTagMap[t] {
@@ -518,12 +664,7 @@ extension _LogView {
                 }
                 tagControl.isSelected = tagItems.contains(where: \.isSelected)
                 items.removeAll { $0 === last }
-                if let t = textView.text {
-                    let n1 = last.content.count
-                    // \n
-                    let mapN = n == 1 ? n1 : n1 + 1
-                    textView.text.removeLast(mapN)
-                }
+                refreshDisplayedLogs(resetCurrentMatch: currentSearchIndex != nil)
             }
         }
     }
@@ -537,7 +678,185 @@ extension _LogView {
             if !selLevels.isEmpty, !selLevels.contains("\($0.level)") { return false }
             return true
         }
-        textView.text = showingItems.map(\.content).joined(separator: "\n")
+        refreshDisplayedLogs(resetCurrentMatch: currentSearchIndex != nil,
+                             scrollToCurrentMatch: currentSearchIndex != nil)
+    }
+}
+extension _LogView: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+private extension _LogView {
+    var displayedText: String {
+        showingItems.map(\.content).joined(separator: displaySeparator)
+    }
+    
+    var baseTextAttributes: [NSAttributedString.Key: Any] {
+        var attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.white
+        ]
+        if let font = textView.font {
+            attributes[.font] = font
+        }
+        return attributes
+    }
+    
+    func shouldDisplay(_ item: LogItem) -> Bool {
+        let selLevels = Set(levelItems.filter(\.isSelected).map(\.title))
+        if !selLevels.isEmpty, !selLevels.contains("\(item.level)") { return false }
+        let selTags = Set(tagItems.filter(\.isSelected).map(\.title))
+        if !selTags.isEmpty, item.tags.intersection(selTags).isEmpty { return false }
+        return true
+    }
+    
+    @objc func searchFieldTextDidChange(_ sender: UITextField) {
+        searchKeyword = sender.text ?? ""
+        currentSearchIndex = nil
+        refreshDisplayedLogs(resetCurrentMatch: true,
+                             scrollToCurrentMatch: true)
+    }
+    
+    @objc func goToPreviousMatch() {
+        guard !searchRanges.isEmpty else { return }
+        let nextIndex = ((currentSearchIndex ?? 0) - 1 + searchRanges.count) % searchRanges.count
+        currentSearchIndex = nextIndex
+        refreshDisplayedLogs(scrollToCurrentMatch: true)
+    }
+    
+    @objc func goToNextMatch() {
+        guard !searchRanges.isEmpty else { return }
+        let nextIndex = ((currentSearchIndex ?? -1) + 1) % searchRanges.count
+        currentSearchIndex = nextIndex
+        refreshDisplayedLogs(scrollToCurrentMatch: true)
+    }
+    
+    func refreshDisplayedLogs(resetCurrentMatch: Bool = false,
+                              scrollToCurrentMatch: Bool = false) {
+        textView.hiddenPopMenu()
+        let text = displayedText
+        let matchedRanges = allSearchRanges(in: text, keyword: searchKeyword)
+        searchRanges = matchedRanges
+        
+        if matchedRanges.isEmpty {
+            currentSearchIndex = nil
+        } else if resetCurrentMatch || currentSearchIndex == nil {
+            currentSearchIndex = 0
+        } else if let index = currentSearchIndex, index >= matchedRanges.count {
+            currentSearchIndex = matchedRanges.count - 1
+        }
+        
+        let attributed = NSMutableAttributedString(string: text, attributes: baseTextAttributes)
+        if !matchedRanges.isEmpty {
+            for range in matchedRanges {
+                attributed.addAttributes([
+                    .backgroundColor: UIColor.white.withAlphaComponent(0.18)
+                ], range: range)
+            }
+            if let currentRange = currentSearchRange {
+                attributed.addAttributes([
+                    .backgroundColor: UIColor(red: 255 / 255.0, green: 229 / 255.0, blue: 0 / 255.0, alpha: 1),
+                    .foregroundColor: UIColor.black
+                ], range: currentRange)
+            }
+        }
+        
+        textView.attributedText = attributed
+        textView.contentInset.bottom = contentInsetSpacing
+        textView.scrollIndicatorInsets.bottom = contentInsetSpacing
+        updateSearchControls()
+        
+        guard scrollToCurrentMatch else { return }
+        scrollCurrentMatchToVisible()
+    }
+    
+    func updateSearchControls() {
+        let count = searchRanges.count
+        if let currentSearchIndex, count > 0 {
+            searchCountLabel.text = "\(currentSearchIndex + 1)/\(count)"
+        } else {
+            searchCountLabel.text = "0/0"
+        }
+        let canNavigate = count > 1
+        previousMatchButton.isEnabled = canNavigate
+        nextMatchButton.isEnabled = canNavigate
+    }
+    
+    var currentSearchRange: NSRange? {
+        guard let currentSearchIndex,
+              searchRanges.indices.contains(currentSearchIndex) else { return nil }
+        return searchRanges[currentSearchIndex]
+    }
+    
+    func scrollCurrentMatchToVisible() {
+        guard let range = currentSearchRange else { return }
+        layoutIfNeeded()
+        textView.scrollRangeToVisible(range)
+    }
+    
+    func allSearchRanges(in text: String, keyword: String) -> [NSRange] {
+        guard !keyword.isEmpty else { return [] }
+        let source = text as NSString
+        guard source.length > 0 else { return [] }
+        
+        var remainingRange = NSRange(location: 0, length: source.length)
+        var ranges: [NSRange] = []
+        while remainingRange.location != NSNotFound, remainingRange.length > 0 {
+            let foundRange = source.range(of: keyword,
+                                          options: [.caseInsensitive],
+                                          range: remainingRange)
+            if foundRange.location == NSNotFound { break }
+            ranges.append(foundRange)
+            let nextLocation = foundRange.location + max(foundRange.length, 1)
+            if nextLocation >= source.length { break }
+            remainingRange = NSRange(location: nextLocation,
+                                     length: source.length - nextLocation)
+        }
+        return ranges
+    }
+    
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillChangeFrame(_:)),
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
+    
+    @objc func keyboardWillChangeFrame(_ note: Notification) {
+        guard let userInfo = note.userInfo,
+              let frame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        let convertedFrame = convert(frame, from: nil)
+        let overlap = max(0, bounds.maxY - convertedFrame.minY)
+        applyKeyboardInset(overlap, userInfo: userInfo)
+    }
+    
+    @objc func keyboardWillHide(_ note: Notification) {
+        applyKeyboardInset(0, userInfo: note.userInfo)
+    }
+    
+    func applyKeyboardInset(_ inset: CGFloat, userInfo: [AnyHashable: Any]?) {
+        searchContainerBottomConstraint?.constant = -(toolbarHeight + inset)
+        textView.contentInset.bottom = contentInsetSpacing
+        textView.scrollIndicatorInsets.bottom = contentInsetSpacing
+        
+        let duration = (userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.25
+        let curveRawValue = (userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue
+            ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+        let options = UIView.AnimationOptions(rawValue: curveRawValue << 16)
+        UIView.animate(withDuration: duration,
+                       delay: 0,
+                       options: [options, .beginFromCurrentState]) {
+            self.layoutIfNeeded()
+        } completion: { _ in
+            self.scrollCurrentMatchToVisible()
+        }
     }
 }
 
