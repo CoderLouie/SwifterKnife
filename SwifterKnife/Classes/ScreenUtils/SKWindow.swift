@@ -186,7 +186,7 @@ class SKWindow: UIWindow {
         }
     }
     
-    private unowned var container: UIView!
+    private(set) unowned var container: UIView!
     private unowned var popoverButton: UIButton!
     private lazy var contentEdge = Screen.bodyRect.inset(by: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
 }
@@ -242,6 +242,13 @@ public enum SKS {
         get { !(_window?.isHidden ?? true) }
         set {
             window.isHidden = !newValue
+        }
+    }
+    
+    public static var isPresented: Bool {
+        get { !window.container.isHidden }
+        set {
+            window.container.isHidden = !newValue
         }
     }
     
