@@ -61,8 +61,7 @@ class OptionsViewController: _BaseViewController {
             $0.doConstraints { make in
                 make.topEqualTo(Screen.navbarH)
                 make.horizontalEqualTo(16)
-                make.bottomEqualTo(0)
-                
+                make.bottomEqualTo(-Screen.tabbarH)
             }
         }
     }
