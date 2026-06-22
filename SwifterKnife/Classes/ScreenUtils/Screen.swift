@@ -28,8 +28,8 @@ public enum Screen {
         UIDevice.current.userInterfaceIdiom == .pad
     }
     public static let isIPhoneXSeries: Bool = {
-        let bottomSafeInset = currentWindow?.safeAreaInsets.bottom ?? 0
-        return bottomSafeInset > 0
+        let screenHeight = UIScreen.main.bounds.height
+        return screenHeight > 800
     }()
     
     /// 当前是否是竖屏
