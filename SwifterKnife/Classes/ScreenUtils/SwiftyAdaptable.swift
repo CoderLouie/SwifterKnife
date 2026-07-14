@@ -217,8 +217,8 @@ public struct UIDesignReference {
         self.withoutHeaderHeight = height
         self.bodyHeight = bodyHeight
     }
-    
-    public static var stander: UIDesignReference = .iPhone12
+    /// 默认iPhone15
+    public static var stander: UIDesignReference = .iPhone15
 }
 public extension UIDesignReference {
     static var iPhoneX: UIDesignReference {

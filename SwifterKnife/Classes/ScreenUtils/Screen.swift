@@ -132,13 +132,36 @@ public enum Screen {
     
     public static var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
-            guard let window = currentWindow else { return .zero }
-            if let inset = window.rootViewController?.view.safeAreaInsets,
-               inset.top > 0 { return inset }
-            return window.safeAreaInsets
+            if let inset = frontViewController?.viewIfLoaded?.window?.safeAreaInsets
+            ,
+               inset != .zero {
+                return inset
+            }
+
+            if let inset = currentWindow?.safeAreaInsets,
+               inset != .zero {
+                return inset
+            }
+
+            if #available(iOS 13.0, *),
+               let scene = activeWindowScene {
+                if let inset = scene.windows.first(where:
+                \.isKeyWindow)?.safeAreaInsets,
+                   inset != .zero {
+                    return inset
+                }
+
+                if let inset = scene.windows.first(where: { !$0.isHidden && $0.alpha > 0 })?.safeAreaInsets,
+                   inset != .zero {
+                    return inset
+                }
+            }
+
+            return .zero
         } else {
             let height = UIApplication.shared.statusBarFrame.height
-            return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
+            return UIEdgeInsets(top: height, left: 0, bottom: 0,
+            right: 0)
         }
     }
     
