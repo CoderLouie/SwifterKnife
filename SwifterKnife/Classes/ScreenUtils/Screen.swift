@@ -34,28 +34,26 @@ public enum Screen {
     
     /// 当前是否是竖屏
     public static var isPortrait: Bool {
-        return UIApplication.shared.statusBarOrientation.isPortrait
+        interfaceOrientation.isPortrait
     }
     
     /// 安全区域刘海一侧的间距 (20/44/50) 也即状态栏高度
     public static var safeAreaT: CGFloat {
         let inset = safeAreaInsets
-        switch UIApplication.shared.statusBarOrientation {
-        case .portrait, .portraitUpsideDown: return inset.top
+        switch interfaceOrientation {
         case .landscapeLeft: return inset.right
         case .landscapeRight: return inset.left
-        default: return 0
+        default: return inset.top
         }
     }
     
     /// 安全区域刘海对侧的间距 也即 HomeIndicator 高度
     public static var safeAreaB: CGFloat {
         let inset = safeAreaInsets
-        switch UIApplication.shared.statusBarOrientation {
-        case .portrait, .portraitUpsideDown: return inset.bottom
+        switch interfaceOrientation {
         case .landscapeLeft: return inset.left
         case .landscapeRight: return inset.right
-        default: return 0
+        default: return inset.bottom
         }
     }
     
@@ -96,6 +94,14 @@ public enum Screen {
     public static var currentWindow: UIWindow? {
         delegateWindow ?? keyWindow
     }
+
+    private static var interfaceOrientation: UIInterfaceOrientation {
+        if #available(iOS 13.0, *) {
+            return currentWindow?.windowScene?.interfaceOrientation ?? .unknown
+        } else {
+            return UIApplication.shared.statusBarOrientation
+        }
+    }
     
     @available(iOS 13.0, *)
     public static var activeWindowScene: UIWindowScene? {
@@ -132,36 +138,13 @@ public enum Screen {
     
     public static var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
-            if let inset = frontViewController?.viewIfLoaded?.window?.safeAreaInsets
-            ,
-               inset != .zero {
-                return inset
-            }
-
-            if let inset = currentWindow?.safeAreaInsets,
-               inset != .zero {
-                return inset
-            }
-
-            if #available(iOS 13.0, *),
-               let scene = activeWindowScene {
-                if let inset = scene.windows.first(where:
-                \.isKeyWindow)?.safeAreaInsets,
-                   inset != .zero {
-                    return inset
-                }
-
-                if let inset = scene.windows.first(where: { !$0.isHidden && $0.alpha > 0 })?.safeAreaInsets,
-                   inset != .zero {
-                    return inset
-                }
-            }
-
-            return .zero
+            guard let window = currentWindow else { return .zero }
+            if let inset = window.rootViewController?.view.safeAreaInsets,
+               inset.top > 0 { return inset }
+            return window.safeAreaInsets
         } else {
             let height = UIApplication.shared.statusBarFrame.height
-            return UIEdgeInsets(top: height, left: 0, bottom: 0,
-            right: 0)
+            return UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
         }
     }
     
@@ -222,3 +205,4 @@ extension UIViewController {
         }
     }
 }
+
