@@ -77,7 +77,7 @@ open class GradientLabel: UIView {
         }
     }
     
-    private func setup() {
+    open func setup() {
         backgroundColor = .clear
         
         gradientLayer = CAGradientLayer().then {

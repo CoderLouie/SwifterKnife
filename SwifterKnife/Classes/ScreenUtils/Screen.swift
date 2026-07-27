@@ -103,16 +103,30 @@ public enum Screen {
         }
     }
     
+    
+    @available(iOS 13.0, *)
+    public static func firstWindowScene(where predicate: (UIWindowScene) -> Bool) -> UIWindowScene? {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+            if predicate(windowScene) { return windowScene }
+        }
+        return nil
+    }
     @available(iOS 13.0, *)
     public static var activeWindowScene: UIWindowScene? {
-        return UIApplication.shared.connectedScenes.first {
-            $0.activationState == .foregroundActive &&
-            ($0 as? UIWindowScene) != nil
-        } as? UIWindowScene
+        return firstWindowScene {
+            $0.activationState == .foregroundActive
+        }
+    }
+    @available(iOS 13.0, *)
+    public static var foregroundWindowScene: UIWindowScene? {
+        return activeWindowScene ?? firstWindowScene {
+            $0.activationState == .foregroundInactive
+        }
     }
     public static var keyWindow: UIWindow? {
         if #available(iOS 13.0, *) {
-            return activeWindowScene?.windows.first {
+            return foregroundWindowScene?.windows.first {
                 $0.isKeyWindow
             }
         } else {
