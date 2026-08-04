@@ -87,7 +87,16 @@ open class SeparatorStackView: UIStackView {
                     height: thickness
                 )
             } else {
-                let centerX = (previousView.frame.maxX + nextView.frame.minX) * 0.5
+                let leftView: UIView
+                let rightView: UIView
+                if previousView.frame.minX <= nextView.frame.minX {
+                    leftView = previousView
+                    rightView = nextView
+                } else {
+                    leftView = nextView
+                    rightView = previousView
+                }
+                let centerX = (leftView.frame.maxX + rightView.frame.minX) * 0.5
                 let x = ((centerX - thickness * 0.5) * scale).rounded() / scale
                 
                 separatorView.frame = CGRect(
