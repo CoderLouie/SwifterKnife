@@ -13,6 +13,108 @@ open class NormalStackView: UIStackView {
     }
 }
 
+open class SeparatorStackView: UIStackView {
+    
+    /// 分割线颜色；nil 表示使用系统分割线颜色
+    open var separatorColor: UIColor? {
+        didSet {
+            separatorViews.forEach {
+                $0.backgroundColor = separatorColor ?? .separator
+            }
+        }
+    }
+    
+    /// 分割线相对于 Stack 边缘的缩进及厚度
+    open var separatorAmount: (leftOrTop: CGFloat, rightOrBottom: CGFloat, thickness: CGFloat?) = (0, 0, nil) {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
+    
+    /// 内部的分割线视图
+    private var separatorViews: [UIView] = []
+    
+    /// 根据当前 arrangedSubviews 布局分割线
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        layoutSeparatorViews()
+    }
+    
+    /// 更新分割线数量和位置
+    private func layoutSeparatorViews() {
+        
+        let visibleViews = arrangedSubviews.filter { !$0.isHidden }
+        
+        let scale = max(traitCollection.displayScale, 1)
+        let thickness = separatorAmount.thickness ?? (1 / scale)
+        
+        let bounds = bounds
+         
+        var index = 0
+        while index < visibleViews.count - 1 {
+            defer { index += 1 }
+            let separatorView = separatorViews[safe: index] ?? {
+                let sview = UIView()
+                sview.isUserInteractionEnabled = false
+                sview.isAccessibilityElement = false
+                
+                addSubview(sview)
+                separatorViews.append(sview)
+                return sview
+            }()
+            
+            
+            let previousView = visibleViews[index]
+            let nextView = visibleViews[index + 1]
+            
+            separatorView.isHidden = false
+            separatorView.backgroundColor = separatorColor ?? .separator
+                
+            if axis == .vertical {
+                let centerY = (previousView.frame.maxY + nextView.frame.minY) * 0.5
+                let y = ((centerY - thickness * 0.5) * scale).rounded() / scale
+                
+                separatorView.frame = CGRect(
+                    x: bounds.minX + separatorAmount.leftOrTop,
+                    y: y,
+                    width: max(
+                        bounds.width
+                        - separatorAmount.leftOrTop
+                        - separatorAmount.rightOrBottom,
+                        0
+                    ),
+                    height: thickness
+                )
+            } else {
+                let centerX = (previousView.frame.maxX + nextView.frame.minX) * 0.5
+                let x = ((centerX - thickness * 0.5) * scale).rounded() / scale
+                
+                separatorView.frame = CGRect(
+                    x: x,
+                    y: bounds.minY + separatorAmount.leftOrTop,
+                    width: thickness,
+                    height: max(
+                        bounds.height
+                        - separatorAmount.leftOrTop
+                        - separatorAmount.rightOrBottom,
+                        0
+                    )
+                )
+            }
+            
+            bringSubviewToFront(separatorView)
+        }
+         
+        while index < separatorViews.count, let v = separatorViews.last {
+            v.removeFromSuperview()
+            separatorViews.removeLast()
+        }
+    }
+     
+}
+
+
 public extension UIStackView {
     static var vertical: Self {
         return .create(axis: .vertical, alignment: .center)
@@ -46,13 +148,13 @@ public extension UIStackView {
         spacing: CGFloat = 0.0,
         alignment: UIStackView.Alignment = .center,
         distribution: UIStackView.Distribution = .fill) -> Self {
-        let view = Self(arrangedSubviews: arrangedSubviews)
-        view.axis = axis
-        view.spacing = spacing
-        view.alignment = alignment
-        view.distribution = distribution
-        return view
-    }
+            let view = Self(arrangedSubviews: arrangedSubviews)
+            view.axis = axis
+            view.spacing = spacing
+            view.alignment = alignment
+            view.distribution = distribution
+            return view
+        }
     
     func addArrangedSubviews(_ views: UIView...) {
         addArrangedSubviews(views)
@@ -65,7 +167,7 @@ public extension UIStackView {
             addArrangedSubview(view)
         }
     }
-
+    
     /// Removes all views in stack’s array of arranged subviews.
     func removeArrangedSubviews() {
         for view in arrangedSubviews {
@@ -111,7 +213,7 @@ public extension UIStackView {
     func customSpacing(_ spacing: CGFloat, at index: Int) -> UIStackView {
         let subviews = arrangedSubviews
         guard (0..<subviews.count).contains(index) else { return self }
-        setCustomSpacing(spacing, after: subviews[index]) 
+        setCustomSpacing(spacing, after: subviews[index])
         return self
     }
     subscript(spacingIndex index: Int) -> CGFloat {
@@ -133,7 +235,7 @@ public extension UIStackView {
         isLayoutMarginsRelativeArrangement = true
         return self
     }
-
+    
     @discardableResult
     func alignment(_ alignment: UIStackView.Alignment) -> UIStackView {
         self.alignment = alignment
@@ -145,7 +247,7 @@ public extension UIStackView {
         self.spacing = spacing
         return self
     }
-
+    
     @discardableResult
     func distribution(_ distribution: UIStackView.Distribution) -> UIStackView {
         self.distribution = distribution
@@ -162,7 +264,7 @@ public extension UIStackView {
         else { return }
         removeArrangedSubview(view1)
         insertArrangedSubview(view1, at: view2Index)
-
+        
         removeArrangedSubview(view2)
         insertArrangedSubview(view2, at: view1Index)
     }

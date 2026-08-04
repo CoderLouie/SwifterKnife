@@ -9,12 +9,13 @@ import Darwin
 
 
 public final class AtomicFlag {
-    private  var flag = atomic_flag()
+//    private  var flag = atomic_flag()
     
     public func testAndSet() -> Bool {
-        atomic_flag_test_and_set(&flag)
+//        atomic_flag_test_and_set(&flag)
+        return true
     }
     public func clear() {
-        atomic_flag_clear(&flag)
+//        atomic_flag_clear(&flag)
     }
 }
