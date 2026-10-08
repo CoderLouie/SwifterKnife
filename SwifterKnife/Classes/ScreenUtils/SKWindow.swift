@@ -228,6 +228,7 @@ public enum SKS {
     private static var window: SKWindow {
         if let v = _window { return v }
         let w = SKWindow(frame: UIScreen.main.bounds)
+        w.windowScene = (UIApplication.shared.delegate?.window ?? nil)?.windowScene
         _window = w
         return w
     }
@@ -262,6 +263,9 @@ public enum SKS {
         } else {
             DispatchQueue.main.async(execute: ops)
         }
+    }
+    public static func connect(to scene: UIWindowScene?) {
+        _window?.windowScene = scene
     }
     
     public static func makeScreenOptions(_ make: @escaping (_ maker: SKSOptionHandler) -> Void) {
