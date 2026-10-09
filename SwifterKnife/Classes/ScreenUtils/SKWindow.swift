@@ -242,14 +242,25 @@ public enum SKS {
     public static var isEnable: Bool {
         get { !(_window?.isHidden ?? true) }
         set {
-            window.isHidden = !newValue
+            if newValue {
+                window.isHidden = false
+            } else {
+                _window?.isHidden = true
+            }
         }
     }
     
     public static var isPresented: Bool {
-        get { !window.container.isHidden }
+        get {
+            guard let w = _window else { return false }
+            return !w.container.isHidden
+        }
         set {
-            window.container.isHidden = !newValue
+            if newValue {
+                window.container.isHidden = false
+            } else {
+                _window?.container.isHidden = true
+            }
         }
     }
     
