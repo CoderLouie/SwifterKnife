@@ -87,14 +87,61 @@ public enum Screen {
     public static var _tabbarH: CGFloat = 49
     public static var _navbarH: CGFloat = 44
     
-    public static var delegateWindow: UIWindow? {
-        UIApplication.shared.delegate?.window ?? nil
-    }
-    
     public static var currentWindow: UIWindow? {
-        delegateWindow ?? keyWindow
+        if #available(iOS 13.0, *) {
+            let scenes = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+            let applicationScenes = scenes.filter { $0.session.role == .windowApplication }
+            let pool = applicationScenes.isEmpty ? scenes : applicationScenes
+            guard !pool.isEmpty else { return legacyWindow }
+            return window(in: pool)
+        }
+        return legacyWindow
     }
 
+    /// 没有接入 UIScene 的旧工程
+    private static var legacyWindow: UIWindow? {
+        UIApplication.shared.delegate?.window ?? UIApplication.shared.keyWindow
+    }
+
+    @available(iOS 13.0, *)
+    public static func currentWindow(for scene: UIWindowScene) -> UIWindow? {
+        preferredWindow(in: scene)
+    }
+
+    @available(iOS 13.0, *)
+    private static func window(in scenes: [UIWindowScene]) -> UIWindow? {
+        let states: [UIScene.ActivationState] = [
+            .foregroundActive, .foregroundInactive, .background
+        ]
+        for state in states {
+            let matches = scenes.compactMap { scene -> UIWindow? in
+                guard scene.activationState == state else { return nil }
+                return preferredWindow(in: scene)
+            }
+            if matches.count == 1 { return matches[0] }
+            if matches.count > 1 {
+                guard let scene = firstResponder?.window?.windowScene else { return nil }
+                return matches.first { $0.windowScene === scene }
+            }
+        }
+        return nil
+    }
+
+    @available(iOS 13.0, *)
+    private static func preferredWindow(in scene: UIWindowScene) -> UIWindow? {
+        let usable = scene.windows.filter {
+            $0.windowLevel == .normal && !$0.isHidden && $0.rootViewController != nil
+        }
+        if let owned = (scene.delegate as? UIWindowSceneDelegate)?.window ?? nil,
+           usable.contains(where: { $0 === owned }) {
+            return owned
+        }
+        let keys = usable.filter(\.isKeyWindow)
+        if keys.count == 1 { return keys[0] }
+        if usable.count == 1 { return usable[0] }
+        return nil
+    }
     private static var interfaceOrientation: UIInterfaceOrientation {
         if #available(iOS 13.0, *) {
             return currentWindow?.windowScene?.interfaceOrientation ?? .unknown
@@ -125,13 +172,29 @@ public enum Screen {
         }
     }
     public static var keyWindow: UIWindow? {
-        if #available(iOS 13.0, *) {
-            return foregroundWindowScene?.windows.first {
-                $0.isKeyWindow
+        if #available(iOS 15.0, *) {
+            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            let ordered = scenes.sorted {
+                // foregroundActive > foregroundInactive > 其他
+                $0.activationState.rawValue < $1.activationState.rawValue
             }
-        } else {
-            return UIApplication.shared.keyWindow
+            if let win = ordered.lazy.compactMap(\.keyWindow).first {
+                return win
+            }
+            return ordered
+                .flatMap(\.windows)
+                .first { !$0.isHidden && $0.alpha > 0 && $0.windowLevel == .normal }
         }
+        
+        if #available(iOS 13.0, *) {
+            let windows = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap(\.windows)
+            return windows.first(where: \.isKeyWindow)
+                ?? windows.first { !$0.isHidden && $0.alpha > 0 }
+        }
+        
+        return UIApplication.shared.keyWindow
     }
 //    public static func fontWindow(maxLevel: CGFloat? = nil) -> UIWindow? {
 //        for window in UIApplication.shared.windows.reversed() {
